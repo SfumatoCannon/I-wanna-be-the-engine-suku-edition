@@ -55,35 +55,33 @@ void Sender()
 	}
 }
 
-bool isThreadWorking = false;
+std::mutex threadLock;
 
 void updateWork()
 {
 	using namespace suku;
-	if (!isThreadWorking)
+	if (threadLock.try_lock())
 	{
-		isThreadWorking = true;
-
 		keyCheck();
 
 		if (isKeyDown[VK_ESCAPE])
 			PostMessage(hWnd, WM_QUIT, 0, 0);
-
-		if (nowRoom)
-			nowRoom->update();
-
+		else
+		{
+			if (nowRoom)
+				nowRoom->update();
+		}
 		resetKey();
 
-		isThreadWorking = false;
+		threadLock.unlock();
 	}
 }
 
 void paintWork()
 {
 	using namespace suku;
-	if (!isThreadWorking)
+	if (threadLock.try_lock())
 	{
-		isThreadWorking = true;
 		beginDraw(hWnd);
 		nowRoom->paint();
 		static SquareShape a(100.0, 96, 96);
@@ -95,7 +93,7 @@ void paintWork()
 		c.outlineWidth = 4;
 
 		endDraw();
-		isThreadWorking = false;
+		threadLock.unlock();
 	}
 }
 

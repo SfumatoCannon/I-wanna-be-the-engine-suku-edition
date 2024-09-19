@@ -1383,8 +1383,10 @@ namespace suku
 	void Room::paint()
 	{
 		static Shape A(SquareShape(64));
+		static Shape B = A;
 		static ID2D1Brush* brush1 = createSolidColorBrush(Color(255, 0, 0));
-		A.paint(32, 64, brush1, brush1);
+		B.setTransform(rotation(16, 16, 30));
+		B.paint(32, 64, brush1, brush1);
 		for (auto& x : paintArray)
 			for (auto& obj : x.second)
 				obj->paintBody();
