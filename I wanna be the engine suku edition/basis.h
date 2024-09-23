@@ -51,7 +51,7 @@ namespace suku
 	{
 	public:
 		Shape shape;
-		ShapeCollisionBox(Shape _shape);
+		ShapeCollisionBox(const Shape& _shape);
 		//~ShapeCollisionBox();
 
 		virtual void release()override { shape.originalGeometry->Release(), shape.currentGeometry->Release(); }
@@ -81,7 +81,7 @@ namespace suku
 	{
 	public:
 
-		BitmapSpriteZ(Shape _collisionBox,
+		BitmapSpriteZ(const Shape& _collisionBox,
 			UINT _width, UINT _height, float _centerX, float _centerY,
 			LPCTSTR _path);
 		BitmapSpriteZ(UINT _width, UINT _height,
@@ -118,7 +118,7 @@ namespace suku
 		ID2D1Brush* outlineBrush;
 		ID2D1StrokeStyle* outlineStrokeStyle;
 		float outlineWidth;
-		ShapeSpriteZ(Shape _shape);
+		ShapeSpriteZ(const Shape& _shape);
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
 			float _xScale = 1.0, float _yScale = 1.0, float _angle = 0.0);

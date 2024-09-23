@@ -71,6 +71,7 @@ void updateWork()
 			if (nowRoom)
 				nowRoom->update();
 		}
+
 		resetKey();
 
 		threadLock.unlock();

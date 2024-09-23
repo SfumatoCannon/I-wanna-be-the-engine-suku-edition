@@ -54,14 +54,15 @@ namespace suku
 		//ID2D1StrokeStyle* outlineStrokeStyle;
 		//float outlineWidth;
 
-		Shape& operator= (Shape& _x)const = delete;
-		//Shape& operator= (Shape& _x);
+		//Shape& operator= (Shape& _x)const = delete;
 
 		Shape();
+		Shape(const Shape& _x);
 		Shape(ID2D1Geometry* _geometry);
 		//Shape(ID2D1Geometry* _geometry, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush,
 		//	float _edgeWidth = 1.0, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
-		//~Shape();
+		void join();
+		~Shape();
 
 		void setOriginalGeometry(ID2D1Geometry* _geometry);
 		void setTransform(Transform _transform);
@@ -77,11 +78,11 @@ namespace suku
 
 		bool isCrashed(Shape& _x);
 
-		void operator=(Shape& _x);
-		Shape operator-(Shape& _x);
-		Shape operator&(Shape& _x);
-		Shape operator|(Shape& _x);
-		Shape operator^(Shape& _x);
+		Shape& operator= (const Shape& _x);
+		Shape operator-(const Shape& _x);
+		Shape operator&(const Shape& _x);
+		Shape operator|(const Shape& _x);
+		Shape operator^(const Shape& _x);
 
 		bool operator==(const Shape& other) const = default;
 	};

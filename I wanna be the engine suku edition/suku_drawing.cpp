@@ -612,15 +612,58 @@ namespace suku
 		currentGeometry = nullptr;
 	}
 
+	Shape::Shape(const Shape& _x)
+	{
+		transform = _x.transform;
+		if (_x.originalGeometry)
+		{
+			originalGeometry = _x.originalGeometry;
+			originalGeometry->AddRef();
+			if (_x.currentGeometry)
+			{
+				currentGeometry = _x.currentGeometry;
+				currentGeometry->AddRef();
+			}
+			else
+			{
+				g_pD2DFactory->
+					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+			}
+		}
+		else
+		{
+			originalGeometry = nullptr;
+			currentGeometry = nullptr;
+		}
+	}
 
 	Shape::Shape(ID2D1Geometry* _geometry)
 	{
+		originalGeometry = nullptr;
 		transform = Transform();
+		currentGeometry = nullptr;
 		setOriginalGeometry(_geometry);
+	}
+
+	void Shape::join()
+	{
+		if (originalGeometry)
+			originalGeometry->AddRef();
+		if (currentGeometry)
+			currentGeometry->AddRef();
+	}
+
+	Shape::~Shape()
+	{
+		SAFE_RELEASE(originalGeometry);
+		SAFE_RELEASE(currentGeometry);
 	}
 
 	void Shape::setOriginalGeometry(ID2D1Geometry* _geometry)
 	{
+		SAFE_RELEASE(originalGeometry);
+		SAFE_RELEASE(currentGeometry);
+		_geometry->AddRef();
 		originalGeometry = _geometry;
 		g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 	}
@@ -628,6 +671,7 @@ namespace suku
 	void Shape::setTransform(Transform _transform)
 	{
 		transform = _transform;
+		SAFE_RELEASE(currentGeometry);
 		g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 	}
 
@@ -677,14 +721,35 @@ namespace suku
 		else return true;
 	}
 
-	void Shape::operator=(Shape& _x)
+	Shape& Shape::operator=(const Shape& _x)
 	{
-		originalGeometry = _x.originalGeometry;
 		transform = _x.transform;
-		currentGeometry = _x.currentGeometry;
+		SAFE_RELEASE(originalGeometry);
+		SAFE_RELEASE(currentGeometry);
+		if (_x.originalGeometry)
+		{
+			originalGeometry = _x.originalGeometry;
+			originalGeometry->AddRef();
+			if (_x.currentGeometry)
+			{
+				currentGeometry = _x.currentGeometry;
+				currentGeometry->AddRef();
+			}
+			else
+			{
+				g_pD2DFactory->
+					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+			}
+		}
+		else
+		{
+			originalGeometry = nullptr;
+			currentGeometry = nullptr;
+		}
+		return (*this);
 	}
 
-	Shape Shape::operator-(Shape& _x)
+	Shape Shape::operator-(const Shape& _x)
 	{
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
@@ -710,7 +775,7 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	Shape Shape::operator&(Shape& _x)
+	Shape Shape::operator&(const Shape& _x)
 	{
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
@@ -736,7 +801,7 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	Shape Shape::operator|(Shape& _x)
+	Shape Shape::operator|(const Shape& _x)
 	{
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
@@ -762,7 +827,7 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	Shape Shape::operator^(Shape& _x)
+	Shape Shape::operator^(const Shape& _x)
 	{
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
@@ -801,6 +866,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		SAFE_RELEASE(newGeometry);
 	}
 
 	RectangleShape::RectangleShape(float _width, float _height, float _beginningX, float _beginningY)
@@ -816,6 +882,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		SAFE_RELEASE(newGeometry);
 	}
 
 	CircleShape::CircleShape(float _radius, float _beginningX, float _beginningY)
@@ -833,6 +900,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		SAFE_RELEASE(newGeometry);
 	}
 
 	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _beginningX, float _beginningY)
@@ -850,6 +918,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		SAFE_RELEASE(newGeometry);
 	}
 
 	Transform::Transform()

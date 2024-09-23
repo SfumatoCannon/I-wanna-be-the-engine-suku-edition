@@ -86,6 +86,7 @@ namespace suku
 				if (hitArea[i][j])
 				{
 					pixelShape.currentGeometry->CompareWithGeometry(
+
 						_other.shape.currentGeometry,
 						((_transform + translation((float)i, (float)j)).invertTransform()
 							+ _otherTransform).matrix,
@@ -102,7 +103,7 @@ namespace suku
 		return _other.isCrashed(_otherTransform, *this, _transform);
 	}
 
-	ShapeCollisionBox::ShapeCollisionBox(Shape _shape)
+	ShapeCollisionBox::ShapeCollisionBox(const Shape& _shape)
 	{
 		shape = _shape;
 	}
@@ -1382,8 +1383,8 @@ namespace suku
 
 	void Room::paint()
 	{
-		static Shape A(SquareShape(64));
-		static Shape B = A;
+		Shape A(SquareShape(64));
+		Shape B = A;
 		static ID2D1Brush* brush1 = createSolidColorBrush(Color(255, 0, 0));
 		B.setTransform(rotation(16, 16, 30));
 		B.paint(32, 64, brush1, brush1);
@@ -1480,7 +1481,7 @@ namespace suku
 		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(Shape _collisionBox, UINT _width, UINT _height,
+	BitmapSpriteZ::BitmapSpriteZ(const Shape& _collisionBox, UINT _width, UINT _height,
 		float _centerX, float _centerY, LPCTSTR _path)
 	{
 		pBitmap_ = nullptr;
@@ -1775,7 +1776,7 @@ namespace suku
 		}
 	}
 
-	ShapeSpriteZ::ShapeSpriteZ(Shape _shape)
+	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape)
 	{
 		fillBrush = outlineBrush = nullptr;
 		outlineStrokeStyle = nullptr;
