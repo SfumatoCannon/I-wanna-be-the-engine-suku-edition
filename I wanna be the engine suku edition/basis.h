@@ -85,10 +85,10 @@ namespace suku
 			UINT _width, UINT _height, float _centerX, float _centerY,
 			LPCTSTR _path);
 		BitmapSpriteZ(UINT _width, UINT _height,
-			int _judgeX, int _judgeY,
-			UINT _judgeWidth, UINT _judgeWeight,
+			int _hitboxX, int _hitboxY,
+			UINT _hitboxWidth, UINT _hitboxWeight,
 			float _centerX, float _centerY,
-			bool _getAutoJudge = false, LPCTSTR _path = nullptr);
+			bool _getAutoHitbox = false, LPCTSTR _path = nullptr);
 		BitmapSpriteZ(LPCTSTR _path, float _centerX = 0, float _centerY = 0);
 		BitmapSpriteZ(BitmapCollisionBox _collisionBox,
 			UINT _width, UINT _height, float _centerX = 0, float _centerY = 0, LPCTSTR _path = nullptr);

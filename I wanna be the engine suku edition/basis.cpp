@@ -1385,9 +1385,12 @@ namespace suku
 	{
 		Shape A(SquareShape(64));
 		Shape B = A;
+		A = CircleShape(32);
 		static ID2D1Brush* brush1 = createSolidColorBrush(Color(255, 0, 0));
+		static ID2D1Brush* brush2 = createSolidColorBrush(Color(125, 125, 0, 0.4f));
 		B.setTransform(rotation(16, 16, 30));
 		B.paint(32, 64, brush1, brush1);
+		A.paint(32, 128, brush2, brush1);
 		for (auto& x : paintArray)
 			for (auto& obj : x.second)
 				obj->paintBody();
@@ -1498,9 +1501,9 @@ namespace suku
 	}
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
-		int _judgeX, int _judgeY, UINT _judgeWidth, UINT _judgeHeight,
+		int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
 		float _centerX, float _centerY,
-		bool _getAutoJudge, LPCTSTR _path)
+		bool _getAutoHitbox, LPCTSTR _path)
 	{
 		pBitmap_ = nullptr;
 		//d2d1Bitmap_ = nullptr;
@@ -1512,13 +1515,13 @@ namespace suku
 		catchBitmap(_path);
 		//catchWicBitmap(_path);
 		//catchD2dBitmap();
-		if (_getAutoJudge)
+		if (_getAutoHitbox)
 		{
-			hitArea = new BitmapCollisionBox(pBitmap_, _judgeX, _judgeY);
+			hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY);
 		}
 		else
 		{
-			RectangleShape newCollisionBoxShape((float)_judgeWidth, (float)_judgeHeight, (float)_judgeX, (float)_judgeY);
+			RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
 			hitArea = new ShapeCollisionBox(newCollisionBoxShape);
 		}
 	}

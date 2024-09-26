@@ -104,7 +104,6 @@ namespace suku
 		short nowBloodNum_;
 		Object* deathBlood_[PLAYER_BLOODNUMMAX];
 		short jumpTime_;
-		short state_;
 		bool side_;
 		bool isDied_;
 		bool isOnPlatform_;

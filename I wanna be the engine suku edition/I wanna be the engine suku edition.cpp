@@ -14,6 +14,9 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+bool gameEndFlag = false;
+void endGame() {gameEndFlag = true;}
+
 int fps = MAXFPS;
 
 void Initialization()
@@ -44,13 +47,21 @@ void Sender()
 	double paintTick = 0;
 	auto updateAndPaintWork = []() {updateWork(), paintWork(); };
 	
+	std::future<void> task = std::async(updateAndPaintWork);
+
 	if (MAXFPS == 50)
 	{
 		while (1)
 		{
 			Sleep(20);
-			std::thread thread(updateAndPaintWork);
-			thread.detach();
+			task.get();
+			if (gameEndFlag == true)
+			{
+				PostMessage(hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+			else
+				task = std::async(updateAndPaintWork);
 		}
 	}
 }
@@ -64,8 +75,8 @@ void updateWork()
 	{
 		keyCheck();
 
-		if (isKeyDown[VK_ESCAPE])
-			PostMessage(hWnd, WM_QUIT, 0, 0);
+		if (isKeyDown[VK_ESCAPE] && !gameEndFlag)
+			endGame();
 		else
 		{
 			if (nowRoom)
@@ -83,17 +94,12 @@ void paintWork()
 	using namespace suku;
 	if (threadLock.try_lock())
 	{
-		beginDraw(hWnd);
-		nowRoom->paint();
-		static SquareShape a(100.0, 96, 96);
-		static SquareShape b(100.0, 96, 96);
-		a.setTransform(rotation(96 + 50, 96 + 50, 30) * translation(96, 0));
-		static ShapeSpriteZ c(a | b);
-		c.setFillColor(150, 30, 70, 1.0);
-		c.setOutlineColor(0, 0, 0, 1.0);      
-		c.outlineWidth = 4;
-
-		endDraw();
+		if (!gameEndFlag)
+		{
+			beginDraw(hWnd);
+			nowRoom->paint();
+			endDraw();
+		}
 		threadLock.unlock();
 	}
 }

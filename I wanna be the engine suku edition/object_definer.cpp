@@ -198,13 +198,12 @@ namespace suku
 		paintId_ = 3;
 		isInfinityJump = false;
 		isFrozen = false;
-		maxJumpTime = PLAYER_JUMPTIME;
+		maxJumpTime = 2;
 		movingSpeed = PLAYER_MOVINGSPEED;
 		gravity = VALUE_G;
 		spawnX = _x;
 		spawnY = _y;
 		side_ = SIDE_RIGHT;
-		state_ = STATE_STAND;
 		jumpTime_ = maxJumpTime;
 		nowBloodNum_ = 0;
 		setReviseStateId(0);
@@ -621,9 +620,6 @@ namespace suku
 
 	Box::Box(float _x, float _y) :Object(_x, _y)
 	{
-		//setKind(ID_BOX);
-		setUpdateStateId(ID_PLAYER - 1);
-		setRecheckStateId(ID_PLAYER - 1);
 		paintId_ = 2;
 		sprite_ = &sprBox;
 		gravity = 0.4f;
