@@ -14,40 +14,40 @@ namespace suku
 	inline void spritePreSet()
 	{
 		// preset other sprites
-		sprCherry.push({ 21, 24, 0, 0, 21, 24, 10, 12, true, _T("Image\\cherry1.png") });
+		sprCherry.push(BitmapSpriteZ(_T("Image\\cherry1.png"), 10, 12));
 
-		sprCherry.push({ 21, 24, 0, 0, 21, 24, 10, 12, true, _T("Image\\cherry2.png") });
+		sprCherry.push(BitmapSpriteZ(_T("Image\\cherry2.png"), 10, 12));
 
 		sprCherry.setSpeed(25);
-	
-		sprWall.push(BitmapSpriteZ(SquareShape(32), 32, 32, 16, 16, _T("Image\\wall.png")));
 
-		sprSpikeUp.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, true, _T("Image\\spike_u.png")));
+		sprWall.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\wall.png")));
 
-		sprSpikeDown.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, true, _T("Image\\spike_d.png")));
+		sprSpikeUp.push(BitmapSpriteZ(_T("Image\\spike_u.png"), 16, 16));
 
-		sprSpikeLeft.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, true, _T("Image\\spike_l.png")));
+		sprSpikeDown.push(BitmapSpriteZ(_T("Image\\spike_d.png"), 16, 16));
 
-		sprSpikeRight.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, true, _T("Image\\spike_r.png")));
+		sprSpikeLeft.push(BitmapSpriteZ(_T("Image\\spike_l.png"), 16, 16));
 
-		sprWater.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, false, _T("Image\\water_noextrajump.png")));
+		sprSpikeRight.push(BitmapSpriteZ(_T("Image\\spike_r.png"), 16, 16));
 
-		sprWaterExtraJump.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, false, _T("Image\\water_extrajump.png")));
+		sprWater.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\water_noextrajump.png")));
 
-		sprTrigger.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, false, nullptr));
+		sprWaterExtraJump.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\water_extrajump.png")));
 
-		sprBlood.push(BitmapSpriteZ(SquareShape(2), 0, 0, 2, 2, _T("Image\\blood.png")));
+		sprTrigger.push(ShapeSpriteZ(SquareShape(32)));
 
-		sprWarp.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, true, _T("Image\\warp.png")));
+		sprBlood.push(BitmapSpriteZ(2, 2, SquareShape(2), 1, 1, _T("Image\\blood.png")));
 
-		sprPlatform.push(BitmapSpriteZ(32, 16, 0, 0, 32, 16, 16, 8, false, _T("Image\\platform.png")));
+		sprWarp.push(BitmapSpriteZ(_T("Image\\warp.png"), 16, 16));
+
+		sprPlatform.push(BitmapSpriteZ(32, 16, RectangleShape(32, 16), 16, 8, _T("Image\\platform.png")));
 
 		//sprVineLeft.push(BitmapSpriteZ(RectangleShape(14, 32, 18, 0), 32, 32, 16, 16, _T("Image\\walljump_l.png")));
-		sprVineLeft.push(BitmapSpriteZ(32, 32, 18, 0, 14, 32, 0, 0, false, _T("Image\\walljump_l.png")));
+		sprVineLeft.push(BitmapSpriteZ(32, 32, RectangleShape(14, 32, 18, 0), 16, 16, _T("Image\\walljump_l.png")));
 
-		sprVineRight.push(BitmapSpriteZ(32, 32, 0, 0, 14, 32, 0, 0, false, _T("Image\\walljump_r.png")));
+		sprVineRight.push(BitmapSpriteZ(32, 32, RectangleShape(14, 32, 0, 0), 16, 16, _T("Image\\walljump_r.png")));
 
-		sprBox.push(BitmapSpriteZ(32, 32, 0, 0, 32, 32, 16, 16, false, _T("Image\\box.png")));
+		sprBox.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\box.png")));
 
 		//preset player sprites
 		short i;
@@ -56,9 +56,8 @@ namespace suku
 		{
 			_stprintf_s(path, _T("Image\\player_stand%d.png"), i + 1);
 
-			sprPlayerIdle.push(BitmapSpriteZ(
+			sprPlayerIdle.push(BitmapSpriteZ(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
-				PLAYER_WIDTH, PLAYER_HEIGHT,
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
 		sprPlayerIdle.setSpeed(BMPSPEED_STANDING);
@@ -66,9 +65,8 @@ namespace suku
 		{
 			_stprintf_s(path, _T("Image\\player_running%d.png"), i + 1);
 
-			sprPlayerRunning.push(BitmapSpriteZ(
+			sprPlayerRunning.push(BitmapSpriteZ(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
-				PLAYER_WIDTH, PLAYER_HEIGHT,
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
 		sprPlayerRunning.setSpeed(BMPSPEED_RUNNING);
@@ -76,9 +74,8 @@ namespace suku
 		{
 			_stprintf_s(path, _T("Image\\player_jump%d.png"), i + 1);
 
-			sprPlayerJumping.push(BitmapSpriteZ(
+			sprPlayerJumping.push(BitmapSpriteZ(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
-				PLAYER_WIDTH, PLAYER_HEIGHT,
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
 		sprPlayerJumping.setSpeed(BMPSPEED_JUMPING);
@@ -86,9 +83,8 @@ namespace suku
 		{
 			_stprintf_s(path, _T("Image\\player_fall%d.png"), i + 1);
 
-			sprPlayerFalling.push(BitmapSpriteZ(
+			sprPlayerFalling.push(BitmapSpriteZ(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
-				PLAYER_WIDTH, PLAYER_HEIGHT,
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
 		sprPlayerFalling.setSpeed(BMPSPEED_FALLING);
@@ -96,9 +92,8 @@ namespace suku
 		{
 			_stprintf_s(path, _T("Image\\player_sliding%d.png"), i + 1);
 
-			sprPlayerSliding.push(BitmapSpriteZ(
+			sprPlayerSliding.push(BitmapSpriteZ(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
-				PLAYER_WIDTH, PLAYER_HEIGHT,
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
 		sprPlayerSliding.setSpeed(BMPSPEED_SLIDING);

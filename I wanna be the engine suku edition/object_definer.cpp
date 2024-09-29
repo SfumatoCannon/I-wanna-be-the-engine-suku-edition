@@ -317,7 +317,7 @@ namespace suku
 	{
 		short i;
 		i = 0;
-		BitmapSpriteZ* body2 = nowState();
+		SpriteZ* body2 = nowState();
 		if (!body2)
 			return;
 		while (nowBloodNum_ < PLAYER_BLOODNUMMAX)

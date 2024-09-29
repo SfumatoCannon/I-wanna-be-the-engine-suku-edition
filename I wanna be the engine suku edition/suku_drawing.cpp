@@ -496,7 +496,7 @@ namespace suku
 		return { width, height };
 	}
 
-	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* pBitmap, BYTE _alphaThreshold)
+	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* pBitmap, float _alphaThreshold)
 	{
 		if (!pBitmap) return;
 		if (!_pHitArea) return;
@@ -511,6 +511,7 @@ namespace suku
 		BYTE* pv = nullptr;
 
 		pILock->GetDataPointer(&cbBufferSize, &pv);
+		BYTE alphaThreshold = (BYTE)(_alphaThreshold * 255.0f);
 		if (pv)
 		{
 			for (unsigned int i = 0; i < width * 4; i += 4)
@@ -518,7 +519,7 @@ namespace suku
 				{
 					UINT k = i + j * width * 4;
 
-					if (k + 3 < cbBufferSize && pv[k + 3] <= _alphaThreshold)
+					if (k + 3 < cbBufferSize && pv[k + 3] <= alphaThreshold)
 						_pHitArea[i / 4][j] = 0;
 					else _pHitArea[i / 4][j] = 1;
 				}
@@ -526,14 +527,15 @@ namespace suku
 		pILock->Release();
 	}
 
-	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _bitmap, BYTE _alphaThreshold)
+	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _bitmap, float _alphaThreshold)
 	{
 		if (!_pHitArea)
 			return;
 		UINT width = _bitmap.getWidth();
+		BYTE alphaThreshold = (BYTE)(_alphaThreshold * 255.0f);
 		_bitmap.viewPixelDetail([&](const BYTE* _pv, const UINT _x, const UINT _y, const UINT _k)
 			{
-				if (_pv[_k + 3] <= _alphaThreshold)
+				if (_pv[_k + 3] <= alphaThreshold)
 					_pHitArea[_x][_y] = 0;
 				else _pHitArea[_x][_y] = 1;
 			});
@@ -647,10 +649,8 @@ namespace suku
 
 	void Shape::join()
 	{
-		if (originalGeometry)
-			originalGeometry->AddRef();
-		if (currentGeometry)
-			currentGeometry->AddRef();
+		SAFE_ADDREF(originalGeometry);
+		SAFE_ADDREF(currentGeometry);
 	}
 
 	Shape::~Shape()
@@ -663,9 +663,14 @@ namespace suku
 	{
 		SAFE_RELEASE(originalGeometry);
 		SAFE_RELEASE(currentGeometry);
-		_geometry->AddRef();
-		originalGeometry = _geometry;
-		g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+		if (_geometry)
+		{
+			_geometry->AddRef();
+			originalGeometry = _geometry;
+			g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+		}
+		else
+			originalGeometry = currentGeometry = nullptr;
 	}
 
 	void Shape::setTransform(Transform _transform)

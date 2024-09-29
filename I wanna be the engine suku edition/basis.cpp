@@ -17,7 +17,7 @@ namespace suku
 		hitWidth = _hitWidth, hitHeight = _hitHeight;
 	}
 
-	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, BYTE _alphaThreshold)
+	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, float _alphaThreshold)
 	{
 		auto [width, height] = getSizeFromWICBitmap(_bitmap);
 		hitWidth = width, hitHeight = height;
@@ -26,7 +26,7 @@ namespace suku
 		getHitAreaFromBitmap(hitArea, _bitmap, _alphaThreshold);
 	}
 
-	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, BYTE _alphaThreshold)
+	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, float _alphaThreshold)
 	{
 		if (_pBitmap == nullptr)
 		{
@@ -154,37 +154,15 @@ namespace suku
 
 	bool SpriteZ::isCrashed(Transform _transform, const SpriteZ& _other, Transform _otherTransform)const
 	{
-		//float x1 = 0, y1 = 0, x2 = width, y2 = height;
-		//float ox1 = 0, oy1 = 0, ox2 = _other.width, oy2 = _other.height;
-		//_transform.transformPoint(x1, y1);
-		//_transform.transformPoint(x2, y2);
-		//_otherTransform.transformPoint(ox1, oy1);
-		//_otherTransform.transformPoint(ox2, oy2);
-		//float midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
-		//float midOx = (ox1 + ox2) / 2, midOy = (oy1 + oy2) / 2;
-		//float disX = x1 - x2, disY = y1 - y2;
-		//float disOx = ox1 - ox2, disOy = oy1 - oy2;
-		//float disMidX = midOx - midX, disMidY = midOy - midY;
-		//if (disX * disX + disY * disY + disOx * disOx + disOy * disOy < disMidX * disMidX + disMidY * disMidY)
-		//	return false;
+		if (!hitArea || !(_other.hitArea))
+			return false;
 		return hitArea->isCrashed(_transform, *(_other.hitArea), _otherTransform);
 	}
 
 	bool SpriteZ::isCrashed(Transform _transform, const SpriteZ* _other, Transform _otherTransform)const
 	{
-		//float x1 = 0, y1 = 0, x2 = width, y2 = height;
-		//float ox1 = 0, oy1 = 0, ox2 = _other->width, oy2 = _other->height;
-		//_transform.transformPoint(x1, y1);
-		//_transform.transformPoint(x2, y2);
-		//_otherTransform.transformPoint(ox1, oy1);
-		//_otherTransform.transformPoint(ox2, oy2);
-		//float midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
-		//float midOx = (ox1 + ox2) / 2, midOy = (oy1 + oy2) / 2;
-		//float disX = x1 - x2, disY = y1 - y2;
-		//float disOx = ox1 - ox2, disOy = oy1 - oy2;
-		//float disMidX = midOx - midX, disMidY = midOy - midY;
-		//if (disX * disX + disY * disY + disOx * disOx + disOy * disOy < disMidX * disMidX + disMidY * disMidY)
-		//	return false;
+		if (!hitArea || !(_other->hitArea))
+			return false;
 		return hitArea->isCrashed(_transform, *(_other->hitArea), _otherTransform);
 	}
 
@@ -192,7 +170,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		BitmapSpriteZ* spr = nowState();
+		SpriteZ* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -204,7 +182,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		BitmapSpriteZ* spr = nowState();
+		SpriteZ* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -233,7 +211,7 @@ namespace suku
 		y = spawnY;
 	}
 
-	BitmapSpriteZ* Object::nowState()const
+	SpriteZ* Object::nowState()const
 	{
 		if (!sprite_)
 			return nullptr;
@@ -1484,7 +1462,7 @@ namespace suku
 		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(const Shape& _collisionBox, UINT _width, UINT _height,
+	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
 		float _centerX, float _centerY, LPCTSTR _path)
 	{
 		pBitmap_ = nullptr;
@@ -1500,33 +1478,58 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
+	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
+	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
+	//	float _centerX, float _centerY,
+	//	bool _getAutoHitbox, LPCTSTR _path)
+	//{
+	//	pBitmap_ = nullptr;
+	//	width = _width;
+	//	height = _height;
+	//	centerX = _centerX;
+	//	centerY = _centerY;
+	//	catchBitmap(_path);
+	//	if (_getAutoHitbox)
+	//	{
+	//		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY);
+	//	}
+	//	else
+	//	{
+	//		RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
+	//		hitArea = new ShapeCollisionBox(newCollisionBoxShape);
+	//	}
+	//}
+
+	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
+	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
+	//	float _centerX, float _centerY,
+	//	LPCTSTR _path)
+	//{
+	//	pBitmap_ = nullptr;
+	//	width = _width;
+	//	height = _height;
+	//	centerX = _centerX;
+	//	centerY = _centerY;
+	//	catchBitmap(_path);
+	//	RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
+	//	hitArea = new ShapeCollisionBox(newCollisionBoxShape);
+	//}
+
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
-		int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
-		float _centerX, float _centerY,
-		bool _getAutoHitbox, LPCTSTR _path)
+		int _hitboxX, int _hitboxY,
+		LPCTSTR _path,
+		float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
-		//d2d1Bitmap_ = nullptr;
-		//wicBitmap_ = nullptr;
 		width = _width;
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
 		catchBitmap(_path);
-		//catchWicBitmap(_path);
-		//catchD2dBitmap();
-		if (_getAutoHitbox)
-		{
-			hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY);
-		}
-		else
-		{
-			RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
-			hitArea = new ShapeCollisionBox(newCollisionBoxShape);
-		}
+		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(LPCTSTR _path, float _centerX, float _centerY)
+	BitmapSpriteZ::BitmapSpriteZ(LPCTSTR _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 
@@ -1541,13 +1544,17 @@ namespace suku
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
+			hitArea = new BitmapCollisionBox(pBitmap_, 0, 0);
 		}
 		else
+		{
 			width = height = 0;
+			hitArea = nullptr;
+		}
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(BitmapCollisionBox _collisionBox,
-		UINT _width, UINT _height, float _centerX, float _centerY, LPCTSTR _path)
+	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+		float _centerX, float _centerY, LPCTSTR _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;
@@ -1572,36 +1579,16 @@ namespace suku
 		speed_ = 1;
 	}
 
-	void Sprite::operator=(BitmapSpriteZ _spriteZ)
-	{
-		bodyList.clear();
-		bodyList.push_back(_spriteZ);
-	}
-
-	Sprite Sprite::operator+(BitmapSpriteZ _spriteZ)
-	{
-		Sprite resultSprite;
-		resultSprite.bodyList = bodyList;
-		resultSprite.bodyList.push_back(_spriteZ);
-		return resultSprite;
-	}
-
 	void Sprite::setSpeed(unsigned short _speed)
 	{
 		speed_ = _speed;
 	}
 
-	void Sprite::push(const BitmapSpriteZ& _spriteZ)
-	{
-		auto iter = bodyList.insert(bodyList.end(), BitmapSpriteZ());
-		*iter = _spriteZ;
-	}
-
-	BitmapSpriteZ* Sprite::getState(unsigned short _wp)
+	SpriteZ* Sprite::getState(unsigned short _wp)
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else return &bodyList[_wp / speed_ % bodyList.size()];
+		else return bodyList[_wp / speed_ % bodyList.size()];
 	}
 
 	Group Group::operator&(Group& _group)
@@ -1779,12 +1766,76 @@ namespace suku
 		}
 	}
 
-	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape)
+	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, ID2D1Brush* _fillBrush,
+		ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
 	{
-		fillBrush = outlineBrush = nullptr;
-		outlineStrokeStyle = nullptr;
-		outlineWidth = 0.0f;
 		shape = _shape;
+		SAFE_ADDREF(_fillBrush);
+		fillBrush = _fillBrush;
+		SAFE_ADDREF(_outlineBrush);
+		outlineBrush = _outlineBrush;
+
+		outlineWidth = _outlineWidth;
+
+		SAFE_ADDREF(_outlineStrokeStyle);
+		outlineStrokeStyle = _outlineStrokeStyle;
+	}
+
+	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, const Color& _fillColor)
+	{
+		shape = _shape;
+
+		ID2D1SolidColorBrush* newBrush;
+		HRESULT hr;
+		hr = g_pRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
+			&newBrush
+		);
+		if (SUCCEEDED(hr))
+			fillBrush = newBrush;
+		else 
+			fillBrush = nullptr;
+
+		outlineBrush = nullptr;
+		outlineWidth = 0.0f;
+		outlineStrokeStyle = nullptr;
+	}
+
+	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, const Color& _fillColor, 
+		const Color& _outlineColor, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
+	{
+		shape = _shape;
+
+		ID2D1SolidColorBrush* newBrush;
+		HRESULT hr;
+		hr = g_pRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
+			&newBrush
+		);
+		if (SUCCEEDED(hr))
+			fillBrush = newBrush;
+		else
+			fillBrush = nullptr;
+		//Reference count is still 1, no need to release
+		hr = g_pRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(_outlineColor.r() / 255.0f, _outlineColor.g() / 255.0f, _outlineColor.b() / 255.0f, _outlineColor.alpha),
+			&newBrush
+		);
+		if (SUCCEEDED(hr))
+			outlineBrush = newBrush;
+		else
+			outlineBrush = nullptr;
+
+		outlineWidth = _outlineWidth;
+		SAFE_ADDREF(_outlineStrokeStyle);
+		outlineStrokeStyle = _outlineStrokeStyle;
+	}
+
+	ShapeSpriteZ::~ShapeSpriteZ()
+	{
+		SAFE_RELEASE(fillBrush);
+		SAFE_RELEASE(outlineBrush);
+		SAFE_RELEASE(outlineStrokeStyle);
 	}
 
 	void ShapeSpriteZ::setShapeTransform(Transform _transform)
@@ -1809,28 +1860,28 @@ namespace suku
 		shape.paint(_paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
 	}
 
-	void ShapeSpriteZ::setFillColor(int _R, int _G, int _B, float _alpha)
+	void ShapeSpriteZ::setFillColor(const Color& _color)
 	{
 		if (fillBrush != nullptr)
 			SAFE_RELEASE(fillBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
 		hr = g_pRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_R / 255.0f, _G / 255.0f, _B / 255.0f, _alpha),
+			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
 			fillBrush = newBrush;
 	}
 
-	void ShapeSpriteZ::setOutlineColor(int _R, int _G, int _B, float _alpha)
+	void ShapeSpriteZ::setOutlineColor(const Color& _color)
 	{
 		if (outlineBrush != nullptr)
 			SAFE_RELEASE(outlineBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
 		hr = g_pRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_R / 255.0f, _G / 255.0f, _B / 255.0f, _alpha),
+			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
 			&newBrush
 		);
 		if (SUCCEEDED(hr))

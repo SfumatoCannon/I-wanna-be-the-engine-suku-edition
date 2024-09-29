@@ -4,7 +4,8 @@
 
 namespace suku
 {
-#define SAFE_RELEASE(P) if(P){P -> Release(); P = NULL;}
+#define SAFE_ADDREF(P) if(P) P->AddRef();
+#define SAFE_RELEASE(P) if(P){P -> Release(); P = nullptr;}
 
 	class Transform;
 	class Shape;
@@ -12,8 +13,8 @@ namespace suku
 	class Color;
 	class Effect;
 
-	extern ID2D1Factory* g_pD2DFactory;	// Direct2D factory
-	extern ID2D1HwndRenderTarget* g_pRenderTarget;	// Render target
+	extern ID2D1Factory* g_pD2DFactory;
+	extern ID2D1HwndRenderTarget* g_pRenderTarget;
 	extern IWICImagingFactory* g_pIWICFactory;
 
 	extern TCHAR strPath[MAX_PATH + 1];
@@ -158,27 +159,27 @@ namespace suku
 	class Color
 	{
 	public:
-		float alpha;
+		float alpha;	//range: 0.0f ~ 1.0f
 
 		Color();
 		Color(float _r, float _g, float _b, float _alpha = 1.0f);
 
-		float r()const { return r_; }
-		float g()const { return g_; }
-		float b()const { return b_; }
+		inline float r()const { return r_; }
+		inline float g()const { return g_; }
+		inline float b()const { return b_; }
 		float h()const;
 		float s()const;
 		float v()const;
-		void setR(float _r) { r_ = _r; }
-		void setG(float _g) { g_ = _g; }
-		void setB(float _b) { b_ = _b; }
-		void setRGB(float _r, float _g, float _b) { r_ = _r, g_ = _g, b_ = _b; }
+		inline void setR(float _r) { r_ = _r; }
+		inline void setG(float _g) { g_ = _g; }
+		inline void setB(float _b) { b_ = _b; }
+		inline void setRGB(float _r, float _g, float _b) { r_ = _r, g_ = _g, b_ = _b; }
 		void setH(float _h);
 		void setS(float _s);
 		void setV(float _v);
 		void setHSV(float _h, float _s, float _v);
 	private:
-		float r_, g_, b_;
+		float r_, g_, b_;	//range: 0.0f ~ 255.0f
 	};
 
 	class Effect
@@ -228,8 +229,8 @@ namespace suku
 	ID2D1Brush* createSolidColorBrush(const Color _color);
 
 	std::pair<UINT, UINT> getSizeFromWICBitmap(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
-	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* _pBitmap, BYTE _alphaThreshold = 0);
-	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _pBitmap, BYTE _alphaThreshold = 0);
+	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* _pBitmap, float _alphaThreshold = 0.0f);
+	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _pBitmap, float _alphaThreshold = 0.0f);
 	//void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
 	//	float _width, float _height, float _alpha,
 	//	float _angle, float _rotatingCenterX, float _rotatingCenterY);

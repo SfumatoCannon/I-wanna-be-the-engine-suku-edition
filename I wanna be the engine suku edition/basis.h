@@ -36,8 +36,8 @@ namespace suku
 		int hitX, hitY;
 		UINT hitWidth, hitHeight;
 		BitmapCollisionBox(bool** _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
-		BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, BYTE _alphaThreshold = 0);
-		BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, BYTE _alphaThreshold = 0);
+		BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, float _alphaThreshold = 0.0f);
+		BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
 
 		virtual void release()override { free2D(hitArea, hitWidth, hitHeight); }
@@ -46,7 +46,7 @@ namespace suku
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const override;
 	};
-	
+
 	class ShapeCollisionBox :public CollisionBox
 	{
 	public:
@@ -69,10 +69,10 @@ namespace suku
 		SpriteZ() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
 
 		virtual void paint(float _x, float _y,
-			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) = 0;
+			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) {};
 		virtual void paint(float _x, float _y,
-			Transform _transform, float _alpha = 1.0) = 0;
-		virtual void paint(Transform _transform, float _alpha = 1.0) = 0;
+			Transform _transform, float _alpha = 1.0) {};
+		virtual void paint(Transform _transform, float _alpha = 1.0) {};
 		bool isCrashed(Transform _transform, const SpriteZ& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteZ* _other, Transform _otherTransform)const;
 	};
@@ -81,17 +81,24 @@ namespace suku
 	{
 	public:
 
-		BitmapSpriteZ(const Shape& _collisionBox,
-			UINT _width, UINT _height, float _centerX, float _centerY,
-			LPCTSTR _path);
+		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
+			float _centerX = 0.0f, float _centerY = 0.0f,
+			LPCTSTR _path = nullptr);
+		//BitmapSpriteZ(UINT _width, UINT _height,
+		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
+		//	float _centerX = 0.0f, float _centerY = 0.0f,
+		//	bool _getAutoHitbox = false, LPCTSTR _path = nullptr);
+		//BitmapSpriteZ(UINT _width, UINT _height,
+		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
+		//	float _centerX = 0.0f, float _centerY = 0.0f,
+		//	LPCTSTR _path = nullptr);
 		BitmapSpriteZ(UINT _width, UINT _height,
 			int _hitboxX, int _hitboxY,
-			UINT _hitboxWidth, UINT _hitboxWeight,
-			float _centerX, float _centerY,
-			bool _getAutoHitbox = false, LPCTSTR _path = nullptr);
-		BitmapSpriteZ(LPCTSTR _path, float _centerX = 0, float _centerY = 0);
-		BitmapSpriteZ(BitmapCollisionBox _collisionBox,
-			UINT _width, UINT _height, float _centerX = 0, float _centerY = 0, LPCTSTR _path = nullptr);
+			LPCTSTR _path,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		BitmapSpriteZ(LPCTSTR _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+			float _centerX = 0, float _centerY = 0, LPCTSTR _path = nullptr);
 		BitmapSpriteZ();
 
 		void catchBitmap(LPCTSTR _path);
@@ -118,14 +125,19 @@ namespace suku
 		ID2D1Brush* outlineBrush;
 		ID2D1StrokeStyle* outlineStrokeStyle;
 		float outlineWidth;
-		ShapeSpriteZ(const Shape& _shape);
+		ShapeSpriteZ(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
+			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 0.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor);
+		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor,
+			const Color& _outlineColor, float _outlineWidth = 0.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+		~ShapeSpriteZ();
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
 			float _xScale = 1.0, float _yScale = 1.0, float _angle = 0.0);
 		void paint(float _x, float _y, Transform _paintingTransform);
 		void paint(Transform _paintingTransform);
-		void setFillColor(int _R, int _G, int _B, float _alpha = 1.0);
-		void setOutlineColor(int _R, int _G, int _B, float _alpha = 1.0);
+		void setFillColor(const Color& _color);
+		void setOutlineColor(const Color& _color);
 		void setOutlineWidth(int _width);
 
 		virtual void paint(float _x, float _y,
@@ -138,16 +150,18 @@ namespace suku
 	class Sprite
 	{
 	public:
-		std::vector<BitmapSpriteZ> bodyList;
+		std::vector<SpriteZ*> bodyList;
 		Sprite();
 		//Sprite(BitmapSpriteZ _spriteZ);
-		//Sprite(BitmapSpriteZ _spriteZ1, BitmapSpriteZ _spriteZ2, ...);
+		//Sprite(BitmapSpriteZ _spriteZ1, BitmapSpriteZ _spriteZ2, 
+		// 
+		// 
+		// );
 		void operator= (Sprite& _sprite)const = delete;
-		void operator= (BitmapSpriteZ _spriteZ);
-		Sprite operator+ (BitmapSpriteZ _spriteZ);
+
 		void setSpeed(unsigned short _speed);
-		void push(const BitmapSpriteZ& _spriteZ);
-		BitmapSpriteZ* getState(unsigned short _wp);
+		template<typename T> void push(const T& _spriteZ);
+		SpriteZ* getState(unsigned short _wp);
 	private:
 		unsigned short speed_;
 	};
@@ -189,7 +203,7 @@ namespace suku
 
 		Var& operator[](std::string _str);
 		Object(float _x = 0, float _y = 0);
-		BitmapSpriteZ* nowState()const;
+		SpriteZ* nowState()const;
 
 		void remove();
 		void destroy();
@@ -806,5 +820,12 @@ namespace suku
 	{
 		collisionInheritTree.unlink<Son>();
 		collisionInheritTree.link<Father, Son>();
+	}
+
+	template<typename T>
+	inline void Sprite::push(const T& _spriteZ)
+	{
+		T* newSpriteZ = new T(_spriteZ);
+		bodyList.push_back(newSpriteZ);
 	}
 }
