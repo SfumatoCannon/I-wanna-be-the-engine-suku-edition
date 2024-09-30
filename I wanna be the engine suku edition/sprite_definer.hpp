@@ -20,7 +20,8 @@ namespace suku
 
 		sprCherry.setSpeed(25);
 
-		sprWall.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\wall.png")));
+		//sprWall.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, _T("Image\\wall.png")));
+		sprWall.push(BitmapSpriteZ(_T("Image\\wall.png"), 16, 16));
 
 		sprSpikeUp.push(BitmapSpriteZ(_T("Image\\spike_u.png"), 16, 16));
 

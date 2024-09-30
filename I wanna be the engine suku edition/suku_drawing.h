@@ -145,11 +145,11 @@ namespace suku
 		void updatePixelDetail(Color** _detail, UINT _startX, UINT _startY);
 		void changePixelDetailRough(std::function<void(Color&)> _changingFunction);
 
-		//Parameters: pixelDetailPointer, x, y, modifying index(for pixelDetailPointer)
-		void changePixelDetail(std::function<void(BYTE*, UINT, UINT, UINT)> _changingFunction);
+		//Parameters: x, y, the corresponding color of position (x,y)
+		void changePixelDetail(std::function<void(UINT, UINT, Color&)> _changingFunction);
 
-		//Parameters: pixelDetailPointer, x, y, viewing index(for pixelDetailPointer)
-		void viewPixelDetail(std::function<void(const BYTE*, const UINT, const UINT, const UINT)> _viewFunction)const;
+		//Parameters: x, y, the corresponding color of position (x,y)
+		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
 	private:
 		UINT width_, height_;
 		ID2D1Bitmap* d2d1Bitmap_;

@@ -533,9 +533,9 @@ namespace suku
 			return;
 		UINT width = _bitmap.getWidth();
 		BYTE alphaThreshold = (BYTE)(_alphaThreshold * 255.0f);
-		_bitmap.viewPixelDetail([&](const BYTE* _pv, const UINT _x, const UINT _y, const UINT _k)
+		_bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
 			{
-				if (_pv[_k + 3] <= alphaThreshold)
+				if (_color.alpha <= alphaThreshold)
 					_pHitArea[_x][_y] = 0;
 				else _pHitArea[_x][_y] = 1;
 			});
@@ -1278,17 +1278,28 @@ namespace suku
 
 			if (pv != nullptr)
 			{
-				for (unsigned int i = 0; i < height_; i++)
-					for (unsigned int j = 0; j < width_; j++)
-					{
-						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+				if (bytesPerPixel == 3)
+				{
+					for (unsigned int i = 0; i < height_; i++)
+						for (unsigned int j = 0; j < width_; j++)
+						{
+							BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-						pixelArrayPointer[i][j].setRGB(pixelData[2], pixelData[1], pixelData[0]);
-						if (bytesPerPixel == 4)
-							pixelArrayPointer[i][j].alpha = (float)pixelData[3] / 255.0f;
-						else
+							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
 							pixelArrayPointer[i][j].alpha = 1.0f;
-					}
+						}
+				}
+				else if (bytesPerPixel == 4)
+				{
+					for (unsigned int i = 0; i < height_; i++)
+						for (unsigned int j = 0; j < width_; j++)
+						{
+							BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
+							pixelArrayPointer[i][j].alpha = (float)(*pixelData + 3) / 255.0f;
+						}
+				}
 			}
 			pILock->Release();
 		}
@@ -1342,21 +1353,34 @@ namespace suku
 
 		if (pv != nullptr)
 		{
-			for (unsigned int i = 0; i < height_; i++)
-				for (unsigned int j = 0; j < width_; j++)
-				{
-					BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+			if (bytesPerPixel == 3)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-					pixelData[2] = (BYTE)_detail[i][j].r();
-					pixelData[1] = (BYTE)_detail[i][j].g();
-					pixelData[0] = (BYTE)_detail[i][j].b();
+						*(pixelData + 2) = (BYTE)_detail[i][j].r();
+						*(pixelData + 1) = (BYTE)_detail[i][j].g();
+						*pixelData = (BYTE)_detail[i][j].b();
+					}
+			}
+			else if (bytesPerPixel == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-					if (bytesPerPixel == 4)
-						pixelData[3] = (BYTE)(_detail[i][j].alpha * 255.0f);
-					else pixelData[3] = 1.0f;
-				}
+						*(pixelData + 3) = (BYTE)(_detail[i][j].alpha * 255.0f);
+						*(pixelData + 2) = (BYTE)_detail[i][j].r();
+						*(pixelData + 1) = (BYTE)_detail[i][j].g();
+						*pixelData = (BYTE)_detail[i][j].b();
+					}
+			}
 		}
 		pILock->Release();
+		SAFE_RELEASE(d2d1Bitmap_);
 		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
 	}
 
@@ -1395,84 +1419,199 @@ namespace suku
 	{
 		if (wicBitmap_ == nullptr)
 			return;
+
+		WICPixelFormatGUID pixelFormat;
+		wicBitmap_->GetPixelFormat(&pixelFormat);
+
+		UINT bytesPerPixel = 0;
+		// 获取每个像素所占的字节数
+		IWICComponentInfo* componentInfo;
+		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+		IWICPixelFormatInfo2* pixelFormatInfo;
+		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
+		componentInfo->Release();
+		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
+		bytesPerPixel /= 8;
+
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
 		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
-		UINT cbBufferSize = 0;
+		UINT stride;
+		UINT cbBufferSize;
 		BYTE* pv = nullptr;
 
 		pILock->GetDataPointer(&cbBufferSize, &pv);
-		if (pv)
+		pILock->GetStride(&stride);
+
+		if (pv != nullptr)
 		{
-			for (unsigned int i = 0; i < width_ * 4; i += 4)
-				for (unsigned int j = 0; j < height_; j++)
-				{
-					UINT k = i + j * width_ * 4;
-					if (k + 3 < cbBufferSize)
+			if (bytesPerPixel == 3)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
 					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
 						Color pixelColor;
-						pixelColor.setRGB(pv[k + 2], pv[k + 1], pv[k]);
-						pixelColor.alpha = (float)pv[k + 3] / 255.0f;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = 1.0f;
 						_changingFunction(pixelColor);
-						pv[k + 2] = (UINT)pixelColor.r();
-						pv[k + 1] = (UINT)pixelColor.g();
-						pv[k] = (UINT)pixelColor.b();
-						pv[k + 3] = (UINT)(pixelColor.alpha * 255.0f);
+						*(pixelData + 2) = (BYTE)pixelColor.r();
+						*(pixelData + 1) = (BYTE)pixelColor.g();
+						*pixelData = (BYTE)pixelColor.b();
 					}
-				}
+			}
+			else if (bytesPerPixel == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						Color pixelColor;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = (float)*(pixelData + 3) / 255.0f;
+						_changingFunction(pixelColor);
+						*(pixelData + 3) = (BYTE)(pixelColor.alpha * 255.0f);
+						*(pixelData + 2) = (BYTE)pixelColor.r();
+						*(pixelData + 1) = (BYTE)pixelColor.g();
+						*pixelData = (BYTE)pixelColor.b();
+					}
+			}
 		}
 		pILock->Release();
+		SAFE_RELEASE(d2d1Bitmap_);
 		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
 	}
 
-	void Bitmap::changePixelDetail(std::function<void(BYTE*, UINT, UINT, UINT)> _changingFunction)
+	void Bitmap::changePixelDetail(std::function<void(UINT, UINT, Color&)> _changingFunction)
 	{
 		if (wicBitmap_ == nullptr)
 			return;
+
+		WICPixelFormatGUID pixelFormat;
+		wicBitmap_->GetPixelFormat(&pixelFormat);
+
+		UINT bytesPerPixel = 0;
+		// 获取每个像素所占的字节数
+		IWICComponentInfo* componentInfo;
+		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+		IWICPixelFormatInfo2* pixelFormatInfo;
+		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
+		componentInfo->Release();
+		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
+		bytesPerPixel /= 8;
+
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
 		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
-		UINT cbBufferSize = 0;
+		UINT stride;
+		UINT cbBufferSize;
 		BYTE* pv = nullptr;
 
 		pILock->GetDataPointer(&cbBufferSize, &pv);
-		if (pv)
+		pILock->GetStride(&stride);
+
+		if (pv != nullptr)
 		{
-			for (unsigned int i = 0; i < width_ * 4; i += 4)
-				for (unsigned int j = 0; j < height_; j++)
-				{
-					UINT k = i + j * width_ * 4;
-					if (k + 3 < cbBufferSize)
-						_changingFunction(pv, i / 4, j, k);
-				}
+			if (bytesPerPixel == 3)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						Color pixelColor;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = 1.0f;
+						_changingFunction(j, i, pixelColor);
+						*(pixelData + 2) = (BYTE)pixelColor.r();
+						*(pixelData + 1) = (BYTE)pixelColor.g();
+						*pixelData = (BYTE)pixelColor.b();
+					}
+			}
+			else if (bytesPerPixel == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						Color pixelColor;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = (float)*(pixelData + 3) / 255.0f;
+						_changingFunction(j, i, pixelColor);
+						*(pixelData + 3) = (BYTE)(pixelColor.alpha * 255.0f);
+						*(pixelData + 2) = (BYTE)pixelColor.r();
+						*(pixelData + 1) = (BYTE)pixelColor.g();
+						*pixelData = (BYTE)pixelColor.b();
+					}
+			}
 		}
 		pILock->Release();
+		SAFE_RELEASE(d2d1Bitmap_);
 		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
 	}
 
-	void Bitmap::viewPixelDetail(std::function<void(const BYTE*, const UINT, const UINT, const UINT)> _viewFunction)const
+	void Bitmap::viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const
 	{
 		if (wicBitmap_ == nullptr)
 			return;
+
+		WICPixelFormatGUID pixelFormat;
+		wicBitmap_->GetPixelFormat(&pixelFormat);
+
+		UINT bytesPerPixel = 0;
+		// 获取每个像素所占的字节数
+		IWICComponentInfo* componentInfo;
+		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+		IWICPixelFormatInfo2* pixelFormatInfo;
+		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
+		componentInfo->Release();
+		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
+		bytesPerPixel /= 8;
+
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
-		wicBitmap_->Lock(&rcLock, WICBitmapLockRead, &pILock);
+		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
-		UINT cbBufferSize = 0;
+		UINT stride;
+		UINT cbBufferSize;
 		BYTE* pv = nullptr;
 
 		pILock->GetDataPointer(&cbBufferSize, &pv);
-		if (pv)
+		pILock->GetStride(&stride);
+
+		if (pv != nullptr)
 		{
-			for (unsigned int i = 0; i < width_ * 4; i += 4)
-				for (unsigned int j = 0; j < height_; j++)
-				{
-					UINT k = i + j * width_ * 4;
-					if (k + 3 < cbBufferSize)
-						_viewFunction(pv, i / 4, j, k);
-				}
+			if (bytesPerPixel == 3)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						Color pixelColor;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = 1.0f;
+						_viewFunction(j, i, pixelColor);
+					}
+			}
+			else if (bytesPerPixel == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						Color pixelColor;
+						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
+						pixelColor.alpha = (float)*(pixelData + 3) / 255.0f;
+						_viewFunction(j, i, pixelColor);
+					}
+			}
 		}
 		pILock->Release();
 	}

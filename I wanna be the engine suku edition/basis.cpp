@@ -1540,7 +1540,7 @@ namespace suku
 
 		pBitmap_ = new Bitmap(_path);
 
-		if (!pBitmap_)
+		if (pBitmap_)
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
