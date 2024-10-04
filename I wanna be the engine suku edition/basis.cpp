@@ -23,7 +23,7 @@ namespace suku
 		hitWidth = width, hitHeight = height;
 		hitX = _hitX, hitY = _hitY;
 		hitArea = malloc2D<bool>(hitWidth, hitHeight);
-		getHitAreaFromBitmap(hitArea, _bitmap, _alphaThreshold);
+		getHitAreaFromBitmap(hitArea, Bitmap(_bitmap), _alphaThreshold);
 	}
 
 	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, float _alphaThreshold)

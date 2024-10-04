@@ -496,37 +496,6 @@ namespace suku
 		return { width, height };
 	}
 
-	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* pBitmap, float _alphaThreshold)
-	{
-		if (!pBitmap) return;
-		if (!_pHitArea) return;
-
-		IWICBitmapLock* pILock = nullptr;
-		UINT width, height;
-		pBitmap->GetSize(&width, &height);
-		WICRect rcLock = { 0, 0, (int)width, (int)height };
-		pBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
-
-		UINT cbBufferSize = 0;
-		BYTE* pv = nullptr;
-
-		pILock->GetDataPointer(&cbBufferSize, &pv);
-		BYTE alphaThreshold = (BYTE)(_alphaThreshold * 255.0f);
-		if (pv)
-		{
-			for (unsigned int i = 0; i < width * 4; i += 4)
-				for (unsigned int j = 0; j < height; j++)
-				{
-					UINT k = i + j * width * 4;
-
-					if (k + 3 < cbBufferSize && pv[k + 3] <= alphaThreshold)
-						_pHitArea[i / 4][j] = 0;
-					else _pHitArea[i / 4][j] = 1;
-				}
-		}
-		pILock->Release();
-	}
-
 	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _bitmap, float _alphaThreshold)
 	{
 		if (!_pHitArea)
@@ -1079,45 +1048,21 @@ namespace suku
 
 	Bitmap::Bitmap(UINT _width, UINT _height)
 	{
-		//width_ = _width;
-		//height_ = _height;
-		//d2d1Bitmap_ = nullptr;
-		//wicBitmap_ = nullptr;
-		//D2D1_BITMAP_PROPERTIES bitmapProperties = D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE));
-		//HRESULT hr;
-		//hr = g_pRenderTarget->CreateBitmap(
-		//	D2D1::SizeU(_width, _height),
-		//	bitmapProperties,
-		//	&d2d1Bitmap_
-		//);
-		//if (SUCCEEDED(hr))
-		//	createWICBitmap(&wicBitmap_, _width, _height);
-		//if (SUCCEEDED(hr))
-		//{
-		//	ID2D1RenderTarget* pTempRenderTarget = nullptr;
-		//	hr = g_pD2DFactory->CreateWicBitmapRenderTarget(wicBitmap_, D2D1::RenderTargetProperties(), &pTempRenderTarget);
-		//	if (SUCCEEDED(hr))
-		//	{
-		//		pTempRenderTarget->BeginDraw();
-		//		pTempRenderTarget->DrawBitmap(d2d1Bitmap_);
-		//		pTempRenderTarget->EndDraw();
-
-		//		// 释放临时的 ID2D1RenderTarget 对象
-		//		pTempRenderTarget->Release();
-		//	}
-		//}
 		HRESULT hr = createWICBitmap(&wicBitmap_, _width, _height);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getSizeFromWICBitmap(wicBitmap_);
 			width_ = w;
 			height_ = h;
+			bytesPerPixel_ = 0;
+			getPixelByte();
 			getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, _width, _height);
 		}
 		else
 		{
 			width_ = height_ = 0;
 			d2d1Bitmap_ = nullptr;
+			bytesPerPixel_ = 0;
 		}
 	}
 
@@ -1131,6 +1076,8 @@ namespace suku
 			{
 				width_ = w;
 				height_ = h;
+				bytesPerPixel_ = 0;
+				getPixelByte();
 				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
 				return;
 			}
@@ -1138,23 +1085,29 @@ namespace suku
 		width_ = height_ = 0;
 		wicBitmap_ = nullptr;
 		d2d1Bitmap_ = nullptr;
+		bytesPerPixel_ = 0;
 	}
 
 	Bitmap::Bitmap(LPCTSTR _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		loadWICBitmap(&wicBitmap_, AbsolutePath(_url), _x, _y, _width, _height);
-		auto [w, h] = getSizeFromWICBitmap(wicBitmap_);
-		width_ = w;
-		height_ = h;
-		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
-		//createWICBitmap(&wicBitmap_, _width, _height);
-
-		//IWICBitmap* originalBitmap;
-		//loadWICBitmap(&originalBitmap, AbsolutePath(_url));
-		//Color** pixels = getPixelDetailFromWICBitmap(originalBitmap, _x, _y, _width, _height);
-		//originalBitmap->Release();
-
-		//updatePixelDetail(pixels);
+		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url), _x, _y, _width, _height);
+		if (SUCCEEDED(hr))
+		{
+			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
+			if (SUCCEEDED(hr))
+			{
+				width_ = w;
+				height_ = h;
+				bytesPerPixel_ = 0;
+				getPixelByte();
+				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
+				return;
+			}
+		}
+		width_ = height_ = 0;
+		wicBitmap_ = nullptr;
+		d2d1Bitmap_ = nullptr;
+		bytesPerPixel_ = 0;
 	}
 
 	Bitmap::Bitmap(Color** _pixels, UINT _width, UINT _height)
@@ -1162,6 +1115,8 @@ namespace suku
 		width_ = _width;
 		height_ = _height;
 		createWICBitmap(&wicBitmap_, _width, _height);
+		bytesPerPixel_ = 0;
+		getPixelByte();
 		updatePixelDetail(_pixels);
 	}
 
@@ -1170,7 +1125,33 @@ namespace suku
 		width_ = _width;
 		height_ = _height;
 		createWICBitmap(&wicBitmap_, _width, _height);
+		bytesPerPixel_ = 0;
+		getPixelByte();
 		updatePixelDetail(_pixels, _x, _y);
+	}
+
+	Bitmap::Bitmap(IWICBitmap* _wicBitmap)
+	{
+		_wicBitmap->AddRef();
+		wicBitmap_ = _wicBitmap;
+		HRESULT hr;
+		auto [w, h] = getSizeFromWICBitmap(_wicBitmap, &hr);
+		if (SUCCEEDED(hr))
+		{
+			width_ = w;
+			height_ = h;
+			bytesPerPixel_ = 0;
+			getPixelByte();
+			getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+		}
+		else
+		{
+			_wicBitmap->Release();
+			wicBitmap_ = nullptr;
+			d2d1Bitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			width_ = height_ = 0;
+		}
 	}
 
 	Bitmap::Bitmap(const Bitmap& _otherBitmap)
@@ -1178,11 +1159,21 @@ namespace suku
 		auto [w, h] = _otherBitmap.getSize();
 		width_ = w;
 		height_ = h;
-		createWICBitmap(&wicBitmap_, w, h);
-
-		Color** x = _otherBitmap.getPixelDetail();
-		updatePixelDetail(x);
-		free2D(x, w, h);
+		auto hr = createWICBitmap(&wicBitmap_, w, h);
+		if (SUCCEEDED(hr))
+		{
+			bytesPerPixel_ = 0;
+			getPixelByte();
+			Color** x = _otherBitmap.getPixelDetail();
+			updatePixelDetail(x);
+			free2D(x, w, h);
+		}
+		else
+		{
+			wicBitmap_ = nullptr;
+			d2d1Bitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+		}
 	}
 
 	Bitmap::~Bitmap()
@@ -1193,23 +1184,53 @@ namespace suku
 			d2d1Bitmap_->Release();
 	}
 
+	UINT Bitmap::getPixelByte()
+	{
+		if (bytesPerPixel_ != 0)
+			return bytesPerPixel_;
+
+		bytesPerPixel_ = 0;
+
+		if (wicBitmap_ == nullptr)
+			return 0;
+
+		HRESULT hr;
+		WICPixelFormatGUID pixelFormat;
+		hr = wicBitmap_->GetPixelFormat(&pixelFormat);
+
+		IWICComponentInfo* componentInfo = nullptr;
+		if (SUCCEEDED(hr))
+			hr = g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+		IWICPixelFormatInfo2* pixelFormatInfo = nullptr;
+		if (SUCCEEDED(hr))
+			hr = componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
+		SAFE_RELEASE(componentInfo);
+		if (SUCCEEDED(hr))
+			pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel_);
+		bytesPerPixel_ /= 8;
+		return bytesPerPixel_;
+	}
+
 	Bitmap& Bitmap::operator=(const Bitmap& _bitmap)
 	{
 		if (&_bitmap == this)
 			return *this;
 
-		if (wicBitmap_)
-			wicBitmap_->Release();
-		if (d2d1Bitmap_)
-			d2d1Bitmap_->Release();
+		SAFE_RELEASE(wicBitmap_);
+		SAFE_RELEASE(d2d1Bitmap_);
+
 		auto [w, h] = _bitmap.getSize();
 		width_ = w;
 		height_ = h;
 		HRESULT hr = createWICBitmap(&wicBitmap_, w, h);
-
-		auto x = _bitmap.getPixelDetail();
-		updatePixelDetail(x);
-		free2D(x, w, h);
+		bytesPerPixel_ = 0;
+		if (SUCCEEDED(hr))
+		{
+			getPixelByte();
+			auto x = _bitmap.getPixelDetail();
+			updatePixelDetail(x);
+			free2D(x, w, h);
+		}
 
 		return *this;
 	}
@@ -1251,18 +1272,8 @@ namespace suku
 		Color** pixelArrayPointer = malloc2D<Color>(width_, height_);
 		if (pixelArrayPointer != nullptr)
 		{
-			WICPixelFormatGUID pixelFormat;
-			wicBitmap_->GetPixelFormat(&pixelFormat);
-
-			UINT bytesPerPixel = 0;
-			// 获取每个像素所占的字节数
-			IWICComponentInfo* componentInfo;
-			g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
-			IWICPixelFormatInfo2* pixelFormatInfo;
-			componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-			componentInfo->Release();
-			pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
-			bytesPerPixel /= 8;
+			if (bytesPerPixel_ == 0)
+				return nullptr;
 
 			IWICBitmapLock* pILock = nullptr;
 			WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1278,23 +1289,23 @@ namespace suku
 
 			if (pv != nullptr)
 			{
-				if (bytesPerPixel == 3)
+				if (bytesPerPixel_ == 3)
 				{
 					for (unsigned int i = 0; i < height_; i++)
 						for (unsigned int j = 0; j < width_; j++)
 						{
-							BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+							BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
 							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
 							pixelArrayPointer[i][j].alpha = 1.0f;
 						}
 				}
-				else if (bytesPerPixel == 4)
+				else if (bytesPerPixel_ == 4)
 				{
 					for (unsigned int i = 0; i < height_; i++)
 						for (unsigned int j = 0; j < width_; j++)
 						{
-							BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+							BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
 							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
 							pixelArrayPointer[i][j].alpha = (float)(*pixelData + 3) / 255.0f;
@@ -1327,18 +1338,7 @@ namespace suku
 		if (_detail == nullptr || wicBitmap_ == nullptr)
 			return;
 
-		WICPixelFormatGUID pixelFormat;
-		wicBitmap_->GetPixelFormat(&pixelFormat);
-
-		UINT bytesPerPixel = 0;
-		// 获取每个像素所占的字节数
-		IWICComponentInfo* componentInfo;
-		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
-		IWICPixelFormatInfo2* pixelFormatInfo;
-		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-		componentInfo->Release();
-		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
-		bytesPerPixel /= 8;
+		UINT bytesPerPixel = getPixelByte();
 
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1388,28 +1388,48 @@ namespace suku
 	{
 		if (_detail == nullptr || wicBitmap_ == nullptr)
 			return;
+
+		UINT bytesPerPixel = getPixelByte();
+
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
 		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
-		UINT cbBufferSize = 0;
+		UINT stride;
+		UINT cbBufferSize;
 		BYTE* pv = nullptr;
 
 		pILock->GetDataPointer(&cbBufferSize, &pv);
-		if (pv)
+		pILock->GetStride(&stride);
+
+		pILock->GetDataPointer(&cbBufferSize, &pv);
+		if (pv != nullptr)
 		{
-			for (unsigned int i = 0; i < width_ * 4; i += 4)
-				for (unsigned int j = 0; j < height_; j++)
-				{
-					UINT k = i + j * width_ * 4;
-					if (k + 3 < cbBufferSize)
+			if (bytesPerPixel == 3)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
 					{
-						pv[k + 2] = (UINT)_detail[i / 4 + _startX][j + _startY].r();
-						pv[k + 1] = (UINT)_detail[i / 4 + _startX][j + _startY].g();
-						pv[k] = (UINT)_detail[i / 4 + _startX][j + _startY].b();
-						pv[k + 3] = (UINT)(_detail[i / 4 + _startX][j + _startY].alpha * 255.0f);
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						*(pixelData + 2) = (BYTE)_detail[_startY + i][_startX + j].r();
+						*(pixelData + 1) = (BYTE)_detail[_startY + i][_startX + j].g();
+						*pixelData = (BYTE)_detail[_startY + i][_startX + j].b();
 					}
-				}
+			}
+			else if (bytesPerPixel == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+
+						*(pixelData + 3) = (BYTE)(_detail[_startY + i][_startX + j].alpha * 255.0f);
+						*(pixelData + 2) = (BYTE)_detail[_startY + i][_startX + j].r();
+						*(pixelData + 1) = (BYTE)_detail[_startY + i][_startX + j].g();
+						*pixelData = (BYTE)_detail[_startY + i][_startX + j].b();
+					}
+			}
 		}
 		pILock->Release();
 		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
@@ -1420,18 +1440,7 @@ namespace suku
 		if (wicBitmap_ == nullptr)
 			return;
 
-		WICPixelFormatGUID pixelFormat;
-		wicBitmap_->GetPixelFormat(&pixelFormat);
-
-		UINT bytesPerPixel = 0;
-		// 获取每个像素所占的字节数
-		IWICComponentInfo* componentInfo;
-		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
-		IWICPixelFormatInfo2* pixelFormatInfo;
-		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-		componentInfo->Release();
-		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
-		bytesPerPixel /= 8;
+		UINT bytesPerPixel = getPixelByte();
 
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1490,18 +1499,7 @@ namespace suku
 		if (wicBitmap_ == nullptr)
 			return;
 
-		WICPixelFormatGUID pixelFormat;
-		wicBitmap_->GetPixelFormat(&pixelFormat);
-
-		UINT bytesPerPixel = 0;
-		// 获取每个像素所占的字节数
-		IWICComponentInfo* componentInfo;
-		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
-		IWICPixelFormatInfo2* pixelFormatInfo;
-		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-		componentInfo->Release();
-		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
-		bytesPerPixel /= 8;
+		UINT bytesPerPixel = getPixelByte();
 
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1560,18 +1558,8 @@ namespace suku
 		if (wicBitmap_ == nullptr)
 			return;
 
-		WICPixelFormatGUID pixelFormat;
-		wicBitmap_->GetPixelFormat(&pixelFormat);
-
-		UINT bytesPerPixel = 0;
-		// 获取每个像素所占的字节数
-		IWICComponentInfo* componentInfo;
-		g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
-		IWICPixelFormatInfo2* pixelFormatInfo;
-		componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-		componentInfo->Release();
-		pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel);
-		bytesPerPixel /= 8;
+		if (bytesPerPixel_ == 0)
+			return;
 
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1586,12 +1574,12 @@ namespace suku
 
 		if (pv != nullptr)
 		{
-			if (bytesPerPixel == 3)
+			if (bytesPerPixel_ == 3)
 			{
 				for (unsigned int i = 0; i < height_; i++)
 					for (unsigned int j = 0; j < width_; j++)
 					{
-						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
@@ -1599,12 +1587,12 @@ namespace suku
 						_viewFunction(j, i, pixelColor);
 					}
 			}
-			else if (bytesPerPixel == 4)
+			else if (bytesPerPixel_ == 4)
 			{
 				for (unsigned int i = 0; i < height_; i++)
 					for (unsigned int j = 0; j < width_; j++)
 					{
-						BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));

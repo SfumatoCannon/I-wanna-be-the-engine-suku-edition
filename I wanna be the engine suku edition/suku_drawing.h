@@ -123,8 +123,11 @@ namespace suku
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(IWICBitmap* _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
 		~Bitmap();
+
+		UINT getPixelByte();
 
 		void paint(float _x, float _y, float _alpha = 1.0f)const;
 		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f)const;
@@ -151,6 +154,7 @@ namespace suku
 		//Parameters: x, y, the corresponding color of position (x,y)
 		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
 	private:
+		UINT bytesPerPixel_;
 		UINT width_, height_;
 		ID2D1Bitmap* d2d1Bitmap_;
 		IWICBitmap* wicBitmap_;
@@ -229,7 +233,6 @@ namespace suku
 	ID2D1Brush* createSolidColorBrush(const Color _color);
 
 	std::pair<UINT, UINT> getSizeFromWICBitmap(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
-	void getHitAreaFromBitmap(bool** _pHitArea, IWICBitmap* _pBitmap, float _alphaThreshold = 0.0f);
 	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _pBitmap, float _alphaThreshold = 0.0f);
 	//void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
 	//	float _width, float _height, float _alpha,
