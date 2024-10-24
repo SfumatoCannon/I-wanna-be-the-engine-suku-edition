@@ -349,12 +349,12 @@ namespace suku
 		template<typename Obj> void createCenterFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 
+		virtual void onPaint() {};
+
 		void update();
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
-		//void paintBody();
-		virtual void recheckState();
 	};
 
 

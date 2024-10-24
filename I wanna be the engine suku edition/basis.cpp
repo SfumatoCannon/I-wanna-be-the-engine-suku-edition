@@ -1228,20 +1228,20 @@ namespace suku
 	void Room::update()
 	{
 
-		Object* preciousObj = nullptr;
+		Object* previousObj = nullptr;
 		std::list<Object*>* objectList;
 		objectPointerArray[typecode(Object)] >> objectList;
 
 		for (auto& obj : *objectList)
 		{
-			if (preciousObj && preciousObj->removeTag_)
+			if (previousObj && previousObj->removeTag_)
 			{
-				preciousObj->removeTag_ = false;
-				preciousObj->remove();
-				if (preciousObj->destroyTag_)
+				previousObj->removeTag_ = false;
+				previousObj->remove();
+				if (previousObj->destroyTag_)
 				{
-					delete preciousObj;
-					preciousObj = nullptr;
+					delete previousObj;
+					previousObj = nullptr;
 				}
 			}
 			obj->hspeedTemp = obj->vspeedTemp = 0;
@@ -1250,103 +1250,103 @@ namespace suku
 			obj->isUpdating_ = true;
 			obj->updateFunction();
 			obj->isUpdating_ = false;
-			preciousObj = obj;
+			previousObj = obj;
 		}
-		if (preciousObj && preciousObj->removeTag_)
+		if (previousObj && previousObj->removeTag_)
 		{
-			preciousObj->removeTag_ = false;
-			preciousObj->remove();
-			if (preciousObj->destroyTag_)
+			previousObj->removeTag_ = false;
+			previousObj->remove();
+			if (previousObj->destroyTag_)
 			{
-				delete preciousObj;
-				preciousObj = nullptr;
+				delete previousObj;
+				previousObj = nullptr;
 			}
 		}
 
 		for (auto& x : reviseStateArray)
 			for (auto& obj : x.second)
 			{
-				if (preciousObj && preciousObj->removeTag_)
+				if (previousObj && previousObj->removeTag_)
 				{
-					preciousObj->removeTag_ = false;
-					preciousObj->remove();
-					if (preciousObj->destroyTag_)
+					previousObj->removeTag_ = false;
+					previousObj->remove();
+					if (previousObj->destroyTag_)
 					{
-						delete preciousObj;
-						preciousObj = nullptr;
+						delete previousObj;
+						previousObj = nullptr;
 					}
 				}
 				obj->isUpdating_ = true;
 				obj->reviseState();
 				obj->isUpdating_ = false;
-				preciousObj = obj;
+				previousObj = obj;
 			}
-		if (preciousObj && preciousObj->removeTag_)
+		if (previousObj && previousObj->removeTag_)
 		{
-			preciousObj->removeTag_ = false;
-			preciousObj->remove();
-			if (preciousObj->destroyTag_)
+			previousObj->removeTag_ = false;
+			previousObj->remove();
+			if (previousObj->destroyTag_)
 			{
-				delete preciousObj;
-				preciousObj = nullptr;
+				delete previousObj;
+				previousObj = nullptr;
 			}
 		}
 
 		for (auto& x : updateStateArray)
 			for (auto& obj : x.second)
 			{
-				if (preciousObj && preciousObj->removeTag_)
+				if (previousObj && previousObj->removeTag_)
 				{
-					preciousObj->removeTag_ = false;
-					preciousObj->remove();
-					if (preciousObj->destroyTag_)
+					previousObj->removeTag_ = false;
+					previousObj->remove();
+					if (previousObj->destroyTag_)
 					{
-						delete preciousObj;
-						preciousObj = nullptr;
+						delete previousObj;
+						previousObj = nullptr;
 					}
 				}
 				obj->isUpdating_ = true;
 				obj->updateState();
 				obj->isUpdating_ = false;
-				preciousObj = obj;
+				previousObj = obj;
 			}
-		if (preciousObj && preciousObj->removeTag_)
+		if (previousObj && previousObj->removeTag_)
 		{
-			preciousObj->removeTag_ = false;
-			preciousObj->remove();
-			if (preciousObj->destroyTag_)
+			previousObj->removeTag_ = false;
+			previousObj->remove();
+			if (previousObj->destroyTag_)
 			{
-				delete preciousObj;
-				preciousObj = nullptr;
+				delete previousObj;
+				previousObj = nullptr;
 			}
 		}
 
 		for (auto& x : recheckStateArray)
 			for (auto& obj : x.second)
 			{
-				if (preciousObj && preciousObj->removeTag_)
+				if (previousObj && previousObj->removeTag_)
 				{
-					preciousObj->removeTag_ = false;
-					preciousObj->remove();
-					if (preciousObj->destroyTag_)
+					previousObj->removeTag_ = false;
+					previousObj->remove();
+					if (previousObj->destroyTag_)
 					{
-						delete preciousObj;
-						preciousObj = nullptr;
+						delete previousObj;
+						previousObj = nullptr;
 					}
 				}
 				obj->isUpdating_ = true;
 				obj->recheckState();
 				obj->isUpdating_ = false;
-				preciousObj = obj;
+				previousObj = obj;
 			}
-		if (preciousObj && preciousObj->removeTag_)
+		if (previousObj && previousObj->removeTag_)
 		{
-			preciousObj->removeTag_ = false;
-			preciousObj->remove();
-			if (preciousObj->destroyTag_)
+			previousObj->removeTag_ = false;
+			previousObj->remove();
+			if (previousObj->destroyTag_)
 			{
-				delete preciousObj;
-				preciousObj = nullptr;
+				delete previousObj;
+				previousObj = nullptr;
 			}
 		}
 
@@ -1355,8 +1355,6 @@ namespace suku
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
 		}
-
-		recheckState();
 	}
 
 	void Room::paint()
@@ -1415,10 +1413,6 @@ namespace suku
 			for (k = object_painting_array[j].begin(); k != object_painting_array[j].end(); k++)
 				(*k)->paintBody();
 	}*/
-
-	void Room::recheckState()
-	{
-	}
 
 	void BitmapSpriteZ::catchBitmap(LPCTSTR _path)
 	{
