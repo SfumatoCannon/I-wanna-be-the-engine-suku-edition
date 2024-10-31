@@ -261,7 +261,6 @@ namespace suku
 		//Object* getCrashedObjectPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
 		//std::list<Object*> getCrashedObjectListPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
 
-		void setRoom(Room* _room);
 		void save();
 		void spawn();
 	protected:
@@ -327,6 +326,7 @@ namespace suku
 		std::map<double, std::list<Object*>> paintArray;
 
 		float playerStartX, playerStartY;
+		bool hasCreated;
 		//std::list<Object*> object_painting_array[VALUE_MAXPAINT];
 
 		Room();
@@ -349,7 +349,13 @@ namespace suku
 		template<typename Obj> void createCenterFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 
-		virtual void onPaint() {};
+		virtual void onCreate() {};
+		virtual void onJoin() {};
+		virtual void onRestart() {};
+		virtual void onPaintStart() {};
+		virtual void onPaintEnd() {};
+		virtual void onUpdateStart() {};
+		virtual void onUpdateEnd() {};
 
 		void update();
 		void paint();
@@ -357,7 +363,7 @@ namespace suku
 		void reset();
 	};
 
-
+	void gotoRoom(Room& _room);
 
 
 

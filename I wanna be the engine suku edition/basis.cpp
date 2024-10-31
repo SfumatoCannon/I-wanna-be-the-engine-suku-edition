@@ -1145,11 +1145,6 @@ namespace suku
 		return result;
 	}*/
 
-	void Object::setRoom(Room* _room)
-	{
-		inRoom_ = _room;
-	}
-
 	void Object::save()
 	{
 		spawnX = x;
@@ -1167,6 +1162,7 @@ namespace suku
 
 	Room::Room()
 	{
+		hasCreated = false;
 		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
@@ -1227,6 +1223,7 @@ namespace suku
 
 	void Room::update()
 	{
+		onUpdateStart();
 
 		Object* previousObj = nullptr;
 		std::list<Object*>* objectList;
@@ -1355,21 +1352,19 @@ namespace suku
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
 		}
+
+		onUpdateEnd();
 	}
 
 	void Room::paint()
 	{
-		Shape A(SquareShape(64));
-		Shape B = A;
-		A = CircleShape(32);
-		static ID2D1Brush* brush1 = createSolidColorBrush(Color(255, 0, 0));
-		static ID2D1Brush* brush2 = createSolidColorBrush(Color(125, 125, 0, 0.4f));
-		B.setTransform(rotation(16, 16, 30));
-		B.paint(32, 64, brush1, brush1);
-		A.paint(32, 128, brush2, brush1);
+		onPaintStart();
+
 		for (auto& x : paintArray)
 			for (auto& obj : x.second)
 				obj->paintBody();
+
+		onPaintEnd();
 	}
 
 	void Room::additionalFramePaint(float _offset)
@@ -1915,5 +1910,20 @@ namespace suku
 			outlineWidth,
 			outlineStrokeStyle
 		);
+	}
+
+	void gotoRoom(Room& _room)
+	{
+		if (_room.hasCreated == false)
+		{
+			_room.onCreate();
+			//_room.onJoin()...?
+			nowRoom = &_room;
+		}
+		else
+		{
+			_room.onJoin();
+			nowRoom = &_room;
+		}
 	}
 }

@@ -15,13 +15,14 @@
 #include <mmsystem.h>
 #include <d2d1.h>
 // C 运行时头文件
-#include <initializer_list>
-#include <functional>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 #include <cmath>
+
+#include <initializer_list>
+#include <functional>
 #include <list>
 #include <queue>
 #include <map>

@@ -25,6 +25,7 @@ namespace suku
 	class PlaceChanger :public Object
 	{
 	public:
+		Room* roomTo;
 		PlaceChanger(float _x = 0, float _y = 0, Room* _roomTo = nullptr);
 	};
 
@@ -136,7 +137,6 @@ namespace suku
 		void stopJump();
 		void save();
 		void spawn();
-		void setRoom(Room& _room);
 		bool isAlive();
 	};
 

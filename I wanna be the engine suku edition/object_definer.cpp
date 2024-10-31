@@ -50,7 +50,7 @@ namespace suku
 	PlaceChanger::PlaceChanger(float _x, float _y, Room* _roomTo) :Object(_x, _y)
 	{
 		sprite_ = &sprTrigger;
-		var["warp_room"] << _roomTo;
+		roomTo = _roomTo;
 	}
 
 	Warp::Warp(float _x, float _y, Room* _roomTo) :PlaceChanger(_x, _y, _roomTo)
@@ -279,16 +279,6 @@ namespace suku
 		nowBloodNum_ = 0;
 		clock_ = 0;
 		jumpTime_ = maxJumpTime;
-	}
-
-	void Player::setRoom(Room& _room)
-	{
-		//inRoom_->objectPointerArray.insert(inRoom_->kindEnd[ID_PLAYER], this);
-		//inRoom_->player = this;
-		//setPlaceAndSave(_room.playerStartX, _room.playerStartY);
-		//for (int i = 0; i < PLAYER_BLOODNUMMAX; i++)
-		//	deathBlood_[i] = inRoom_->findObj(Blood(), inRoom_->create(Blood()));
-		spawn();
 	}
 
 	void Player::save()
@@ -585,11 +575,11 @@ namespace suku
 			die();
 			return;
 		}
-		if (auto warp = getCrashedObject<PlaceChanger>())
+		if (auto warp = getCrashedObjectPrecisely<Warp>())
 		{
-			if (warp->var["warp_room"].getValue<Room*>())
+			if (warp->roomTo != nullptr)
 			{
-				setRoom(*warp->var["warp_room"].getValue<Room*>());
+				gotoRoom(*warp->roomTo);
 			}
 		}
 	}
