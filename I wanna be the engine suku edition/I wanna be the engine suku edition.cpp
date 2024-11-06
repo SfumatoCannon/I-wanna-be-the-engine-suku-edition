@@ -23,7 +23,7 @@ void Initialization()
 {
 	using namespace suku;
 	GetModuleFileName(NULL, strPath, MAX_PATH);
-	(_tcsrchr(strPath, _T('\\')))[1] = 0;
+	(_tcsrchr(strPath, L'\\'))[1] = 0;
 	Path_len = _tcsclen(strPath);
 	HRESULT hr = CoInitialize(NULL);
 	if (SUCCEEDED(hr))

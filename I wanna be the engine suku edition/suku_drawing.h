@@ -17,7 +17,7 @@ namespace suku
 	extern ID2D1HwndRenderTarget* g_pRenderTarget;
 	extern IWICImagingFactory* g_pIWICFactory;
 
-	extern TCHAR strPath[MAX_PATH + 1];
+	extern wchar_t strPath[MAX_PATH + 1];
 	extern size_t Path_len;
 	extern HWND game_hWnd;
 
@@ -118,8 +118,8 @@ namespace suku
 		//Create an empty bitmap
 		Bitmap(UINT _width, UINT _height);
 		//Create bitmap from file
-		Bitmap(LPCTSTR _url);
-		Bitmap(LPCTSTR _url, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(const wchar_t* _url);
+		Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
@@ -192,7 +192,7 @@ namespace suku
 
 	};
 
-	LPCTSTR AbsolutePath(LPCTSTR _relativePath);
+	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
 
 	void SwapByte(BYTE* _a, BYTE* _b);
 
@@ -204,11 +204,11 @@ namespace suku
 
 	HRESULT loadWICBitmap(
 		IWICBitmap** _pWicBitmap,
-		LPCTSTR uri
+		const wchar_t* uri
 	);
 	HRESULT loadWICBitmap(
 		IWICBitmap** _pWicBitmap,
-		LPCTSTR uri,
+		const wchar_t* uri,
 		UINT _x, UINT _y, UINT _width, UINT _height
 	);
 	//Due to technical problem, _width and _height should <= 2048

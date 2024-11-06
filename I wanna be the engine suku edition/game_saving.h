@@ -42,6 +42,7 @@ namespace suku
 
 	void createPath(std::string _path);
 	void createPath(const wchar_t* _path);
+	void createPath(const char* _path);
 	void saveToFile();
 	void loadFromFile();
 	template<typename T> bool setSavable(T& _x, std::string _name);

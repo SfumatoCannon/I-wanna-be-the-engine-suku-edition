@@ -1409,7 +1409,7 @@ namespace suku
 				(*k)->paintBody();
 	}*/
 
-	void BitmapSpriteZ::catchBitmap(LPCTSTR _path)
+	void BitmapSpriteZ::catchBitmap(const wchar_t* _path)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1419,7 +1419,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	//void BitmapSpriteZ::catchWicBitmap(LPCTSTR _path)
+	//void BitmapSpriteZ::catchWicBitmap(const wchar_t* _path)
 	//{
 	//	loadWICBitmap(&wicBitmap_, AbsolutePath(_path));
 	//}
@@ -1452,7 +1452,7 @@ namespace suku
 	}
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
-		float _centerX, float _centerY, LPCTSTR _path)
+		float _centerX, float _centerY, const wchar_t* _path)
 	{
 		pBitmap_ = nullptr;
 		//d2d1Bitmap_ = nullptr;
@@ -1470,7 +1470,7 @@ namespace suku
 	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
 	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
 	//	float _centerX, float _centerY,
-	//	bool _getAutoHitbox, LPCTSTR _path)
+	//	bool _getAutoHitbox, const wchar_t* _path)
 	//{
 	//	pBitmap_ = nullptr;
 	//	width = _width;
@@ -1492,7 +1492,7 @@ namespace suku
 	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
 	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
 	//	float _centerX, float _centerY,
-	//	LPCTSTR _path)
+	//	const wchar_t* _path)
 	//{
 	//	pBitmap_ = nullptr;
 	//	width = _width;
@@ -1506,7 +1506,7 @@ namespace suku
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
 		int _hitboxX, int _hitboxY,
-		LPCTSTR _path,
+		const wchar_t* _path,
 		float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
@@ -1518,7 +1518,7 @@ namespace suku
 		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(LPCTSTR _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZ::BitmapSpriteZ(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 
@@ -1543,7 +1543,7 @@ namespace suku
 	}
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-		float _centerX, float _centerY, LPCTSTR _path)
+		float _centerX, float _centerY, const wchar_t* _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;

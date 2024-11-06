@@ -17,17 +17,22 @@ namespace suku
 
 	void createPath(const wchar_t* _path)
 	{
-		char pathInChar[512] = { 0 };
-		sprintf_s(pathInChar, "%ls", _path);
-		std::string pathInString;
-		pathInString = pathInChar;
-		createPath(pathInString);
+		char command[512] = { 0 };
+		sprintf_s(command, "md %ls", _path);
+		system(command);
+	}
+
+	void createPath(const char* _path)
+	{
+		char command[512] = { 0 };
+		sprintf_s(command, "md %s", _path);
+		system(command);
 	}
 
 	void saveToFile()
 	{
 		wchar_t saveFilePath[512];
-		_stprintf_s(saveFilePath, _T("%ls\\save%d"), SAVE_DIR, saveFileId);
+		swprintf_s(saveFilePath, L"%ls\\save%d", SAVE_DIR, saveFileId);
 		std::ofstream ofs;
 		ofs.open(saveFilePath, std::ios::binary);
 		if (!ofs.is_open())
@@ -49,7 +54,7 @@ namespace suku
 	void loadFromFile()
 	{
 		wchar_t saveFilePath[512];
-		_stprintf_s(saveFilePath, L"%ls\\save%d", SAVE_DIR, saveFileId);
+		swprintf_s(saveFilePath, L"%ls\\save%d", SAVE_DIR, saveFileId);
 		std::ifstream ifs;
 		ifs.open(saveFilePath, std::ios::binary);
 		if (!ifs.is_open())

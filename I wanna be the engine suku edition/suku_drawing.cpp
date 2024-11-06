@@ -7,7 +7,7 @@ namespace suku
 	ID2D1HwndRenderTarget* g_pRenderTarget = NULL;	// Render target
 	IWICImagingFactory* g_pIWICFactory;
 
-	TCHAR strPath[MAX_PATH + 1];
+	wchar_t strPath[MAX_PATH + 1];
 	size_t Path_len;
 
 	Transform translation(float _shiftX, float _shiftY)
@@ -58,14 +58,13 @@ namespace suku
 		g_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
-
-	LPCTSTR AbsolutePath(LPCTSTR relative_path)
+	const wchar_t* AbsolutePath(const wchar_t* relative_path)
 	{
 		if (!relative_path) return nullptr;
-		static TCHAR result[MAX_PATH + 1] = { 0 };
+		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
-		lstrcat(result, strPath);
-		lstrcat(result, relative_path);
+		lstrcatW(result, strPath);
+		lstrcatW(result, relative_path);
 		return result;
 	}
 
@@ -85,7 +84,7 @@ namespace suku
 			hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &g_pD2DFactory);
 			if (FAILED(hr))
 			{
-				MessageBox(hWnd, _T("Create D2D factory failed!"), _T("Error"), 0);
+				MessageBox(hWnd, L"Create D2D factory failed!", L"Error", 0);
 				return;
 			}
 
@@ -102,7 +101,7 @@ namespace suku
 			);
 			if (FAILED(hr))
 			{
-				MessageBox(hWnd, _T("Create render target failed!"), _T("Error"), 0);
+				MessageBox(hWnd, L"Create render target failed!", L"Error", 0);
 				return;
 			}
 
@@ -112,7 +111,7 @@ namespace suku
 	ID2D1Bitmap* GetBlendedBitmapFromFile(
 		IWICImagingFactory* pIWICFactory,
 		ID2D1RenderTarget* pRenderTarget,
-		LPCTSTR uri,
+		const wchar_t* uri,
 		const D2D1_COLOR_F& color)
 	{
 		ID2D1Bitmap* pBitmap = NULL;
@@ -278,7 +277,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, LPCTSTR uri)
+	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* uri)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
@@ -314,7 +313,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, LPCTSTR uri, UINT _x, UINT _y, UINT _width, UINT _height)
+	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* uri, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
@@ -347,7 +346,7 @@ namespace suku
 	{
 		if (_width > 1600 || _height > 1216)
 			return E_FAIL;
-		HRESULT hr = loadWICBitmap(_pWicBitmap, AbsolutePath(_T("Image\\tempBlank.png")),
+		HRESULT hr = loadWICBitmap(_pWicBitmap, AbsolutePath(L"Image\\tempBlank.png"),
 			0, 0, _width, _height);
 		return hr;
 	}
@@ -1066,7 +1065,7 @@ namespace suku
 		}
 	}
 
-	Bitmap::Bitmap(LPCTSTR _url)
+	Bitmap::Bitmap(const wchar_t* _url)
 	{
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url));
 		if (SUCCEEDED(hr))
@@ -1088,7 +1087,7 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
-	Bitmap::Bitmap(LPCTSTR _url, UINT _x, UINT _y, UINT _width, UINT _height)
+	Bitmap::Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))

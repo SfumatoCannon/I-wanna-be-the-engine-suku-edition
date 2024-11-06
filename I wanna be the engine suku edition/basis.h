@@ -83,26 +83,26 @@ namespace suku
 
 		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
 			float _centerX = 0.0f, float _centerY = 0.0f,
-			LPCTSTR _path = nullptr);
+			const wchar_t* _path = nullptr);
 		//BitmapSpriteZ(UINT _width, UINT _height,
 		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
 		//	float _centerX = 0.0f, float _centerY = 0.0f,
-		//	bool _getAutoHitbox = false, LPCTSTR _path = nullptr);
+		//	bool _getAutoHitbox = false, const wchar_t* _path = nullptr);
 		//BitmapSpriteZ(UINT _width, UINT _height,
 		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
 		//	float _centerX = 0.0f, float _centerY = 0.0f,
-		//	LPCTSTR _path = nullptr);
+		//	const wchar_t* _path = nullptr);
 		BitmapSpriteZ(UINT _width, UINT _height,
 			int _hitboxX, int _hitboxY,
-			LPCTSTR _path,
+			const wchar_t* _path,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZ(LPCTSTR _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZ(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
 		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-			float _centerX = 0, float _centerY = 0, LPCTSTR _path = nullptr);
+			float _centerX = 0, float _centerY = 0, const wchar_t* _path = nullptr);
 		BitmapSpriteZ();
 
-		void catchBitmap(LPCTSTR _path);
-		//void catchWicBitmap(LPCTSTR _path);
+		void catchBitmap(const wchar_t* _path);
+		//void catchWicBitmap(const wchar_t* _path);
 		//void catchD2dBitmap();
 
 		virtual void paint(float _x, float _y,
