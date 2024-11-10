@@ -84,24 +84,28 @@ namespace suku
 		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
 			float _centerX = 0.0f, float _centerY = 0.0f,
 			const wchar_t* _path = nullptr);
-		//BitmapSpriteZ(UINT _width, UINT _height,
-		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
-		//	float _centerX = 0.0f, float _centerY = 0.0f,
-		//	bool _getAutoHitbox = false, const wchar_t* _path = nullptr);
-		//BitmapSpriteZ(UINT _width, UINT _height,
-		//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
-		//	float _centerX = 0.0f, float _centerY = 0.0f,
-		//	const wchar_t* _path = nullptr);
+		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
+			float _centerX = 0.0f, float _centerY = 0.0f,
+			const char* _path = nullptr);
 		BitmapSpriteZ(UINT _width, UINT _height,
 			int _hitboxX, int _hitboxY,
 			const wchar_t* _path,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		BitmapSpriteZ(UINT _width, UINT _height,
+			int _hitboxX, int _hitboxY,
+			const char* _path,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 		BitmapSpriteZ(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZ(const char* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
 		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 			float _centerX = 0, float _centerY = 0, const wchar_t* _path = nullptr);
+		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+			float _centerX = 0, float _centerY = 0, const char* _path = nullptr);
 		BitmapSpriteZ();
 
 		void catchBitmap(const wchar_t* _path);
+		void catchBitmap(const char* _path);
+
 		//void catchWicBitmap(const wchar_t* _path);
 		//void catchD2dBitmap();
 
@@ -286,6 +290,7 @@ namespace suku
 		std::list<std::function<bool()> > functionList_;
 	};
 	template<typename Father, typename Son> void linkCollisionType();
+	template<typename Son> void unlinkCollisionType();
 
 	class Group
 	{
@@ -826,6 +831,12 @@ namespace suku
 	{
 		collisionInheritTree.unlink<Son>();
 		collisionInheritTree.link<Father, Son>();
+	}
+
+	template<typename Son>
+	void unlinkCollisionType()
+	{
+		collisionInheritTree.unlink<Son>();
 	}
 
 	template<typename T>

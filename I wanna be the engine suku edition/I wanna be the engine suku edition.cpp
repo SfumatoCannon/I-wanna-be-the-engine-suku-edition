@@ -22,9 +22,9 @@ int fps = MAXFPS;
 void Initialization()
 {
 	using namespace suku;
-	GetModuleFileName(NULL, strPath, MAX_PATH);
-	(_tcsrchr(strPath, L'\\'))[1] = 0;
-	Path_len = _tcsclen(strPath);
+	GetModuleFileName(NULL, exePath, MAX_PATH);
+	(_tcsrchr(exePath, L'\\'))[1] = 0;
+	Path_len = _tcsclen(exePath);
 	HRESULT hr = CoInitialize(NULL);
 	if (SUCCEEDED(hr))
 	{

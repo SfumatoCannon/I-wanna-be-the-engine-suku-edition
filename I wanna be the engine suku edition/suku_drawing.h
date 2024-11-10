@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 #include "suku_maths.h"
+#include "game_saving.h"
 
 namespace suku
 {
@@ -17,7 +18,7 @@ namespace suku
 	extern ID2D1HwndRenderTarget* g_pRenderTarget;
 	extern IWICImagingFactory* g_pIWICFactory;
 
-	extern wchar_t strPath[MAX_PATH + 1];
+	extern wchar_t exePath[MAX_PATH + 1];
 	extern size_t Path_len;
 	extern HWND game_hWnd;
 
@@ -119,7 +120,9 @@ namespace suku
 		Bitmap(UINT _width, UINT _height);
 		//Create bitmap from file
 		Bitmap(const wchar_t* _url);
+		Bitmap(const char* _url);
 		Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(const char* _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
@@ -193,6 +196,7 @@ namespace suku
 	};
 
 	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
+	const wchar_t* AbsolutePath(const char* _relativePath);
 
 	void SwapByte(BYTE* _a, BYTE* _b);
 
@@ -204,19 +208,21 @@ namespace suku
 
 	HRESULT loadWICBitmap(
 		IWICBitmap** _pWicBitmap,
-		const wchar_t* uri
+		const wchar_t* uri	//absolute path
 	);
 	HRESULT loadWICBitmap(
 		IWICBitmap** _pWicBitmap,
-		const wchar_t* uri,
+		const wchar_t* _uri,	//absolute path
 		UINT _x, UINT _y, UINT _width, UINT _height
 	);
-	//Due to technical problem, _width and _height should <= 2048
+
+	//Due to technical reason, _width and _height in CreateWICBitmap() must <= 2048
 	HRESULT createWICBitmap(
 		IWICBitmap** _pWicBitmap,
 		UINT _width,
 		UINT _height
 	);
+
 	HRESULT getD2DBitmap(
 		IWICBitmap** _pWicBitmap,
 		ID2D1Bitmap** _pD2dBitmap,

@@ -40,6 +40,9 @@ namespace suku
 	extern int saveFileId;
 	extern wchar_t saveFilePath[512];
 
+	wchar_t getWideChar(const char& _multiByteChar);
+	wchar_t* getWideString(const char* _multiByteString);
+
 	void createPath(std::string _path);
 	void createPath(const wchar_t* _path);
 	void createPath(const char* _path);

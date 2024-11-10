@@ -42,6 +42,7 @@ public:
 		create(Water(224, 32));
 		create(Spike(32, 128), Wall(32, 160));
 		create(Warp(128, 0, &room1));
+		linkCollisionType<Wall, Spike>();
 	}
 
 	virtual void onPaintStart()override

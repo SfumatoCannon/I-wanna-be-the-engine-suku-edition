@@ -21,15 +21,15 @@ namespace suku
 		sprCherry.setSpeed(25);
 
 		//sprWall.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, L"Image\\wall.png"));
-		sprWall.push(BitmapSpriteZ(L"Image\\wall.png", 16, 16));
+		sprWall.push(BitmapSpriteZ("Image\\wall.png", 16, 16));
 
-		sprSpikeUp.push(BitmapSpriteZ(L"Image\\spike_u.png", 16, 16));
+		sprSpikeUp.push(BitmapSpriteZ("Image\\spike_u.png", 16, 16));
 
-		sprSpikeDown.push(BitmapSpriteZ(L"Image\\spike_d.png", 16, 16));
+		sprSpikeDown.push(BitmapSpriteZ("Image\\spike_d.png", 16, 16));
 
-		sprSpikeLeft.push(BitmapSpriteZ(L"Image\\spike_l.png", 16, 16));
+		sprSpikeLeft.push(BitmapSpriteZ("Image\\spike_l.png", 16, 16));
 
-		sprSpikeRight.push(BitmapSpriteZ(L"Image\\spike_r.png", 16, 16));
+		sprSpikeRight.push(BitmapSpriteZ("Image\\spike_r.png", 16, 16));
 
 		sprWater.push(BitmapSpriteZ(32, 32, SquareShape(32), 16, 16, L"Image\\water_noextrajump.png"));
 

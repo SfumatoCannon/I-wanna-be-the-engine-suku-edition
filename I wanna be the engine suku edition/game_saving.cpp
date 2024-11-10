@@ -9,6 +9,20 @@ namespace suku
 	int saveFileId;
 	wchar_t saveFilePath[512];
 
+	wchar_t getWideChar(const char& _multiByteChar)
+	{
+		return wchar_t(_multiByteChar);
+	}
+
+	wchar_t* getWideString(const char* _multiByteString)
+	{
+		int length = MultiByteToWideChar(CP_ACP, 0, _multiByteString, (int)strlen(_multiByteString), nullptr, 0);
+		wchar_t* result = new wchar_t[length + 1];
+		MultiByteToWideChar(CP_ACP, 0, _multiByteString, (int)strlen(_multiByteString), result, length);
+		result[length] = L'\0';
+		return result;
+	}
+
 	void createPath(std::string _path)
 	{
 		_path = "md " + _path;

@@ -1419,6 +1419,16 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
+	void BitmapSpriteZ::catchBitmap(const char* _path)
+	{
+		if (pBitmap_ != nullptr)
+		{
+			delete pBitmap_;
+			pBitmap_ = nullptr;
+		}
+		pBitmap_ = new Bitmap(_path);
+	}
+
 	//void BitmapSpriteZ::catchWicBitmap(const wchar_t* _path)
 	//{
 	//	loadWICBitmap(&wicBitmap_, AbsolutePath(_path));
@@ -1455,54 +1465,24 @@ namespace suku
 		float _centerX, float _centerY, const wchar_t* _path)
 	{
 		pBitmap_ = nullptr;
-		//d2d1Bitmap_ = nullptr;
-		//wicBitmap_ = nullptr;
 		width = _width;
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
 		catchBitmap(_path);
-		//catchWicBitmap(_path);
-		//catchD2dBitmap();
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
-	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
-	//	float _centerX, float _centerY,
-	//	bool _getAutoHitbox, const wchar_t* _path)
-	//{
-	//	pBitmap_ = nullptr;
-	//	width = _width;
-	//	height = _height;
-	//	centerX = _centerX;
-	//	centerY = _centerY;
-	//	catchBitmap(_path);
-	//	if (_getAutoHitbox)
-	//	{
-	//		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY);
-	//	}
-	//	else
-	//	{
-	//		RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
-	//		hitArea = new ShapeCollisionBox(newCollisionBoxShape);
-	//	}
-	//}
-
-	//BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
-	//	int _hitboxX, int _hitboxY, UINT _hitboxWidth, UINT _hitboxHeight,
-	//	float _centerX, float _centerY,
-	//	const wchar_t* _path)
-	//{
-	//	pBitmap_ = nullptr;
-	//	width = _width;
-	//	height = _height;
-	//	centerX = _centerX;
-	//	centerY = _centerY;
-	//	catchBitmap(_path);
-	//	RectangleShape newCollisionBoxShape((float)_hitboxWidth, (float)_hitboxHeight, (float)_hitboxX, (float)_hitboxY);
-	//	hitArea = new ShapeCollisionBox(newCollisionBoxShape);
-	//}
+	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY, const char* _path)
+	{
+		pBitmap_ = nullptr;
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		catchBitmap(_path);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
 		int _hitboxX, int _hitboxY,
@@ -1518,12 +1498,41 @@ namespace suku
 		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
 	}
 
+	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, int _hitboxX, int _hitboxY, const char* _path, float _centerX, float _centerY, float _alphaThreshold)
+	{
+		pBitmap_ = nullptr;
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		catchBitmap(_path);
+		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
+	}
+
 	BitmapSpriteZ::BitmapSpriteZ(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
+		centerX = _centerX;
+		centerY = _centerY;
 
-		//catchWicBitmap(_path);
-		//catchD2dBitmap();
+		pBitmap_ = new Bitmap(_path);
+
+		if (pBitmap_)
+		{
+			width = pBitmap_->getWidth();
+			height = pBitmap_->getHeight();
+			hitArea = new BitmapCollisionBox(pBitmap_, 0, 0);
+		}
+		else
+		{
+			width = height = 0;
+			hitArea = nullptr;
+		}
+	}
+
+	BitmapSpriteZ::BitmapSpriteZ(const char* _path, float _centerX, float _centerY, float _alphaThreshold)
+	{
+		pBitmap_ = nullptr;
 		centerX = _centerX;
 		centerY = _centerY;
 
@@ -1544,6 +1553,16 @@ namespace suku
 
 	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 		float _centerX, float _centerY, const wchar_t* _path)
+	{
+		hitArea = new BitmapCollisionBox(_collisionBox);
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = new Bitmap(_path);
+	}
+
+	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, const char* _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;

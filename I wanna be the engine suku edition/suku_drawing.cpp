@@ -1,5 +1,6 @@
 #include "suku_drawing.h"
 #include "suku_maths.h"
+#include "game_saving.h"
 
 namespace suku
 {
@@ -7,7 +8,7 @@ namespace suku
 	ID2D1HwndRenderTarget* g_pRenderTarget = NULL;	// Render target
 	IWICImagingFactory* g_pIWICFactory;
 
-	wchar_t strPath[MAX_PATH + 1];
+	wchar_t exePath[MAX_PATH + 1];
 	size_t Path_len;
 
 	Transform translation(float _shiftX, float _shiftY)
@@ -58,13 +59,25 @@ namespace suku
 		g_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
-	const wchar_t* AbsolutePath(const wchar_t* relative_path)
+	const wchar_t* AbsolutePath(const wchar_t* relativePath)
 	{
-		if (!relative_path) return nullptr;
+		if (!relativePath) return nullptr;
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
-		lstrcatW(result, strPath);
-		lstrcatW(result, relative_path);
+		lstrcatW(result, exePath);
+		lstrcatW(result, relativePath);
+		return result;
+	}
+
+	const wchar_t* AbsolutePath(const char* _relativePath)
+	{
+		if (!_relativePath) return nullptr;
+		wchar_t* wideCharRelativePath = getWideString(_relativePath);
+		static wchar_t result[MAX_PATH + 1] = { 0 };
+		result[0] = L'\0';
+		lstrcatW(result, exePath);
+		lstrcatW(result, wideCharRelativePath);
+		delete[] wideCharRelativePath;
 		return result;
 	}
 
@@ -277,7 +290,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* uri)
+	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* _uri)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
@@ -285,7 +298,7 @@ namespace suku
 		UINT					originalHeight = 0;
 
 		HRESULT hr = g_pIWICFactory->CreateDecoderFromFilename(
-			uri,
+			_uri,
 			nullptr,
 			GENERIC_READ,
 			WICDecodeMetadataCacheOnLoad,
@@ -313,13 +326,13 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* uri, UINT _x, UINT _y, UINT _width, UINT _height)
+	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* _uri, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
 
 		HRESULT hr = g_pIWICFactory->CreateDecoderFromFilename(
-			uri,
+			_uri,
 			nullptr,
 			GENERIC_READ,
 			WICDecodeMetadataCacheOnLoad,
@@ -1087,9 +1100,56 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
+	Bitmap::Bitmap(const char* _url)
+	{
+		wchar_t* wideCharUrl = getWideString(_url);
+		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl));
+		if (SUCCEEDED(hr))
+		{
+			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
+			if (SUCCEEDED(hr))
+			{
+				width_ = w;
+				height_ = h;
+				bytesPerPixel_ = 0;
+				getPixelByte();
+				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
+				return;
+			}
+		}
+		width_ = height_ = 0;
+		wicBitmap_ = nullptr;
+		d2d1Bitmap_ = nullptr;
+		bytesPerPixel_ = 0;
+		delete[] wideCharUrl;
+	}
+
 	Bitmap::Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url), _x, _y, _width, _height);
+		if (SUCCEEDED(hr))
+		{
+			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
+			if (SUCCEEDED(hr))
+			{
+				width_ = w;
+				height_ = h;
+				bytesPerPixel_ = 0;
+				getPixelByte();
+				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
+				return;
+			}
+		}
+		width_ = height_ = 0;
+		wicBitmap_ = nullptr;
+		d2d1Bitmap_ = nullptr;
+		bytesPerPixel_ = 0;
+	}
+
+	Bitmap::Bitmap(const char* _url, UINT _x, UINT _y, UINT _width, UINT _height)
+	{
+		wchar_t* wideCharUrl = getWideString(_url);		
+		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
