@@ -1584,19 +1584,19 @@ namespace suku
 
 	Sprite::Sprite()
 	{
-		speed_ = 1;
+		flipTime_ = 1;
 	}
 
 	void Sprite::setSpeed(unsigned short _speed)
 	{
-		speed_ = _speed;
+		flipTime_ = _speed;
 	}
 
 	SpriteZ* Sprite::getState(unsigned short _wp)
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else return bodyList[_wp / speed_ % bodyList.size()];
+		else return bodyList[_wp / flipTime_ % bodyList.size()];
 	}
 
 	Group Group::operator&(Group& _group)
@@ -1800,12 +1800,19 @@ namespace suku
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
+		{
+			newBrush->AddRef();
 			fillBrush = newBrush;
-		else 
+			newBrush->AddRef();
+			outlineBrush = newBrush;
+		}
+		else
+		{
 			fillBrush = nullptr;
+			outlineBrush = nullptr;
+		}
 
-		outlineBrush = nullptr;
-		outlineWidth = 0.0f;
+		outlineWidth = 1.0f;
 		outlineStrokeStyle = nullptr;
 	}
 
@@ -1821,16 +1828,22 @@ namespace suku
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
+		{
+			newBrush->AddRef();
 			fillBrush = newBrush;
+		}
 		else
 			fillBrush = nullptr;
-		//Reference count is still 1, no need to release
+
 		hr = g_pRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_outlineColor.r() / 255.0f, _outlineColor.g() / 255.0f, _outlineColor.b() / 255.0f, _outlineColor.alpha),
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
+		{
+			newBrush->AddRef();
 			outlineBrush = newBrush;
+		}
 		else
 			outlineBrush = nullptr;
 
@@ -1879,7 +1892,10 @@ namespace suku
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
+		{
+			newBrush->AddRef();
 			fillBrush = newBrush;
+		}
 	}
 
 	void ShapeSpriteZ::setOutlineColor(const Color& _color)
@@ -1893,7 +1909,10 @@ namespace suku
 			&newBrush
 		);
 		if (SUCCEEDED(hr))
+		{
+			newBrush->AddRef();
 			outlineBrush = newBrush;
+		}
 	}
 
 	void ShapeSpriteZ::setOutlineWidth(int _width)

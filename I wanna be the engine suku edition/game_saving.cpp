@@ -22,7 +22,7 @@ namespace suku
 		result[length] = L'\0';
 		return result;
 	}
-
+	
 	void createPath(std::string _path)
 	{
 		_path = "md " + _path;

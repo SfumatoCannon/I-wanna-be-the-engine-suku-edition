@@ -130,14 +130,14 @@ namespace suku
 		ID2D1StrokeStyle* outlineStrokeStyle;
 		float outlineWidth;
 		ShapeSpriteZ(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
-			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 0.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
 		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor);
 		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor,
-			const Color& _outlineColor, float _outlineWidth = 0.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+			const Color& _outlineColor, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
 		~ShapeSpriteZ();
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
-			float _xScale = 1.0, float _yScale = 1.0, float _angle = 0.0);
+			float _xScale = 1.0f, float _yScale = 1.0f, float _angle = 0.0f);
 		void paint(float _x, float _y, Transform _paintingTransform);
 		void paint(Transform _paintingTransform);
 		void setFillColor(const Color& _color);
@@ -145,7 +145,7 @@ namespace suku
 		void setOutlineWidth(int _width);
 
 		virtual void paint(float _x, float _y,
-			float _xScale = 1.0, float _ycale = 1.0, float _alpha = 1.0, float _angle = 0.0) override;
+			float _xScale = 1.0f, float _yScale = 1.0f, float _alpha = 1.0f, float _angle = 0.0f) override;
 		virtual void paint(float _x, float _y,
 			Transform _transform, float _alpha = 1.0) override;
 		virtual void paint(Transform _transform, float _alpha = 1.0) override;
@@ -156,18 +156,16 @@ namespace suku
 	public:
 		std::vector<SpriteZ*> bodyList;
 		Sprite();
-		//Sprite(BitmapSpriteZ _spriteZ);
-		//Sprite(BitmapSpriteZ _spriteZ1, BitmapSpriteZ _spriteZ2, 
-		// 
-		// 
-		// );
+		template<typename SprZ> Sprite(const SprZ& _spriteZ);
+		template<typename SprZ, typename... SprZNext> Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
 		void setSpeed(unsigned short _speed);
-		template<typename T> void push(const T& _spriteZ);
+		template<typename SprZ> void push(const SprZ& _spriteZ);
+		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		SpriteZ* getState(unsigned short _wp);
 	private:
-		unsigned short speed_;
+		unsigned short flipTime_;
 	};
 
 	class Object
@@ -839,10 +837,32 @@ namespace suku
 		collisionInheritTree.unlink<Son>();
 	}
 
-	template<typename T>
-	inline void Sprite::push(const T& _spriteZ)
+	template<typename SprZ>
+	inline Sprite::Sprite(const SprZ& _spriteZ)
 	{
-		T* newSpriteZ = new T(_spriteZ);
+		flipTime_ = 1;
+		push(_spriteZ);
+	}
+
+	template<typename SprZ, typename ...SprZNext>
+	inline Sprite::Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	{
+		flipTime_ = _flipTime;
+		push(_spriteZ);
+		push(_spriteZNext...);
+	}
+
+	template<typename SprZ>
+	inline void Sprite::push(const SprZ& _spriteZ)
+	{
+		SprZ* newSpriteZ = new SprZ(_spriteZ);
 		bodyList.push_back(newSpriteZ);
+	}
+
+	template<typename SprZ, typename ...SprZNext>
+	inline void Sprite::push(const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	{
+		push(_spriteZ);
+		push(_spriteZNext...);
 	}
 }
