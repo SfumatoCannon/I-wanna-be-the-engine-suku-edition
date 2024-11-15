@@ -9,9 +9,9 @@ namespace suku
 	class CollisionBox;
 	class BitmapCollisionBox;
 	class ShapeCollisionBox;
-	class SpriteZ;
-	class BitmapSpriteZ;
-	class ShapeSpriteZ;
+	class SpriteZero;
+	class BitmapSpriteZero;
+	class ShapeSpriteZero;
 	class Sprite;
 	class Object;
 	class Group;
@@ -60,54 +60,51 @@ namespace suku
 		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const override;
 	};
 
-	class SpriteZ
+	class SpriteZero
 	{
 	public:
 		UINT height, width;
 		float centerX, centerY;
 		CollisionBox* hitArea;
-		SpriteZ() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
+		SpriteZero() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
 
 		virtual void paint(float _x, float _y,
 			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) {};
 		virtual void paint(float _x, float _y,
 			Transform _transform, float _alpha = 1.0) {};
 		virtual void paint(Transform _transform, float _alpha = 1.0) {};
-		bool isCrashed(Transform _transform, const SpriteZ& _other, Transform _otherTransform)const;
-		bool isCrashed(Transform _transform, const SpriteZ* _other, Transform _otherTransform)const;
+		bool isCrashed(Transform _transform, const SpriteZero& _other, Transform _otherTransform)const;
+		bool isCrashed(Transform _transform, const SpriteZero* _other, Transform _otherTransform)const;
 	};
 
-	class BitmapSpriteZ :public SpriteZ
+	class BitmapSpriteZero :public SpriteZero
 	{
 	public:
 
-		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
+		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
 			float _centerX = 0.0f, float _centerY = 0.0f,
 			const wchar_t* _path = nullptr);
-		BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
+		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
 			float _centerX = 0.0f, float _centerY = 0.0f,
 			const char* _path = nullptr);
-		BitmapSpriteZ(UINT _width, UINT _height,
+		BitmapSpriteZero(UINT _width, UINT _height,
 			int _hitboxX, int _hitboxY,
 			const wchar_t* _path,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZ(UINT _width, UINT _height,
+		BitmapSpriteZero(UINT _width, UINT _height,
 			int _hitboxX, int _hitboxY,
 			const char* _path,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZ(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZ(const char* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+		BitmapSpriteZero(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(const char* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 			float _centerX = 0, float _centerY = 0, const wchar_t* _path = nullptr);
-		BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 			float _centerX = 0, float _centerY = 0, const char* _path = nullptr);
-		BitmapSpriteZ();
+		BitmapSpriteZero();
 
 		void catchBitmap(const wchar_t* _path);
 		void catchBitmap(const char* _path);
-
-		//void catchWicBitmap(const wchar_t* _path);
-		//void catchD2dBitmap();
 
 		virtual void paint(float _x, float _y,
 			float _xScale = 1.0, float _yScale = 1.0, float _alpha = 1.0, float _angle = 0.0) override;
@@ -121,7 +118,7 @@ namespace suku
 		//ID2D1Bitmap* d2d1Bitmap_;
 	};
 
-	class ShapeSpriteZ :public SpriteZ
+	class ShapeSpriteZero :public SpriteZero
 	{
 	public:
 		Shape shape;
@@ -129,12 +126,12 @@ namespace suku
 		ID2D1Brush* outlineBrush;
 		ID2D1StrokeStyle* outlineStrokeStyle;
 		float outlineWidth;
-		ShapeSpriteZ(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
+		ShapeSpriteZero(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
 			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
-		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor);
-		ShapeSpriteZ(const Shape& _shape, const Color& _fillColor,
+		ShapeSpriteZero(const Shape& _shape, const Color& _fillColor);
+		ShapeSpriteZero(const Shape& _shape, const Color& _fillColor,
 			const Color& _outlineColor, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
-		~ShapeSpriteZ();
+		~ShapeSpriteZero();
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
 			float _xScale = 1.0f, float _yScale = 1.0f, float _angle = 0.0f);
@@ -154,16 +151,18 @@ namespace suku
 	class Sprite
 	{
 	public:
-		std::vector<SpriteZ*> bodyList;
+		std::vector<SpriteZero*> bodyList;
 		Sprite();
 		template<typename SprZ> Sprite(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ> void init(const SprZ& _spriteZ);
+		template<typename SprZ, typename... SprZNext> void init(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
 		void setSpeed(unsigned short _speed);
 		template<typename SprZ> void push(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
-		SpriteZ* getState(unsigned short _wp);
+		SpriteZero* getState(unsigned short _wp);
 	private:
 		unsigned short flipTime_;
 	};
@@ -184,7 +183,6 @@ namespace suku
 		double recheckStateId()const { return recheckStateId_; }
 		double paintId()const { return paintId_; }
 		size_t kind()const { return kindId_; }
-		size_t tag()const { return tag_; }
 
 		template<typename Obj> Obj* getInsideObject();
 		void setReviseStateId(double _id);
@@ -205,7 +203,7 @@ namespace suku
 
 		Var& operator[](std::string _str);
 		Object(float _x = 0, float _y = 0);
-		SpriteZ* nowState()const;
+		SpriteZero* nowState()const;
 
 		void remove();
 		void destroy();
@@ -270,12 +268,10 @@ namespace suku
 
 		Room* inRoom_;
 		size_t kindId_;
-		size_t tag_;
 		double reviseStateId_, updateStateId_, recheckStateId_, paintId_;
 		std::list<Object*>::iterator objectIterator_;
 		std::list<Object*>::iterator objectParentIterator_;
 		Var insideObjectIterator_;	//Var type: std::list<Obj*>::iterator
-		std::list<Object*>::iterator tagIterator_;
 		std::list<Object*>::iterator reviseStateIterator_;
 		std::list<Object*>::iterator updateStateIterator_;
 		std::list<Object*>::iterator recheckStateIterator_;
@@ -322,7 +318,6 @@ namespace suku
 		std::map<size_t, Var> objectPointerArray;	//Var type: std::list<Obj*>*
 		std::map<size_t, std::list<Object*>> objectParentPointerArray;
 		std::map<size_t, std::list<Var>> objectPointerRemoveArray; //Var type: std::list<Obj*>::iterator
-		std::map<size_t, std::list<Object*>> tagArray;
 		std::map<double, std::list<Object*>> reviseStateArray;
 		std::map<double, std::list<Object*>> updateStateArray;
 		std::map<double, std::list<Object*>> recheckStateArray;
@@ -445,10 +440,6 @@ namespace suku
 		newObj->objectParentIterator_ =
 			objectParentPointerArray[typecode(Obj)].insert(objectParentPointerArray[typecode(Obj)].end(), newObjParent);
 
-		newObj->tagIterator_ =
-			tagArray[newObj->tag_].insert(tagArray[newObj->tag_].end(), newObj);
-
-
 		newObj->reviseStateIterator_ =
 			reviseStateArray[newObj->reviseStateId_].insert(reviseStateArray[newObj->reviseStateId_].end(), newObjParent);
 
@@ -500,10 +491,6 @@ namespace suku
 
 		newObj->objectParentIterator_ =
 			objectParentPointerArray[typecode(Obj)].insert(objectParentPointerArray[typecode(Obj)].end(), newObjParent);
-
-		newObj->tagIterator_ =
-			tagArray[newObj->tag_].insert(tagArray[newObj->tag_].end(), newObj);
-
 
 		newObj->reviseStateIterator_ =
 			reviseStateArray[newObj->reviseStateId_].insert(reviseStateArray[newObj->reviseStateId_].end(), newObjParent);
@@ -847,6 +834,23 @@ namespace suku
 	template<typename SprZ, typename ...SprZNext>
 	inline Sprite::Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
 	{
+		flipTime_ = _flipTime;
+		push(_spriteZ);
+		push(_spriteZNext...);
+	}
+
+	template<typename SprZ>
+	inline void Sprite::init(const SprZ& _spriteZ)
+	{
+		bodyList.clear();
+		flipTime_ = 1;
+		push(_spriteZ);
+	}
+
+	template<typename SprZ, typename ...SprZNext>
+	inline void Sprite::init(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	{
+		bodyList.clear();
 		flipTime_ = _flipTime;
 		push(_spriteZ);
 		push(_spriteZNext...);

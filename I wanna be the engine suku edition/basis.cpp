@@ -152,14 +152,14 @@ namespace suku
 		return _other.isCrashed(_otherTransform, *this, _transform);
 	}
 
-	bool SpriteZ::isCrashed(Transform _transform, const SpriteZ& _other, Transform _otherTransform)const
+	bool SpriteZero::isCrashed(Transform _transform, const SpriteZero& _other, Transform _otherTransform)const
 	{
 		if (!hitArea || !(_other.hitArea))
 			return false;
 		return hitArea->isCrashed(_transform, *(_other.hitArea), _otherTransform);
 	}
 
-	bool SpriteZ::isCrashed(Transform _transform, const SpriteZ* _other, Transform _otherTransform)const
+	bool SpriteZero::isCrashed(Transform _transform, const SpriteZero* _other, Transform _otherTransform)const
 	{
 		if (!hitArea || !(_other->hitArea))
 			return false;
@@ -170,7 +170,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteZ* spr = nowState();
+		SpriteZero* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -182,7 +182,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteZ* spr = nowState();
+		SpriteZero* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -211,7 +211,7 @@ namespace suku
 		y = spawnY;
 	}
 
-	SpriteZ* Object::nowState()const
+	SpriteZero* Object::nowState()const
 	{
 		if (!sprite_)
 			return nullptr;
@@ -362,7 +362,6 @@ namespace suku
 		spriteTransform = Transform();
 		paintId_ = 0;
 		kindId_ = typecode(Object);
-		tag_ = typecode(Object);
 	}
 
 	void Object::remove()
@@ -381,7 +380,6 @@ namespace suku
 				inRoom_->updateStateArray[updateStateId_].erase(updateStateIterator_);
 				inRoom_->recheckStateArray[recheckStateId_].erase(recheckStateIterator_);
 				inRoom_->paintArray[paintId_].erase(paintIterator_);
-				inRoom_->tagArray[tag_].erase(tagIterator_);
 				inRoom_ = nullptr;
 			}
 		}
@@ -483,8 +481,8 @@ namespace suku
 	* old version
 	bool Object::isCrashed(Object _obj, bool _isPredict)
 	{
-		BitmapSpriteZ* bodyza = nowState();
-		BitmapSpriteZ* bodyzb = _obj.nowState();
+		BitmapSpriteZero* bodyza = nowState();
+		BitmapSpriteZero* bodyzb = _obj.nowState();
 		if (_isPredict)
 		{
 			_obj.x += _obj.totalHspeed();
@@ -982,64 +980,14 @@ namespace suku
 			else vspeedTemp = yTo - round(y) - vspeed;
 		}
 	}
-	/*
-	Object* Object::getCrashedObjectPrecisely(size_t _tag, float _x, float _y, bool _isPredict)
-	{
-		if (inRoom_)
-		{
-			auto& list = inRoom_->tagArray[_tag];
-			if (_isPredict)
-			{
-				for (auto& obj : list)
-				{
-					if (isCrashed(*obj, _x, _y, obj->x, obj->y))
-						return obj;
-				}
-			}
-			else
-			{
-				for (auto& obj : list)
-				{
-					if (isCrashed(*obj, _x, _y))
-						return obj;
-				}
-			}
-		}
-		return nullptr;
-	}
-	std::list<Object*> Object::getCrashedObjectListPrecisely(size_t _tag, float _x, float _y, bool _isPredict)
-	{
-		std::list<Object*> resultList;
-		if (inRoom_)
-		{
-			auto& list = inRoom_->tagArray[_tag];
-			if (_isPredict)
-			{
-				for (auto& obj : list)
-				{
-					if (isCrashed(*obj, _x, _y, obj->x, obj->y))
-						resultList.push_back(obj);
-				}
-			}
-			else
-			{
-				for (auto& obj : list)
-				{
-					if (isCrashed(*obj, _x, _y))
-						resultList.push_back(obj);
-				}
-			}
-		}
-		return resultList;
-	}
-	*/
+	
 	/*
 	Object* Object::touchObject(unsigned short _objectkind)
 	{
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -1056,7 +1004,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 			{
 				x = tx;
@@ -1080,7 +1028,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -1096,7 +1044,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -1118,7 +1066,7 @@ namespace suku
 				x = tx, y = ty;
 				return result;
 			}
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -1135,7 +1083,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteZ* body2 = nowState();
+			BitmapSpriteZero* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -1409,7 +1357,7 @@ namespace suku
 				(*k)->paintBody();
 	}*/
 
-	void BitmapSpriteZ::catchBitmap(const wchar_t* _path)
+	void BitmapSpriteZero::catchBitmap(const wchar_t* _path)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1419,7 +1367,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	void BitmapSpriteZ::catchBitmap(const char* _path)
+	void BitmapSpriteZero::catchBitmap(const char* _path)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1429,17 +1377,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	//void BitmapSpriteZ::catchWicBitmap(const wchar_t* _path)
-	//{
-	//	loadWICBitmap(&wicBitmap_, AbsolutePath(_path));
-	//}
-
-	//void BitmapSpriteZ::catchD2dBitmap()
-	//{
-	//	getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width, height);
-	//}
-
-	void BitmapSpriteZ::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
+	void BitmapSpriteZero::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
 		pBitmap_->paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
 			_alpha);
@@ -1447,7 +1385,7 @@ namespace suku
 		//	translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle));
 	}
 
-	void BitmapSpriteZ::paint(float _x, float _y, Transform _transform, float _alpha)
+	void BitmapSpriteZero::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		pBitmap_->paint(translation(_x, _y) + _transform,
 			_alpha);
@@ -1455,13 +1393,13 @@ namespace suku
 		//	translation(_x, _y) + _transform);
 	}
 
-	void BitmapSpriteZ::paint(Transform _transform, float _alpha)
+	void BitmapSpriteZero::paint(Transform _transform, float _alpha)
 	{
 		pBitmap_->paint(_transform, _alpha);
 		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox,
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
 		float _centerX, float _centerY, const wchar_t* _path)
 	{
 		pBitmap_ = nullptr;
@@ -1473,7 +1411,7 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY, const char* _path)
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY, const char* _path)
 	{
 		pBitmap_ = nullptr;
 		width = _width;
@@ -1484,7 +1422,7 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height,
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height,
 		int _hitboxX, int _hitboxY,
 		const wchar_t* _path,
 		float _centerX, float _centerY, float _alphaThreshold)
@@ -1498,7 +1436,7 @@ namespace suku
 		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, int _hitboxX, int _hitboxY, const char* _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, int _hitboxX, int _hitboxY, const char* _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 		width = _width;
@@ -1509,7 +1447,7 @@ namespace suku
 		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 		centerX = _centerX;
@@ -1530,7 +1468,7 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(const char* _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZero::BitmapSpriteZero(const char* _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 		centerX = _centerX;
@@ -1551,7 +1489,7 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 		float _centerX, float _centerY, const wchar_t* _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
@@ -1562,7 +1500,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, const char* _path)
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, const char* _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;
@@ -1572,7 +1510,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	BitmapSpriteZ::BitmapSpriteZ()
+	BitmapSpriteZero::BitmapSpriteZero()
 	{
 		hitArea = nullptr;
 		pBitmap_ = nullptr;
@@ -1592,7 +1530,7 @@ namespace suku
 		flipTime_ = _speed;
 	}
 
-	SpriteZ* Sprite::getState(unsigned short _wp)
+	SpriteZero* Sprite::getState(unsigned short _wp)
 	{
 		if (bodyList.empty())
 			return nullptr;
@@ -1774,7 +1712,7 @@ namespace suku
 		}
 	}
 
-	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, ID2D1Brush* _fillBrush,
+	ShapeSpriteZero::ShapeSpriteZero(const Shape& _shape, ID2D1Brush* _fillBrush,
 		ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
 	{
 		shape = _shape;
@@ -1789,7 +1727,7 @@ namespace suku
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
-	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, const Color& _fillColor)
+	ShapeSpriteZero::ShapeSpriteZero(const Shape& _shape, const Color& _fillColor)
 	{
 		shape = _shape;
 
@@ -1816,7 +1754,7 @@ namespace suku
 		outlineStrokeStyle = nullptr;
 	}
 
-	ShapeSpriteZ::ShapeSpriteZ(const Shape& _shape, const Color& _fillColor, 
+	ShapeSpriteZero::ShapeSpriteZero(const Shape& _shape, const Color& _fillColor, 
 		const Color& _outlineColor, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
 	{
 		shape = _shape;
@@ -1852,36 +1790,36 @@ namespace suku
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
-	ShapeSpriteZ::~ShapeSpriteZ()
+	ShapeSpriteZero::~ShapeSpriteZero()
 	{
 		SAFE_RELEASE(fillBrush);
 		SAFE_RELEASE(outlineBrush);
 		SAFE_RELEASE(outlineStrokeStyle);
 	}
 
-	void ShapeSpriteZ::setShapeTransform(Transform _transform)
+	void ShapeSpriteZero::setShapeTransform(Transform _transform)
 	{
 		shape.setTransform(_transform);
 	}
 
-	void ShapeSpriteZ::paint(float _x, float _y, float _xScale, float _yScale, float _angle)
+	void ShapeSpriteZero::paint(float _x, float _y, float _xScale, float _yScale, float _angle)
 	{
 		Transform paintingTransform = translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale)
 			+ rotation(centerX, centerY, _angle);
 		shape.paint(paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
 	}
 
-	void ShapeSpriteZ::paint(float _x, float _y, Transform _paintingTransform)
+	void ShapeSpriteZero::paint(float _x, float _y, Transform _paintingTransform)
 	{
 		shape.paint(_x, _y, _paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
 	}
 
-	void ShapeSpriteZ::paint(Transform _paintingTransform)
+	void ShapeSpriteZero::paint(Transform _paintingTransform)
 	{
 		shape.paint(_paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
 	}
 
-	void ShapeSpriteZ::setFillColor(const Color& _color)
+	void ShapeSpriteZero::setFillColor(const Color& _color)
 	{
 		if (fillBrush != nullptr)
 			SAFE_RELEASE(fillBrush);
@@ -1898,7 +1836,7 @@ namespace suku
 		}
 	}
 
-	void ShapeSpriteZ::setOutlineColor(const Color& _color)
+	void ShapeSpriteZero::setOutlineColor(const Color& _color)
 	{
 		if (outlineBrush != nullptr)
 			SAFE_RELEASE(outlineBrush);
@@ -1915,12 +1853,12 @@ namespace suku
 		}
 	}
 
-	void ShapeSpriteZ::setOutlineWidth(int _width)
+	void ShapeSpriteZero::setOutlineWidth(int _width)
 	{
 		outlineWidth = (float)_width;
 	}
 
-	void ShapeSpriteZ::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
+	void ShapeSpriteZero::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
 		shape.paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
 			fillBrush,
@@ -1930,7 +1868,7 @@ namespace suku
 		);
 	}
 
-	void ShapeSpriteZ::paint(float _x, float _y, Transform _transform, float _alpha)
+	void ShapeSpriteZero::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		shape.paint(translation(_x, _y) + _transform,
 			fillBrush,
@@ -1940,7 +1878,7 @@ namespace suku
 		);
 	}
 
-	void ShapeSpriteZ::paint(Transform _transform, float _alpha)
+	void ShapeSpriteZero::paint(Transform _transform, float _alpha)
 	{
 		shape.paint(_transform,
 			fillBrush,
