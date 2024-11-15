@@ -60,8 +60,8 @@ namespace suku
 
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		tag_ = typecode(Wall);
-		sprite_ = &sprWall;
+		static Sprite sprWall_(5, BitmapSpriteZero("Image\\wall.png", 16, 16), ShapeSpriteZero(SquareShape(32), {255,255,0}));
+		sprite_ = &sprWall_;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
 		setRecheckStateId(-1);
@@ -307,7 +307,7 @@ namespace suku
 	{
 		short i;
 		i = 0;
-		SpriteZ* body2 = nowState();
+		SpriteZero* body2 = nowState();
 		if (!body2)
 			return;
 		while (nowBloodNum_ < PLAYER_BLOODNUMMAX)

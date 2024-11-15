@@ -63,9 +63,9 @@ namespace suku
 	class TypeNode
 	{
 	public:
-		size_t code;
+		size_t code = 0;
 		std::list<TypeNode*> child;
-		TypeNode* father;
+		TypeNode* father = nullptr;
 	};
 
 	class TypeTree
