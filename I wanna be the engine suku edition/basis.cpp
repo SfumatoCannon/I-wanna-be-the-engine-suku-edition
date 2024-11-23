@@ -201,10 +201,6 @@ namespace suku
 		}
 	}
 
-	void Object::onAppearing()
-	{
-	}
-
 	void Object::onRestarting()
 	{
 		x = spawnX;
@@ -216,19 +212,6 @@ namespace suku
 		if (!sprite_)
 			return nullptr;
 		return sprite_->getState(clock_);
-	}
-
-
-	void Object::reviseState()
-	{
-	}
-
-	void Object::updateState()
-	{
-	}
-
-	void Object::recheckState()
-	{
 	}
 
 	void Object::setReviseStateId(double _id)

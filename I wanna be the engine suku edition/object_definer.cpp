@@ -58,9 +58,11 @@ namespace suku
 		sprite_ = &sprWarp;
 	}
 
+	Sprite* Wall::spr;
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		sprite_ = &sprWall;
+		sprInit(spr, (BitmapSpriteZero("Image\\wall.png", 16, 16)));
+		sprite_ = spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
 		setRecheckStateId(-1);
@@ -450,29 +452,7 @@ namespace suku
 		if (!isAlive())
 			return;
 		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
-		//for (auto& obj : tempList)
-		//{
-		//	if (isCrashed(*obj, x + totalHspeed(), y, obj->x + obj->totalHspeed(), obj->y))
-		//	{
-		//		if (totalHspeed() < obj->totalHspeed())
-		//			contactToRight(*obj, true);
-		//		else if (totalHspeed() > obj->totalHspeed())
-		//			contactToLeft(*obj, true);
-		//	}
-		//	if (isCrashed(*obj, x, y + totalVspeed(), obj->x, obj->y + obj->totalVspeed()))
-		//	{
-		//		if (totalVspeed() < obj->totalVspeed())
-		//		{
-		//			vspeed = 0;
-		//			contactToDown(*obj, true);
-		//		}
-		//		else if (totalVspeed() > obj->totalVspeed())
-		//		{
-		//			vspeed = 0;
-		//			contactToUp(*obj, true);
-		//		}
-		//	}
-		//}
+
 		float vspeedBefore = totalVspeed();
 		moveContactOld(tempList);
 		if (vspeedBefore != totalVspeed())

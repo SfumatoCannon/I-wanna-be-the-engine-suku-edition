@@ -4,6 +4,8 @@
 #include "game_saving.h"
 #include "global_value.h"
 
+#define sprInit(sprPointer, func) static Sprite* temp = sprPointer = new Sprite func;
+
 namespace suku
 {
 	class CollisionBox;
@@ -209,11 +211,13 @@ namespace suku
 		void destroy();
 
 		void updateFunction();
-		virtual void onAppearing();
+
+		static void classInitialize() {};
+		virtual void onAppearing() {};
 		virtual void onRestarting();
-		virtual void reviseState();
-		virtual void updateState();
-		virtual void recheckState();
+		virtual void reviseState() {};
+		virtual void updateState() {};
+		virtual void recheckState() {};
 
 		inline float totalHspeed()const;
 		inline float totalVspeed()const;
@@ -414,6 +418,8 @@ namespace suku
 		std::list<Obj*>* objList = objectList<Obj>();
 		std::list<Object*>* objParentList = objectList<Object>();
 
+		bool isFirstObjInClass = false;
+
 		if (objParentList == nullptr)
 		{
 			objParentList = new std::list<Object*>;
@@ -423,6 +429,7 @@ namespace suku
 		}
 		if (objList == nullptr)
 		{
+			isFirstObjInClass = true;
 			objList = new std::list<Obj*>;
 			Var objListVar;
 			objListVar << objList;
@@ -451,6 +458,11 @@ namespace suku
 
 		newObj->paintIterator_ =
 			paintArray[newObj->paintId_].insert(paintArray[newObj->paintId_].end(), newObjParent);
+
+		if (isFirstObjInClass)
+		{
+			Obj::classInitialize();
+		}
 
 		return newObj;
 	}
@@ -466,6 +478,7 @@ namespace suku
 		std::list<Obj*>* objList = objectList<Obj>();
 		std::list<Object*>* objParentList = objectList<Object>();
 
+		bool isFirstObjInClass = false;
 		if (objParentList == nullptr)
 		{
 			objParentList = new std::list<Object*>;
@@ -475,6 +488,7 @@ namespace suku
 		}
 		if (objList == nullptr)
 		{
+			isFirstObjInClass = true;
 			objList = new std::list<Obj*>;
 			Var objListVar;
 			objListVar << objList;
@@ -503,6 +517,11 @@ namespace suku
 
 		newObj->paintIterator_ =
 			paintArray[newObj->paintId_].insert(paintArray[newObj->paintId_].end(), newObjParent);
+
+		if (isFirstObjInClass)
+		{
+			Obj::classInitialize();
+		}
 
 		return newObj;
 	}
