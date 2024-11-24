@@ -7,36 +7,12 @@ namespace suku
 		sprWall, sprSpikeUp, sprSpikeDown, sprSpikeLeft, sprSpikeRight,
 		sprWater, sprWaterExtraJump, sprBlood,
 		sprTrigger, sprWarp, sprCherry, sprPlatform, sprVineLeft, sprVineRight,
-		sprPlayerIdle, sprPlayerRunning, sprPlayerFalling, sprPlayerJumping, sprPlayerSliding,
+		sprPlayerStanding, sprPlayerRunning, sprPlayerFalling, sprPlayerJumping, sprPlayerSliding,
 		sprBox
 		;
 
 	inline void spritePreSet()
 	{
-		// preset other sprites
-		sprCherry.push(BitmapSpriteZero(L"Image\\cherry1.png", 10, 12));
-
-		sprCherry.push(BitmapSpriteZero(L"Image\\cherry2.png", 10, 12));
-
-		sprCherry.setSpeed(25);
-
-		//sprWall.push(BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\wall.png"));
-		sprWall.push(BitmapSpriteZero("Image\\wall.png", 16, 16),
-			ShapeSpriteZero(SquareShape(32), { 200,60,120 }, { 0,0,0 }));
-		sprWall.setSpeed(5);
-
-		sprSpikeUp.push(BitmapSpriteZero("Image\\spike_u.png", 16, 16));
-
-		sprSpikeDown.push(BitmapSpriteZero("Image\\spike_d.png", 16, 16));
-
-		sprSpikeLeft.push(BitmapSpriteZero("Image\\spike_l.png", 16, 16));
-
-		sprSpikeRight.push(BitmapSpriteZero("Image\\spike_r.png", 16, 16));
-
-		sprWater.push(BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_noextrajump.png"));
-
-		sprWaterExtraJump.push(BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_extrajump.png"));
-
 		sprTrigger.push(ShapeSpriteZero(SquareShape(32)));
 
 		sprBlood.push(BitmapSpriteZero(2, 2, SquareShape(2), 1, 1, L"Image\\blood.png"));
@@ -59,11 +35,11 @@ namespace suku
 		{
 			swprintf_s(path, L"Image\\player_stand%d.png", i + 1);
 
-			sprPlayerIdle.push(BitmapSpriteZero(PLAYER_WIDTH, PLAYER_HEIGHT,
+			sprPlayerStanding.push(BitmapSpriteZero(PLAYER_WIDTH, PLAYER_HEIGHT,
 				RectangleShape(PLAYER_PDWIDTH, PLAYER_PDHEIGHT, PLAYER_PDX, PLAYER_PDY),
 				PLAYER_CENTERX, PLAYER_CENTERY, path));
 		}
-		sprPlayerIdle.setSpeed(BMPSPEED_STANDING);
+		sprPlayerStanding.setSpeed(BMPSPEED_STANDING);
 		for (i = 0; i < BMPNUM_RUNNING; i++)
 		{
 			swprintf_s(path, L"Image\\player_running%d.png", i + 1);

@@ -4,7 +4,7 @@
 #include "game_saving.h"
 #include "global_value.h"
 
-#define sprInit(sprPointer, func) static Sprite* temp = sprPointer = new Sprite func;
+#define SPR_INIT(sprPointer, func) static Sprite* temp_##sprPointer = sprPointer = new Sprite func;
 
 namespace suku
 {

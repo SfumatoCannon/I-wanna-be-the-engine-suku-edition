@@ -61,7 +61,7 @@ namespace suku
 	Sprite* Wall::spr;
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		sprInit(spr, (BitmapSpriteZero("Image\\wall.png", 16, 16)));
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", 16, 16)));
 		sprite_ = spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
@@ -69,32 +69,44 @@ namespace suku
 		setPaintId(2);
 	}
 
+	Sprite* Spike::sprUp;
+	Sprite* Spike::sprDown;
+	Sprite* Spike::sprLeft;
+	Sprite* Spike::sprRight;
 	Spike::Spike(float _x, float _y, short _dir) :Object(_x, _y)
 	{
+		SPR_INIT(sprUp, (BitmapSpriteZero("Image\\spike_u.png", 16, 16)));
+		SPR_INIT(sprDown, (BitmapSpriteZero("Image\\spike_d.png", 16, 16)));
+		SPR_INIT(sprLeft, (BitmapSpriteZero("Image\\spike_l.png", 16, 16)));
+		SPR_INIT(sprRight, (BitmapSpriteZero("Image\\spike_r.png", 16, 16)));
 		setPaintId(3);
 		switch (_dir)
 		{
 		case DIR_UP:
-			sprite_ = &sprSpikeUp;
+			sprite_ = sprUp;
 			break;
 		case DIR_DOWN:
-			sprite_ = &sprSpikeDown;
+			sprite_ = sprDown;
 			break;
 		case DIR_LEFT:
-			sprite_ = &sprSpikeLeft;
+			sprite_ = sprLeft;
 			break;
 		case DIR_RIGHT:
-			sprite_ = &sprSpikeRight;
+			sprite_ = sprRight;
 			break;
 		default:
-			sprite_ = &sprSpikeUp;
+			sprite_ = sprUp;
 			break;
 		}
 	}
 
+	Sprite* Cherry::spr;
 	Cherry::Cherry(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprCherry;
+		SPR_INIT(spr, (25, 
+			BitmapSpriteZero("Image\\cherry1.png", 10, 12),
+			BitmapSpriteZero("Image\\cherry2.png", 10, 12)));
+		sprite_ = spr;
 		setPaintId(3);
 	}
 
@@ -104,9 +116,19 @@ namespace suku
 		setPaintId(2);
 	}
 
+	Sprite* Water::spr;
+	Water::Water(float _x, float _y) :Object(_x, _y)
+	{
+		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_noextrajump.png")));
+		sprite_ = spr;
+		paintId_ = 4;
+	}
+
+	Sprite* WaterExtraJump::spr;
 	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprWaterExtraJump;
+		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_extrajump.png")));
+		sprite_ = spr;
 		setPaintId(4);
 	}
 
@@ -144,52 +166,6 @@ namespace suku
 		vspeed += gravity;
 	}
 
-	void Blood::updateState()
-	{
-		if (totalHspeed() == 0 && totalVspeed() == 0)
-			return;
-		/*if (!(touchObject(ID_WALL, x + totalHspeed(), y + totalVspeed())))
-		{
-			x += totalHspeed();
-			y += totalVspeed();
-		}
-		else
-		{
-			Object* temp;
-			x += totalHspeed();
-			while (temp = touchObject(ID_WALL))
-			{
-				if (temp->nowState()->hitArea == nullptr && temp->angle == 0.0)
-				{
-					if (totalHspeed() > 0)
-						x = temp->x + temp->nowState()->hitX - nowState()->hitWidth - nowState()->hitX;
-					else
-						x = temp->x + temp->nowState()->hitX + temp->nowState()->hitWidth - nowState()->hitX;
-				}
-				else x = x - (totalHspeed() > 0 ? 1.0 : -1.0);
-			}
-			y += totalVspeed();
-			while (temp = touchObject(ID_WALL))
-			{
-				if (temp->nowState()->hitArea == nullptr && temp->angle == 0.0)
-				{
-					if (totalVspeed() > 0)
-						y = temp->y + temp->nowState()->hitY - nowState()->hitHeight - nowState()->hitY;
-					else
-						y = temp->y + temp->nowState()->hitY + temp->nowState()->hitHeight - nowState()->hitY;
-				}
-				else y = y - (totalVspeed() > 0 ? 1.0 : -1.0);
-				stopMoving();
-			}
-		}*/
-	}
-
-	Water::Water(float _x, float _y) :Object(_x, _y)
-	{
-		paintId_ = 4;
-		sprite_ = &sprWater;
-	}
-
 	Player::Player(float _x, float _y) :Object(_x, _y)
 	{
 		isDied_ = false;
@@ -213,7 +189,7 @@ namespace suku
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
 		memset(deathBlood_, 0, sizeof(deathBlood_));
-		sprite_ = &sprPlayerIdle;
+		sprite_ = &sprPlayerStanding;
 	}
 
 	void Player::onAppearing()
@@ -437,7 +413,7 @@ namespace suku
 			if (isKeyHolding[VK_LEFT] || isKeyHolding[VK_RIGHT])
 				sprite_ = &sprPlayerRunning;
 			else
-				sprite_ = &sprPlayerIdle;
+				sprite_ = &sprPlayerStanding;
 		}
 		//xScale = (side_ == 0 ? 1.0 : -1.0);
 		spriteTransform = scale(PLAYER_CENTERX, PLAYER_CENTERY, (side_ == 0 ? 1.0f : -1.0f), 1);
