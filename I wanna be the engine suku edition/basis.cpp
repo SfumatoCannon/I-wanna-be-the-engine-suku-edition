@@ -963,7 +963,7 @@ namespace suku
 			else vspeedTemp = yTo - round(y) - vspeed;
 		}
 	}
-	
+
 	/*
 	Object* Object::touchObject(unsigned short _objectkind)
 	{
@@ -1737,7 +1737,7 @@ namespace suku
 		outlineStrokeStyle = nullptr;
 	}
 
-	ShapeSpriteZero::ShapeSpriteZero(const Shape& _shape, const Color& _fillColor, 
+	ShapeSpriteZero::ShapeSpriteZero(const Shape& _shape, const Color& _fillColor,
 		const Color& _outlineColor, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
 	{
 		shape = _shape;

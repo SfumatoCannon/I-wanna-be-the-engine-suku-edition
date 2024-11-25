@@ -620,7 +620,7 @@ namespace suku
 		}
 	}
 
-	Shape::Shape(ID2D1Geometry* _geometry)
+	Shape::Shape(ID2D1Geometry* _geometry, Transform _transform)
 	{
 		originalGeometry = nullptr;
 		transform = Transform();
@@ -747,7 +747,7 @@ namespace suku
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry,
 				D2D1_COMBINE_MODE_EXCLUDE,
-				NULL,
+				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
 				resGeometrySink
 			);
@@ -773,7 +773,7 @@ namespace suku
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry,
 				D2D1_COMBINE_MODE_INTERSECT,
-				NULL,
+				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
 				resGeometrySink
 			);
@@ -799,7 +799,7 @@ namespace suku
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry,
 				D2D1_COMBINE_MODE_UNION,
-				NULL,
+				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
 				resGeometrySink
 			);
@@ -825,7 +825,7 @@ namespace suku
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry,
 				D2D1_COMBINE_MODE_XOR,
-				NULL,
+				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
 				resGeometrySink
 			);
@@ -839,7 +839,7 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	SquareShape::SquareShape(float _length, float _beginningX, float _beginningY)
+	SquareShape::SquareShape(float _length, float _beginningX, float _beginningY, Transform _transform)
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
@@ -852,10 +852,11 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		setTransform(_transform);
 		SAFE_RELEASE(newGeometry);
 	}
 
-	RectangleShape::RectangleShape(float _width, float _height, float _beginningX, float _beginningY)
+	RectangleShape::RectangleShape(float _width, float _height, float _beginningX, float _beginningY, Transform _transform)
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
@@ -868,10 +869,11 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		setTransform(_transform);
 		SAFE_RELEASE(newGeometry);
 	}
 
-	CircleShape::CircleShape(float _radius, float _beginningX, float _beginningY)
+	CircleShape::CircleShape(float _radius, float _beginningX, float _beginningY, Transform _transform)
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
@@ -886,10 +888,11 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		setTransform(_transform);
 		SAFE_RELEASE(newGeometry);
 	}
 
-	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _beginningX, float _beginningY)
+	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _beginningX, float _beginningY, Transform _transform)
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
@@ -904,6 +907,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 			setOriginalGeometry(newGeometry);
+		setTransform(_transform);
 		SAFE_RELEASE(newGeometry);
 	}
 

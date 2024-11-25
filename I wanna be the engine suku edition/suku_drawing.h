@@ -60,7 +60,7 @@ namespace suku
 
 		Shape();
 		Shape(const Shape& _x);
-		Shape(ID2D1Geometry* _geometry);
+		Shape(ID2D1Geometry* _geometry, Transform _transform = Transform());
 		//Shape(ID2D1Geometry* _geometry, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush,
 		//	float _edgeWidth = 1.0, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
 		void join();
@@ -92,25 +92,25 @@ namespace suku
 	class SquareShape :public Shape
 	{
 	public:
-		SquareShape(float _length, float _beginningX = 0, float _beginningY = 0);
+		SquareShape(float _length, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
 	};
 
 	class RectangleShape :public Shape
 	{
 	public:
-		RectangleShape(float _width, float _height, float _beginningX = 0, float _beginningY = 0);
+		RectangleShape(float _width, float _height, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
 	};
 
 	class CircleShape :public Shape
 	{
 	public:
-		CircleShape(float _radius, float _beginningX = 0, float _beginningY = 0);
+		CircleShape(float _radius, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
 	};
 
 	class EllipseShape :public Shape
 	{
 	public:
-		EllipseShape(float _radiusX, float _radiusY, float _beginningX = 0, float _beginningY = 0);
+		EllipseShape(float _radiusX, float _radiusY, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
 	};
 
 	class Bitmap
@@ -144,7 +144,7 @@ namespace suku
 
 		//This will not create a new piece of memory
 		BYTE* getDataPointer()const;
-		
+
 		Bitmap& operator=(const Bitmap& _bitmap);
 
 		void updatePixelDetail(Color** _detail);
