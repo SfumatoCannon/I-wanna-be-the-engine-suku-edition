@@ -103,7 +103,7 @@ namespace suku
 	Sprite* Cherry::spr;
 	Cherry::Cherry(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (25, 
+		SPR_INIT(spr, (25,
 			BitmapSpriteZero("Image\\cherry1.png", 10, 12),
 			BitmapSpriteZero("Image\\cherry2.png", 10, 12)));
 		sprite_ = spr;
@@ -119,7 +119,7 @@ namespace suku
 	Sprite* Water::spr;
 	Water::Water(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_noextrajump.png")));
+		SPR_INIT(spr, (BitmapSpriteZero(L"Image\\water_noextrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		paintId_ = 4;
 	}
@@ -127,7 +127,7 @@ namespace suku
 	Sprite* WaterExtraJump::spr;
 	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 16, 16, L"Image\\water_extrajump.png")));
+		SPR_INIT(spr, (BitmapSpriteZero(L"Image\\water_extrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		setPaintId(4);
 	}

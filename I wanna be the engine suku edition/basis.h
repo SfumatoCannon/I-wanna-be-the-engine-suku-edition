@@ -38,8 +38,8 @@ namespace suku
 		int hitX, hitY;
 		UINT hitWidth, hitHeight;
 		BitmapCollisionBox(bool** _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
-		BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, float _alphaThreshold = 0.0f);
-		BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, float _alphaThreshold = 0.0f);
+		BitmapCollisionBox(IWICBitmap* _bitmap, float _alphaThreshold = 0.0f);
+		BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
 
 		virtual void release()override { free2D(hitArea, hitWidth, hitHeight); }
@@ -71,10 +71,10 @@ namespace suku
 		SpriteZero() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
 
 		virtual void paint(float _x, float _y,
-			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) {};
+			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) {}
 		virtual void paint(float _x, float _y,
-			Transform _transform, float _alpha = 1.0) {};
-		virtual void paint(Transform _transform, float _alpha = 1.0) {};
+			Transform _transform, float _alpha = 1.0) {}
+		virtual void paint(Transform _transform, float _alpha = 1.0) {}
 		bool isCrashed(Transform _transform, const SpriteZero& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteZero* _other, Transform _otherTransform)const;
 	};
@@ -82,31 +82,34 @@ namespace suku
 	class BitmapSpriteZero :public SpriteZero
 	{
 	public:
-
-		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
-			float _centerX = 0.0f, float _centerY = 0.0f,
-			const wchar_t* _path = nullptr);
-		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
-			float _centerX = 0.0f, float _centerY = 0.0f,
-			const char* _path = nullptr);
-		BitmapSpriteZero(UINT _width, UINT _height,
-			int _hitboxX, int _hitboxY,
-			const wchar_t* _path,
-			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(UINT _width, UINT _height,
-			int _hitboxX, int _hitboxY,
-			const char* _path,
-			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(const char* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero();
+		BitmapSpriteZero(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 			float _centerX = 0, float _centerY = 0, const wchar_t* _path = nullptr);
 		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-			float _centerX = 0, float _centerY = 0, const char* _path = nullptr);
-		BitmapSpriteZero();
+			float _centerX = 0, float _centerY = 0, std::string _path = nullptr);
 
-		void catchBitmap(const wchar_t* _path);
-		void catchBitmap(const char* _path);
+		BitmapSpriteZero(const wchar_t* _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteZero(std::string _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+
+
+		BitmapSpriteZero(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(std::string _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+
+
+		void catchBitmap(const wchar_t* _path, UINT _startX = 0, UINT _startY = 0);
+		void catchBitmap(std::string _path, UINT _startX = 0, UINT _startY = 0);
+		void catchBitmapAndSize(const wchar_t* _path);
+		void catchBitmapAndSize(std::string _path);
 
 		virtual void paint(float _x, float _y,
 			float _xScale = 1.0, float _yScale = 1.0, float _alpha = 1.0, float _angle = 0.0) override;
@@ -116,8 +119,6 @@ namespace suku
 
 	private:
 		Bitmap* pBitmap_;
-		//IWICBitmap* wicBitmap_;
-		//ID2D1Bitmap* d2d1Bitmap_;
 	};
 
 	class ShapeSpriteZero :public SpriteZero
@@ -156,17 +157,24 @@ namespace suku
 		std::vector<SpriteZero*> bodyList;
 		Sprite();
 		template<typename SprZ> Sprite(const SprZ& _spriteZ);
-		template<typename SprZ, typename... SprZNext> Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		
+		//Load Sprite Directly from the long sprite bitmap; height will be auto calculated.
+		//Sprite(int _flipTime, const wchar_t* _path, UINT _stepWidth);
+		//Sprite(int _flipTime, std::string _path, UINT _stepWidth);
+		//Load Sprite Directly from the long sprite bitmap, with given starting position and size.
+		//Sprite(int _flipTime, const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height);
+
 		template<typename SprZ> void init(const SprZ& _spriteZ);
-		template<typename SprZ, typename... SprZNext> void init(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ, typename... SprZNext> void init(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
-		void setSpeed(unsigned short _speed);
+		void setSpeed(int _speed);
 		template<typename SprZ> void push(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
-		SpriteZero* getState(unsigned short _wp);
+		SpriteZero* getState(int _wp);
 	private:
-		unsigned short flipTime_;
+		int flipTime_;
 	};
 
 	class Object
@@ -338,8 +346,8 @@ namespace suku
 		template<typename Obj> Obj* findObj(Obj _objectForType, size_t _pos)const;
 		Object* findObj(size_t _kindId, size_t _pos);
 
-		//Object* findObjWithPosition(unsigned short _kind, double _x, double _y);
-		//Object* findObjWithCenterPosition(unsigned short _kind, double _x, double _y);
+		//Object* findObjWithPosition(int _kind, double _x, double _y);
+		//Object* findObjWithCenterPosition(int _kind, double _x, double _y);
 
 		template<typename Obj> Obj* append(const Obj* _objectPointer);
 		template<typename Obj> Obj* create(Obj _object);
@@ -851,7 +859,7 @@ namespace suku
 	}
 
 	template<typename SprZ, typename ...SprZNext>
-	inline Sprite::Sprite(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	inline Sprite::Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
 	{
 		flipTime_ = _flipTime;
 		push(_spriteZ);
@@ -867,7 +875,7 @@ namespace suku
 	}
 
 	template<typename SprZ, typename ...SprZNext>
-	inline void Sprite::init(unsigned short _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	inline void Sprite::init(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
 	{
 		bodyList.clear();
 		flipTime_ = _flipTime;

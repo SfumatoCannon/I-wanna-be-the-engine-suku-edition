@@ -92,25 +92,29 @@ namespace suku
 	class SquareShape :public Shape
 	{
 	public:
-		SquareShape(float _length, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
+		const float length, startX, startY;
+		SquareShape(float _length, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 
 	class RectangleShape :public Shape
 	{
 	public:
-		RectangleShape(float _width, float _height, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
+		const float width, height, startX, startY;
+		RectangleShape(float _width, float _height, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 
 	class CircleShape :public Shape
 	{
 	public:
-		CircleShape(float _radius, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
+		const float radius, startX, startY;
+		CircleShape(float _radius, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 
 	class EllipseShape :public Shape
 	{
 	public:
-		EllipseShape(float _radiusX, float _radiusY, float _beginningX = 0, float _beginningY = 0, Transform _transform = Transform());
+		const float radiusX, radiusY, startX, startY;
+		EllipseShape(float _radiusX, float _radiusY, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 
 	class Bitmap
@@ -120,9 +124,9 @@ namespace suku
 		Bitmap(UINT _width, UINT _height);
 		//Create bitmap from file
 		Bitmap(const wchar_t* _url);
-		Bitmap(const char* _url);
+		Bitmap(std::string _url);
 		Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height);
-		Bitmap(const char* _url, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(std::string _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);

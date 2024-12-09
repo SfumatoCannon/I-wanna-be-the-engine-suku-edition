@@ -17,27 +17,27 @@ namespace suku
 		hitWidth = _hitWidth, hitHeight = _hitHeight;
 	}
 
-	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, int _hitX, int _hitY, float _alphaThreshold)
+	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, float _alphaThreshold)
 	{
 		auto [width, height] = getSizeFromWICBitmap(_bitmap);
 		hitWidth = width, hitHeight = height;
-		hitX = _hitX, hitY = _hitY;
+		hitX = hitY = 0;
 		hitArea = malloc2D<bool>(hitWidth, hitHeight);
 		getHitAreaFromBitmap(hitArea, Bitmap(_bitmap), _alphaThreshold);
 	}
 
-	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, int _hitX, int _hitY, float _alphaThreshold)
+	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold)
 	{
 		if (_pBitmap == nullptr)
 		{
 			hitWidth = hitHeight = 0;
-			hitX = _hitX, hitY = _hitY;
+			hitX = hitY = 0;
 			hitArea = nullptr;
 			return;
 		}
 		hitWidth = _pBitmap->getWidth();
 		hitHeight = _pBitmap->getHeight();
-		hitX = _hitX, hitY = _hitY;
+		hitX = hitY = 0;
 		hitArea = malloc2D<bool>(hitWidth, hitHeight);
 		getHitAreaFromBitmap(hitArea, *_pBitmap, _alphaThreshold);
 	}
@@ -538,7 +538,7 @@ namespace suku
 					_obj.x + bodyzb->hitX * _obj.xScale, _obj.y + bodyzb->hitY * _obj.yScale,
 					bodyzb->hitWidth * _obj.xScale, bodyzb->hitHeight * _obj.yScale))
 					return false;
-				unsigned short i, j;
+				int i, j;
 				for (i = 0; i < bodyzb->hitHeight; i++)
 					for (j = 0; j < bodyzb->hitWidth; j++)
 						if (*(bodyzb->hitArea + i * bodyzb->hitWidth + j))
@@ -557,7 +557,7 @@ namespace suku
 					_obj.x + bodyzb->centerX * _obj.xScale - disB, _obj.y + bodyzb->centerY * _obj.yScale - disB, disB * 2, disB * 2))
 					return false;
 				double px, py;
-				unsigned short i, j;
+				int i, j;
 				for (i = 0; i < bodyzb->hitHeight; i++)
 					for (j = 0; j < bodyzb->hitWidth; j++)
 						if (*(bodyzb->hitArea + i * bodyzb->hitWidth + j))
@@ -583,7 +583,7 @@ namespace suku
 				_obj.x + bodyzb->centerX * _obj.xScale - disB, _obj.y + bodyzb->centerY * _obj.yScale - disB, disB * 2, disB * 2))
 				return false;
 			double px, py;
-			unsigned short i, j;
+			int i, j;
 			for (i = 0; i < bodyzb->hitHeight; i++)
 				for (j = 0; j < bodyzb->hitWidth; j++)
 					if (*(bodyzb->hitArea + i * bodyzb->hitWidth + j))
@@ -965,7 +965,7 @@ namespace suku
 	}
 
 	/*
-	Object* Object::touchObject(unsigned short _objectkind)
+	Object* Object::touchObject(int _objectkind)
 	{
 		if (inRoom_)
 		{
@@ -980,7 +980,7 @@ namespace suku
 		return nullptr;
 	}
 
-	Object* Object::touchObject(unsigned short _objectkind, double _x, double _y)
+	Object* Object::touchObject(int _objectkind, double _x, double _y)
 	{
 		double tx = x, ty = y;
 		x = _x, y = _y;
@@ -1006,7 +1006,7 @@ namespace suku
 		return nullptr;
 	}
 
-	Object* Object::nearbyObject(unsigned short _objectkind, double _dis)
+	Object* Object::nearbyObject(int _objectkind, double _dis)
 	{
 		if (inRoom_)
 		{
@@ -1021,7 +1021,7 @@ namespace suku
 		return nullptr;
 	}
 
-	std::list<Object*> Object::touchObjectList(unsigned short _objectkind)
+	std::list<Object*> Object::touchObjectList(int _objectkind)
 	{
 		std::list<Object*> result;
 		if (inRoom_)
@@ -1037,7 +1037,7 @@ namespace suku
 		return result;
 	}
 
-	std::list<Object*> Object::touchObjectList(unsigned short _objectkind, double _x, double _y)
+	std::list<Object*> Object::touchObjectList(int _objectkind, double _x, double _y)
 	{
 		std::list<Object*> result;
 		double tx = x, ty = y;
@@ -1060,7 +1060,7 @@ namespace suku
 		return result;
 	}
 
-	std::list<Object*> Object::nearbyObjectList(unsigned short _objectkind, double _dis)
+	std::list<Object*> Object::nearbyObjectList(int _objectkind, double _dis)
 	{
 		std::list<Object*> result;
 		if (inRoom_)
@@ -1119,7 +1119,7 @@ namespace suku
 		return nullptr;
 	}
 	/*
-	Object* Room::findObjWithPosition(unsigned short _kind, double _x, double _y)
+	Object* Room::findObjWithPosition(int _kind, double _x, double _y)
 	{
 		double minDistance = 100000000.0;
 		Object* result = nullptr;
@@ -1134,7 +1134,7 @@ namespace suku
 		return result;
 	}
 
-	Object* Room::findObjWithCenterPosition(unsigned short _kind, double _x, double _y)
+	Object* Room::findObjWithCenterPosition(int _kind, double _x, double _y)
 	{
 		double minDistance = 100000000.0;
 		Object* result = nullptr;
@@ -1340,17 +1340,27 @@ namespace suku
 				(*k)->paintBody();
 	}*/
 
-	void BitmapSpriteZero::catchBitmap(const wchar_t* _path)
+	void BitmapSpriteZero::catchBitmap(const wchar_t* _path, UINT _startX, UINT _startY)
 	{
 		if (pBitmap_ != nullptr)
 		{
 			delete pBitmap_;
 			pBitmap_ = nullptr;
 		}
-		pBitmap_ = new Bitmap(_path);
+		pBitmap_ = new Bitmap(_path, _startX, _startY, width, height);
 	}
 
-	void BitmapSpriteZero::catchBitmap(const char* _path)
+	void BitmapSpriteZero::catchBitmap(std::string _path, UINT _startX, UINT _startY)
+	{
+		if (pBitmap_ != nullptr)
+		{
+			delete pBitmap_;
+			pBitmap_ = nullptr;
+		}
+		pBitmap_ = new Bitmap(_path, _startX, _startY, width, height);
+	}
+
+	void BitmapSpriteZero::catchBitmapAndSize(const wchar_t* _path)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1358,6 +1368,20 @@ namespace suku
 			pBitmap_ = nullptr;
 		}
 		pBitmap_ = new Bitmap(_path);
+		width = pBitmap_->getWidth();
+		height = pBitmap_->getHeight();
+	}
+
+	void BitmapSpriteZero::catchBitmapAndSize(std::string _path)
+	{
+		if (pBitmap_ != nullptr)
+		{
+			delete pBitmap_;
+			pBitmap_ = nullptr;
+		}
+		pBitmap_ = new Bitmap(_path);
+		width = pBitmap_->getWidth();
+		height = pBitmap_->getHeight();
 	}
 
 	void BitmapSpriteZero::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
@@ -1382,52 +1406,95 @@ namespace suku
 		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox,
+	BitmapSpriteZero::BitmapSpriteZero()
+	{
+		hitArea = nullptr;
+		pBitmap_ = nullptr;
+		width = 0;
+		height = 0;
+		centerX = 0;
+		centerY = 0;
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX, float _centerY)
+	{
+		width = _bitmap.getWidth();
+		height = _bitmap.getHeight();
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = new Bitmap(_bitmap);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = nullptr;
+		catchBitmapAndSize(_path);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(std::string _path, const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = nullptr;
+		catchBitmapAndSize(_path);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
+		const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		pBitmap_ = nullptr;
+		hitArea = new ShapeCollisionBox(_collisionBox);
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 		float _centerX, float _centerY, const wchar_t* _path)
 	{
-		pBitmap_ = nullptr;
+		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
-		catchBitmap(_path);
-		hitArea = new ShapeCollisionBox(_collisionBox);
+		pBitmap_ = new Bitmap(_path);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY, const char* _path)
+	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, std::string _path)
 	{
-		pBitmap_ = nullptr;
+		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
-		catchBitmap(_path);
-		hitArea = new ShapeCollisionBox(_collisionBox);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height,
-		int _hitboxX, int _hitboxY,
-		const wchar_t* _path,
-		float _centerX, float _centerY, float _alphaThreshold)
-	{
-		pBitmap_ = nullptr;
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		catchBitmap(_path);
-		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, int _hitboxX, int _hitboxY, const char* _path, float _centerX, float _centerY, float _alphaThreshold)
-	{
-		pBitmap_ = nullptr;
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		catchBitmap(_path);
-		hitArea = new BitmapCollisionBox(pBitmap_, _hitboxX, _hitboxY, _alphaThreshold);
+		pBitmap_ = new Bitmap(_path);
 	}
 
 	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
@@ -1442,7 +1509,7 @@ namespace suku
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
-			hitArea = new BitmapCollisionBox(pBitmap_, 0, 0);
+			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
 		}
 		else
 		{
@@ -1451,7 +1518,7 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(const char* _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZero::BitmapSpriteZero(std::string _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 		centerX = _centerX;
@@ -1463,7 +1530,7 @@ namespace suku
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
-			hitArea = new BitmapCollisionBox(pBitmap_, 0, 0);
+			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
 		}
 		else
 		{
@@ -1472,35 +1539,38 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-		float _centerX, float _centerY, const wchar_t* _path)
+	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
+		float _centerX, float _centerY, float _alphaThreshold)
 	{
-		hitArea = new BitmapCollisionBox(_collisionBox);
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, const char* _path)
-	{
-		hitArea = new BitmapCollisionBox(_collisionBox);
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero()
-	{
-		hitArea = nullptr;
 		pBitmap_ = nullptr;
-		width = 0;
-		height = 0;
-		centerX = 0;
-		centerY = 0;
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+		
+		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
+
+		if (pBitmap_)
+			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
+		else
+			hitArea = nullptr;
+	}
+
+	BitmapSpriteZero::BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		float _centerX, float _centerY, float _alphaThreshold)
+	{
+		pBitmap_ = nullptr;
+		width = _width;
+		height = _height;
+		centerX = _centerX;
+		centerY = _centerY;
+
+		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
+
+		if (pBitmap_)
+			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
+		else
+			hitArea = nullptr;
 	}
 
 	Sprite::Sprite()
@@ -1508,12 +1578,12 @@ namespace suku
 		flipTime_ = 1;
 	}
 
-	void Sprite::setSpeed(unsigned short _speed)
+	void Sprite::setSpeed(int _speed)
 	{
 		flipTime_ = _speed;
 	}
 
-	SpriteZero* Sprite::getState(unsigned short _wp)
+	SpriteZero* Sprite::getState(int _wp)
 	{
 		if (bodyList.empty())
 			return nullptr;
@@ -1592,7 +1662,7 @@ namespace suku
 		return member_.size();
 	}
 	/*
-	size_t Group::appendSelectively(Room* _room, std::function<bool(Object*)> _function, unsigned short _kind)
+	size_t Group::appendSelectively(Room* _room, std::function<bool(Object*)> _function, int _kind)
 	{
 		for (auto i = _room->kindStart[_kind]; i != _room->kindEnd[_kind]; i++)
 			if ((*i)->id != 0 && !id_[*i] && _function(*i))
@@ -1614,7 +1684,7 @@ namespace suku
 		return member_.size();
 	}
 
-	/*size_t Group::appendSelectively(Group* _group, std::function<bool(Object*)> _function, unsigned short _kind)
+	/*size_t Group::appendSelectively(Group* _group, std::function<bool(Object*)> _function, int _kind)
 	{
 		size_t size = _group->getSize();
 		Object* obj;

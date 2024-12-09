@@ -839,14 +839,15 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	SquareShape::SquareShape(float _length, float _beginningX, float _beginningY, Transform _transform)
+	SquareShape::SquareShape(float _length, float _startX, float _startY, Transform _transform) 
+		:length(_length), startX(_startX), startY(_startY)
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
 		hr = g_pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
-				_beginningX, _beginningY,
-				_beginningX + _length - 1.0f, _beginningY + _length - 1.0f
+				_startX, _startY,
+				_startX + _length - 1.0f, _startY + _length - 1.0f
 			),
 			&newGeometry
 		);
@@ -856,14 +857,15 @@ namespace suku
 		SAFE_RELEASE(newGeometry);
 	}
 
-	RectangleShape::RectangleShape(float _width, float _height, float _beginningX, float _beginningY, Transform _transform)
+	RectangleShape::RectangleShape(float _width, float _height, float _startX, float _startY, Transform _transform)
+		:width(_width), height(_height), startX(_startX), startY(_startY)
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
 		hr = g_pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
-				_beginningX, _beginningY,
-				_beginningX + _width - 1.0f, _beginningY + _height - 1.0f
+				_startX, _startY,
+				_startX + _width - 1.0f, _startY + _height - 1.0f
 			),
 			&newGeometry
 		);
@@ -873,14 +875,15 @@ namespace suku
 		SAFE_RELEASE(newGeometry);
 	}
 
-	CircleShape::CircleShape(float _radius, float _beginningX, float _beginningY, Transform _transform)
+	CircleShape::CircleShape(float _radius, float _startX, float _startY, Transform _transform)
+		:radius(_radius), startX(_startX), startY(_startY)
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
 		hr = g_pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
-					_radius + _beginningX, _radius + _beginningY
+					_radius + _startX, _radius + _startY
 				),
 				_radius, _radius
 			),
@@ -892,14 +895,15 @@ namespace suku
 		SAFE_RELEASE(newGeometry);
 	}
 
-	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _beginningX, float _beginningY, Transform _transform)
+	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _startX, float _startY, Transform _transform)
+		:radiusX(_radiusX), radiusY(_radiusY), startX(_startX), startY(_startY)
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
 		hr = g_pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
-					_radiusX + _beginningX, _radiusY + _beginningY
+					_radiusX + _startX, _radiusY + _startY
 				),
 				_radiusX, _radiusY
 			),
@@ -1104,9 +1108,9 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
-	Bitmap::Bitmap(const char* _url)
+	Bitmap::Bitmap(std::string _url)
 	{
-		wchar_t* wideCharUrl = getWideString(_url);
+		wchar_t* wideCharUrl = getWideString(_url.c_str());
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl));
 		if (SUCCEEDED(hr))
 		{
@@ -1150,9 +1154,9 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
-	Bitmap::Bitmap(const char* _url, UINT _x, UINT _y, UINT _width, UINT _height)
+	Bitmap::Bitmap(std::string _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		wchar_t* wideCharUrl = getWideString(_url);		
+		wchar_t* wideCharUrl = getWideString(_url.c_str());
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
