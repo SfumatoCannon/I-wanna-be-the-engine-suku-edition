@@ -1340,7 +1340,7 @@ namespace suku
 				(*k)->paintBody();
 	}*/
 
-	void BitmapSpriteZero::catchBitmap(const wchar_t* _path, UINT _startX, UINT _startY)
+	void BitmapSpriteZero::catchBitmap(String _path, UINT _startX, UINT _startY)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1350,29 +1350,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path, _startX, _startY, width, height);
 	}
 
-	void BitmapSpriteZero::catchBitmap(std::string _path, UINT _startX, UINT _startY)
-	{
-		if (pBitmap_ != nullptr)
-		{
-			delete pBitmap_;
-			pBitmap_ = nullptr;
-		}
-		pBitmap_ = new Bitmap(_path, _startX, _startY, width, height);
-	}
-
-	void BitmapSpriteZero::catchBitmapAndSize(const wchar_t* _path)
-	{
-		if (pBitmap_ != nullptr)
-		{
-			delete pBitmap_;
-			pBitmap_ = nullptr;
-		}
-		pBitmap_ = new Bitmap(_path);
-		width = pBitmap_->getWidth();
-		height = pBitmap_->getHeight();
-	}
-
-	void BitmapSpriteZero::catchBitmapAndSize(std::string _path)
+	void BitmapSpriteZero::catchBitmapAndSize(String _path)
 	{
 		if (pBitmap_ != nullptr)
 		{
@@ -1426,7 +1404,7 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, const Shape& _collisionBox, float _centerX, float _centerY)
+	BitmapSpriteZero::BitmapSpriteZero(String _path, const Shape& _collisionBox, float _centerX, float _centerY)
 	{
 		centerX = _centerX;
 		centerY = _centerY;
@@ -1435,27 +1413,7 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(std::string _path, const Shape& _collisionBox, float _centerX, float _centerY)
-	{
-		centerX = _centerX;
-		centerY = _centerY;
-		pBitmap_ = nullptr;
-		catchBitmapAndSize(_path);
-		hitArea = new ShapeCollisionBox(_collisionBox);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
-		const Shape& _collisionBox, float _centerX, float _centerY)
-	{
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
-		hitArea = new ShapeCollisionBox(_collisionBox);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
 		const Shape& _collisionBox, float _centerX, float _centerY)
 	{
 		width = _width;
@@ -1477,7 +1435,7 @@ namespace suku
 	}
 
 	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-		float _centerX, float _centerY, const wchar_t* _path)
+		float _centerX, float _centerY, String _path)
 	{
 		hitArea = new BitmapCollisionBox(_collisionBox);
 		width = _width;
@@ -1487,17 +1445,7 @@ namespace suku
 		pBitmap_ = new Bitmap(_path);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox, float _centerX, float _centerY, std::string _path)
-	{
-		hitArea = new BitmapCollisionBox(_collisionBox);
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path);
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, float _centerX, float _centerY, float _alphaThreshold)
+	BitmapSpriteZero::BitmapSpriteZero(String _path, float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
 		centerX = _centerX;
@@ -1518,28 +1466,7 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(std::string _path, float _centerX, float _centerY, float _alphaThreshold)
-	{
-		pBitmap_ = nullptr;
-		centerX = _centerX;
-		centerY = _centerY;
-
-		pBitmap_ = new Bitmap(_path);
-
-		if (pBitmap_)
-		{
-			width = pBitmap_->getWidth();
-			height = pBitmap_->getHeight();
-			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
-		}
-		else
-		{
-			width = height = 0;
-			hitArea = nullptr;
-		}
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
+	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
 		float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
@@ -1548,23 +1475,6 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 		
-		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
-
-		if (pBitmap_)
-			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
-		else
-			hitArea = nullptr;
-	}
-
-	BitmapSpriteZero::BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
-		float _centerX, float _centerY, float _alphaThreshold)
-	{
-		pBitmap_ = nullptr;
-		width = _width;
-		height = _height;
-		centerX = _centerX;
-		centerY = _centerY;
-
 		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
 
 		if (pBitmap_)

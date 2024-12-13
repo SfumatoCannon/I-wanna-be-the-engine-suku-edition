@@ -8,9 +8,6 @@ namespace suku
 	ID2D1HwndRenderTarget* g_pRenderTarget = NULL;	// Render target
 	IWICImagingFactory* g_pIWICFactory;
 
-	wchar_t exePath[MAX_PATH + 1];
-	size_t Path_len;
-
 	Transform translation(float _shiftX, float _shiftY)
 	{
 		return Transform(D2D1::Matrix3x2F::Translation(_shiftX, _shiftY));
@@ -1086,9 +1083,9 @@ namespace suku
 		}
 	}
 
-	Bitmap::Bitmap(const wchar_t* _url)
+	Bitmap::Bitmap(String _url)
 	{
-		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url));
+		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url.content));
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
@@ -1108,56 +1105,9 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
-	Bitmap::Bitmap(std::string _url)
+	Bitmap::Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		wchar_t* wideCharUrl = getWideString(_url.c_str());
-		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl));
-		if (SUCCEEDED(hr))
-		{
-			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
-			if (SUCCEEDED(hr))
-			{
-				width_ = w;
-				height_ = h;
-				bytesPerPixel_ = 0;
-				getPixelByte();
-				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
-				return;
-			}
-		}
-		width_ = height_ = 0;
-		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
-		bytesPerPixel_ = 0;
-		delete[] wideCharUrl;
-	}
-
-	Bitmap::Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height)
-	{
-		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url), _x, _y, _width, _height);
-		if (SUCCEEDED(hr))
-		{
-			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
-			if (SUCCEEDED(hr))
-			{
-				width_ = w;
-				height_ = h;
-				bytesPerPixel_ = 0;
-				getPixelByte();
-				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
-				return;
-			}
-		}
-		width_ = height_ = 0;
-		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
-		bytesPerPixel_ = 0;
-	}
-
-	Bitmap::Bitmap(std::string _url, UINT _x, UINT _y, UINT _width, UINT _height)
-	{
-		wchar_t* wideCharUrl = getWideString(_url.c_str());
-		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(wideCharUrl), _x, _y, _width, _height);
+		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url.content), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);

@@ -86,30 +86,20 @@ namespace suku
 		BitmapSpriteZero(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX = 0.0f, float _centerY = 0.0f);
 		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-			float _centerX = 0, float _centerY = 0, const wchar_t* _path = nullptr);
-		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
-			float _centerX = 0, float _centerY = 0, std::string _path = nullptr);
+			float _centerX = 0, float _centerY = 0, String _path = String());
 
-		BitmapSpriteZero(const wchar_t* _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(std::string _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
-			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		BitmapSpriteZero(String _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 
 
-		BitmapSpriteZero(const wchar_t* _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(std::string _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
-			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(std::string _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		BitmapSpriteZero(String _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 
 
-		void catchBitmap(const wchar_t* _path, UINT _startX = 0, UINT _startY = 0);
-		void catchBitmap(std::string _path, UINT _startX = 0, UINT _startY = 0);
-		void catchBitmapAndSize(const wchar_t* _path);
-		void catchBitmapAndSize(std::string _path);
+		void catchBitmap(String _path, UINT _startX = 0, UINT _startY = 0);
+		void catchBitmapAndSize(String _path);
 
 		virtual void paint(float _x, float _y,
 			float _xScale = 1.0, float _yScale = 1.0, float _alpha = 1.0, float _angle = 0.0) override;

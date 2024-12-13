@@ -19,8 +19,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-#include <cmath>
-
+#include <math.h>
+// C++ 运行时头文件
 #include <initializer_list>
 #include <functional>
 #include <list>

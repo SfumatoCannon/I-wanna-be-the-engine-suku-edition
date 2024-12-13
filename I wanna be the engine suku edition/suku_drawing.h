@@ -18,8 +18,6 @@ namespace suku
 	extern ID2D1HwndRenderTarget* g_pRenderTarget;
 	extern IWICImagingFactory* g_pIWICFactory;
 
-	extern wchar_t exePath[MAX_PATH + 1];
-	extern size_t Path_len;
 	extern HWND game_hWnd;
 
 	class Transform
@@ -123,10 +121,8 @@ namespace suku
 		//Create an empty bitmap
 		Bitmap(UINT _width, UINT _height);
 		//Create bitmap from file
-		Bitmap(const wchar_t* _url);
-		Bitmap(std::string _url);
-		Bitmap(const wchar_t* _url, UINT _x, UINT _y, UINT _width, UINT _height);
-		Bitmap(std::string _url, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(String _url);
+		Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);

@@ -5,6 +5,20 @@
 
 namespace suku
 {
+	class String
+	{
+	public:
+		wchar_t* content;
+		String();
+		String(const char* _string);
+		String(std::string _string);
+		String(const wchar_t* _wstring);
+		String(std::wstring _wstring);
+		String(const String& _other);
+		void operator=(const String& _other);
+		~String();
+	};
+
 	class Var
 	{
 	private:
@@ -39,13 +53,15 @@ namespace suku
 
 	extern int saveFileId;
 	extern wchar_t saveFilePath[512];
+	extern wchar_t exePath[MAX_PATH + 1];
+	extern size_t Path_len;
 
 	wchar_t getWideChar(const char& _multiByteChar);
 	wchar_t* getWideString(const char* _multiByteString);
 
-	void createPath(std::string _path);
 	void createPath(const wchar_t* _path);
-	void createPath(const char* _path);
+	void createPath(String _path);
+
 	void saveToFile();
 	void loadFromFile();
 	template<typename T> bool setSavable(T& _x, std::string _name);
