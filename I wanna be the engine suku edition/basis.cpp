@@ -1413,7 +1413,7 @@ namespace suku
 		hitArea = new ShapeCollisionBox(_collisionBox);
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
+	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 		const Shape& _collisionBox, float _centerX, float _centerY)
 	{
 		width = _width;
@@ -1466,7 +1466,7 @@ namespace suku
 		}
 	}
 
-	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, 
+	BitmapSpriteZero::BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 		float _centerX, float _centerY, float _alphaThreshold)
 	{
 		pBitmap_ = nullptr;
@@ -1474,7 +1474,7 @@ namespace suku
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
-		
+
 		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
 
 		if (pBitmap_)
@@ -1486,6 +1486,58 @@ namespace suku
 	Sprite::Sprite()
 	{
 		flipTime_ = 1;
+	}
+
+	Sprite::Sprite(String _path, UINT _amount, int _flipTime, const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		flipTime_ = _flipTime;
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+		UINT width = originalWidth / _amount;
+		for (UINT i = 0; i < _amount; i++)
+		{
+			BitmapSpriteZero* sprZ = new BitmapSpriteZero(_path, i * width, 0, width, originalHeight,
+				_collisionBox, _centerX, _centerY);
+			bodyList.push_back((SpriteZero*)sprZ);
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _amount, int _flipTime, float _centerX, float _centerY, float _alphaThreshold)
+	{
+		flipTime_ = _flipTime;
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+		UINT width = originalWidth / _amount;
+		for (UINT i = 0; i < _amount; i++)
+		{
+			BitmapSpriteZero* sprZ = new BitmapSpriteZero(_path, i * width, 0, width, originalHeight,
+				_centerX, _centerY, _alphaThreshold); 
+			bodyList.push_back((SpriteZero*)sprZ);
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
+		const Shape& _collisionBox, float _centerX, float _centerY)
+	{
+		flipTime_ = _flipTime;
+		for (UINT i = 0; i < _amount; i++)
+		{
+			BitmapSpriteZero* sprZ = new BitmapSpriteZero(_path, _startX + i * _width, _startY, _width, _height,
+				_collisionBox, _centerX, _centerY);
+			bodyList.push_back((SpriteZero*)sprZ);
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
+		float _centerX, float _centerY, float _alphaThreshold)
+	{
+		flipTime_ = _flipTime;
+		for (UINT i = 0; i < _amount; i++)
+		{
+			BitmapSpriteZero* sprZ = new BitmapSpriteZero(_path, _startX + i * _width, _startY, _width, _height,
+				_centerX, _centerY, _alphaThreshold);
+			bodyList.push_back((SpriteZero*)sprZ);
+		}
 	}
 
 	void Sprite::setSpeed(int _speed)

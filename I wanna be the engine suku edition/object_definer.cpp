@@ -61,7 +61,8 @@ namespace suku
 	Sprite* Wall::spr;
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", 16, 16)));
+		//SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", SquareShape(32), 16, 16)));
+		SPR_INIT(spr, ("Image\\player_standing.png", 4, 5, SquareShape(32)));
 		sprite_ = spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);

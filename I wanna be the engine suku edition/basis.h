@@ -149,11 +149,16 @@ namespace suku
 		template<typename SprZ> Sprite(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		
-		//Load Sprite Directly from the long sprite bitmap; height will be auto calculated.
-		//Sprite(int _flipTime, const wchar_t* _path, UINT _stepWidth);
-		//Sprite(int _flipTime, std::string _path, UINT _stepWidth);
+		//Load Sprite Directly from the long sprite bitmap; width and height will be auto calculated.
+		Sprite(String _path, UINT _amount, int _flipTime, 
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		Sprite(String _path, UINT _amount, int _flipTime,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 		//Load Sprite Directly from the long sprite bitmap, with given starting position and size.
-		//Sprite(int _flipTime, const wchar_t* _path, UINT _startX, UINT _startY, UINT _width, UINT _height);
+		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 
 		template<typename SprZ> void init(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void init(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
