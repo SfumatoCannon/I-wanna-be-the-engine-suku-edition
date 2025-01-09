@@ -49,20 +49,22 @@ namespace suku
 {
 	PlaceChanger::PlaceChanger(float _x, float _y, Room* _roomTo) :Object(_x, _y)
 	{
-		sprite_ = &sprTrigger;
+		sprite_ = Trigger::spr;
 		roomTo = _roomTo;
 	}
 
+	Sprite* Warp::spr;
 	Warp::Warp(float _x, float _y, Room* _roomTo) :PlaceChanger(_x, _y, _roomTo)
 	{
-		sprite_ = &sprWarp;
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\warp.png", 16, 16, 0.2f)));
+		sprite_ = spr;
 	}
 
 	Sprite* Wall::spr;
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		//SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", SquareShape(32), 16, 16)));
-		SPR_INIT(spr, ("Image\\player_standing.png", 4, 5, SquareShape(32)));
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", SquareShape(32), 16, 16)));
+		//SPR_INIT(spr, ("Image\\player_standing.png", 4, 5, SquareShape(32)));
 		sprite_ = spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
@@ -111,16 +113,18 @@ namespace suku
 		setPaintId(3);
 	}
 
+	Sprite* Platform::spr;
 	Platform::Platform(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprPlatform;
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\platform.png", 8, 16)));
+		sprite_ = spr;
 		setPaintId(2);
 	}
 
 	Sprite* Water::spr;
 	Water::Water(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero(L"Image\\water_noextrajump.png", SquareShape(32))));
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\water_noextrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		paintId_ = 4;
 	}
@@ -128,35 +132,42 @@ namespace suku
 	Sprite* WaterExtraJump::spr;
 	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero(L"Image\\water_extrajump.png", SquareShape(32))));
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\water_extrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		setPaintId(4);
 	}
 
+	Sprite* Trigger::spr;
 	Trigger::Trigger(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprTrigger;
+		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 0, 0)));
+		sprite_ = spr;
 	}
 
+	Sprite* VineLeft::spr;
 	VineLeft::VineLeft(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprVineLeft;
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0))));
+		sprite_ = spr;
 		setPaintId(3);
 	}
 
+	Sprite* VineRight::spr;
 	VineRight::VineRight(float _x, float _y) :Object(_x, _y)
 	{
-		sprite_ = &sprVineRight;
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0))));
+		sprite_ = spr;
 		setPaintId(3);
 	}
 
-
+	Sprite* Blood::spr;
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\blood.jpg", SquareShape(2))));
 		setPaintId(1);
 		hspeed = _wspeed;
 		vspeed = _hspeed;
-		sprite_ = &sprBlood;
+		sprite_ = spr;
 		gravity = VALUE_G;
 	}
 
@@ -167,8 +178,19 @@ namespace suku
 		vspeed += gravity;
 	}
 
+	Sprite* Player::sprStanding;
+	Sprite* Player::sprRunning;
+	Sprite* Player::sprJumping;
+	Sprite* Player::sprFalling;
+	Sprite* Player::sprSliding;
 	Player::Player(float _x, float _y) :Object(_x, _y)
 	{
+		SPR_INIT(sprStanding, ("Image\\player_standing.png", 4, 5, RectangleShape(11, 21, 12, 11), 17, 23));
+		SPR_INIT(sprRunning, ("Image\\player_running.png", 4, 2, RectangleShape(11, 21, 12, 11), 17, 23));
+		SPR_INIT(sprJumping, ("Image\\player_jumping.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23));
+		SPR_INIT(sprFalling, ("Image\\player_falling.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23));
+		SPR_INIT(sprSliding, ("Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23));
+
 		isDied_ = false;
 		isOnPlatform_ = false;
 		isOnFloor_ = false;
@@ -190,7 +212,7 @@ namespace suku
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
 		memset(deathBlood_, 0, sizeof(deathBlood_));
-		sprite_ = &sprPlayerStanding;
+		sprite_ = sprStanding;
 	}
 
 	void Player::onAppearing()
@@ -402,19 +424,19 @@ namespace suku
 		}
 
 		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown[VK_SHIFT]))
-			sprite_ = &sprPlayerJumping;
+			sprite_ = sprJumping;
 		else if (!isOnFloor_ && totalVspeed() > (isOnPlatform_ ? 0.4 : 0))
 		{
 			if (isOnVineLeft_ || isOnVineRight_)
-				sprite_ = &sprPlayerSliding;
-			else sprite_ = &sprPlayerFalling;
+				sprite_ = sprSliding;
+			else sprite_ = sprFalling;
 		}
 		else
 		{
 			if (isKeyHolding[VK_LEFT] || isKeyHolding[VK_RIGHT])
-				sprite_ = &sprPlayerRunning;
+				sprite_ = sprRunning;
 			else
-				sprite_ = &sprPlayerStanding;
+				sprite_ = sprStanding;
 		}
 		//xScale = (side_ == 0 ? 1.0 : -1.0);
 		spriteTransform = scale(PLAYER_CENTERX, PLAYER_CENTERY, (side_ == 0 ? 1.0f : -1.0f), 1);
@@ -562,128 +584,4 @@ namespace suku
 		hspeedTemp = movingSpeed * 5.0f;
 	}
 
-
-
-	Box::Box(float _x, float _y) :Object(_x, _y)
-	{
-		paintId_ = 2;
-		sprite_ = &sprBox;
-		gravity = 0.4f;
-	}
-
-	void Box::pushLeft(float _xTo, Object* _nowobj)
-	{
-		/*std::list<Object*> objList;
-		if (_nowobj == nullptr)
-			_nowobj = this;
-		_nowobj->hspeedTemp = min(_nowobj->totalHspeed(),
-			_xTo - _nowobj->nowState()->hitX - _nowobj->nowState()->hitWidth - _nowobj->x);
-		objList = _nowobj->touchObjectList(ID_BOX, _nowobj->x + _nowobj->totalHspeed(), _nowobj->y + _nowobj->totalVspeed());
-		for (auto& i : objList)
-		{
-			if (i->x < _nowobj->x)
-				pushLeft(_nowobj->x + _nowobj->nowState()->hitX + _nowobj->totalHspeed(), i);
-		}*/
-	}
-
-	void Box::pushRight(float _xTo, Object* _nowobj)
-	{
-		//std::list<Object*> objList;
-		//if (_nowobj == nullptr)
-		//	_nowobj = this;
-		//_nowobj->hspeedTemp = max(_nowobj->totalHspeed(),
-		//	_xTo - _nowobj->nowState()->hitX - _nowobj->x);
-		//objList = _nowobj->touchObjectList(ID_BOX, _nowobj->x + _nowobj->totalHspeed(), _nowobj->y /* + _nowobj->totalVspeed()*/);
-		//for (auto& i : objList)
-		//{
-		//	if (i->x > _nowobj->x)
-		//		pushRight(_nowobj->x + _nowobj->totalHspeed()
-		//			+ _nowobj->nowState()->hitX + _nowobj->nowState()->hitWidth, i);
-		//}
-	}
-
-	void Box::pushUp(float _yTo, Object* _nowobj)
-	{
-		//std::list<Object*> objList;
-		//if (_nowobj == nullptr)
-		//	_nowobj = this;
-		//_nowobj->y = _yTo - _nowobj->nowState()->hitHeight - _nowobj->nowState()->hitY;
-		//_nowobj->vspeed = 0;
-		//objList = _nowobj->touchObjectList(ID_BOX);
-		//for (auto& i : objList)
-		//{
-		//	if (i->y < _nowobj->y)
-		//		pushUp(_nowobj->y + _nowobj->nowState()->hitY, i);
-		//}
-	}
-
-	void Box::reviseState()
-	{
-		vspeed += gravity;
-		/*if (!inRoom_->player)
-			return;
-		Object* player = inRoom_->player;
-		if (!player)
-			return;
-		if (isCrashed(*player, x - player->totalHspeed(), y) &&
-			!isCrashed(*player, x, y))
-		{
-			double playerHspeed = player->totalHspeed();
-			Object* temp;
-			if (playerHspeed > 0)
-			{
-				while (temp = player->touchObject(ID_WALL, player->x + playerHspeed, player->y))
-				{
-					if (temp->nowState()->hitArea == nullptr && temp->angle == 0.0)
-						playerHspeed = round(temp->x) + temp->nowState()->hitX
-						- player->nowState()->hitWidth - player->nowState()->hitX - round(player->x);
-					else playerHspeed = playerHspeed - 1.0;
-				}
-				pushRight(player->x + playerHspeed + player->nowState()->hitX + player->nowState()->hitWidth);
-			}
-			else if (playerHspeed < 0)
-			{
-				while (temp = player->touchObject(ID_WALL, player->x + playerHspeed, player->y))
-				{
-					if (temp->nowState()->hitArea == nullptr && temp->angle == 0.0)
-						playerHspeed = round(temp->x) + temp->nowState()->hitX + temp->nowState()->hitWidth
-						- player->nowState()->hitX - round(player->x);
-					else playerHspeed = playerHspeed + 1.0;
-				}
-				pushLeft(player->x + playerHspeed + player->nowState()->hitX);
-			}
-		}*/
-	}
-
-	void Box::updateState()
-	{
-		//Object* temp;
-		/*if (touchObject(ID_WALL, x + totalHspeed(), y + totalVspeed()))
-		{
-			while (temp = touchObject(ID_WALL, x + totalHspeed(), y))
-			{
-				if (totalHspeed() > 0)
-					contactToLeft(*temp);
-				else if (totalHspeed() < 0)
-					contactToRight(*temp);
-				else break;
-			}
-			x += totalHspeed();
-			while (temp = touchObject(ID_WALL, x, y + totalVspeed()))
-			{
-				if (totalVspeed() > 0)
-					contactToUp(*temp);
-				else if (totalVspeed() < 0)
-					contactToDown(*temp);
-				else break;
-			}
-			y += totalVspeed();
-			pushUp(y + nowState()->hitY + nowState()->hitHeight);
-		}
-		else
-		{
-			x += totalHspeed();
-			y += totalVspeed();
-		}*/
-	}
 }

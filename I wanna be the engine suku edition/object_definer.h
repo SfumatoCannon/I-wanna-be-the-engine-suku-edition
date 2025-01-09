@@ -1,5 +1,4 @@
 #pragma once
-#include "sprite_definer.hpp"
 #include "game_saving.h"
 #include "basis.h"
 
@@ -129,6 +128,12 @@ namespace suku
 		void die();
 		void bleed();
 	public:
+		static Sprite* sprStanding;
+		static Sprite* sprRunning;
+		static Sprite* sprJumping;
+		static Sprite* sprFalling;
+		static Sprite* sprSliding;
+
 
 		bool isInfinityJump;
 		bool isFrozen;
@@ -158,17 +163,4 @@ namespace suku
 	// .......................................................................................
 	// extensive objects
 
-	class Box :public Object
-	{
-	public:
-		float gravity;
-		Box(float _x = 0, float _y = 0);
-
-		void pushLeft(float _xTo, Object* _nowobj = nullptr);
-		void pushRight(float _xTo, Object* _nowobj = nullptr);
-		void pushUp(float _yTo, Object* _nowobj = nullptr);
-
-		virtual void reviseState() override;
-		virtual void updateState() override;
-	};
 }

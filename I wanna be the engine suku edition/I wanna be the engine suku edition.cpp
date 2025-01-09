@@ -35,8 +35,8 @@ void Initialization()
 			IID_PPV_ARGS(&g_pIWICFactory)
 		);
 	}
-	if (SUCCEEDED(hr))
-		spritePreSet();
+	//if (SUCCEEDED(hr))
+	//	spritePreSet();
 }
 
 void Sender()
