@@ -268,25 +268,26 @@ namespace suku
 
 	float Object::centerX()
 	{
-		float cx = x + nowState()->centerX;
-		float cy = y + nowState()->centerY;
+		float cx = nowState()->centerX;
+		float cy = nowState()->centerY;
 		spriteTransform.transformPoint(&cx, &cy);
-		return cx;
+		return x + cx;
 	}
 
 	float Object::centerY()
 	{
-		float cx = x + nowState()->centerX;
-		float cy = y + nowState()->centerY;
+		float cx = nowState()->centerX;
+		float cy = nowState()->centerY;
 		spriteTransform.transformPoint(&cx, &cy);
-		return cy;
+		return y + cy;
 	}
 
 	Vector Object::center()
 	{
-		float cx = x + nowState()->centerX;
-		float cy = y + nowState()->centerY;
-		return spriteTransform.transformPoint(cx, cy);
+		auto result = spriteTransform.transformPoint(nowState()->centerX, nowState()->centerY);
+		result.first += x;
+		result.second += y;
+		return result;
 	}
 
 	double Object::getSpriteAngle()

@@ -164,7 +164,7 @@ namespace suku
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
 		SPR_INIT(spr, (BitmapSpriteZero("Image\\blood.png", SquareShape(2))));
-		setPaintId(1);
+		setPaintId(4);
 		hspeed = _wspeed;
 		vspeed = _hspeed;
 		sprite_ = spr;
