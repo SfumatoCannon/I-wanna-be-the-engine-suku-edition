@@ -163,7 +163,7 @@ namespace suku
 	Sprite* Blood::spr;
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\blood.jpg", SquareShape(2))));
+		SPR_INIT(spr, (BitmapSpriteZero("Image\\blood.png", SquareShape(2))));
 		setPaintId(1);
 		hspeed = _wspeed;
 		vspeed = _hspeed;
@@ -173,9 +173,26 @@ namespace suku
 
 	void Blood::reviseState()
 	{
+		if (isKeyDown[VK_R])
+			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;
 		vspeed += gravity;
+	}
+
+	void Blood::updateState()
+	{
+		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
+
+		float vspeedBefore = totalVspeed();
+		moveContactOld(tempList);
+		if (vspeedBefore != totalVspeed())
+		{
+			vspeedTemp = totalVspeed();
+			vspeed = 0;
+		}
+		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
+			hspeed = hspeedTemp = 0;
 	}
 
 	Sprite* Player::sprStanding;
@@ -211,7 +228,6 @@ namespace suku
 		setRecheckStateId(0);
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
-		memset(deathBlood_, 0, sizeof(deathBlood_));
 		sprite_ = sprStanding;
 	}
 
@@ -298,7 +314,7 @@ namespace suku
 
 	void Player::die()
 	{
-		//state_ |= STATE_DIED;
+		setSpeed(0.0f, 0.0f, 0.0f, 0.0f);
 		alpha = 0.0;
 		isDied_ = true;
 	}
@@ -307,18 +323,17 @@ namespace suku
 	{
 		short i;
 		i = 0;
+		if (!inRoom())
+			return;
 		SpriteZero* body2 = nowState();
 		if (!body2)
 			return;
 		while (nowBloodNum_ < PLAYER_BLOODNUMMAX)
 		{
 			i++;
-			float bloodhspeed = modR((float)randD(), PLAYER_BLOODWOFFSET);
-			float bloodvspeed = modR((float)randD(), PLAYER_BLOODHOFFSET);
-			deathBlood_[nowBloodNum_]->x = x + body2->centerX;
-			deathBlood_[nowBloodNum_]->y = y + body2->centerY;
-			deathBlood_[nowBloodNum_]->hspeed = bloodhspeed;
-			deathBlood_[nowBloodNum_]->vspeed = bloodvspeed;
+			float bloodhspeed = randF(-PLAYER_BLOODHOFFSET, PLAYER_BLOODHOFFSET);
+			float bloodvspeed = randF(-PLAYER_BLOODVOFFSET, PLAYER_BLOODVOFFSET);
+			inRoom()->create(Blood(centerX(), centerY()))->setSpeed(bloodhspeed, bloodvspeed);
 			nowBloodNum_++;
 			if (i >= PLAYER_BLOODNUMONCE)
 				break;
@@ -329,8 +344,6 @@ namespace suku
 	{
 		if (isKeyDown[VK_R])
 		{
-			//if (inRoom_)
-			//	inRoom_->reset();
 			spawn();
 		}
 
@@ -438,6 +451,7 @@ namespace suku
 			else
 				sprite_ = sprStanding;
 		}
+
 		//xScale = (side_ == 0 ? 1.0 : -1.0);
 		spriteTransform = scale(PLAYER_CENTERX, PLAYER_CENTERY, (side_ == 0 ? 1.0f : -1.0f), 1);
 
@@ -461,72 +475,6 @@ namespace suku
 		}
 		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
 			hspeed = hspeedTemp = 0;
-
-		/*templist = touchObjectList(ID_BOX, x, y);
-		for (auto i : templist)
-		{
-			//die();
-			//return;
-			if (i->totalVspeed() < 0)
-				contactToUp(*i, true);
-			else if (i->totalVspeed() > 0)
-				contactToDown(*i, true);
-		}
-		if (touchObject(ID_WALL) || touchObject(ID_BOX))
-		{
-			die();
-			return;
-		}
-		if (touchObject(ID_WALL, x + totalHspeed(), y + totalVspeed()) || touchObject(ID_BOX, x + totalHspeed(), y + totalVspeed()))
-		{
-			while (temp = touchObject(ID_WALL, x + totalHspeed(), y))
-			{
-				if (totalHspeed() > 0)
-					contactToLeft(*temp);
-				else if (totalHspeed() < 0)
-					contactToRight(*temp);
-				else break;
-			}
-			while (temp = touchObject(ID_BOX, x + totalHspeed(), y))
-			{
-				if (totalHspeed() > 0)
-					contactToLeft(*temp);
-				else if (totalHspeed() < 0)
-					contactToRight(*temp);
-				else break;
-			}
-			x += totalHspeed();
-			if (touchObject(ID_WALL, x, y + totalVspeed()) || touchObject(ID_BOX, x, y + totalVspeed()))
-			{
-				float tvspeed = totalVspeed();
-				while (temp = touchObject(ID_WALL, x, y + totalVspeed()))
-				{
-					if (totalVspeed() > 0)
-						contactToUp(*temp);
-					else if (totalVspeed() < 0)
-						contactToDown(*temp);
-					else break;
-				}
-				while (temp = touchObject(ID_BOX, x, y + totalVspeed()))
-				{
-
-					if (totalVspeed() > 0)
-						contactToUp(*temp);
-					else if (totalVspeed() < 0)
-						contactToDown(*temp);
-					else break;
-				}
-				//y += tvspeed;
-				y += totalVspeed();
-				stopMoving(false, true);
-			}
-			else y += totalVspeed();
-		}
-		else
-		{
-			x += totalHspeed();
-			y += totalVspeed();
-		}*/
 
 		/*if (temp = touchObject(ID_PLATFORM))
 		{

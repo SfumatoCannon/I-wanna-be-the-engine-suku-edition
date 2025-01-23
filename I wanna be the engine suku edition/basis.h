@@ -215,15 +215,19 @@ namespace suku
 
 		void updateFunction();
 
-		static void classInitialize() {};
-		virtual void onAppearing() {};
+		static void classInitialize() {}
+		virtual void onAppearing() {}
 		virtual void onRestarting();
-		virtual void reviseState() {};
-		virtual void updateState() {};
-		virtual void recheckState() {};
+		virtual void onDestroy() {}
+		virtual void reviseState() {}
+		virtual void updateState() {}
+		virtual void recheckState() {}
 
 		inline float totalHspeed()const;
 		inline float totalVspeed()const;
+
+		void setSpeed(float _hspeed, float _vspeed, float _hspeedTemp = 0.0f, float _vspeedTemp = 0.0f);
+		void setSpeedTemp(float _hspeedTemp, float _vspeedTemp);
 
 		void movingTo(float _xTo, float _yTo, int _time);
 		void rotate(float _angle);

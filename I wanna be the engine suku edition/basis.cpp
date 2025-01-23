@@ -349,6 +349,7 @@ namespace suku
 
 	void Object::remove()
 	{
+		onDestroy();
 		if (inRoom_)
 		{
 			if (isUpdating_)
@@ -366,7 +367,6 @@ namespace suku
 				inRoom_ = nullptr;
 			}
 		}
-		//triggerOnDestroy();
 	}
 
 	void Object::destroy()
@@ -385,6 +385,20 @@ namespace suku
 	inline float Object::totalVspeed()const
 	{
 		return vspeed + vspeedTemp;
+	}
+
+	void Object::setSpeed(float _hspeed, float _vspeed, float _hspeedTemp, float _vspeedTemp)
+	{
+		hspeed = _hspeed;
+		vspeed = _vspeed;
+		hspeedTemp = _hspeedTemp;
+		vspeedTemp = _vspeedTemp;
+	}
+
+	void Object::setSpeedTemp(float _hspeedTemp, float _vspeedTemp)
+	{
+		hspeedTemp = _hspeedTemp;
+		vspeedTemp = _vspeedTemp;
 	}
 
 	void Object::rotate(float _angle)

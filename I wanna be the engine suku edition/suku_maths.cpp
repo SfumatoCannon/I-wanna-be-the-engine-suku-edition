@@ -80,6 +80,17 @@ namespace suku
 			return (float)iX;
 	}
 
+
+	long long randL()
+	{
+		static long long x = (long long)(time(0));
+		static long long clock = 0;
+		const long long a = 1103515245, c = 12345, m = 1ll << 31;
+		x = (x * a + c) % m;
+		clock += x;
+		return (int)(x + clock);
+	}
+
 	int randI()
 	{
 		static long long x = (long long)(time(0));
@@ -90,14 +101,19 @@ namespace suku
 		return (int)(x + clock);
 	}
 
-	double randD()
+	int randI(int _left, int _right)
 	{
-		return 1.0 / (1.0 / ((double)randI()) + 1.0 / ((double)randI()));
+		return (int)randD((double)_left, (double)_right);
 	}
 
-	float randF()
+	double randD(double _left, double _right)
 	{
-		return 1.0f / (1.0f / ((float)randI()) + 1.0f / ((float)randI()));
+		return (double)abs(randI()) / INT_MAX * (_right - _left) + _left;
+	}
+
+	float randF(float _left, float _right)
+	{
+		return (float)abs(randI()) / INT_MAX * (_right - _left) + _left;
 	}
 
 	int gcd(int _a, int _b)

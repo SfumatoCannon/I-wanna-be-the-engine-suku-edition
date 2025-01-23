@@ -157,15 +157,19 @@ namespace suku
 	double bRound(double _x);
 	float bRound(float _x);
 
+	long long randL();
 	int randI();
-	double randD();
-	float randF();
+	int randI(int _left, int _right);
+	double randD(double _left, double _right);
+	float randF(float _left, float _right);
 	template<typename T> T randInList(T _a, T _b, ...);
 
 	int gcd(int _a, int _b);
 	int lcm(int _a, int _b);
 
+	// or use fmod() in <cmath>
 	double modR(double _a, double _b);	// a % b
+	// or use fmod() in <cmath>
 	float modR(float _a, float _b);	// a % b
 
 	unsigned long long hash(std::string _str);

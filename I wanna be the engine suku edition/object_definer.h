@@ -109,14 +109,13 @@ namespace suku
 		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
 
 		virtual void reviseState() override;
-		//virtual void updateState() override;
+		virtual void updateState() override;
 	};
 
 	class Player :public Object
 	{
 	private:
 		short nowBloodNum_;
-		Object* deathBlood_[PLAYER_BLOODNUMMAX];
 		short jumpTime_;
 		bool side_;
 		bool isDied_;
