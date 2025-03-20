@@ -219,6 +219,7 @@ namespace suku
 		virtual void onAppearing() {}
 		virtual void onRestarting();
 		virtual void onDestroy() {}
+		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
 		virtual void reviseState() {}
 		virtual void updateState() {}
 		virtual void recheckState() {}

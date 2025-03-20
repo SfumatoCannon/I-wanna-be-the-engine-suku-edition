@@ -118,6 +118,7 @@ namespace suku
 	class Bitmap
 	{
 	public:
+		Bitmap();
 		//Create an empty bitmap
 		Bitmap(UINT _width, UINT _height);
 		//Create bitmap from file

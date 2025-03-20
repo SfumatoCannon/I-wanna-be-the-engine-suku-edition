@@ -532,4 +532,19 @@ namespace suku
 		hspeedTemp = movingSpeed * 5.0f;
 	}
 
+	Background::Background(const Bitmap& _bitmap) : Object(0, 0)
+	{
+		setReviseStateId(-1);
+		setUpdateStateId(-1);
+		setRecheckStateId(-1);
+		setPaintId(0);
+		picture_ = new Bitmap(_bitmap);
+	}
+
+	bool Background::onPaint()
+	{
+		picture_->paint(0, 0);
+		return true;
+	}
+
 }

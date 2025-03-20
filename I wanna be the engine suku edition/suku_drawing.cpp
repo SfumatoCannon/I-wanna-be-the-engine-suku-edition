@@ -1063,6 +1063,14 @@ namespace suku
 		b_ = (B + m) * 255.0f;
 	}
 
+	Bitmap::Bitmap()
+	{
+		bytesPerPixel_ = 0;
+		width_ = height_ = 0;
+		wicBitmap_ = nullptr;
+		d2d1Bitmap_ = nullptr;
+	}
+
 	Bitmap::Bitmap(UINT _width, UINT _height)
 	{
 		HRESULT hr = createWICBitmap(&wicBitmap_, _width, _height);

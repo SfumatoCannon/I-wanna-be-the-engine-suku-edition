@@ -8,6 +8,7 @@ void loadFromJtoolMsg(suku::Room* _room, std::string _msg);
 // basic objects
 namespace suku
 {
+	class Background;
 	class PlaceChanger;
 	class Wall;
 	class Spike;
@@ -20,6 +21,16 @@ namespace suku
 	class WaterExtraJump;
 	class Blood;
 	class Player;
+
+	class Background :public Object
+	{
+	public:
+		Background() {}
+		Background(const Bitmap& _bitmap);
+		virtual bool onPaint() override;
+	private:
+		Bitmap* picture_;
+	};
 
 	class PlaceChanger :public Object
 	{

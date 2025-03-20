@@ -1308,7 +1308,10 @@ namespace suku
 
 		for (auto& x : paintArray)
 			for (auto& obj : x.second)
-				obj->paintBody();
+			{
+				if (!obj->onPaint())
+					obj->paintBody();
+			}
 
 		onPaintEnd();
 	}
