@@ -25,11 +25,12 @@ namespace suku
 	class Background :public Object
 	{
 	public:
-		Background() {}
+		Background() : picture(nullptr) {}
 		Background(const Bitmap& _bitmap);
+		//Background(const Background& _bg);
+		~Background();
 		virtual bool onPaint() override;
-	private:
-		Bitmap* picture_;
+		Bitmap* picture;
 	};
 
 	class PlaceChanger :public Object

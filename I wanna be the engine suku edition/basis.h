@@ -350,7 +350,7 @@ namespace suku
 		//Object* findObjWithCenterPosition(int _kind, double _x, double _y);
 
 		template<typename Obj> Obj* append(const Obj* _objectPointer);
-		template<typename Obj> Obj* create(Obj _object);
+		template<typename Obj> Obj* create(const Obj& _object);
 		template<typename Obj, typename ... ObjNext> void create(Obj _firstobject, ObjNext...	_objectnext);
 		template<typename Obj> void createFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
@@ -476,12 +476,11 @@ namespace suku
 	}
 
 	template<typename Obj>
-	inline Obj* Room::create(Obj _object)
+	inline Obj* Room::create(const Obj& _object)
 	{
 		const type_info& type = typeid(Obj);
 		const type_info& typeObject = typeid(Object);
-		Obj* newObj = new Obj;
-		*newObj = _object;
+		Obj* newObj = new Obj(_object);
 		Object* newObjParent = &(*newObj);
 		std::list<Obj*>* objList = objectList<Obj>();
 		std::list<Object*>* objParentList = objectList<Object>();

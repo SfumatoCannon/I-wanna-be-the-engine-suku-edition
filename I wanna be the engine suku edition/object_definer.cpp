@@ -535,12 +535,28 @@ namespace suku
 	Background::Background(const Bitmap& _bitmap) : Object(0, 0)
 	{
 		setPaintId(0);
-		picture_ = new Bitmap(_bitmap);
+		picture = new Bitmap(_bitmap);
+	}
+
+	//Background::Background(const Background& _bg)
+	//{
+	//	if (picture)
+	//	{
+	//		delete picture;
+	//		picture = nullptr;
+	//	}
+	//	picture = new Bitmap(*_bg.picture);
+	//}
+
+	Background::~Background()
+	{
+		if (!picture)
+			delete picture;
 	}
 
 	bool Background::onPaint()
 	{
-		picture_->paint(0, 0);
+		picture->paint(0, 0);
 		return true;
 	}
 
