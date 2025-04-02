@@ -1184,6 +1184,9 @@ namespace suku
 		auto [w, h] = _otherBitmap.getSize();
 		width_ = w;
 		height_ = h;
+		wicBitmap_ = nullptr;
+		d2d1Bitmap_ = nullptr;
+		bytesPerPixel_ = 0;
 		auto hr = createWICBitmap(&wicBitmap_, w, h);
 		if (SUCCEEDED(hr))
 		{
@@ -1193,20 +1196,12 @@ namespace suku
 			updatePixelDetail(x);
 			free2D(x, w, h);
 		}
-		else
-		{
-			wicBitmap_ = nullptr;
-			d2d1Bitmap_ = nullptr;
-			bytesPerPixel_ = 0;
-		}
 	}
 
 	Bitmap::~Bitmap()
 	{
-		if (wicBitmap_)
-			wicBitmap_->Release();
-		if (d2d1Bitmap_)
-			d2d1Bitmap_->Release();
+		SAFE_RELEASE(wicBitmap_);
+		SAFE_RELEASE(d2d1Bitmap_);
 	}
 
 	UINT Bitmap::getPixelByte()
@@ -1333,7 +1328,7 @@ namespace suku
 							BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
 							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
-							pixelArrayPointer[i][j].alpha = (float)(*pixelData + 3) / 255.0f;
+							pixelArrayPointer[i][j].alpha = (float)(*(pixelData + 3)) / 255.0f;
 						}
 				}
 			}
@@ -1363,8 +1358,10 @@ namespace suku
 		if (_detail == nullptr || wicBitmap_ == nullptr)
 			return;
 
-		UINT bytesPerPixel = getPixelByte();
+		SAFE_RELEASE(d2d1Bitmap_);
 
+		UINT bytesPerPixel = getPixelByte();
+		
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
 		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);
@@ -1405,7 +1402,6 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		SAFE_RELEASE(d2d1Bitmap_);
 		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
 	}
 

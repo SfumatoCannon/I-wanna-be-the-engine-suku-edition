@@ -532,10 +532,21 @@ namespace suku
 		hspeedTemp = movingSpeed * 5.0f;
 	}
 
-	Background::Background(const Bitmap& _bitmap) : Object(0, 0)
+	Background::Background(const Bitmap& _bitmap) : picture(_bitmap), Object(0, 0)
 	{
 		setPaintId(0);
-		picture = new Bitmap(_bitmap);
+	}
+
+	Background::Background(const Background& _bg)
+	{
+		picture = _bg.picture;
+		setPaintId(0);
+	}
+
+	Background& Background::operator=(const Background& _bg)
+	{
+		picture = _bg.picture;
+		return *this;
 	}
 
 	//Background::Background(const Background& _bg)
@@ -548,15 +559,9 @@ namespace suku
 	//	picture = new Bitmap(*_bg.picture);
 	//}
 
-	Background::~Background()
-	{
-		if (!picture)
-			delete picture;
-	}
-
 	bool Background::onPaint()
 	{
-		picture->paint(0, 0);
+		picture.paint(0, 0);
 		return true;
 	}
 
