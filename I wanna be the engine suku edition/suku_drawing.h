@@ -58,6 +58,7 @@ namespace suku
 
 		Shape();
 		Shape(const Shape& _x);
+		Shape(Shape&& _x)noexcept;
 		Shape(ID2D1Geometry* _geometry, Transform _transform = Transform());
 		//Shape(ID2D1Geometry* _geometry, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush,
 		//	float _edgeWidth = 1.0, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
@@ -129,6 +130,7 @@ namespace suku
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
 		Bitmap(IWICBitmap* _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
+		Bitmap(Bitmap&& _otherBitmap)noexcept;
 		~Bitmap();
 
 		UINT getPixelByte();

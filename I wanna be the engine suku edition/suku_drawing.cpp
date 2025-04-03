@@ -617,6 +617,15 @@ namespace suku
 		}
 	}
 
+	Shape::Shape(Shape&& _x) noexcept
+	{
+		transform = _x.transform;
+		originalGeometry = _x.originalGeometry;
+		currentGeometry = _x.currentGeometry;
+		_x.originalGeometry = nullptr;
+		_x.currentGeometry = nullptr;
+	}
+
 	Shape::Shape(ID2D1Geometry* _geometry, Transform _transform)
 	{
 		originalGeometry = nullptr;
@@ -1181,21 +1190,33 @@ namespace suku
 
 	Bitmap::Bitmap(const Bitmap& _otherBitmap)
 	{
-		auto [w, h] = _otherBitmap.getSize();
-		width_ = w;
-		height_ = h;
+		width_ = _otherBitmap.width_;
+		height_ = _otherBitmap.height_;
 		wicBitmap_ = nullptr;
 		d2d1Bitmap_ = nullptr;
 		bytesPerPixel_ = 0;
-		auto hr = createWICBitmap(&wicBitmap_, w, h);
+		auto hr = createWICBitmap(&wicBitmap_, width_, height_);
 		if (SUCCEEDED(hr))
 		{
 			bytesPerPixel_ = 0;
 			getPixelByte();
 			Color** x = _otherBitmap.getPixelDetail();
 			updatePixelDetail(x);
-			free2D(x, w, h);
+			free2D(x, width_, height_);
 		}
+	}
+
+	Bitmap::Bitmap(Bitmap&& _otherBitmap)noexcept
+	{
+		width_ = _otherBitmap.width_;
+		height_ = _otherBitmap.height_;
+		wicBitmap_ = _otherBitmap.wicBitmap_;
+		d2d1Bitmap_ = _otherBitmap.d2d1Bitmap_;
+		bytesPerPixel_ = _otherBitmap.bytesPerPixel_;
+
+		_otherBitmap.wicBitmap_ = nullptr;
+		_otherBitmap.d2d1Bitmap_ = nullptr;
+		_otherBitmap.bytesPerPixel_ = 0;
 	}
 
 	Bitmap::~Bitmap()

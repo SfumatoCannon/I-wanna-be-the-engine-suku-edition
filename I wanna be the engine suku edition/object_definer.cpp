@@ -537,9 +537,13 @@ namespace suku
 		setPaintId(0);
 	}
 
-	Background::Background(const Background& _bg)
+	Background::Background(const Background& _bg) : picture(_bg.picture), Object(0, 0)
 	{
-		picture = _bg.picture;
+		setPaintId(0);
+	}
+
+	Background::Background(Background&& _bg) noexcept : picture(std::move(_bg.picture)), Object(0, 0)
+	{
 		setPaintId(0);
 	}
 
