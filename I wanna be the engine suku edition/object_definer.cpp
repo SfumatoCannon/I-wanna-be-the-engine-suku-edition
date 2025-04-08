@@ -546,13 +546,6 @@ namespace suku
 	{
 		setPaintId(0);
 	}
-
-	Background& Background::operator=(const Background& _bg)
-	{
-		picture = _bg.picture;
-		return *this;
-	}
-
 	//Background::Background(const Background& _bg)
 	//{
 	//	if (picture)

@@ -32,11 +32,9 @@ void Initialization()
 			CLSID_WICImagingFactory1,
 			NULL,
 			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&g_pIWICFactory)
+			IID_PPV_ARGS(&pIWICFactory)
 		);
 	}
-	//if (SUCCEEDED(hr))
-	//	spritePreSet();
 }
 
 void Sender()

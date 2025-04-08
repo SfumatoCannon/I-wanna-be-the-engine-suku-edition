@@ -5,6 +5,7 @@
 #include "object_definer.h"
 #include "suku_drawing.h"
 #include "game_saving.h"
+#include "suku_sounds.h"
 
 void init();
 void Initialization();

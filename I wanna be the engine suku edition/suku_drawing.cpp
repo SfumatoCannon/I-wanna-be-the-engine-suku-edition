@@ -4,9 +4,9 @@
 
 namespace suku
 {
-	ID2D1Factory* g_pD2DFactory = NULL;	// Direct2D factory
-	ID2D1HwndRenderTarget* g_pRenderTarget = NULL;	// Render target
-	IWICImagingFactory* g_pIWICFactory;
+	ID2D1Factory* pD2DFactory = NULL;	// Direct2D factory
+	ID2D1HwndRenderTarget* pMainRenderTarget = NULL;	// Render target
+	IWICImagingFactory* pIWICFactory;
 
 	Transform translation(float _shiftX, float _shiftY)
 	{
@@ -36,24 +36,24 @@ namespace suku
 
 	void setPaintingTransform(Transform _transform)
 	{
-		g_pRenderTarget->SetTransform(_transform.matrix);
+		pMainRenderTarget->SetTransform(_transform.matrix);
 	}
 
 	void beginDraw(HWND hWnd)
 	{
 		createD2DResource(hWnd);
-		g_pRenderTarget->BeginDraw();
-		g_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+		pMainRenderTarget->BeginDraw();
+		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
 	void endDraw()
 	{
-		g_pRenderTarget->EndDraw();
+		pMainRenderTarget->EndDraw();
 	}
 
 	void clearScreen()
 	{
-		g_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
 	const wchar_t* AbsolutePath(const wchar_t* relativePath)
@@ -87,11 +87,11 @@ namespace suku
 
 	void createD2DResource(HWND hWnd)
 	{
-		if (!g_pRenderTarget)
+		if (!pMainRenderTarget)
 		{
 			HRESULT hr;
 
-			hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &g_pD2DFactory);
+			hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
 			if (FAILED(hr))
 			{
 				MessageBox(hWnd, L"Create D2D factory failed!", L"Error", 0);
@@ -101,13 +101,13 @@ namespace suku
 			RECT rc;
 			GetClientRect(hWnd, &rc);
 
-			hr = g_pD2DFactory->CreateHwndRenderTarget(
+			hr = pD2DFactory->CreateHwndRenderTarget(
 				D2D1::RenderTargetProperties(),
 				D2D1::HwndRenderTargetProperties(
 					hWnd,
 					D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top)
 				),
-				&g_pRenderTarget
+				&pMainRenderTarget
 			);
 			if (FAILED(hr))
 			{
@@ -294,7 +294,7 @@ namespace suku
 		UINT					originalWidth = 0;
 		UINT					originalHeight = 0;
 
-		HRESULT hr = g_pIWICFactory->CreateDecoderFromFilename(
+		HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
 			_uri,
 			nullptr,
 			GENERIC_READ,
@@ -314,7 +314,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = g_pIWICFactory->CreateBitmapFromSourceRect(
+			hr = pIWICFactory->CreateBitmapFromSourceRect(
 				pSource, 0, 0, (UINT)originalWidth, (UINT)originalHeight, _pWicBitmap);
 		}
 
@@ -328,7 +328,7 @@ namespace suku
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
 
-		HRESULT hr = g_pIWICFactory->CreateDecoderFromFilename(
+		HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
 			_uri,
 			nullptr,
 			GENERIC_READ,
@@ -343,7 +343,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = g_pIWICFactory->CreateBitmapFromSourceRect(
+			hr = pIWICFactory->CreateBitmapFromSourceRect(
 				pSource, _x, _y, _width, _height, _pWicBitmap);
 		}
 
@@ -374,11 +374,11 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = g_pIWICFactory->CreateFormatConverter(&pConverter);
+			hr = pIWICFactory->CreateFormatConverter(&pConverter);
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = g_pIWICFactory->CreateBitmapScaler(&pScaler);
+			hr = pIWICFactory->CreateBitmapScaler(&pScaler);
 		}
 		if (SUCCEEDED(hr))
 		{
@@ -402,7 +402,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = g_pRenderTarget->CreateBitmapFromWicBitmap(
+			hr = pMainRenderTarget->CreateBitmapFromWicBitmap(
 				pConverter,
 				NULL,
 				_pD2dBitmap
@@ -490,7 +490,7 @@ namespace suku
 	ID2D1Brush* createSolidColorBrush(const Color _color)
 	{
 		ID2D1SolidColorBrush* newBrush;
-		g_pRenderTarget->CreateSolidColorBrush(
+		pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r(), _color.g(), _color.b(), _color.alpha),
 			&newBrush
 		);
@@ -535,8 +535,8 @@ namespace suku
 			transformMatrix.SetProduct(transformMatrix,
 				D2D1::Matrix3x2F::Scale(1.0, -1.0, D2D1::Point2F(_x + _width / 2, _y - _height / 2)));
 
-		g_pRenderTarget->SetTransform(transformMatrix);
-		g_pRenderTarget->drawBitmap(
+		pMainRenderTarget->SetTransform(transformMatrix);
+		pMainRenderTarget->drawBitmap(
 			_pBitmap,
 			D2D1::RectF(
 				_x,
@@ -552,7 +552,7 @@ namespace suku
 	{
 		if (!_pBitmap) return;
 		setPaintingTransform(_transform);
-		g_pRenderTarget->DrawBitmap(
+		pMainRenderTarget->DrawBitmap(
 			_pBitmap,
 			D2D1::RectF(
 				_x, _y,
@@ -567,7 +567,7 @@ namespace suku
 	{
 		if (!_pBitmap) return;
 		setPaintingTransform(_transform);
-		g_pRenderTarget->DrawBitmap(
+		pMainRenderTarget->DrawBitmap(
 			_pBitmap,
 			D2D1::RectF(
 				0.0f, 0.0f,
@@ -581,8 +581,8 @@ namespace suku
 	void cleanup()
 	{
 		CoUninitialize();
-		SAFE_RELEASE(g_pRenderTarget);
-		SAFE_RELEASE(g_pD2DFactory);
+		SAFE_RELEASE(pMainRenderTarget);
+		SAFE_RELEASE(pD2DFactory);
 	}
 
 	Shape::Shape()
@@ -606,7 +606,7 @@ namespace suku
 			}
 			else
 			{
-				g_pD2DFactory->
+				pD2DFactory->
 					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 			}
 		}
@@ -654,7 +654,7 @@ namespace suku
 		{
 			_geometry->AddRef();
 			originalGeometry = _geometry;
-			g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+			pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 		}
 		else
 			originalGeometry = currentGeometry = nullptr;
@@ -664,7 +664,7 @@ namespace suku
 	{
 		transform = _transform;
 		SAFE_RELEASE(currentGeometry);
-		g_pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+		pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 	}
 
 	void Shape::paint(float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth,
@@ -674,9 +674,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y));
 			if (_outlineBrush != nullptr)
-				g_pRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				g_pRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
 		}
 	}
 
@@ -686,9 +686,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
 			if (_outlineBrush != nullptr)
-				g_pRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				g_pRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
 		}
 	}
 
@@ -698,9 +698,9 @@ namespace suku
 		{
 			setPaintingTransform(_paintingTransform);
 			if (_outlineBrush != nullptr)
-				g_pRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				g_pRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
 		}
 	}
 
@@ -729,7 +729,7 @@ namespace suku
 			}
 			else
 			{
-				g_pD2DFactory->
+				pD2DFactory->
 					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 			}
 		}
@@ -741,12 +741,24 @@ namespace suku
 		return (*this);
 	}
 
+	Shape& Shape::operator=(Shape&& _x) noexcept
+	{
+		transform = _x.transform;
+		SAFE_RELEASE(originalGeometry);
+		SAFE_RELEASE(currentGeometry);
+		originalGeometry = _x.originalGeometry;
+		currentGeometry = _x.currentGeometry;
+		_x.originalGeometry = nullptr;
+		_x.currentGeometry = nullptr;
+		return (*this);
+	}
+
 	Shape Shape::operator-(const Shape& _x)
 	{
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
-		g_pD2DFactory->CreatePathGeometry(&resGeometry);
+		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
 		{
@@ -772,7 +784,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
-		g_pD2DFactory->CreatePathGeometry(&resGeometry);
+		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
 		{
@@ -798,7 +810,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
-		g_pD2DFactory->CreatePathGeometry(&resGeometry);
+		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
 		{
@@ -824,7 +836,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
-		g_pD2DFactory->CreatePathGeometry(&resGeometry);
+		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
 		{
@@ -850,7 +862,7 @@ namespace suku
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
-		hr = g_pD2DFactory->CreateRectangleGeometry(
+		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
 				_startX + _length - 1.0f, _startY + _length - 1.0f
@@ -868,7 +880,7 @@ namespace suku
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
-		hr = g_pD2DFactory->CreateRectangleGeometry(
+		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
 				_startX + _width - 1.0f, _startY + _height - 1.0f
@@ -886,7 +898,7 @@ namespace suku
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
-		hr = g_pD2DFactory->CreateEllipseGeometry(
+		hr = pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
 					_radius + _startX, _radius + _startY
@@ -906,7 +918,7 @@ namespace suku
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
-		hr = g_pD2DFactory->CreateEllipseGeometry(
+		hr = pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
 					_radiusX + _startX, _radiusY + _startY
@@ -1241,7 +1253,7 @@ namespace suku
 
 		IWICComponentInfo* componentInfo = nullptr;
 		if (SUCCEEDED(hr))
-			hr = g_pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+			hr = pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
 		IWICPixelFormatInfo2* pixelFormatInfo = nullptr;
 		if (SUCCEEDED(hr))
 			hr = componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
@@ -1272,6 +1284,27 @@ namespace suku
 			updatePixelDetail(x);
 			free2D(x, w, h);
 		}
+
+		return *this;
+	}
+
+	Bitmap& Bitmap::operator=(Bitmap&& _bitmap) noexcept
+	{
+		if (&_bitmap == this)
+			return *this;
+
+		SAFE_RELEASE(wicBitmap_);
+		SAFE_RELEASE(d2d1Bitmap_);
+
+		width_ = _bitmap.width_;
+		height_ = _bitmap.height_;
+		wicBitmap_ = _bitmap.wicBitmap_;
+		d2d1Bitmap_ = _bitmap.d2d1Bitmap_;
+		bytesPerPixel_ = _bitmap.bytesPerPixel_;
+
+		_bitmap.wicBitmap_ = nullptr;
+		_bitmap.d2d1Bitmap_ = nullptr;
+		_bitmap.bytesPerPixel_ = 0;
 
 		return *this;
 	}

@@ -14,11 +14,9 @@ namespace suku
 	class Color;
 	class Effect;
 
-	extern ID2D1Factory* g_pD2DFactory;
-	extern ID2D1HwndRenderTarget* g_pRenderTarget;
-	extern IWICImagingFactory* g_pIWICFactory;
-
-	extern HWND game_hWnd;
+	extern ID2D1Factory* pD2DFactory;
+	extern ID2D1HwndRenderTarget* pMainRenderTarget;
+	extern IWICImagingFactory* pIWICFactory;
 
 	class Transform
 	{
@@ -80,6 +78,7 @@ namespace suku
 		bool isCrashed(Shape& _x);
 
 		Shape& operator= (const Shape& _x);
+		Shape& operator= (Shape&& _x)noexcept;
 		Shape operator-(const Shape& _x);
 		Shape operator&(const Shape& _x);
 		Shape operator|(const Shape& _x);
@@ -149,6 +148,7 @@ namespace suku
 		BYTE* getDataPointer()const;
 
 		Bitmap& operator=(const Bitmap& _bitmap);
+		Bitmap& operator=(Bitmap&& _bitmap)noexcept;
 
 		void updatePixelDetail(Color** _detail);
 		void updatePixelDetail(Color** _detail, UINT _startX, UINT _startY);

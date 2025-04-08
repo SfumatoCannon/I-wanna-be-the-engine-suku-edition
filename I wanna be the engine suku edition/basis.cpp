@@ -1766,7 +1766,7 @@ namespace suku
 
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
-		hr = g_pRenderTarget->CreateSolidColorBrush(
+		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
 			&newBrush
 		);
@@ -1794,7 +1794,7 @@ namespace suku
 
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
-		hr = g_pRenderTarget->CreateSolidColorBrush(
+		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
 			&newBrush
 		);
@@ -1806,7 +1806,7 @@ namespace suku
 		else
 			fillBrush = nullptr;
 
-		hr = g_pRenderTarget->CreateSolidColorBrush(
+		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_outlineColor.r() / 255.0f, _outlineColor.g() / 255.0f, _outlineColor.b() / 255.0f, _outlineColor.alpha),
 			&newBrush
 		);
@@ -1858,7 +1858,7 @@ namespace suku
 			SAFE_RELEASE(fillBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
-		hr = g_pRenderTarget->CreateSolidColorBrush(
+		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
 			&newBrush
 		);
@@ -1875,7 +1875,7 @@ namespace suku
 			SAFE_RELEASE(outlineBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
-		hr = g_pRenderTarget->CreateSolidColorBrush(
+		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
 			&newBrush
 		);
