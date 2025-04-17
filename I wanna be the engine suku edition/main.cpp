@@ -31,6 +31,8 @@ public:
 		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
+		Sound a("Audio\\sndJump.wav");
+		a.play();
 		create(Background(Bitmap("Image\\bg.jpg")));
 		create(Player(0, 0))->rotate(50.0f);
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });

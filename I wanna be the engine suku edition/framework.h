@@ -1,7 +1,4 @@
 ﻿#pragma once
-#pragma comment (lib,"d2d1")
-#pragma comment (lib,"dxguid.lib")
-#pragma comment (lib,"winmm.lib")
 
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头文件中排除极少使用的内容
@@ -30,3 +27,8 @@
 #include <fstream>
 #include <future>
 #include <any>
+
+
+#pragma comment (lib,"d2d1")
+#pragma comment (lib,"dxguid.lib")
+#pragma comment (lib,"winmm.lib")

@@ -9,6 +9,8 @@ namespace suku
 	{
 	public:
 		wchar_t* content;
+		std::wstring contentInWString();
+		std::string contentInString();
 		String();
 		String(const char* _string);
 		String(std::string _string);

@@ -1,7 +1,21 @@
 #include "game_saving.h"
+#include <locale>
+#include <codecvt>
 
 namespace suku
 {
+	std::wstring String::contentInWString()
+	{
+		return std::wstring(content);
+	}
+
+	std::string String::contentInString()
+	{
+		std::wstring_convert <std::codecvt_utf8<wchar_t>> converter;
+		std::string result = converter.to_bytes(content);
+		return result;
+	}
+
 	String::String()
 	{
 		content = nullptr;
