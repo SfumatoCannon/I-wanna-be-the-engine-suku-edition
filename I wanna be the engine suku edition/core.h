@@ -1,6 +1,6 @@
 #pragma once
 #include "suku_drawing.h"
-#include "suku_maths.h"
+#include "suku_foundation.h"
 #include "game_saving.h"
 #include "global_value.h"
 

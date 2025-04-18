@@ -1,4 +1,4 @@
-#include "suku_maths.h"
+#include "suku_foundation.h"
 
 namespace suku
 {

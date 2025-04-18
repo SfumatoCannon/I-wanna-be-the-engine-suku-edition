@@ -1,6 +1,6 @@
 #pragma once
 #include "game_saving.h"
-#include "basis.h"
+#include "core.h"
 
 void loadFromJtoolMsg(suku::Room* _room, std::string _msg);
 

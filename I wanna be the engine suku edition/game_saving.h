@@ -1,6 +1,6 @@
 #pragma once
 #include "framework.h"
-#include "suku_maths.h"
+#include "suku_foundation.h"
 #include "global_value.h"
 
 namespace suku
@@ -9,8 +9,8 @@ namespace suku
 	{
 	public:
 		wchar_t* content;
-		std::wstring contentInWString();
-		std::string contentInString();
+		std::wstring contentInWString()const;
+		std::string contentInString()const;
 		String();
 		String(const char* _string);
 		String(std::string _string);
@@ -18,8 +18,13 @@ namespace suku
 		String(std::wstring _wstring);
 		String(const String& _other);
 		void operator=(const String& _other);
+		String operator+(const String& _other);
 		~String();
 	};
+	String operator+(const char* _string1, const String& _string2);
+	String operator+(const wchar_t* _string1, const String& _string2);
+	String operator+(std::string _string1, const String& _string2);
+	String operator+(std::wstring _string1, const String& _string2);
 
 	class Var
 	{

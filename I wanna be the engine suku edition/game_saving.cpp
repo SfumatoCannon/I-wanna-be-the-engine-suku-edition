@@ -4,12 +4,12 @@
 
 namespace suku
 {
-	std::wstring String::contentInWString()
+	std::wstring String::contentInWString()const
 	{
 		return std::wstring(content);
 	}
 
-	std::string String::contentInString()
+	std::string String::contentInString()const
 	{
 		std::wstring_convert <std::codecvt_utf8<wchar_t>> converter;
 		std::string result = converter.to_bytes(content);
@@ -73,6 +73,11 @@ namespace suku
 		content[length] = L'\0';
 	}
 
+	String String::operator+(const String& _other)
+	{
+		return String(contentInWString() + _other.contentInWString());
+	}
+
 	String::~String()
 	{
 		if (content != nullptr)
@@ -87,6 +92,34 @@ namespace suku
 	wchar_t saveFilePath[512];
 	wchar_t exePath[MAX_PATH + 1];
 	size_t Path_len;
+
+	String operator+(const char* _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(const wchar_t* _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(std::string _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(std::wstring _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
 
 	wchar_t getWideChar(const char& _multiByteChar)
 	{

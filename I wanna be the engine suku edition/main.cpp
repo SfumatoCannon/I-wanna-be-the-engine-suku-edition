@@ -31,11 +31,12 @@ public:
 		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
-		Sound a("Audio\\sndJump.wav");
-		a.play();
+		Music music1("Audio\\musOnDeath.mp3");
+		music1.play(true);
+		music1.setVolume(0.01);
 		create(Background(Bitmap("Image\\bg.jpg")));
 		create(Player(0, 0))->rotate(50.0f);
-		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
+		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));

@@ -3,6 +3,18 @@
 
 namespace suku
 {
+	//----------------------------------------------
+	//           Error Handling Section
+	//----------------------------------------------
+#define ERRORWINDOW(message) MessageBoxExW(NULL, \
+	String(String("In function: ") + typeid(this).name() + "." + __func__ + "\n" + message).content, \
+	L"Error", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT))
+
+
+
+	//----------------------------------------------
+	//           Player Input Section
+	//----------------------------------------------
 #define VK_0 0x30
 #define VK_1 0x31
 #define VK_2 0x32
@@ -48,12 +60,12 @@ namespace suku
 	void keyCheck();
 	void resetKey();
 
-#define COINCIDENT_LINES 1
-#define PARALLEL_LINES 2
-#define	INTERSECTING_LINES 3
 
-#define PI 3.14159265358979323846
 
+
+	//----------------------------------------------
+	//			  Type Tree Section
+	//----------------------------------------------
 #define typecode(T) typeid(T).hash_code()
 
 	//typedef double real;
@@ -151,8 +163,48 @@ namespace suku
 		}
 	};
 
+
+
+
+	//----------------------------------------------
+	//			  Memory Section
+	//----------------------------------------------
 	template<typename T> T** malloc2D(UINT _width, UINT _height);
 	template<typename T> void free2D(T** _pointer, UINT _width, UINT _height);
+
+	template<typename T>
+	inline T** malloc2D(UINT _width, UINT _height)
+	{
+		T** resultPointer = new T * [_height];
+		if (resultPointer != nullptr)
+		{
+			for (UINT i = 0; i < _height; i++)
+				resultPointer[i] = new T[_width];
+		}
+		return resultPointer;
+	}
+
+	template<typename T>
+	inline void free2D(T** _pointer, UINT _width, UINT _height)
+	{
+		if (_pointer == nullptr)
+			return;
+		for (UINT i = 0; i < _height; i++)
+			if (_pointer[i] != nullptr)
+				delete[] _pointer[i];
+		delete[] _pointer;
+	}
+
+
+
+	//----------------------------------------------
+	//			  Maths Section
+	//----------------------------------------------
+#define COINCIDENT_LINES 1
+#define PARALLEL_LINES 2
+#define	INTERSECTING_LINES 3
+
+#define PI 3.14159265358979323846
 
 	double bRound(double _x);
 	float bRound(float _x);
@@ -197,29 +249,6 @@ namespace suku
 		double x2, double y2, double width2, double height2);
 	double distanceOfRect(double _x1, double _y1, double _width1, double _height1,
 		double _x2, double _y2, double _width2, double _height2);
-
-	template<typename T>
-	inline T** malloc2D(UINT _width, UINT _height)
-	{
-		T** resultPointer = new T * [_height];
-		if (resultPointer != nullptr)
-		{
-			for (UINT i = 0; i < _height; i++)
-				resultPointer[i] = new T[_width];
-		}
-		return resultPointer;
-	}
-
-	template<typename T>
-	inline void free2D(T** _pointer, UINT _width, UINT _height)
-	{
-		if (_pointer == nullptr)
-			return;
-		for (UINT i = 0; i < _height; i++)
-			if (_pointer[i] != nullptr)
-				delete[] _pointer[i];
-		delete[] _pointer;
-	}
 
 	template<typename T>
 	inline T randInList(T _a, T _b, ...)

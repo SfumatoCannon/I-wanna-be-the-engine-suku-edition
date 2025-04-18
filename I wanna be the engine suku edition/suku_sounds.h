@@ -21,6 +21,17 @@ namespace suku
 
 	class Music
 	{
+	private:
+		MCIDEVICEID deviceId_;
+	public:
+		Music() = default;
+		Music(String _url);
+		Music(const Music& _other) = delete;
+		void setVolume(double _volume);
+		void setSpeed(double _speed);
+		void play(bool _isLoop = false);
+		//void play(double _startVolume, bool _isLoop = false);
+		//void play(double _startVolume, double _startSpeed, bool _isLoop = false);
 
 	};
 }
