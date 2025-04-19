@@ -63,8 +63,10 @@ namespace suku
 	extern wchar_t exePath[MAX_PATH + 1];
 	extern size_t Path_len;
 
-	wchar_t getWideChar(const char& _multiByteChar);
+	wchar_t getWideChar(char _multiByteChar);
+	char getMultiByteChar(wchar_t _wideChar);
 	wchar_t* getWideString(const char* _multiByteString);
+	char* getMultiByteString(const wchar_t* _wideString);
 
 	void createPath(const wchar_t* _path);
 	void createPath(String _path);

@@ -11,8 +11,9 @@ namespace suku
 
 	std::string String::contentInString()const
 	{
-		std::wstring_convert <std::codecvt_utf8<wchar_t>> converter;
-		std::string result = converter.to_bytes(content);
+		char* str = getMultiByteString(content);
+		std::string result(str);
+		delete[] str;
 		return result;
 	}
 
@@ -121,9 +122,14 @@ namespace suku
 		return result;
 	}
 
-	wchar_t getWideChar(const char& _multiByteChar)
+	wchar_t getWideChar(char _multiByteChar)
 	{
 		return wchar_t(_multiByteChar);
+	}
+
+	char getMultiByteChar(wchar_t _wideChar)
+	{
+		return char(_wideChar);
 	}
 
 	wchar_t* getWideString(const char* _multiByteString)
@@ -132,6 +138,15 @@ namespace suku
 		wchar_t* result = new wchar_t[length + 1];
 		MultiByteToWideChar(CP_ACP, 0, _multiByteString, (int)strlen(_multiByteString), result, length);
 		result[length] = L'\0';
+		return result;
+	}
+
+	char* getMultiByteString(const wchar_t* _wideString)
+	{
+		int length = WideCharToMultiByte(CP_ACP, 0, _wideString, (int)wcslen(_wideString), nullptr, 0, nullptr, nullptr);
+		char* result = new char[length + 1];
+		WideCharToMultiByte(CP_ACP, 0, _wideString, (int)wcslen(_wideString), result, length, nullptr, nullptr);
+		result[length] = '\0';
 		return result;
 	}
 
