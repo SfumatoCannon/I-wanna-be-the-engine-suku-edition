@@ -4,86 +4,6 @@
 
 namespace suku
 {
-	std::wstring String::contentInWString()const
-	{
-		return std::wstring(content);
-	}
-
-	std::string String::contentInString()const
-	{
-		char* str = getMultiByteString(content);
-		std::string result(str);
-		delete[] str;
-		return result;
-	}
-
-	String::String()
-	{
-		content = nullptr;
-	}
-
-	String::String(const char* _string)
-	{
-		content = getWideString(_string);
-	}
-
-	String::String(std::string _string)
-	{
-		content = getWideString(_string.c_str());
-	}
-
-	String::String(const wchar_t* _wstring)
-	{
-		size_t length = wcslen(_wstring);
-		content = new wchar_t[length + 1];
-		memcpy_s(content, length * sizeof(wchar_t), _wstring, length * sizeof(wchar_t));
-		content[length] = L'\0';
-	}
-
-	String::String(std::wstring _wstring)
-	{
-		const wchar_t* wstring = _wstring.c_str();
-		size_t length = wcslen(wstring);
-		content = new wchar_t[length + 1];
-		memcpy_s(content, length * sizeof(wchar_t), wstring, length * sizeof(wchar_t));
-		content[length] = L'\0';
-	}
-
-	String::String(const String& _other)
-	{
-		const wchar_t* wstring = _other.content;
-		size_t length = wcslen(wstring);
-		content = new wchar_t[length + 1];
-		memcpy_s(content, length * sizeof(wchar_t), wstring, length * sizeof(wchar_t));
-		content[length] = L'\0';
-	}
-
-	void String::operator=(const String& _other)
-	{
-		if (content != nullptr)
-		{
-			delete[] content;
-			content = nullptr;
-		}
-		if (_other.content == nullptr)
-			return;
-		const wchar_t* wstring = _other.content;
-		size_t length = wcslen(wstring);
-		content = new wchar_t[length + 1];
-		memcpy_s(content, length * sizeof(wchar_t), wstring, length * sizeof(wchar_t));
-		content[length] = L'\0';
-	}
-
-	String String::operator+(const String& _other)
-	{
-		return String(contentInWString() + _other.contentInWString());
-	}
-
-	String::~String()
-	{
-		if (content != nullptr)
-			delete[] content;
-	}
 
 	std::map<unsigned long long, std::pair<char*, size_t>> varSaveList;
 	std::map<unsigned long long, Var> varFinderList;
@@ -119,34 +39,6 @@ namespace suku
 	{
 		String result(_string1);
 		result = result + _string2;
-		return result;
-	}
-
-	wchar_t getWideChar(char _multiByteChar)
-	{
-		return wchar_t(_multiByteChar);
-	}
-
-	char getMultiByteChar(wchar_t _wideChar)
-	{
-		return char(_wideChar);
-	}
-
-	wchar_t* getWideString(const char* _multiByteString)
-	{
-		int length = MultiByteToWideChar(CP_ACP, 0, _multiByteString, (int)strlen(_multiByteString), nullptr, 0);
-		wchar_t* result = new wchar_t[length + 1];
-		MultiByteToWideChar(CP_ACP, 0, _multiByteString, (int)strlen(_multiByteString), result, length);
-		result[length] = L'\0';
-		return result;
-	}
-
-	char* getMultiByteString(const wchar_t* _wideString)
-	{
-		int length = WideCharToMultiByte(CP_ACP, 0, _wideString, (int)wcslen(_wideString), nullptr, 0, nullptr, nullptr);
-		char* result = new char[length + 1];
-		WideCharToMultiByte(CP_ACP, 0, _wideString, (int)wcslen(_wideString), result, length, nullptr, nullptr);
-		result[length] = '\0';
 		return result;
 	}
 
