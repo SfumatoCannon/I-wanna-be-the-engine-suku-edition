@@ -23,13 +23,23 @@ namespace suku
 	{
 	private:
 		MCIDEVICEID deviceId_;
+		DWORD totalTime_;
 	public:
-		Music() = default;
+		Music() : deviceId_(-1), totalTime_(-1) {}
 		Music(String _url);
 		Music(const Music& _other) = delete;
+
+		void open(String _url);
+		void openInAbsolutePath(String _url);
+		void close();
+
 		void setVolume(double _volume);
 		void setSpeed(double _speed);
 		void play(bool _isLoop = false);
+		void pause();
+		void stop();
+		DWORD getLength();
+		DWORD getCurrentTime();
 		//void play(double _startVolume, bool _isLoop = false);
 		//void play(double _startVolume, double _startSpeed, bool _isLoop = false);
 
