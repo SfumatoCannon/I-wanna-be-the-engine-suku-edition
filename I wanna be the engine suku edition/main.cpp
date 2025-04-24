@@ -34,6 +34,7 @@ public:
 		Music music1("Audio\\musOnDeath.mp3");
 		music1.play(true);
 		music1.setVolume(0.01);
+		music1.setSpeed(0.5);
 		create(Background(Bitmap("Image\\bg.jpg")));
 		create(Player(0, 0))->rotate(50.0f);
 		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });

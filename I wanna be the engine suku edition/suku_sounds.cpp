@@ -53,7 +53,13 @@ namespace suku
 		totalTime_ = -1;
 	}
 
-	void Music::open(String _url)
+	Music::Music(MCIDEVICEID _deviceId)
+	{
+		deviceId_ = _deviceId;
+		totalTime_ = -1;
+	}
+
+	MCIDEVICEID Music::open(String _url)
 	{
 		if (deviceId_ != -1)
 			close();
@@ -72,10 +78,11 @@ namespace suku
 			ERRORWINDOW("MCI - Failed to open sound file: " + errorString);
 			deviceId_ = -1;
 			totalTime_ = -1;
-			return;
+			return -1;
 		}
 		deviceId_ = openParms.wDeviceID;
 		totalTime_ = -1;
+		return deviceId_;
 	}
 
 	void Music::openInAbsolutePath(String _url)
@@ -103,10 +110,10 @@ namespace suku
 		totalTime_ = -1;
 	}
 
-	void Music::close()
+	MCIDEVICEID Music::close()
 	{
 		if (deviceId_ == -1)
-			return;
+			return -1;
 		MCI_GENERIC_PARMS closeParms = { 0 };
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_CLOSE,
 			MCI_NOTIFY | MCI_WAIT, (DWORD_PTR)&closeParms);
@@ -117,6 +124,9 @@ namespace suku
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to close sound file: " + errorString);
 		}
+		MCIDEVICEID temp = deviceId_;
+		deviceId_ = -1;
+		return temp;
 	}
 
 	void Music::setVolume(double _volume)
@@ -136,6 +146,22 @@ namespace suku
 			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to set volume: " + errorString);
+		}
+	}
+
+	void Music::setSpeed(double _speed)
+	{
+		MCI_DGV_SET_PARMS setParms = { 0 };
+		setParms.dwCallback = NULL;
+		setParms.dwSpeed = (DWORD)(_speed * 1000);
+		DWORD dwReturn = mciSendCommand(deviceId_, MCI_SET,
+			MCI_DGV_SET_SPEED, (DWORD_PTR)&setParms);
+		if (dwReturn != 0)
+		{
+			wchar_t errorMessage[256];
+			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
+			String errorString(errorMessage);
+			ERRORWINDOW("MCI - Failed to set music speed: " + errorString);
 		}
 	}
 
@@ -159,10 +185,10 @@ namespace suku
 
 	void Music::pause()
 	{
-		MCI_SEEK_PARMS seekParms = { 0 };
+		MCI_GENERIC_PARMS genericParms = { 0 };
 
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_PAUSE, 
-			MCI_NOTIFY | MCI_WAIT, (DWORD_PTR)&seekParms);
+			MCI_NOTIFY | MCI_WAIT, (DWORD_PTR)&genericParms);	
 		if (dwReturn != 0)
 		{
 			wchar_t errorMessage[256];
@@ -185,6 +211,11 @@ namespace suku
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to stop music: " + errorString);
 		}
+	}
+
+	MCIDEVICEID Music::getDeviceId()
+	{
+		return deviceId_;
 	}
 
 	DWORD Music::getLength()
