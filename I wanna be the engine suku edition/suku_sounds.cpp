@@ -4,34 +4,9 @@
 
 namespace suku
 {
-	void Sound::load(String _url)
-	{
-		pszSound_ = AbsolutePath(_url.content);
-	}
+	int globalVolume = 1000;
 
-	void Sound::loadInAbsolutePath(String _url)
-	{
-		pszSound_ = _url;
-	}
-
-	bool Sound::play()
-	{
-		bool result = PlaySound(pszSound_.content, NULL, SND_FILENAME | SND_ASYNC);
-		if (result == false)
-		{
-			unsigned short errorCode = GetLastError();
-			if (errorCode == ERROR_FILE_NOT_FOUND)
-				ERRORWINDOW("Sound file not found: " + pszSound_);
-			else
-			{
-				ERRORWINDOW("Failed to play sound: " + pszSound_
-					+ ", Error code: " + std::to_string(errorCode));
-			}
-		}
-		return result;
-	}
-
-	Music::Music(String _url)
+	Sound::Sound(String _url)
 	{
 		MCI_OPEN_PARMS openParms = { 0 };
 		openParms.dwCallback = NULL;
@@ -53,13 +28,13 @@ namespace suku
 		totalTime_ = -1;
 	}
 
-	Music::Music(MCIDEVICEID _deviceId)
+	Sound::Sound(MCIDEVICEID _deviceId)
 	{
 		deviceId_ = _deviceId;
 		totalTime_ = -1;
 	}
 
-	MCIDEVICEID Music::open(String _url)
+	MCIDEVICEID Sound::open(String _url)
 	{
 		if (deviceId_ != -1)
 			close();
@@ -80,12 +55,13 @@ namespace suku
 			totalTime_ = -1;
 			return -1;
 		}
+		setVolume(1.0);
 		deviceId_ = openParms.wDeviceID;
 		totalTime_ = -1;
 		return deviceId_;
 	}
 
-	void Music::openInAbsolutePath(String _url)
+	void Sound::openInAbsolutePath(String _url)
 	{
 		if (deviceId_ != -1)
 			close();
@@ -106,11 +82,12 @@ namespace suku
 			totalTime_ = -1;
 			return;
 		}
+		setVolume(1.0);
 		deviceId_ = openParms.wDeviceID;
 		totalTime_ = -1;
 	}
 
-	MCIDEVICEID Music::close()
+	MCIDEVICEID Sound::close()
 	{
 		if (deviceId_ == -1)
 			return -1;
@@ -129,7 +106,7 @@ namespace suku
 		return temp;
 	}
 
-	void Music::setVolume(double _volume)
+	void Sound::setVolume(double _volume)
 	{
 		if (_volume < 0.0) _volume = 0;
 		if (_volume > 1.0) _volume = 1.0;
@@ -137,7 +114,7 @@ namespace suku
 		MCI_DGV_SETAUDIO_PARMS setParms = { 0 };
 		setParms.dwCallback = NULL;
 		setParms.dwItem = MCI_DGV_SETAUDIO_VOLUME;
-		setParms.dwValue = (DWORD)(_volume * 1000);
+		setParms.dwValue = (DWORD)(_volume * globalVolume);
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_SETAUDIO, 
 			MCI_DGV_SETAUDIO_VALUE | MCI_DGV_SETAUDIO_ITEM, (DWORD_PTR)&setParms);
 		if (dwReturn != 0)
@@ -149,7 +126,7 @@ namespace suku
 		}
 	}
 
-	void Music::setSpeed(double _speed)
+	void Sound::setSpeed(double _speed)
 	{
 		MCI_DGV_SET_PARMS setParms = { 0 };
 		setParms.dwCallback = NULL;
@@ -165,7 +142,7 @@ namespace suku
 		}
 	}
 
-	void Music::play(bool _isLoop)
+	void Sound::play(bool _isLoop)
 	{
 		DWORD dwFlags = MCI_NOTIFY;
 		if (_isLoop)
@@ -183,7 +160,7 @@ namespace suku
 		}
 	}
 
-	void Music::pause()
+	void Sound::pause()
 	{
 		MCI_GENERIC_PARMS genericParms = { 0 };
 
@@ -198,7 +175,7 @@ namespace suku
 		}
 	}
 
-	void Music::stop()
+	void Sound::stop()
 	{
 		MCI_SEEK_PARMS seekParms = { 0 };
 
@@ -213,12 +190,12 @@ namespace suku
 		}
 	}
 
-	MCIDEVICEID Music::getDeviceId()
+	MCIDEVICEID Sound::getDeviceId()
 	{
 		return deviceId_;
 	}
 
-	DWORD Music::getLength()
+	DWORD Sound::getLength()
 	{
 		if (totalTime_ == -1)
 		{
@@ -242,7 +219,7 @@ namespace suku
 		return totalTime_;
 	}
 
-	DWORD Music::getCurrentTime()
+	DWORD Sound::getCurrentTime()
 	{
 		MCI_STATUS_PARMS statusParms = { 0 };
 		statusParms.dwCallback = NULL;

@@ -1,10 +1,12 @@
 #pragma once
+#include "suku_sounds.h"
 #include "suku_drawing.h"
 #include "suku_foundation.h"
 #include "game_saving.h"
 #include "global_value.h"
 
 #define SPR_INIT(sprPointer, func) static Sprite* temp_##sprPointer = sprPointer = new Sprite func;
+#define SOUND_INIT(soundPointer, func) static Sound* temp_##soundPointer = soundPointer = new Sound func;
 
 namespace suku
 {

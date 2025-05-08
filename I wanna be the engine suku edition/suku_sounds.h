@@ -6,29 +6,18 @@
 
 namespace suku
 {
+	extern int globalVolume; // range: 0 ~ 1000
+	
 	class Sound
-	{
-	private:
-		String pszSound_;
-	public:
-		Sound() = default;
-		Sound(String _url) : pszSound_(AbsolutePath(_url.content)) {}
-		Sound(const Sound& _other) : pszSound_(_other.pszSound_) {}
-		void load(String _url);
-		void loadInAbsolutePath(String _url);
-		bool play();
-	};
-
-	class Music
 	{
 	private:
 		MCIDEVICEID deviceId_;
 		DWORD totalTime_;
 	public:
-		Music() : deviceId_(-1), totalTime_(-1) {}
-		Music(String _url);
-		Music(MCIDEVICEID _deviceId);
-		Music(const Music& _other) = delete;
+		Sound() : deviceId_(-1), totalTime_(-1) {}
+		Sound(String _url);
+		Sound(MCIDEVICEID _deviceId);
+		Sound(const Sound& _other) = delete;
 
 		MCIDEVICEID open(String _url);
 		void openInAbsolutePath(String _url);
