@@ -6,7 +6,6 @@
 #include "global_value.h"
 
 #define SPR_INIT(sprPointer, func) static Sprite* temp_##sprPointer = sprPointer = new Sprite func;
-#define SOUND_INIT(soundPointer, func) static Sound* temp_##soundPointer = soundPointer = new Sound func;
 
 namespace suku
 {

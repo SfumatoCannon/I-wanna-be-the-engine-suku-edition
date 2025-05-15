@@ -64,7 +64,6 @@ namespace suku
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
 		SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", SquareShape(32), 16, 16)));
-		//SPR_INIT(spr, ("Image\\player_standing.png", 4, 5, SquareShape(32)));
 		sprite_ = spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
@@ -249,30 +248,37 @@ namespace suku
 
 	void Player::startJump()
 	{
+		static Sound sndJump("Audio\\sndJump.wav");
+		static Sound sndDJump("Audio\\sndDJump.wav");
 		if (!isAlive())
 			return;
 		if (!isOnVineLeft_ && !isOnVineRight_)
 		{
 			if (jumpTime_ == maxJumpTime)
 			{
+				sndJump.play();
 				vspeed = -8.5f;
 				jumpTime_--;
 			}
 			else if (jumpTime_ != 0)
 			{
+				sndDJump.play();
 				vspeed = -7.0f;
 				if (!getCrashedObject<WaterExtraJump>(x, y))
 					jumpTime_--;
 			}
 			else if (getCrashedObject<Water>(x, y))
 			{
+				sndDJump.play();
 				vspeed = -7.0f;
 			}
 		}
 		else // when press shift on the vine
 		{
 			if (jumpTime_ != 0)
+			{
 				jumpTime_--;
+			}
 		}
 	}
 

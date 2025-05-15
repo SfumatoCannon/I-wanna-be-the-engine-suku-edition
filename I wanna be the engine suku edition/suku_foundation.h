@@ -4,11 +4,27 @@
 namespace suku
 {
 	//----------------------------------------------
-	//           Error Handling Section
+	//           Exception Handling Section
 	//----------------------------------------------
-#define ERRORWINDOW(message) MessageBoxExW(NULL, \
+#ifdef _DEBUG
+#define INFOWINDOW(message) {static bool flag = true; if (flag) flag = false, MessageBoxExW(NULL, \
+	String(String("An ERROR occurred\n") + \
+	"In function: " + typeid(this).name() + "." + __func__ + "\n" + message).content, \
+	L"Info", MB_OK | MB_ICONINFORMATION, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));}
+#define WARNINGWINDOW(message) {static bool flag = true; if (flag) flag = false, MessageBoxExW(NULL, \
+	String(String("WARNING\n") + \
+	"In function: " + typeid(this).name() + "." + __func__ + "\n" + message).content, \
+	L"Warning", MB_OK | MB_ICONWARNING, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));}
+#define ERRORWINDOW(message) {static bool flag = true; if (flag) flag = false, MessageBoxExW(NULL, \
 	String(String("In function: ") + typeid(this).name() + "." + __func__ + "\n" + message).content, \
-	L"Error", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT))
+	L"Error", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));}
+
+#else
+#define INFOWINDOW(message)
+#define WARNINGWINDOW(message)
+#define ERRORWINDOW(message)
+
+#endif
 
 
 
@@ -206,12 +222,14 @@ namespace suku
 		wchar_t* content;
 		std::wstring contentInWString()const;
 		std::string contentInString()const;
-		String();
+		String() : content(nullptr) {}
 		String(const char* _string);
 		String(std::string _string);
 		String(const wchar_t* _wstring);
 		String(std::wstring _wstring);
 		String(const String& _other);
+		bool operator==(const String& _other)const;
+		auto operator<=>(const String& _other)const;
 		void operator=(const String& _other);
 		String operator+(const String& _other);
 		~String();
@@ -220,6 +238,8 @@ namespace suku
 	String operator+(const wchar_t* _string1, const String& _string2);
 	String operator+(std::string _string1, const String& _string2);
 	String operator+(std::wstring _string1, const String& _string2);
+
+	String getFileTypeFromURL(const String& _url);
 
 	wchar_t getWideChar(char _multiByteChar);
 	char getMultiByteChar(wchar_t _wideChar);

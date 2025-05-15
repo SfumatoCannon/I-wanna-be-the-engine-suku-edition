@@ -14,34 +14,6 @@ namespace suku
 	wchar_t exePath[MAX_PATH + 1];
 	size_t Path_len;
 
-	String operator+(const char* _string1, const String& _string2)
-	{
-		String result(_string1);
-		result = result + _string2;
-		return result;
-	}
-
-	String operator+(const wchar_t* _string1, const String& _string2)
-	{
-		String result(_string1);
-		result = result + _string2;
-		return result;
-	}
-
-	String operator+(std::string _string1, const String& _string2)
-	{
-		String result(_string1);
-		result = result + _string2;
-		return result;
-	}
-
-	String operator+(std::wstring _string1, const String& _string2)
-	{
-		String result(_string1);
-		result = result + _string2;
-		return result;
-	}
-
 	void createPath(const wchar_t* _path)
 	{
 		size_t length = wcslen(_path);

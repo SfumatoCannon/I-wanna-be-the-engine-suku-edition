@@ -145,7 +145,6 @@ namespace suku
 		static Sprite* sprFalling;
 		static Sprite* sprSliding;
 
-
 		bool isInfinityJump;
 		bool isFrozen;
 		short maxJumpTime;

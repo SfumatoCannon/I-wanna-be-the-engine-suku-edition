@@ -67,11 +67,6 @@ namespace suku
 		return result;
 	}
 
-	String::String()
-	{
-		content = nullptr;
-	}
-
 	String::String(const char* _string)
 	{
 		content = getWideString(_string);
@@ -108,6 +103,26 @@ namespace suku
 		content[length] = L'\0';
 	}
 
+	bool String::operator==(const String& _other)const
+	{
+		if (content == nullptr && _other.content == nullptr)
+			return true;
+		if (content == nullptr || _other.content == nullptr)
+			return false;
+		return (lstrcmpW(content, _other.content) == 0);
+	}
+
+	auto String::operator<=>(const String& _other) const
+	{
+		if (content == nullptr && _other.content == nullptr)
+			return std::strong_ordering::equal;
+		if (content == nullptr)
+			return std::strong_ordering::less;
+		if (_other.content == nullptr)
+			return std::strong_ordering::greater;
+		return (lstrcmpW(content, _other.content) <=> 0);
+	}
+
 	void String::operator=(const String& _other)
 	{
 		if (content != nullptr)
@@ -133,6 +148,55 @@ namespace suku
 	{
 		if (content != nullptr)
 			delete[] content;
+	}
+	String operator+(const char* _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(const wchar_t* _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(std::string _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String operator+(std::wstring _string1, const String& _string2)
+	{
+		String result(_string1);
+		result = result + _string2;
+		return result;
+	}
+
+	String getFileTypeFromURL(const String& _url)
+	{
+		wchar_t* content = _url.content;
+		size_t length = wcslen(_url.content);
+		for (int i = length - 1; i >= 0; i--)
+		{
+			if (content[i] == L'.')
+			{
+				if (i == length - 1)
+					return String();
+
+				String result;
+				result.content = new wchar_t[length - i];
+				memcpy_s(result.content, (length - i - 1) * sizeof(wchar_t),
+					content + (i + 1), (length - i - 1) * sizeof(wchar_t));
+				result.content[length - i - 1] = L'\0';
+				return result;
+			}
+		}
+		return String();
 	}
 
 	wchar_t getWideChar(char _multiByteChar)
