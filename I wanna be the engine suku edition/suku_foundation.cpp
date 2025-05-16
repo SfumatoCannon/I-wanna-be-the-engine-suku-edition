@@ -112,7 +112,7 @@ namespace suku
 		return (lstrcmpW(content, _other.content) == 0);
 	}
 
-	auto String::operator<=>(const String& _other) const
+	auto String::operator<=>(const String& _other)const
 	{
 		if (content == nullptr && _other.content == nullptr)
 			return std::strong_ordering::equal;

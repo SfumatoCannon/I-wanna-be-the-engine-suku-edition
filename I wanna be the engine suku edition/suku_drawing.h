@@ -198,9 +198,6 @@ namespace suku
 
 	};
 
-	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
-	const wchar_t* AbsolutePath(const char* _relativePath);
-
 	void SwapByte(BYTE* _a, BYTE* _b);
 
 	void beginDraw(HWND hWnd);

@@ -42,6 +42,9 @@ namespace suku
 	extern wchar_t exePath[MAX_PATH + 1];
 	extern size_t Path_len;
 
+	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
+	const wchar_t* AbsolutePath(const char* _relativePath);
+
 	void createPath(const wchar_t* _path);
 	void createPath(String _path);
 

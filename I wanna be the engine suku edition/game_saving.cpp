@@ -14,6 +14,32 @@ namespace suku
 	wchar_t exePath[MAX_PATH + 1];
 	size_t Path_len;
 
+	const wchar_t* AbsolutePath(const wchar_t* _relativePath)
+	{
+		if (!_relativePath) return nullptr;
+		if (_relativePath[1] == L':') // the parameter is already an absolute path
+			return _relativePath;
+		static wchar_t result[MAX_PATH + 1] = { 0 };
+		result[0] = L'\0';
+		lstrcatW(result, exePath);
+		lstrcatW(result, _relativePath);
+		return result;
+	}
+
+	const wchar_t* AbsolutePath(const char* _relativePath)
+	{
+		if (!_relativePath) return nullptr;
+		if (_relativePath[1] == ':') // the parameter is already an absolute path
+			return getWideString(_relativePath);
+		wchar_t* wideCharRelativePath = getWideString(_relativePath);
+		static wchar_t result[MAX_PATH + 1] = { 0 };
+		result[0] = L'\0';
+		lstrcatW(result, exePath);
+		lstrcatW(result, wideCharRelativePath);
+		delete[] wideCharRelativePath;
+		return result;
+	}
+
 	void createPath(const wchar_t* _path)
 	{
 		size_t length = wcslen(_path);

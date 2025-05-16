@@ -56,28 +56,6 @@ namespace suku
 		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
-	const wchar_t* AbsolutePath(const wchar_t* relativePath)
-	{
-		if (!relativePath) return nullptr;
-		static wchar_t result[MAX_PATH + 1] = { 0 };
-		result[0] = L'\0';
-		lstrcatW(result, exePath);
-		lstrcatW(result, relativePath);
-		return result;
-	}
-
-	const wchar_t* AbsolutePath(const char* _relativePath)
-	{
-		if (!_relativePath) return nullptr;
-		wchar_t* wideCharRelativePath = getWideString(_relativePath);
-		static wchar_t result[MAX_PATH + 1] = { 0 };
-		result[0] = L'\0';
-		lstrcatW(result, exePath);
-		lstrcatW(result, wideCharRelativePath);
-		delete[] wideCharRelativePath;
-		return result;
-	}
-
 	void SwapByte(BYTE* _a, BYTE* _b)
 	{
 		BYTE t = *_a;
