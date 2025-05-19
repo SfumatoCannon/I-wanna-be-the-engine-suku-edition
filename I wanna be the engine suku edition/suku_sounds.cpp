@@ -6,59 +6,18 @@ namespace suku
 {
 	int globalVolume = 1000;
 
-	Sound::Sound(String _url) : url_(AbsolutePath(_url.content))
-	{
-		DWORD fileSize = 0;
-		FILE* fp = _wfopen(url_.content, L"rb");
-		if (!fp)
-		{
-			pSoundData_ = nullptr;
-			return;
-		}
-		fseek(fp, 0, SEEK_END);
-		DWORD size = ftell(fp);
-		fseek(fp, 0, SEEK_SET);
-
-		pSoundData_ = new BYTE[size];
-		if (!pSoundData_)
-		{
-			fclose(fp);
-			ERRORWINDOW("Failed to malloc memory of sound file: \"" + _url + "\"");
-			return;
-		}
-		size_t bytesRead = fread(pSoundData_, 1, size, fp);
-		fclose(fp);
-		if (bytesRead != size)
-		{
-			WARNINGWINDOW("File \"" + _url + "\" might be read incompletely.");
-		}
-	}
-
-	void Sound::play(bool _isLoop)
-	{
-		if (_isLoop)
-			PlaySoundA((LPCSTR)pSoundData_, NULL, SND_MEMORY | SND_LOOP | SND_ASYNC);
-		else
-			PlaySoundA((LPCSTR)pSoundData_, NULL, SND_MEMORY | SND_ASYNC);
-	}
-
-	void Sound::stop()
-	{
-		PlaySoundW(NULL, NULL, 0);
-	}
-
-	Music::Music(String _url, double _volume) : deviceId_(-1), totalTime_(-1), fileType_()
+	Sound::Sound(String _url, double _volume) : deviceId_(-1), totalTime_(-1), fileType_()
 	{
 		open(_url, _volume);
 	}
 
-	Music::Music(MCIDEVICEID _deviceId)
+	Sound::Sound(MCIDEVICEID _deviceId)
 	{
 		deviceId_ = _deviceId;
 		totalTime_ = -1;
 	}
 
-	MCIDEVICEID Music::open(String _url, double _volume)
+	MCIDEVICEID Sound::open(String _url, double _volume)
 	{
 		if (deviceId_ != -1)
 			close();
@@ -106,7 +65,7 @@ namespace suku
 		return deviceId_;
 	}
 
-	MCIDEVICEID Music::openInAbsolutePath(String _url, double _volume)
+	MCIDEVICEID Sound::openInAbsolutePath(String _url, double _volume)
 	{
 		if (deviceId_ != -1)
 			close();
@@ -154,7 +113,7 @@ namespace suku
 		return deviceId_;
 	}
 
-	MCIDEVICEID Music::close()
+	MCIDEVICEID Sound::close()
 	{
 		if (deviceId_ == -1)
 			return -1;
@@ -173,7 +132,7 @@ namespace suku
 		return temp;
 	}
 
-	void Music::setVolume(double _volume)
+	void Sound::setVolume(double _volume)
 	{
 		if (_volume < 0.0) _volume = 0;
 		if (_volume > 1.0) _volume = 1.0;
@@ -200,7 +159,7 @@ namespace suku
 		}
 	}
 
-	void Music::setSpeed(double _speed)
+	void Sound::setSpeed(double _speed)
 	{
 		if (fileType_ == ".wav") // WAVE device
 		{
@@ -223,7 +182,7 @@ namespace suku
 		}
 	}
 
-	void Music::play(bool _isLoop)
+	void Sound::play(bool _isLoop)
 	{
 		if (isFinished() || isPaused() || isPlaying())
 			stop();
@@ -248,7 +207,7 @@ namespace suku
 		}
 	}
 
-	void Music::pause()
+	void Sound::pause()
 	{
 		MCI_GENERIC_PARMS genericParms = { 0 };
 
@@ -263,11 +222,11 @@ namespace suku
 		}
 	}
 
-	void Music::resume(bool _isLoop)
+	void Sound::resume(bool _isLoop)
 	{
 		if (isFinished())
 		{
-			WARNINGWINDOW("The audio is finished playing. Use Music::play() instead.");
+			WARNINGWINDOW("The audio is finished playing. Use Sound::play() instead.");
 			return;
 		}
 		DWORD dwFlags = MCI_NOTIFY;
@@ -291,7 +250,7 @@ namespace suku
 		}
 	}
 
-	void Music::stop()
+	void Sound::stop()
 	{
 		MCI_SEEK_PARMS seekParms = { 0 };
 
@@ -306,17 +265,17 @@ namespace suku
 		}
 	}
 
-	const String& Music::getFileType()
+	const String& Sound::getFileType()
 	{
 		return fileType_;
 	}
 
-	MCIDEVICEID Music::getDeviceId()
+	MCIDEVICEID Sound::getDeviceId()
 	{
 		return deviceId_;
 	}
 
-	DWORD Music::getLength()
+	DWORD Sound::getLength()
 	{
 		if (totalTime_ == -1)
 		{
@@ -340,7 +299,7 @@ namespace suku
 		return totalTime_;
 	}
 
-	DWORD Music::getCurrentTime()
+	DWORD Sound::getCurrentTime()
 	{
 		MCI_STATUS_PARMS statusParms = { 0 };
 		statusParms.dwCallback = NULL;
@@ -358,7 +317,7 @@ namespace suku
 		return statusParms.dwReturn;
 	}
 
-	bool Music::isAvailable()
+	bool Sound::isAvailable()
 	{
 		MCI_STATUS_PARMS statusParms = { 0 };
 		statusParms.dwCallback = NULL;
@@ -371,28 +330,28 @@ namespace suku
 			return (statusParms.dwReturn == 1);
 	}
 
-	bool Music::isPlaying()
+	bool Sound::isPlaying()
 	{
 		if (!isAvailable())
 			return false;
 		return (getCurrentStatus() == MCI_MODE_PLAY);
 	}
 
-	bool Music::isFinished()
+	bool Sound::isFinished()
 	{
 		if (!isAvailable())
 			return false;
 		return (getCurrentStatus() == MCI_MODE_STOP);
 	}
 
-	bool Music::isPaused()
+	bool Sound::isPaused()
 	{
 		if (!isAvailable())
 			return false;
 		return (getCurrentStatus() == MCI_MODE_PAUSE);
 	}
 
-	DWORD Music::getCurrentStatus()
+	DWORD Sound::getCurrentStatus()
 	{
 		MCI_STATUS_PARMS statusParms = { 0 };
 		statusParms.dwCallback = NULL;

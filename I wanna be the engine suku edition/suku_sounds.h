@@ -11,26 +11,14 @@ namespace suku
 	class Sound
 	{
 	private:
-		String url_;
-		BYTE* pSoundData_;
-	public:
-		Sound() : url_(), pSoundData_(nullptr) {}
-		Sound(String _url);
-		void play(bool _isLoop = false);
-		static void stop(); // stop all sounds regardless of the instance
-	};
-
-	class Music
-	{
-	private:
 		MCIDEVICEID deviceId_;
 		DWORD totalTime_;
 		String fileType_;
 	public:
-		Music() : deviceId_(-1), totalTime_(-1), fileType_() {}
-		Music(String _url, double _volume = 1.0);
-		Music(MCIDEVICEID _deviceId);
-		Music(const Music& _other) = delete;
+		Sound() : deviceId_(-1), totalTime_(-1), fileType_() {}
+		Sound(String _url, double _volume = 1.0);
+		Sound(MCIDEVICEID _deviceId);
+		Sound(const Sound& _other) = delete;
 
 		MCIDEVICEID open(String _url, double _volume = 1.0);
 		MCIDEVICEID openInAbsolutePath(String _url, double _volume = 1.0);

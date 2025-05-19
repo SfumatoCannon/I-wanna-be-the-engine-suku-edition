@@ -31,7 +31,7 @@ public:
 		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
-		//Music music1("Audio\\musOnDeath.mp3");
+		//Sound music1("Audio\\musOnDeath.mp3");
 		//music1.play(true);
 		//music1.setVolume(0.01);
 		//music1.setSpeed(0.5);
