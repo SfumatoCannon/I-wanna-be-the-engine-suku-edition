@@ -19,24 +19,6 @@ void endGame() {gameEndFlag = true;}
 
 int fps = MAXFPS;
 
-void Initialization()
-{
-	using namespace suku;
-	GetModuleFileName(NULL, exePath, MAX_PATH);
-	(_tcsrchr(exePath, L'\\'))[1] = 0;
-	Path_len = _tcsclen(exePath);
-	HRESULT hr = CoInitialize(NULL);
-	if (SUCCEEDED(hr))
-	{
-		hr = CoCreateInstance(
-			CLSID_WICImagingFactory1,
-			NULL,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&pIWICFactory)
-		);
-	}
-}
-
 void Sender()
 {
 	double updateInterval = 20;	//  1000 / 50
@@ -132,12 +114,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 		timeBeginPeriod(1);
-		createD2DResource(hWnd);
-		Initialization();
+		suku_save_init();
+		suku_drawing_init(hWnd);
 		init();
 		std::thread thread(Sender);
 		thread.detach();
-
 		break;
 	}
 	case WM_KEYDOWN:case WM_KEYUP:
@@ -148,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		timeEndPeriod(1);
-		cleanup();
+		suku_drawing_uninit();
 		PostQuitMessage(0);
 		break;
 	default:

@@ -10,9 +10,16 @@ namespace suku
 	std::map<char*, unsigned long long> varIdList;
 
 	int saveFileId;
-	wchar_t saveFilePath[512];
+	//wchar_t saveFilePath[512];
 	wchar_t exePath[MAX_PATH + 1];
 	size_t Path_len;
+
+	void suku_save_init()
+	{
+		GetModuleFileName(NULL, exePath, MAX_PATH);
+		(_tcsrchr(exePath, L'\\'))[1] = 0;
+		Path_len = _tcsclen(exePath);
+	}
 
 	const wchar_t* AbsolutePath(const wchar_t* _relativePath)
 	{

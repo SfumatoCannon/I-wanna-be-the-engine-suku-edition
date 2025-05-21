@@ -5,6 +5,8 @@
 
 namespace suku
 {
+	void suku_save_init();
+
 	class Var
 	{
 	private:
@@ -38,7 +40,7 @@ namespace suku
 	extern std::map<char*, unsigned long long> varIdList;
 
 	extern int saveFileId;
-	extern wchar_t saveFilePath[512];
+	//extern wchar_t saveFilePath[512];
 	extern wchar_t exePath[MAX_PATH + 1];
 	extern size_t Path_len;
 

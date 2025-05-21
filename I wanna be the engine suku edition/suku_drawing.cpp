@@ -8,6 +8,54 @@ namespace suku
 	ID2D1HwndRenderTarget* pMainRenderTarget = NULL;	// Render target
 	IWICImagingFactory* pIWICFactory;
 
+	void suku_drawing_init(HWND _hWnd)
+	{
+		// Init WIC resource
+		HRESULT hr = CoInitialize(NULL);
+		if (SUCCEEDED(hr))
+		{
+			hr = CoCreateInstance(
+				CLSID_WICImagingFactory1,
+				NULL,
+				CLSCTX_INPROC_SERVER,
+				IID_PPV_ARGS(&pIWICFactory)
+			);
+		}
+
+		// Init D2D resource
+
+		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
+		if (FAILED(hr))
+		{
+			ERRORWINDOW_GLOBAL("Failed to create D2D factory");
+			return;
+		}
+
+		RECT rc;
+		GetClientRect(_hWnd, &rc);
+
+		hr = pD2DFactory->CreateHwndRenderTarget(
+			D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(
+				_hWnd,
+				D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top)
+			),
+			&pMainRenderTarget
+		);
+		if (FAILED(hr))
+		{
+			ERRORWINDOW_GLOBAL("Failed to create render target");
+			return;
+		}
+	}
+
+	void suku_drawing_uninit()
+	{
+		CoUninitialize();
+		SAFE_RELEASE(pMainRenderTarget);
+		SAFE_RELEASE(pD2DFactory);
+	}
+
 	Transform translation(float _shiftX, float _shiftY)
 	{
 		return Transform(D2D1::Matrix3x2F::Translation(_shiftX, _shiftY));
@@ -41,7 +89,6 @@ namespace suku
 
 	void beginDraw(HWND hWnd)
 	{
-		createD2DResource(hWnd);
 		pMainRenderTarget->BeginDraw();
 		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
@@ -61,39 +108,6 @@ namespace suku
 		BYTE t = *_a;
 		*_a = *_b;
 		*_b = t;
-	}
-
-	void createD2DResource(HWND hWnd)
-	{
-		if (!pMainRenderTarget)
-		{
-			HRESULT hr;
-
-			hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
-			if (FAILED(hr))
-			{
-				MessageBox(hWnd, L"Create D2D factory failed!", L"Error", 0);
-				return;
-			}
-
-			RECT rc;
-			GetClientRect(hWnd, &rc);
-
-			hr = pD2DFactory->CreateHwndRenderTarget(
-				D2D1::RenderTargetProperties(),
-				D2D1::HwndRenderTargetProperties(
-					hWnd,
-					D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top)
-				),
-				&pMainRenderTarget
-			);
-			if (FAILED(hr))
-			{
-				MessageBox(hWnd, L"Create render target failed!", L"Error", 0);
-				return;
-			}
-
-		}
 	}
 
 	ID2D1Bitmap* GetBlendedBitmapFromFile(
@@ -556,13 +570,6 @@ namespace suku
 		);
 	}
 
-	void cleanup()
-	{
-		CoUninitialize();
-		SAFE_RELEASE(pMainRenderTarget);
-		SAFE_RELEASE(pD2DFactory);
-	}
-
 	Shape::Shape()
 	{
 		originalGeometry = nullptr;
@@ -835,7 +842,7 @@ namespace suku
 		return Shape(resGeometry);
 	}
 
-	SquareShape::SquareShape(float _length, float _startX, float _startY, Transform _transform) 
+	SquareShape::SquareShape(float _length, float _startX, float _startY, Transform _transform)
 		:length(_length), startX(_startX), startY(_startY)
 	{
 		ID2D1RectangleGeometry* newGeometry;
@@ -1393,7 +1400,7 @@ namespace suku
 		SAFE_RELEASE(d2d1Bitmap_);
 
 		UINT bytesPerPixel = getPixelByte();
-		
+
 		IWICBitmapLock* pILock = nullptr;
 		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
 		wicBitmap_->Lock(&rcLock, WICBitmapLockWrite, &pILock);

@@ -3,6 +3,7 @@
 #include "suku_foundation.h"
 #include "game_saving.h"
 
+
 namespace suku
 {
 #define SAFE_ADDREF(P) if(P) P->AddRef();
@@ -17,6 +18,9 @@ namespace suku
 	extern ID2D1Factory* pD2DFactory;
 	extern ID2D1HwndRenderTarget* pMainRenderTarget;
 	extern IWICImagingFactory* pIWICFactory;
+
+	void suku_drawing_init(HWND _hWnd);
+	void suku_drawing_uninit();
 
 	class Transform
 	{
@@ -203,8 +207,6 @@ namespace suku
 	void beginDraw(HWND hWnd);
 	void endDraw();
 	void clearScreen();
-	void createD2DResource(HWND hWnd);
-	void cleanup();
 
 	HRESULT loadWICBitmap(
 		IWICBitmap** _pWicBitmap,
