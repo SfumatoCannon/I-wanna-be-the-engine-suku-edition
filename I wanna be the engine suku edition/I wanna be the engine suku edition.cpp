@@ -7,7 +7,10 @@ HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
 
-HWND hWnd;
+HWND suku::GameWindow::hWnd;
+suku::String suku::GameWindow::title = L"I wanna be the engine suku edition";
+int suku::GameWindow::width = WINDOWWIDTH;
+int suku::GameWindow::height = WINDOWHEIGHT;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -37,7 +40,7 @@ void Sender()
 			task.get();
 			if (gameEndFlag == true)
 			{
-				PostMessage(hWnd, WM_QUIT, NULL, NULL);
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 				break;
 			}
 			else
@@ -76,7 +79,7 @@ void paintWork()
 	{
 		if (!gameEndFlag)
 		{
-			beginDraw(hWnd);
+			beginDraw(suku::GameWindow::hWnd);
 			nowRoom->paint();
 			endDraw();
 		}
@@ -166,16 +169,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	RECT rc;
 	SetRect(&rc, WINDOWX, WINDOWY, WINDOWX + WINDOWWIDTH, WINDOWY + WINDOWHEIGHT);
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-	hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
+	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
 		rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
-	if (!hWnd)
+	if (!suku::GameWindow::hWnd)
 	{
 		return FALSE;
 	}
 
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
+	ShowWindow(suku::GameWindow::hWnd, nCmdShow);
+	UpdateWindow(suku::GameWindow::hWnd);
 
 	return TRUE;
 }

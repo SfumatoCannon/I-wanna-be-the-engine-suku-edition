@@ -8,7 +8,6 @@
 #include "suku_sounds.h"
 
 void init();
-void Initialization();
 void Sender();
 void updateWork();
 void paintWork();
