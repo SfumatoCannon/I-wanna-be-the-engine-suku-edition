@@ -5,16 +5,128 @@
 namespace suku
 {
 	int globalVolume = 1000;
+	std::map<MCIDEVICEID, Sound*> Sound::devicePool_;
 
-	Sound::Sound(String _url, double _volume) : deviceId_(-1), totalTime_(-1), fileType_()
+	SoundSource::SoundSource(String _url) : sourceUrl_(_url)
+	{
+		fileType_ = getFileTypeFromURL(_url);
+
+		MCI_OPEN_PARMS openParms = { 0 };
+		openParms.dwCallback = NULL;
+
+		openParms.lpstrElementName = AbsolutePath(_url.content);
+
+		DWORD dwFlags = MCI_OPEN_TYPE | MCI_OPEN_ELEMENT;
+		if (fileType_ == "wav")
+		{
+			openParms.lpstrDeviceType = L"waveaudio";
+		}
+		else
+		{
+			openParms.lpstrDeviceType = L"MPEGVideo";
+			dwFlags |= MCI_OPEN_SHAREABLE;
+		}
+
+		DWORD dwReturn = mciSendCommand(0, MCI_OPEN,
+			dwFlags, (DWORD_PTR)&openParms);
+		if (dwReturn != 0)
+		{
+			if (openParms.wDeviceID != 0)
+				mciSendCommand(openParms.wDeviceID, MCI_CLOSE, 0, 0);
+			wchar_t errorMessage[256];
+			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
+			String errorString(errorMessage);
+			ERRORWINDOW("MCI - Failed to open sound file: " + errorString);
+			totalTime_ = -1;
+			fileType_ = "null";
+			isAvailable_ = false;
+			return;
+		}
+		MCIDEVICEID deviceId = openParms.wDeviceID;
+		MCI_STATUS_PARMS statusParms = { 0 };
+		statusParms.dwItem = MCI_STATUS_LENGTH;
+		dwReturn = mciSendCommand(deviceId, MCI_STATUS,
+			MCI_STATUS_ITEM | MCI_WAIT, (DWORD_PTR)(&statusParms));
+		if (dwReturn != 0)
+		{
+			wchar_t errorMessage[256];
+			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
+			String errorString(errorMessage);
+			WARNINGWINDOW("MCI - Failed to get sound length: " + errorString);
+			totalTime_ = -1;
+		}
+		else
+		{
+			totalTime_ = statusParms.dwReturn;
+		}
+		isAvailable_ = true;
+
+		mciSendCommand(deviceId, MCI_CLOSE, 0, 0);
+	}
+
+	size_t SoundSource::totalTime()
+	{
+		return totalTime_;
+	}
+
+	String SoundSource::sourceUrl()
+	{
+		return sourceUrl_;
+	}
+
+	String SoundSource::fileType()
+	{
+		return fileType_;
+	}
+
+	bool SoundSource::isAvailable()
+	{
+		return isAvailable_;
+	}
+
+	Sound SoundSource::play()
+	{
+		MCI_OPEN_PARMS openParms = { 0 };
+		openParms.dwCallback = NULL;
+		openParms.lpstrElementName = AbsolutePath(sourceUrl_.content);
+
+		DWORD dwFlags = MCI_OPEN_TYPE | MCI_OPEN_ELEMENT;
+		if (fileType_ == "wav")
+		{
+			openParms.lpstrDeviceType = L"waveaudio";
+		}
+		else
+		{
+			openParms.lpstrDeviceType = L"MPEGVideo";
+			dwFlags |= MCI_OPEN_SHAREABLE;
+		}
+
+		DWORD dwReturn = mciSendCommand(0, MCI_OPEN,
+			dwFlags, (DWORD_PTR)&openParms);
+		if (dwReturn != 0)
+		{
+			if (openParms.wDeviceID != 0)
+				mciSendCommand(openParms.wDeviceID, MCI_CLOSE, 0, 0);
+			wchar_t errorMessage[256];
+			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
+			String errorString(errorMessage);
+			ERRORWINDOW("MCI - Failed to open sound file: " + errorString);
+			return Sound();
+		}
+	}
+
+	Sound::Sound(String _url, double _volume) : deviceId_(-1), fileType_()
 	{
 		open(_url, _volume);
 	}
 
-	Sound::Sound(MCIDEVICEID _deviceId)
+	Sound::~Sound()
 	{
-		deviceId_ = _deviceId;
-		totalTime_ = -1;
+		auto iter = devicePool_.find(deviceId_);
+		if (iter != devicePool_.end())
+		{
+			devicePool_.erase(iter);
+		}
 	}
 
 	MCIDEVICEID Sound::open(String _url, double _volume)
@@ -43,18 +155,19 @@ namespace suku
 			dwFlags, (DWORD_PTR)&openParms);
 		if (dwReturn != 0)
 		{
+			if (openParms.wDeviceID != 0)
+				mciSendCommand(openParms.wDeviceID, MCI_CLOSE, 0, 0);
 			wchar_t errorMessage[256];
 			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to open sound file: " + errorString);
 			deviceId_ = -1;
-			totalTime_ = -1;
 			fileType_ = "null";
 			return -1;
 		}
 		deviceId_ = openParms.wDeviceID;
-		totalTime_ = -1;
 		fileType_ = fileType;
+		devicePool_.insert({ deviceId_, this });
 		if (fileType_ == "wav")
 		{
 			if (_volume != 1.0)
@@ -91,18 +204,19 @@ namespace suku
 			dwFlags, (DWORD_PTR)&openParms);
 		if (dwReturn != 0)
 		{
+			if (openParms.wDeviceID != 0)
+				mciSendCommand(openParms.wDeviceID, MCI_CLOSE, 0, 0);
 			wchar_t errorMessage[256];
 			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to open sound file: " + errorString);
 			deviceId_ = -1;
-			totalTime_ = -1;
 			fileType_ = "null";
 			return -1;
 		}
 		deviceId_ = openParms.wDeviceID;
-		totalTime_ = -1;
 		fileType_ = fileType;
+		devicePool_.insert({ deviceId_, this });
 		if (fileType_ == "wav")
 		{
 			if (_volume != 1.0)
@@ -116,10 +230,20 @@ namespace suku
 	MCIDEVICEID Sound::close()
 	{
 		if (deviceId_ == -1)
+		{
+			WARNINGWINDOW("Trying to close a device with id == -1.");
 			return -1;
-		MCI_GENERIC_PARMS closeParms = { 0 };
-		DWORD dwReturn = mciSendCommand(deviceId_, MCI_CLOSE,
-			MCI_NOTIFY | MCI_WAIT, (DWORD_PTR)&closeParms);
+		}
+		auto iter = devicePool_.find(deviceId_);
+		if (iter == devicePool_.end())
+		{
+			WARNINGWINDOW("There is no device with given id (== " + std::to_wstring(deviceId_)
+				+ ") in device pool.");
+			return -1;
+		}
+		devicePool_.erase(iter);
+
+		DWORD dwReturn = mciSendCommand(deviceId_, MCI_CLOSE, 0, 0);
 		if (dwReturn != 0)
 		{
 			wchar_t errorMessage[256];
@@ -130,6 +254,22 @@ namespace suku
 		MCIDEVICEID temp = deviceId_;
 		deviceId_ = -1;
 		return temp;
+	}
+
+	void Sound::receiveWindowMessage(WPARAM _flags, LPARAM _deviceId)
+	{
+		if (_flags == MCI_NOTIFY_SUCCESSFUL)
+		{
+			// try to stop
+			//MCI_SEEK_PARMS seekParms = { 0 };
+
+			//DWORD dwReturn = mciSendCommand(_deviceId, MCI_SEEK,
+			//	MCI_SEEK_TO_START, (DWORD_PTR)&seekParms);
+			//if (dwReturn != 0)
+			//{
+
+			//}
+		}
 	}
 
 	void Sound::setVolume(double _volume)
@@ -184,8 +324,6 @@ namespace suku
 
 	void Sound::play(bool _isLoop)
 	{
-		if (isFinished() || isPaused() || isPlaying())
-			stop();
 		DWORD dwFlags = MCI_NOTIFY;
 		if (_isLoop)
 		{
@@ -195,7 +333,7 @@ namespace suku
 				dwFlags |= MCI_DGV_PLAY_REPEAT;
 		}
 		MCI_PLAY_PARMS playParms = { 0 };
-		playParms.dwCallback = NULL;
+		playParms.dwCallback = (DWORD_PTR)GameWindow::hWnd;
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_PLAY,
 			dwFlags, (DWORD_PTR)&playParms);
 		if (dwReturn != 0)
@@ -255,7 +393,7 @@ namespace suku
 		MCI_SEEK_PARMS seekParms = { 0 };
 
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_SEEK,
-			MCI_NOTIFY | MCI_WAIT | MCI_SEEK_TO_START, (DWORD_PTR)&seekParms);
+			MCI_SEEK_TO_START, (DWORD_PTR)&seekParms);
 		if (dwReturn != 0)
 		{
 			wchar_t errorMessage[256];
@@ -275,31 +413,7 @@ namespace suku
 		return deviceId_;
 	}
 
-	DWORD Sound::getLength()
-	{
-		if (totalTime_ == -1)
-		{
-			MCI_STATUS_PARMS statusParms = { 0 };
-			statusParms.dwCallback = NULL;
-			statusParms.dwItem = MCI_STATUS_LENGTH;
-			DWORD dwReturn = mciSendCommand(deviceId_, MCI_STATUS,
-				MCI_WAIT | MCI_STATUS_ITEM, (DWORD_PTR)&statusParms);
-			if (dwReturn != 0)
-			{
-				wchar_t errorMessage[256];
-				mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
-				String errorString(errorMessage);
-				ERRORWINDOW("MCI - Failed to get audio length: " + errorString);
-			}
-			else
-			{
-				totalTime_ = statusParms.dwReturn;
-			}
-		}
-		return totalTime_;
-	}
-
-	DWORD Sound::getCurrentTime()
+	size_t Sound::getCurrentTime()
 	{
 		MCI_STATUS_PARMS statusParms = { 0 };
 		statusParms.dwCallback = NULL;
@@ -325,7 +439,13 @@ namespace suku
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_STATUS,
 			MCI_WAIT | MCI_STATUS_ITEM, (DWORD_PTR)&statusParms);
 		if (dwReturn != 0)
+		{
+			wchar_t errorMessage[256];
+			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
+			String errorString(errorMessage);
+			ERRORWINDOW("MCI - Failed to get current audio status: " + errorString);
 			return false;
+		}
 		else
 			return (statusParms.dwReturn == 1);
 	}
@@ -357,14 +477,15 @@ namespace suku
 		statusParms.dwCallback = NULL;
 		statusParms.dwItem = MCI_STATUS_MODE;
 		DWORD dwReturn = mciSendCommand(deviceId_, MCI_STATUS,
-			MCI_WAIT | MCI_STATUS_ITEM, (DWORD_PTR)&statusParms);
+			MCI_STATUS_ITEM, (DWORD_PTR)&statusParms);
 		if (dwReturn != 0)
 		{
 			wchar_t errorMessage[256];
 			mciGetErrorStringW(dwReturn, errorMessage, sizeof(errorMessage) / 2);
 			String errorString(errorMessage);
 			ERRORWINDOW("MCI - Failed to get audio status: " + errorString);
+			return -1;
 		}
-		return statusParms.dwReturn;
+		return (DWORD)statusParms.dwReturn;
 	}
 }

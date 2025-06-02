@@ -248,6 +248,7 @@ namespace suku
 
 	void Player::startJump()
 	{
+		static SoundSource jump("Audio\\sndJump.wav");
 		static Sound sndJump("Audio\\sndJump.wav");
 		static Sound sndDJump("Audio\\sndDJump.wav");
 		if (!isAlive())

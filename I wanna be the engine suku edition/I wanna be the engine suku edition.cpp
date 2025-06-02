@@ -127,6 +127,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:case WM_KEYUP:
 		pushKeyMessage(message, wParam);
 		break;
+	case MM_MCINOTIFY:
+		suku::Sound::receiveWindowMessage(wParam, lParam);
+		break;
 	case WM_ERASEBKGND:
 		return TRUE;
 		break;

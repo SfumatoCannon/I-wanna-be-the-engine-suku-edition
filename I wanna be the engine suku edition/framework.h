@@ -14,6 +14,7 @@
 #include <tchar.h>
 #include <math.h>
 // C++ 运行时头文件
+#include <tuple>
 #include <initializer_list>
 #include <functional>
 #include <list>
