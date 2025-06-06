@@ -6,8 +6,16 @@
 
 namespace suku
 {
+#define WM_SUKUAUDIOOPEN 0x5001
+#define WM_SUKUAUDIOCLOSE 0x5002
+#define WM_SUKUAUDIOPLAY 0x5003
+#define WM_SUKUAUDIOPAUSE 0x5004
+#define WM_SUKUAUDIOSTOP 0x5005
+#define WM_SUKUAUDIOSET_VOLUME 0x5006
+#define WM_SUKUAUDIOSET_SPEED 0x5007
+
 	extern int globalVolume; // range: 0 ~ 1000
-	
+
 	class Sound;
 	class SoundSource;
 
@@ -25,7 +33,7 @@ namespace suku
 		String fileType();
 		bool isAvailable();
 		Sound play();
-		void play(Sound& _soundController);
+		//void play(Sound& _soundController);
 	};
 
 	class Sound
@@ -36,6 +44,9 @@ namespace suku
 		String sourceUrl_;
 		String fileType_;
 		bool isAvailable_;
+		bool isPlaying_;
+		bool isFinished_;
+		bool isPaused_;
 	public:
 		Sound() : deviceId_(-1), sourceUrl_(), fileType_(), isAvailable_(false) {}
 		Sound(String _url, double _volume = 1.0);
@@ -66,4 +77,11 @@ namespace suku
 		//void play(double _startVolume, bool _isLoop = false);
 		//void play(double _startVolume, double _startSpeed, bool _isLoop = false);
 	};
+
+	// called by main thread
+	MCIDEVICEID openAudio(String _url);
+	MCIDEVICEID openAudioInAbsolutePath(String _absoluteUrl);
+	void setDeviceVolume(WPARAM _deviceId, LPARAM _volume);
+	void setDeviceSpeed(WPARAM _deviceId, LPARAM _speed);
+	void playDevice(WPARAM _deviceId, LPARAM _isLoop);
 }

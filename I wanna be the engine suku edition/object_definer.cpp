@@ -264,6 +264,8 @@ namespace suku
 			else if (jumpTime_ != 0)
 			{
 				sndDJump.play();
+				Sleep(1000);
+				sndDJump.play();
 				vspeed = -7.0f;
 				if (!getCrashedObject<WaterExtraJump>(x, y))
 					jumpTime_--;
