@@ -2,6 +2,7 @@
 #include "I wanna be the engine suku edition.h"
 
 #define MAX_LOADSTRING 100
+#define WM_CREATEFINISHED (WM_USER + 1)
 
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
@@ -103,35 +104,47 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 	}
 	return true;
 }
+
 void setFPS(int _fps)
 {
 	fps = _fps;
 	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
 }
 
+void startSender()
+{
+	std::thread thread(Sender);
+	thread.detach();
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
+	if (message > WM_SUKUAUDIO_START && message < WM_SUKUAUDIO_END)
+	{
+		Sound::onWindowMessage(message, wParam, lParam);
+		return true;
+	}
 	switch (message)
 	{
 	case WM_CREATE:
-	{
+		PostMessage(hWnd, WM_CREATEFINISHED, 0, 0);
+		break;
+	case WM_CREATEFINISHED:		
 		timeBeginPeriod(1);
 		suku_save_init();
 		suku_drawing_init(hWnd);
 		init();
-		std::thread thread(Sender);
-		thread.detach();
+		startSender();
 		break;
-	}
 	case WM_KEYDOWN:case WM_KEYUP:
 		pushKeyMessage(message, wParam);
 		break;
 	case MM_MCINOTIFY:
-		suku::Sound::receiveWindowMessage(wParam, lParam);
+		suku::Sound::onWindowMessageCallback(wParam, lParam);
 		break;
 	case WM_ERASEBKGND:
-		return TRUE;
+		return true;
 		break;
 	case WM_DESTROY:
 		timeEndPeriod(1);

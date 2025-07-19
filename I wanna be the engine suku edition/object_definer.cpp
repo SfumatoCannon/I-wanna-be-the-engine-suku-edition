@@ -248,7 +248,7 @@ namespace suku
 
 	void Player::startJump()
 	{
-		static SoundSource jump("Audio\\sndJump.wav");
+		//static SoundSource jump("Audio\\sndJump.wav");
 		static Sound sndJump("Audio\\sndJump.wav");
 		static Sound sndDJump("Audio\\sndDJump.wav");
 		if (!isAlive())
@@ -263,8 +263,6 @@ namespace suku
 			}
 			else if (jumpTime_ != 0)
 			{
-				sndDJump.play();
-				Sleep(1000);
 				sndDJump.play();
 				vspeed = -7.0f;
 				if (!getCrashedObject<WaterExtraJump>(x, y))
