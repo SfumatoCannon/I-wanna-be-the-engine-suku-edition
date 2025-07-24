@@ -4,19 +4,19 @@
 
 namespace suku
 {
-	ID2D1Factory* pD2DFactory = NULL;	// Direct2D factory
-	ID2D1HwndRenderTarget* pMainRenderTarget = NULL;	// Render target
+	ID2D1Factory* pD2DFactory = nullptr;	// Direct2D factory
+	ID2D1HwndRenderTarget* pMainRenderTarget = nullptr;	// Render target
 	IWICImagingFactory* pIWICFactory;
 
 	void suku_drawing_init(HWND _hWnd)
 	{
 		// Init WIC resource
-		HRESULT hr = CoInitialize(NULL);
+		HRESULT hr = CoInitialize(nullptr);
 		if (SUCCEEDED(hr))
 		{
 			hr = CoCreateInstance(
 				CLSID_WICImagingFactory1,
-				NULL,
+				nullptr,
 				CLSCTX_INPROC_SERVER,
 				IID_PPV_ARGS(&pIWICFactory)
 			);

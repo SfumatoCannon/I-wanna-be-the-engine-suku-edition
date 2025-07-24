@@ -120,11 +120,11 @@ void startSender()
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
-	if (message > WM_SUKUAUDIO_START && message < WM_SUKUAUDIO_END)
-	{
-		Sound::onWindowMessage(message, wParam, lParam);
-		return true;
-	}
+	//if (message > WM_SUKUAUDIO_START && message < WM_SUKUAUDIO_END)
+	//{
+	//	Sound::onWindowMessage(message, wParam, lParam);
+	//	return true;
+	//}
 	switch (message)
 	{
 	case WM_CREATE:
@@ -134,6 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		timeBeginPeriod(1);
 		suku_save_init();
 		suku_drawing_init(hWnd);
+		soundInit();
 		init();
 		startSender();
 		break;
@@ -141,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		pushKeyMessage(message, wParam);
 		break;
 	case MM_MCINOTIFY:
-		suku::Sound::onWindowMessageCallback(wParam, lParam);
+		//suku::Sound::onWindowMessageCallback(wParam, lParam);
 		break;
 	case WM_ERASEBKGND:
 		return true;
@@ -149,6 +150,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		timeEndPeriod(1);
 		suku_drawing_uninit();
+		soundUninit();
 		PostQuitMessage(0);
 		break;
 	default:
