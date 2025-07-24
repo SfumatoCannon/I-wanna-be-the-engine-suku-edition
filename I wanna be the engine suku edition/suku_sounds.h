@@ -31,10 +31,19 @@ namespace suku
         ~SoundController();
 
         void stop();
+        void replay();
+        void pause();
+        void resume();
+        void setVolume(float volume);
+        void seek(float seconds); // 跳转到指定时间点
 
     private:
         IXAudio2SourceVoice* sourceVoice_ = nullptr;
         Sound* sound_ = nullptr;
+        bool isPaused_ = false;
+        float currentVolume_ = 1.0f;
+
+        void submitBufferFromOffset(UINT32 byteOffset);
     };
 
 	void soundInit();

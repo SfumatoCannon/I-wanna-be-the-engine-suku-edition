@@ -97,8 +97,91 @@ namespace suku
 
 	void SoundController::stop() {
 		if (sourceVoice_) {
-			sourceVoice_->Stop();
+			if (sourceVoice_) {
+				sourceVoice_->Stop();
+				sourceVoice_->FlushSourceBuffers();
+				submitBufferFromOffset(0);
+				isPaused_ = false;
+			}
 		}
+		else
+		{
+			ERRORWINDOW("Invalid source voice");
+		}
+	}
+
+	void SoundController::replay()
+	{
+		if (sourceVoice_)
+		{
+			stop();
+			sourceVoice_->Start();
+			isPaused_ = false;
+		}
+		else
+		{
+			ERRORWINDOW("Invalid source voice");
+		}
+	}
+
+	void SoundController::pause() {
+		if (sourceVoice_ && !isPaused_) {
+			sourceVoice_->Stop();
+			isPaused_ = true;
+		}
+		else
+		{
+			if (!sourceVoice_)
+			{
+				ERRORWINDOW("Invalid source voice");
+			}
+			else
+			{
+				WARNINGWINDOW("Sound is already paused");
+			}
+		}
+	}
+
+	void SoundController::resume() {
+		if (sourceVoice_ && isPaused_) {
+			sourceVoice_->Start();
+			isPaused_ = false;
+		}
+	}
+
+	void SoundController::setVolume(float volume) {
+		if (sourceVoice_) {
+			currentVolume_ = volume;
+			sourceVoice_->SetVolume(volume);
+		}
+	}
+
+	void SoundController::seek(float seconds) {
+		if (!sourceVoice_) return;
+
+		// 停止当前播放
+		sourceVoice_->Stop();
+		sourceVoice_->FlushSourceBuffers();
+
+		// 计算跳转位置的字节偏移
+		WAVEFORMATEX* fmt = sound_->format_;
+		UINT32 byteRate = fmt->nAvgBytesPerSec; // 每秒字节数
+		UINT32 byteOffset = static_cast<UINT32>(seconds * byteRate);
+
+		if (byteOffset > sound_->pcmData_.size()) byteOffset = 0;
+
+		submitBufferFromOffset(byteOffset);
+		sourceVoice_->Start();
+	}
+
+	void SoundController::submitBufferFromOffset(UINT32 byteOffset) {
+		XAUDIO2_BUFFER buffer = {};
+		buffer.AudioBytes = static_cast<UINT32>(sound_->pcmData_.size() - byteOffset);
+		buffer.pAudioData = sound_->pcmData_.data() + byteOffset;
+		buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+		sourceVoice_->SubmitSourceBuffer(&buffer);
+		sourceVoice_->SetVolume(currentVolume_);
 	}
 
 	void soundInit() {
