@@ -76,16 +76,23 @@ namespace suku
 
 	extern IXAudio2* g_xaudio2;
 
-	SoundController::SoundController(Sound* sound) : sound_(sound) {
-		g_xaudio2->CreateSourceVoice(&sourceVoice_, sound->format_);
+	SoundController::SoundController(Sound* _sound, bool _isLoop) : sound_(_sound) {
+		g_xaudio2->CreateSourceVoice(&sourceVoice_, _sound->format_);
 
-		XAUDIO2_BUFFER buffer = {};
-		buffer.AudioBytes = static_cast<UINT32>(sound->pcmData_.size());
-		buffer.pAudioData = sound->pcmData_.data();
-		buffer.Flags = XAUDIO2_END_OF_STREAM;
+		if (!_isLoop)
+		{
+			XAUDIO2_BUFFER buffer = {};
+			buffer.AudioBytes = static_cast<UINT32>(_sound->pcmData_.size());
+			buffer.pAudioData = _sound->pcmData_.data();
+			buffer.Flags = XAUDIO2_END_OF_STREAM;
 
-		sourceVoice_->SubmitSourceBuffer(&buffer);
-		sourceVoice_->Start();
+			sourceVoice_->SubmitSourceBuffer(&buffer);
+			sourceVoice_->Start();
+		}
+		else
+		{
+
+		}
 	}
 
 	SoundController::~SoundController() {
@@ -159,7 +166,6 @@ namespace suku
 	void SoundController::seek(float seconds) {
 		if (!sourceVoice_) return;
 
-		// 停止当前播放
 		sourceVoice_->Stop();
 		sourceVoice_->FlushSourceBuffers();
 
@@ -174,6 +180,59 @@ namespace suku
 		sourceVoice_->Start();
 	}
 
+	void SoundController::setLooping(bool _isEnable)
+	{
+		if (loopEnabled_ == _isEnable)
+		{
+			WARNINGWINDOW("Looping is already set to " + std::to_string(_isEnable));
+			return;
+		}
+		loopEnabled_ = _isEnable;
+
+		sourceVoice_->Stop();
+		sourceVoice_->FlushSourceBuffers();
+
+		if (loopEnabled_)
+			submitLoopBuffer();
+		else
+			submitBufferFromOffset(0);
+
+		if (!isPaused_)
+			sourceVoice_->Start();
+	}
+
+	void SoundController::setLoopRegion(float _startSeconds, float _endSeconds)
+	{
+		useLoopRegion_ = true;
+		loopStartSec_ = _startSeconds;
+		loopEndSec_ = _endSeconds;
+
+		if (!isPaused_)
+			sourceVoice_->Stop();
+
+		sourceVoice_->FlushSourceBuffers();
+		submitLoopBuffer();
+
+		if (!isPaused_)
+			sourceVoice_->Start();
+	}
+
+	void SoundController::clearLoopRegion()
+	{
+		useLoopRegion_ = false;
+		if (!isPaused_)
+			sourceVoice_->Stop();
+		sourceVoice_->FlushSourceBuffers();
+
+		if (loopEnabled_)
+			submitLoopBuffer();
+		else
+			submitBufferFromOffset(0);
+
+		if (!isPaused_)
+			sourceVoice_->Start();
+	}
+
 	void SoundController::submitBufferFromOffset(UINT32 byteOffset) {
 		XAUDIO2_BUFFER buffer = {};
 		buffer.AudioBytes = static_cast<UINT32>(sound_->pcmData_.size() - byteOffset);
@@ -181,7 +240,34 @@ namespace suku
 		buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 		sourceVoice_->SubmitSourceBuffer(&buffer);
-		sourceVoice_->SetVolume(currentVolume_);
+	}
+
+	void SoundController::submitLoopBuffer()
+	{
+		XAUDIO2_BUFFER buffer = {};
+		buffer.pAudioData = sound_->pcmData_.data();
+		buffer.AudioBytes = static_cast<UINT32>(sound_->pcmData_.size());
+		buffer.Flags = 0;
+
+		if (useLoopRegion_) {
+			WAVEFORMATEX* fmt = sound_->format_;
+			DWORD sampleRate = fmt->nSamplesPerSec;
+
+			DWORD loopStartSample = static_cast<DWORD>(loopStartSec_ * sampleRate);
+			DWORD loopEndSample = static_cast<DWORD>(loopEndSec_ * sampleRate);
+			DWORD loopLengthSample = loopEndSample - loopStartSample;
+
+			buffer.LoopBegin = loopStartSample;
+			buffer.LoopLength = loopLengthSample;
+		}
+		else {
+			buffer.LoopBegin = 0;
+			buffer.LoopLength = 0; // 整曲
+		}
+
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+
+		sourceVoice_->SubmitSourceBuffer(&buffer);
 	}
 
 	void soundInit() {
