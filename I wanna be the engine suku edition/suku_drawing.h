@@ -78,6 +78,9 @@ namespace suku
 		void paint(Transform _paintingTransform,
 			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
 			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+		Bitmap* paintOnBitmap(const Bitmap& _bitmap, float _x, float _y,
+			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
+			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
 
 		bool isCrashed(Shape& _x);
 
@@ -131,10 +134,13 @@ namespace suku
 		//Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
+		Bitmap(ID2D1Bitmap* _d2dBitmap);
 		Bitmap(IWICBitmap* _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
 		Bitmap(Bitmap&& _otherBitmap)noexcept;
 		~Bitmap();
+
+		bool isValid()const;
 
 		UINT getPixelByte();
 
@@ -163,10 +169,13 @@ namespace suku
 
 		//Parameters: x, y, the corresponding color of position (x,y)
 		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
+
+		friend class Shape;
 	private:
+		bool isValid_;
 		UINT bytesPerPixel_;
 		UINT width_, height_;
-		ID2D1Bitmap* d2d1Bitmap_;
+		ID2D1Bitmap* d2dBitmap_;
 		IWICBitmap* wicBitmap_;
 	};
 
@@ -226,10 +235,13 @@ namespace suku
 	);
 
 	HRESULT getD2DBitmap(
-		IWICBitmap** _pWicBitmap,
-		ID2D1Bitmap** _pD2dBitmap,
-		int _width,
-		int _height
+		IWICBitmap* _pWicBitmap,
+		ID2D1Bitmap** _pD2dBitmap
+	);
+
+	HRESULT getWICBitmap(
+		ID2D1Bitmap* _pD2dBitmap,
+		IWICBitmap** _pWicBitmap
 	);
 
 	//This will create a new piece of memory; remember to use free2D() to delete it after using!
@@ -240,7 +252,10 @@ namespace suku
 
 	ID2D1Brush* createSolidColorBrush(const Color _color);
 
-	std::pair<UINT, UINT> getSizeFromWICBitmap(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
+	std::pair<UINT, UINT> getBitmapSize(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
+	std::pair<UINT, UINT> getBitmapSize(ID2D1Bitmap* _pBitmap);
+	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _pBitmap);
+
 	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _pBitmap, float _alphaThreshold = 0.0f);
 	//void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
 	//	float _width, float _height, float _alpha,

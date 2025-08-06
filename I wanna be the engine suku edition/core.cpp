@@ -19,7 +19,7 @@ namespace suku
 
 	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, float _alphaThreshold)
 	{
-		auto [width, height] = getSizeFromWICBitmap(_bitmap);
+		auto [width, height] = getBitmapSize(_bitmap);
 		hitWidth = width, hitHeight = height;
 		hitX = hitY = 0;
 		hitArea = malloc2D<bool>(hitWidth, hitHeight);
@@ -1384,7 +1384,7 @@ namespace suku
 	{
 		pBitmap_->paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
 			_alpha);
-		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha,
+		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha,
 		//	translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle));
 	}
 
@@ -1392,14 +1392,14 @@ namespace suku
 	{
 		pBitmap_->paint(translation(_x, _y) + _transform,
 			_alpha);
-		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha,
+		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha,
 		//	translation(_x, _y) + _transform);
 	}
 
 	void BitmapSpriteZero::paint(Transform _transform, float _alpha)
 	{
 		pBitmap_->paint(_transform, _alpha);
-		//drawBitmap(d2d1Bitmap_, (float)width, (float)height, _alpha, _transform);
+		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
 	BitmapSpriteZero::BitmapSpriteZero()

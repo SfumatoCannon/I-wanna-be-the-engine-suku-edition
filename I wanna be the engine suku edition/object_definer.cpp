@@ -500,33 +500,6 @@ namespace suku
 
 	void Player::recheckState()
 	{
-		static Sound musOnDeath("Audio\\musOnDeath.mp3");
-		static SoundController* controller = nullptr;
-		if (isKeyDown[VK_P])
-		{
-			controller = musOnDeath.play();
-			controller->setLooping(true);
-			controller->setLoopRegion(4.0f, 5.0f);
-		}
-		if (isKeyDown[VK_O])
-		{
-			controller->pause();
-		}
-		if (isKeyDown[VK_I])
-		{
-			controller->resume();
-		}
-		if (isKeyDown[VK_L])
-		{
-			controller->setVolume(0.5f);
-		}
-		if (isKeyDown[VK_K])
-		{
-			controller->setVolume(1.0f);
-		}
-		if (!isAlive())
-			return;
-
 		if (getCrashedObject<Spike>() || getCrashedObject<Cherry>())
 		{
 			die();

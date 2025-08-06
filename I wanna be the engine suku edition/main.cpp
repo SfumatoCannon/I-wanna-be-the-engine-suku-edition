@@ -51,23 +51,13 @@ public:
 
 	virtual void onPaintStart()override
 	{
+		ID2D1Brush* brush = createSolidColorBrush(Color(255, 255, 255, 255));
+		ID2D1Brush* brush2 = createSolidColorBrush(Color(0, 0, 0, 255));
 		Shape A(SquareShape(4));
-		Shape B = A;
-		A = CircleShape(4);
-		static ID2D1Brush* brush1 = createSolidColorBrush(Color(255, 0, 0));
-		static ID2D1Brush* brush2 = createSolidColorBrush(Color(125, 125, 0, 0.4f));
-		B.setTransform(rotation(16, 16, 30));
-		B.paint(32, 64, brush1, brush1);
-		A.paint(676, 552, brush2, brush1);
-		A.paint(620, 473, brush2, brush1);
-		A.paint(657, 446, brush2, brush1);
-		A.paint(715, 524, brush2, brush1);
-		Shape C(RectangleShape(97, 47));
-		C.paint(600, 400, brush2, brush1);
-		Shape D(RectangleShape(97, 47));
-		static float angle = 0.0;
-		angle += 10;
-		D.paint(translation(637, 501) * rotation(667.48, 499.32, angle), brush2, brush1);
+		Bitmap B("Image\\bg.jpg");
+		Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
+		C->paint(0, 0);
+		delete C;
 	}
 }room0;
 

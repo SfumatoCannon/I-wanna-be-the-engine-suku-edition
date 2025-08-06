@@ -347,15 +347,24 @@ namespace suku
 	HRESULT createWICBitmap(IWICBitmap** _pWicBitmap, UINT _width, UINT _height)
 	{
 		if (_width > 1600 || _height > 1216)
-			return E_FAIL;
+		{
+			HRESULT hr = pIWICFactory->CreateBitmap(
+				_width,
+				_height,
+				GUID_WICPixelFormat32bppPBGRA,
+				WICBitmapCacheOnLoad,
+				_pWicBitmap
+			);
+			return hr;
+		}
 		HRESULT hr = loadWICBitmap(_pWicBitmap, AbsolutePath(L"Image\\tempBlank.png"),
 			0, 0, _width, _height);
 		return hr;
 	}
 
-	HRESULT getD2DBitmap(IWICBitmap** _pWicBitmap, ID2D1Bitmap** _pD2dBitmap, int _width, int _height)
+	HRESULT getD2DBitmap(IWICBitmap* _pWicBitmap, ID2D1Bitmap** _pD2dBitmap)
 	{
-		if (!(*_pWicBitmap)) return S_FALSE;
+		if (!_pWicBitmap) return S_FALSE;
 
 		IWICBitmapDecoder* pDecoder = NULL;
 		IWICBitmapFrameDecode* pSource = NULL;
@@ -374,11 +383,11 @@ namespace suku
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = (*_pWicBitmap)->GetSize(&width, &height);
+			hr = _pWicBitmap->GetSize(&width, &height);
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = pScaler->Initialize(*_pWicBitmap, _width, _height, WICBitmapInterpolationModeCubic);
+			hr = pScaler->Initialize(_pWicBitmap, width, height, WICBitmapInterpolationModeCubic);
 		}
 		if (SUCCEEDED(hr))
 		{
@@ -409,11 +418,98 @@ namespace suku
 		return hr;
 	}
 
+	HRESULT getWICBitmap(ID2D1Bitmap* _pD2dBitmap, IWICBitmap** _pWicBitmap)
+	{
+		if (!_pD2dBitmap)
+			return E_POINTER;
+
+		D2D1_SIZE_U size = _pD2dBitmap->GetPixelSize();
+
+		HRESULT hr = createWICBitmap(_pWicBitmap, size.width, size.height);
+
+		if (FAILED(hr))
+			return hr;
+
+		// 创建兼容的渲染目标
+		ID2D1DCRenderTarget* pDCRenderTarget = nullptr;
+		D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+			D2D1_RENDER_TARGET_TYPE_DEFAULT,
+			D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)
+		);
+
+		hr = pD2DFactory->CreateDCRenderTarget(&props, &pDCRenderTarget);
+
+		if (SUCCEEDED(hr))
+		{
+			// 绑定 WIC 位图到 DC 渲染目标
+			HDC hdcMemory = CreateCompatibleDC(nullptr);
+			HBITMAP hBitmap = nullptr;
+
+			IWICBitmapLock* pLock = nullptr;
+			WICRect wicRect = { 0, 0, (int)size.width, (int)size.height };
+			RECT rect = { 0, 0, (int)size.width, (int)size.height };
+
+
+			hr = (*_pWicBitmap)->Lock(&wicRect, WICBitmapLockWrite, &pLock);
+
+			if (SUCCEEDED(hr))
+			{
+				UINT bufferSize = 0;
+				BYTE* pData = nullptr;
+
+				pLock->GetDataPointer(&bufferSize, &pData);
+
+				// 创建 DIB 并绑定到 DC
+				BITMAPINFO bmi = {};
+				bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+				bmi.bmiHeader.biWidth = size.width;
+				bmi.bmiHeader.biHeight = -static_cast<LONG>(size.height);
+				bmi.bmiHeader.biPlanes = 1;
+				bmi.bmiHeader.biBitCount = 32;
+				bmi.bmiHeader.biCompression = BI_RGB;
+
+				hBitmap = CreateDIBSection(
+					nullptr, &bmi, DIB_RGB_COLORS,
+					reinterpret_cast<void**>(&pData), nullptr, 0);
+
+				if (hBitmap)
+				{
+					SelectObject(hdcMemory, hBitmap);
+
+					hr = pDCRenderTarget->BindDC(hdcMemory, &rect);
+
+					if (SUCCEEDED(hr))
+					{
+						pDCRenderTarget->BeginDraw();
+
+						pDCRenderTarget->Clear(D2D1::ColorF(0, 0));
+
+						pDCRenderTarget->DrawBitmap(
+							_pD2dBitmap,
+							D2D1::RectF(0, 0, static_cast<FLOAT>(size.width), static_cast<FLOAT>(size.height)),
+							1.0f,
+							D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
+						);
+
+						hr = pDCRenderTarget->EndDraw();
+					}
+
+					DeleteObject(hBitmap);
+				}
+
+				pLock->Release();
+			}
+
+			DeleteDC(hdcMemory);
+			pDCRenderTarget->Release();
+		}
+	}
+
 	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap)
 	{
 		if (_sourceBitmap == nullptr)
 			return nullptr;
-		auto [width, height] = getSizeFromWICBitmap(_sourceBitmap);
+		auto [width, height] = getBitmapSize(_sourceBitmap);
 		Color** pixelArrayPointer = malloc2D<Color>(width, height);
 		if (pixelArrayPointer != nullptr)
 		{
@@ -447,7 +543,7 @@ namespace suku
 	{
 		if (_sourceBitmap == nullptr)
 			return nullptr;
-		auto [width, height] = getSizeFromWICBitmap(_sourceBitmap);
+		auto [width, height] = getBitmapSize(_sourceBitmap);
 		if (_x + _width > width || _y + _height > height)
 			return nullptr;
 		Color** pixelArrayPointer = malloc2D<Color>(_width, _height);
@@ -489,11 +585,26 @@ namespace suku
 		return newBrush;
 	}
 
-	std::pair<UINT, UINT> getSizeFromWICBitmap(IWICBitmap* _pBitmap, HRESULT* _pHResult)
+	std::pair<UINT, UINT> getBitmapSize(IWICBitmap* _pBitmap, HRESULT* _pHResult)
 	{
 		if (!_pBitmap) return { 0,0 };
 		UINT width, height;
 		*_pHResult = _pBitmap->GetSize(&width, &height);
+		return { width, height };
+	}
+
+	std::pair<UINT, UINT> getBitmapSize(ID2D1Bitmap* _pBitmap)
+	{
+		if (!_pBitmap) return { 0,0 };
+		D2D1_SIZE_U size = _pBitmap->GetPixelSize();
+		return { size.width, size.height };
+	}
+
+	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _pBitmap)
+	{
+		if (!_pBitmap.isValid()) return { 0,0 };
+		UINT width = _pBitmap.getWidth();
+		UINT height = _pBitmap.getHeight();
 		return { width, height };
 	}
 
@@ -686,6 +797,61 @@ namespace suku
 				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
 				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+		}
+	}
+
+	Bitmap* Shape::paintOnBitmap(const Bitmap& _bitmap, float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
+	{
+		if (!_bitmap.d2dBitmap_ || !currentGeometry)
+			return nullptr;
+
+		ID2D1BitmapRenderTarget* pBitmapRenderTarget = nullptr;
+		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
+			D2D1::SizeF((FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()),
+			&pBitmapRenderTarget
+		);
+
+		if (SUCCEEDED(hr) && pBitmapRenderTarget)
+		{
+			pBitmapRenderTarget->BeginDraw();
+			pBitmapRenderTarget->DrawBitmap(_bitmap.d2dBitmap_, D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()));
+			pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
+
+			if (_outlineBrush)
+				pBitmapRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+
+			if (_fillBrush)
+				pBitmapRenderTarget->FillGeometry(currentGeometry, _fillBrush);
+
+			hr = pBitmapRenderTarget->EndDraw();
+
+			if (hr == D2DERR_RECREATE_TARGET)
+			{
+				ERRORWINDOW_GLOBAL("Render target needs to be recreated");
+				pBitmapRenderTarget->Release();
+				return nullptr;
+			}
+
+			ID2D1Bitmap* pBitmapResult = nullptr;
+			Bitmap* resultBitmap = nullptr;
+			hr = pBitmapRenderTarget->GetBitmap(&pBitmapResult);
+			if (SUCCEEDED(hr) && pBitmapResult)
+			{
+				//ID2D1RenderTarget* pTarget = nullptr;
+				//D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
+				//pMainRenderTarget->BeginDraw();
+				//pMainRenderTarget->DrawBitmap(pBitmapResult, destRect, 1.0f);
+				//pMainRenderTarget->EndDraw();
+				resultBitmap = new Bitmap(pBitmapResult);
+				pBitmapResult->Release();
+			}
+			pBitmapRenderTarget->Release();
+			return resultBitmap;
+		}
+		else
+		{
+			ERRORWINDOW_GLOBAL("Failed to create compatible render target for bitmap painting");
+			return nullptr;
 		}
 	}
 
@@ -1074,7 +1240,7 @@ namespace suku
 		bytesPerPixel_ = 0;
 		width_ = height_ = 0;
 		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
+		d2dBitmap_ = nullptr;
 	}
 
 	Bitmap::Bitmap(UINT _width, UINT _height)
@@ -1082,17 +1248,19 @@ namespace suku
 		HRESULT hr = createWICBitmap(&wicBitmap_, _width, _height);
 		if (SUCCEEDED(hr))
 		{
-			auto [w, h] = getSizeFromWICBitmap(wicBitmap_);
+			isValid_ = true;
+			auto [w, h] = getBitmapSize(wicBitmap_);
 			width_ = w;
 			height_ = h;
 			bytesPerPixel_ = 0;
 			getPixelByte();
-			getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, _width, _height);
+			getD2DBitmap(wicBitmap_, &d2dBitmap_);
 		}
 		else
 		{
+			isValid_ = false;
 			width_ = height_ = 0;
-			d2d1Bitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
 			bytesPerPixel_ = 0;
 		}
 	}
@@ -1102,20 +1270,22 @@ namespace suku
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url.content));
 		if (SUCCEEDED(hr))
 		{
-			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
+			auto [w, h] = getBitmapSize(wicBitmap_, &hr);
 			if (SUCCEEDED(hr))
 			{
+				isValid_ = true;
 				width_ = w;
 				height_ = h;
 				bytesPerPixel_ = 0;
 				getPixelByte();
-				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
+				getD2DBitmap(wicBitmap_, &d2dBitmap_);
 				return;
 			}
 		}
+		isValid_ = false;
 		width_ = height_ = 0;
 		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
+		d2dBitmap_ = nullptr;
 		bytesPerPixel_ = 0;
 	}
 
@@ -1124,20 +1294,22 @@ namespace suku
 		auto hr = loadWICBitmap(&wicBitmap_, AbsolutePath(_url.content), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
-			auto [w, h] = getSizeFromWICBitmap(wicBitmap_, &hr);
+			auto [w, h] = getBitmapSize(wicBitmap_, &hr);
 			if (SUCCEEDED(hr))
 			{
+				isValid_ = true;
 				width_ = w;
 				height_ = h;
 				bytesPerPixel_ = 0;
 				getPixelByte();
-				getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, w, h);
+				getD2DBitmap(wicBitmap_, &d2dBitmap_);
 				return;
 			}
 		}
+		isValid_ = false;
 		width_ = height_ = 0;
 		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
+		d2dBitmap_ = nullptr;
 		bytesPerPixel_ = 0;
 	}
 
@@ -1161,25 +1333,79 @@ namespace suku
 		updatePixelDetail(_pixels, _x, _y);
 	}
 
+	Bitmap::Bitmap(ID2D1Bitmap* _d2dBitmap)
+	{
+		if (!_d2dBitmap)
+		{
+			isValid_ = false;
+			width_ = height_ = 0;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			return;
+		}
+		_d2dBitmap->AddRef();
+		d2dBitmap_ = _d2dBitmap;
+		HRESULT hr = getWICBitmap(d2dBitmap_, &wicBitmap_);
+		if (SUCCEEDED(hr))
+		{
+			isValid_ = true;
+			auto [w, h] = getBitmapSize(wicBitmap_, &hr);
+			if (SUCCEEDED(hr))
+			{
+				width_ = w;
+				height_ = h;
+				bytesPerPixel_ = 0;
+				getPixelByte();
+			}
+			else
+			{
+				isValid_ = false;
+				wicBitmap_ = nullptr;
+				width_ = height_ = 0;
+				bytesPerPixel_ = 0;
+			}
+		}
+		else
+		{
+			isValid_ = false;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			width_ = height_ = 0;
+		}
+	}
+
 	Bitmap::Bitmap(IWICBitmap* _wicBitmap)
 	{
+		if (!_wicBitmap)
+		{
+			isValid_ = false;
+			width_ = height_ = 0;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			return;
+		}
 		_wicBitmap->AddRef();
 		wicBitmap_ = _wicBitmap;
 		HRESULT hr;
-		auto [w, h] = getSizeFromWICBitmap(_wicBitmap, &hr);
+		auto [w, h] = getBitmapSize(_wicBitmap, &hr);
 		if (SUCCEEDED(hr))
 		{
+			isValid_ = true;
 			width_ = w;
 			height_ = h;
 			bytesPerPixel_ = 0;
 			getPixelByte();
-			getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+			getD2DBitmap(wicBitmap_, &d2dBitmap_);
 		}
 		else
 		{
+			isValid_ = false;
 			_wicBitmap->Release();
 			wicBitmap_ = nullptr;
-			d2d1Bitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
 			bytesPerPixel_ = 0;
 			width_ = height_ = 0;
 		}
@@ -1187,39 +1413,67 @@ namespace suku
 
 	Bitmap::Bitmap(const Bitmap& _otherBitmap)
 	{
-		width_ = _otherBitmap.width_;
-		height_ = _otherBitmap.height_;
-		wicBitmap_ = nullptr;
-		d2d1Bitmap_ = nullptr;
-		bytesPerPixel_ = 0;
-		auto hr = createWICBitmap(&wicBitmap_, width_, height_);
+		if (!_otherBitmap.isValid())
+		{
+			isValid_ = false;
+			width_ = height_ = 0;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			return;
+		}
+		auto hr = createWICBitmap(&wicBitmap_, _otherBitmap.width_, _otherBitmap.height_);
 		if (SUCCEEDED(hr))
 		{
+			isValid_ = true;
 			bytesPerPixel_ = 0;
 			getPixelByte();
 			Color** x = _otherBitmap.getPixelDetail();
 			updatePixelDetail(x);
 			free2D(x, width_, height_);
 		}
+		else
+		{
+			isValid_ = false;
+			width_ = height_ = 0;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+		}
 	}
 
 	Bitmap::Bitmap(Bitmap&& _otherBitmap)noexcept
 	{
+		if (!_otherBitmap.isValid())
+		{
+			isValid_ = false;
+			width_ = height_ = 0;
+			wicBitmap_ = nullptr;
+			d2dBitmap_ = nullptr;
+			bytesPerPixel_ = 0;
+			return;
+		}
+		isValid_ = true;
 		width_ = _otherBitmap.width_;
 		height_ = _otherBitmap.height_;
 		wicBitmap_ = _otherBitmap.wicBitmap_;
-		d2d1Bitmap_ = _otherBitmap.d2d1Bitmap_;
+		d2dBitmap_ = _otherBitmap.d2dBitmap_;
 		bytesPerPixel_ = _otherBitmap.bytesPerPixel_;
 
 		_otherBitmap.wicBitmap_ = nullptr;
-		_otherBitmap.d2d1Bitmap_ = nullptr;
+		_otherBitmap.d2dBitmap_ = nullptr;
 		_otherBitmap.bytesPerPixel_ = 0;
 	}
 
 	Bitmap::~Bitmap()
 	{
 		SAFE_RELEASE(wicBitmap_);
-		SAFE_RELEASE(d2d1Bitmap_);
+		SAFE_RELEASE(d2dBitmap_);
+	}
+
+	bool Bitmap::isValid() const
+	{
+		return isValid_;
 	}
 
 	UINT Bitmap::getPixelByte()
@@ -1255,7 +1509,7 @@ namespace suku
 			return *this;
 
 		SAFE_RELEASE(wicBitmap_);
-		SAFE_RELEASE(d2d1Bitmap_);
+		SAFE_RELEASE(d2dBitmap_);
 
 		auto [w, h] = _bitmap.getSize();
 		width_ = w;
@@ -1279,16 +1533,16 @@ namespace suku
 			return *this;
 
 		SAFE_RELEASE(wicBitmap_);
-		SAFE_RELEASE(d2d1Bitmap_);
+		SAFE_RELEASE(d2dBitmap_);
 
 		width_ = _bitmap.width_;
 		height_ = _bitmap.height_;
 		wicBitmap_ = _bitmap.wicBitmap_;
-		d2d1Bitmap_ = _bitmap.d2d1Bitmap_;
+		d2dBitmap_ = _bitmap.d2dBitmap_;
 		bytesPerPixel_ = _bitmap.bytesPerPixel_;
 
 		_bitmap.wicBitmap_ = nullptr;
-		_bitmap.d2d1Bitmap_ = nullptr;
+		_bitmap.d2dBitmap_ = nullptr;
 		_bitmap.bytesPerPixel_ = 0;
 
 		return *this;
@@ -1296,17 +1550,17 @@ namespace suku
 
 	void Bitmap::paint(float _x, float _y, float _alpha)const
 	{
-		drawBitmap(d2d1Bitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y));
+		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y));
 	}
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)const
 	{
-		drawBitmap(d2d1Bitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
 	}
 
 	void Bitmap::paint(Transform _transform, float _alpha) const
 	{
-		drawBitmap(d2d1Bitmap_, (float)width_, (float)height_, _alpha, _transform);
+		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, _transform);
 	}
 
 	UINT Bitmap::getWidth()const
@@ -1397,7 +1651,7 @@ namespace suku
 		if (_detail == nullptr || wicBitmap_ == nullptr)
 			return;
 
-		SAFE_RELEASE(d2d1Bitmap_);
+		SAFE_RELEASE(d2dBitmap_);
 
 		UINT bytesPerPixel = getPixelByte();
 
@@ -1441,7 +1695,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
 	void Bitmap::updatePixelDetail(Color** _detail, UINT _startX, UINT _startY)
@@ -1492,7 +1746,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
 	void Bitmap::changePixelDetailRough(std::function<void(Color&)> _changingFunction)
@@ -1550,8 +1804,8 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		SAFE_RELEASE(d2d1Bitmap_);
-		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+		SAFE_RELEASE(d2dBitmap_);
+		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
 	void Bitmap::changePixelDetail(std::function<void(UINT, UINT, Color&)> _changingFunction)
@@ -1609,8 +1863,8 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		SAFE_RELEASE(d2d1Bitmap_);
-		getD2DBitmap(&wicBitmap_, &d2d1Bitmap_, width_, height_);
+		SAFE_RELEASE(d2dBitmap_);
+		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
 	void Bitmap::viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const
