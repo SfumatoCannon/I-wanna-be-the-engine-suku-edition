@@ -255,11 +255,11 @@ namespace suku
 	//----------------------------------------------
 	//			  Memory Section
 	//----------------------------------------------
-	template<typename T> T** malloc2D(UINT _width, UINT _height);
-	template<typename T> void free2D(T** _pointer, UINT _width, UINT _height);
+	template<typename T> T** new_memory_2d(UINT _width, UINT _height);
+	template<typename T> void delete_memory_2d(T** _pointer, UINT _width, UINT _height);
 
 	template<typename T>
-	inline T** malloc2D(UINT _width, UINT _height)
+	inline T** new_memory_2d(UINT _width, UINT _height)
 	{
 		T** resultPointer = new T * [_height];
 		if (resultPointer != nullptr)
@@ -271,7 +271,7 @@ namespace suku
 	}
 
 	template<typename T>
-	inline void free2D(T** _pointer, UINT _width, UINT _height)
+	inline void delete_memory_2d(T** _pointer, UINT _width, UINT _height)
 	{
 		if (_pointer == nullptr)
 			return;

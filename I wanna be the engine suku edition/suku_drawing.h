@@ -151,10 +151,9 @@ namespace suku
 		UINT getHeight()const;
 		std::pair<UINT, UINT> getSize()const;
 
-		//This will create a new piece of memory; remember to use free2D() to delete it after using!
-		Color** getPixelDetail()const;
+		//Make sure the size of color array is not smaller than the bitmap size
+		void getPixelDetail(Color*** _pColorArray)const;
 
-		//This will not create a new piece of memory
 		BYTE* getDataPointer()const;
 
 		Bitmap& operator=(const Bitmap& _bitmap);
@@ -162,10 +161,10 @@ namespace suku
 
 		void updatePixelDetail(Color** _detail);
 		void updatePixelDetail(Color** _detail, UINT _startX, UINT _startY);
-		void changePixelDetailRough(std::function<void(Color&)> _changingFunction);
+		void changePixelDetailRough(std::function<void(Color&)> _function);
 
 		//Parameters: x, y, the corresponding color of position (x,y)
-		void changePixelDetail(std::function<void(UINT, UINT, Color&)> _changingFunction);
+		void changePixelDetail(std::function<void(UINT, UINT, Color&)> _function);
 
 		//Parameters: x, y, the corresponding color of position (x,y)
 		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
@@ -244,10 +243,10 @@ namespace suku
 		IWICBitmap** _pWicBitmap
 	);
 
-	//This will create a new piece of memory; remember to use free2D() to delete it after using!
+	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
 	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap);
 
-	//This will create a new piece of memory; remember to use free2D() to delete it after using!
+	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
 	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap, UINT _x, UINT _y, UINT _width, UINT _height);
 
 	ID2D1Brush* createSolidColorBrush(const Color _color);

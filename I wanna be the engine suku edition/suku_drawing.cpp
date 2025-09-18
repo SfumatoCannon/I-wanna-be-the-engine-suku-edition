@@ -426,7 +426,7 @@ namespace suku
 		D2D1_SIZE_U size = _pD2dBitmap->GetPixelSize();
 
 		HRESULT hr = createWICBitmap(_pWicBitmap, size.width, size.height);
-
+		
 		if (FAILED(hr))
 			return hr;
 
@@ -510,7 +510,7 @@ namespace suku
 		if (_sourceBitmap == nullptr)
 			return nullptr;
 		auto [width, height] = getBitmapSize(_sourceBitmap);
-		Color** pixelArrayPointer = malloc2D<Color>(width, height);
+		Color** pixelArrayPointer = new_memory_2d<Color>(width, height);
 		if (pixelArrayPointer != nullptr)
 		{
 			IWICBitmapLock* pILock = nullptr;
@@ -546,7 +546,7 @@ namespace suku
 		auto [width, height] = getBitmapSize(_sourceBitmap);
 		if (_x + _width > width || _y + _height > height)
 			return nullptr;
-		Color** pixelArrayPointer = malloc2D<Color>(_width, _height);
+		Color** pixelArrayPointer = new_memory_2d<Color>(_width, _height);
 		if (pixelArrayPointer != nullptr)
 		{
 			IWICBitmapLock* pILock = nullptr;
@@ -1344,7 +1344,7 @@ namespace suku
 			bytesPerPixel_ = 0;
 			return;
 		}
-		_d2dBitmap->AddRef();
+		SAFE_ADDREF(_d2dBitmap);
 		d2dBitmap_ = _d2dBitmap;
 		HRESULT hr = getWICBitmap(d2dBitmap_, &wicBitmap_);
 		if (SUCCEEDED(hr))
@@ -1361,16 +1361,17 @@ namespace suku
 			else
 			{
 				isValid_ = false;
-				wicBitmap_ = nullptr;
-				width_ = height_ = 0;
+				SAFE_RELEASE(wicBitmap_);
+				SAFE_RELEASE(d2dBitmap_);
 				bytesPerPixel_ = 0;
+				width_ = height_ = 0;
 			}
 		}
 		else
 		{
 			isValid_ = false;
-			wicBitmap_ = nullptr;
-			d2dBitmap_ = nullptr;
+			SAFE_RELEASE(wicBitmap_);
+			SAFE_RELEASE(d2dBitmap_);
 			bytesPerPixel_ = 0;
 			width_ = height_ = 0;
 		}
@@ -1427,10 +1428,13 @@ namespace suku
 		{
 			isValid_ = true;
 			bytesPerPixel_ = 0;
+			width_ = _otherBitmap.width_;
+			height_ = _otherBitmap.height_;
 			getPixelByte();
-			Color** x = _otherBitmap.getPixelDetail();
-			updatePixelDetail(x);
-			free2D(x, width_, height_);
+			Color** pixelDetail = new_memory_2d<Color>(width_, height_);
+			_otherBitmap.getPixelDetail(&pixelDetail);
+			updatePixelDetail(pixelDetail);
+			delete_memory_2d(pixelDetail, width_, height_);
 		}
 		else
 		{
@@ -1507,21 +1511,26 @@ namespace suku
 	{
 		if (&_bitmap == this)
 			return *this;
+		if (!_bitmap.isValid())
+		{
+			WARNINGWINDOW("Trying to assign an invalid bitmap. The target bitmap won't change.");
+			return *this;
+		}
 
 		SAFE_RELEASE(wicBitmap_);
 		SAFE_RELEASE(d2dBitmap_);
 
-		auto [w, h] = _bitmap.getSize();
-		width_ = w;
-		height_ = h;
-		HRESULT hr = createWICBitmap(&wicBitmap_, w, h);
+		width_ = _bitmap.width_;
+		height_ = _bitmap.height_;
+		HRESULT hr = createWICBitmap(&wicBitmap_, width_, height_);
 		bytesPerPixel_ = 0;
 		if (SUCCEEDED(hr))
 		{
 			getPixelByte();
-			auto x = _bitmap.getPixelDetail();
-			updatePixelDetail(x);
-			free2D(x, w, h);
+			Color** pixelDetail = new_memory_2d<Color>(width_, height_);
+			_bitmap.getPixelDetail(&pixelDetail);
+			updatePixelDetail(pixelDetail);
+			delete_memory_2d(pixelDetail, width_, height_);
 		}
 
 		return *this;
@@ -1578,15 +1587,16 @@ namespace suku
 		return std::make_pair(width_, height_);
 	}
 
-	Color** Bitmap::getPixelDetail()const
+	void Bitmap::getPixelDetail(Color*** _pColorArray)const
 	{
-		if (wicBitmap_ == nullptr)
-			return nullptr;
-		Color** pixelArrayPointer = malloc2D<Color>(width_, height_);
-		if (pixelArrayPointer != nullptr)
-		{
-			if (bytesPerPixel_ == 0)
-				return nullptr;
+		if (_pColorArray == nullptr) {
+			WARNINGWINDOW("Pointer to store pixel detail is null");
+			return;
+		}
+		if (!isValid()) {
+			WARNINGWINDOW("Bitmap is not valid");
+			return;
+		}
 
 			IWICBitmapLock* pILock = nullptr;
 			WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
@@ -1599,7 +1609,7 @@ namespace suku
 			pILock->GetDataPointer(&cbBufferSize, &pv);
 			pILock->GetStride(&stride);
 
-
+			Color** pixelArrayPointer = *_pColorArray;
 			if (pv != nullptr)
 			{
 				if (bytesPerPixel_ == 3)
@@ -1626,8 +1636,6 @@ namespace suku
 				}
 			}
 			pILock->Release();
-		}
-		return pixelArrayPointer;
 	}
 
 	BYTE* Bitmap::getDataPointer()const
@@ -1749,7 +1757,7 @@ namespace suku
 		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
-	void Bitmap::changePixelDetailRough(std::function<void(Color&)> _changingFunction)
+	void Bitmap::changePixelDetailRough(std::function<void(Color&)> _function)
 	{
 		if (wicBitmap_ == nullptr)
 			return;
@@ -1779,7 +1787,7 @@ namespace suku
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
 						pixelColor.alpha = 1.0f;
-						_changingFunction(pixelColor);
+						_function(pixelColor);
 						*(pixelData + 2) = (BYTE)pixelColor.r();
 						*(pixelData + 1) = (BYTE)pixelColor.g();
 						*pixelData = (BYTE)pixelColor.b();
@@ -1795,7 +1803,7 @@ namespace suku
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
 						pixelColor.alpha = (float)*(pixelData + 3) / 255.0f;
-						_changingFunction(pixelColor);
+						_function(pixelColor);
 						*(pixelData + 3) = (BYTE)(pixelColor.alpha * 255.0f);
 						*(pixelData + 2) = (BYTE)pixelColor.r();
 						*(pixelData + 1) = (BYTE)pixelColor.g();
@@ -1808,7 +1816,7 @@ namespace suku
 		getD2DBitmap(wicBitmap_, &d2dBitmap_);
 	}
 
-	void Bitmap::changePixelDetail(std::function<void(UINT, UINT, Color&)> _changingFunction)
+	void Bitmap::changePixelDetail(std::function<void(UINT, UINT, Color&)> _function)
 	{
 		if (wicBitmap_ == nullptr)
 			return;
@@ -1838,7 +1846,7 @@ namespace suku
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
 						pixelColor.alpha = 1.0f;
-						_changingFunction(j, i, pixelColor);
+						_function(j, i, pixelColor);
 						*(pixelData + 2) = (BYTE)pixelColor.r();
 						*(pixelData + 1) = (BYTE)pixelColor.g();
 						*pixelData = (BYTE)pixelColor.b();
@@ -1854,7 +1862,7 @@ namespace suku
 						Color pixelColor;
 						pixelColor.setRGB(*(pixelData + 2), *(pixelData + 1), *(pixelData));
 						pixelColor.alpha = (float)*(pixelData + 3) / 255.0f;
-						_changingFunction(j, i, pixelColor);
+						_function(j, i, pixelColor);
 						*(pixelData + 3) = (BYTE)(pixelColor.alpha * 255.0f);
 						*(pixelData + 2) = (BYTE)pixelColor.r();
 						*(pixelData + 1) = (BYTE)pixelColor.g();

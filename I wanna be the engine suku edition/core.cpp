@@ -22,7 +22,7 @@ namespace suku
 		auto [width, height] = getBitmapSize(_bitmap);
 		hitWidth = width, hitHeight = height;
 		hitX = hitY = 0;
-		hitArea = malloc2D<bool>(hitWidth, hitHeight);
+		hitArea = new_memory_2d<bool>(hitWidth, hitHeight);
 		getHitAreaFromBitmap(hitArea, Bitmap(_bitmap), _alphaThreshold);
 	}
 
@@ -38,13 +38,13 @@ namespace suku
 		hitWidth = _pBitmap->getWidth();
 		hitHeight = _pBitmap->getHeight();
 		hitX = hitY = 0;
-		hitArea = malloc2D<bool>(hitWidth, hitHeight);
+		hitArea = new_memory_2d<bool>(hitWidth, hitHeight);
 		getHitAreaFromBitmap(hitArea, *_pBitmap, _alphaThreshold);
 	}
 
 	BitmapCollisionBox::~BitmapCollisionBox()
 	{
-		free2D(hitArea, hitWidth, hitHeight);
+		delete_memory_2d(hitArea, hitWidth, hitHeight);
 	}
 
 	bool BitmapCollisionBox::isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const

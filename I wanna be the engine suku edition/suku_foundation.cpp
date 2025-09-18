@@ -132,7 +132,7 @@ namespace suku
 	{
 		wchar_t* content = _url.content;
 		size_t length = wcslen(_url.content);
-		for (int i = length - 1; i >= 0; i--)
+		for (int i = (int)length - 1; i >= 0; i--)
 		{
 			if (content[i] == L'.')
 			{
