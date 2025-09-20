@@ -279,7 +279,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* _uri)
+	HRESULT loadWICBitmap(IWICBitmap** _ppWicBitmap, const wchar_t* _uri)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
@@ -307,7 +307,7 @@ namespace suku
 		if (SUCCEEDED(hr))
 		{
 			hr = pIWICFactory->CreateBitmapFromSourceRect(
-				pSource, 0, 0, (UINT)originalWidth, (UINT)originalHeight, _pWicBitmap);
+				pSource, 0, 0, (UINT)originalWidth, (UINT)originalHeight, _ppWicBitmap);
 		}
 
 		SAFE_RELEASE(pDecoder);
@@ -315,7 +315,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(IWICBitmap** _pWicBitmap, const wchar_t* _uri, UINT _x, UINT _y, UINT _width, UINT _height)
+	HRESULT loadWICBitmap(IWICBitmap** _ppWicBitmap, const wchar_t* _uri, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
@@ -336,7 +336,7 @@ namespace suku
 		if (SUCCEEDED(hr))
 		{
 			hr = pIWICFactory->CreateBitmapFromSourceRect(
-				pSource, _x, _y, _width, _height, _pWicBitmap);
+				pSource, _x, _y, _width, _height, _ppWicBitmap);
 		}
 
 		SAFE_RELEASE(pDecoder);
@@ -344,25 +344,26 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT createWICBitmap(IWICBitmap** _pWicBitmap, UINT _width, UINT _height)
+	HRESULT createWICBitmap(IWICBitmap** _ppWicBitmap, UINT _width, UINT _height)
 	{
-		if (_width > 1600 || _height > 1216)
-		{
-			HRESULT hr = pIWICFactory->CreateBitmap(
-				_width,
-				_height,
-				GUID_WICPixelFormat32bppPBGRA,
-				WICBitmapCacheOnLoad,
-				_pWicBitmap
-			);
-			return hr;
-		}
-		HRESULT hr = loadWICBitmap(_pWicBitmap, AbsolutePath(L"Image\\tempBlank.png"),
-			0, 0, _width, _height);
+		IWICImagingFactory* pWicFactory = nullptr;
+		HRESULT hr = CoCreateInstance(
+			CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER,
+			IID_PPV_ARGS(&pWicFactory));
+		if (FAILED(hr)) return hr;
+
+		hr = pWicFactory->CreateBitmap(
+			_width,
+			_height,
+			GUID_WICPixelFormat32bppPBGRA,
+			WICBitmapCacheOnLoad,
+			_ppWicBitmap);
+
+		SAFE_RELEASE(pWicFactory);
 		return hr;
 	}
 
-	HRESULT getD2DBitmap(IWICBitmap* _pWicBitmap, ID2D1Bitmap** _pD2dBitmap)
+	HRESULT getD2DBitmap(IWICBitmap* _pWicBitmap, ID2D1Bitmap** _ppD2dBitmap)
 	{
 		if (!_pWicBitmap) return S_FALSE;
 
@@ -406,7 +407,7 @@ namespace suku
 			hr = pMainRenderTarget->CreateBitmapFromWicBitmap(
 				pConverter,
 				NULL,
-				_pD2dBitmap
+				_ppD2dBitmap
 			);
 		}
 
@@ -418,104 +419,54 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT getWICBitmap(ID2D1Bitmap* _pD2dBitmap, IWICBitmap** _pWicBitmap)
+	HRESULT getWICBitmap(ID2D1Bitmap* _pD2dBitmap, IWICBitmap** _ppWicBitmap)
 	{
-		if (!_pD2dBitmap)
+		if (!_pD2dBitmap || !_ppWicBitmap)
 			return E_POINTER;
 
+		*_ppWicBitmap = nullptr;
+
 		D2D1_SIZE_U size = _pD2dBitmap->GetPixelSize();
+		HRESULT hr;
 
-		HRESULT hr = createWICBitmap(_pWicBitmap, size.width, size.height);
-		
-		if (FAILED(hr))
-			return hr;
+		IWICBitmap* pWicBitmap = nullptr;
+		hr = createWICBitmap(&pWicBitmap, size.width, size.height);
+		if (FAILED(hr)) return hr;
 
-		// 创建兼容的渲染目标
-		ID2D1DCRenderTarget* pDCRenderTarget = nullptr;
-		D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
-			D2D1_RENDER_TARGET_TYPE_DEFAULT,
-			D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)
+		ID2D1Bitmap* pDstD2dBitmap = nullptr;
+		hr = pMainRenderTarget->CreateBitmapFromWicBitmap(pWicBitmap, nullptr, &pDstD2dBitmap);
+		if (FAILED(hr)) { pWicBitmap->Release(); return hr; }
+
+		hr = pDstD2dBitmap->CopyFromBitmap(
+			nullptr,
+			_pD2dBitmap,
+			nullptr
 		);
-
-		hr = pD2DFactory->CreateDCRenderTarget(&props, &pDCRenderTarget);
 
 		if (SUCCEEDED(hr))
 		{
-			// 绑定 WIC 位图到 DC 渲染目标
-			HDC hdcMemory = CreateCompatibleDC(nullptr);
-			HBITMAP hBitmap = nullptr;
-
-			IWICBitmapLock* pLock = nullptr;
-			WICRect wicRect = { 0, 0, (int)size.width, (int)size.height };
-			RECT rect = { 0, 0, (int)size.width, (int)size.height };
-
-
-			hr = (*_pWicBitmap)->Lock(&wicRect, WICBitmapLockWrite, &pLock);
-
-			if (SUCCEEDED(hr))
-			{
-				UINT bufferSize = 0;
-				BYTE* pData = nullptr;
-
-				pLock->GetDataPointer(&bufferSize, &pData);
-
-				// 创建 DIB 并绑定到 DC
-				BITMAPINFO bmi = {};
-				bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-				bmi.bmiHeader.biWidth = size.width;
-				bmi.bmiHeader.biHeight = -static_cast<LONG>(size.height);
-				bmi.bmiHeader.biPlanes = 1;
-				bmi.bmiHeader.biBitCount = 32;
-				bmi.bmiHeader.biCompression = BI_RGB;
-
-				hBitmap = CreateDIBSection(
-					nullptr, &bmi, DIB_RGB_COLORS,
-					reinterpret_cast<void**>(&pData), nullptr, 0);
-
-				if (hBitmap)
-				{
-					SelectObject(hdcMemory, hBitmap);
-
-					hr = pDCRenderTarget->BindDC(hdcMemory, &rect);
-
-					if (SUCCEEDED(hr))
-					{
-						pDCRenderTarget->BeginDraw();
-
-						pDCRenderTarget->Clear(D2D1::ColorF(0, 0));
-
-						pDCRenderTarget->DrawBitmap(
-							_pD2dBitmap,
-							D2D1::RectF(0, 0, static_cast<FLOAT>(size.width), static_cast<FLOAT>(size.height)),
-							1.0f,
-							D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
-						);
-
-						hr = pDCRenderTarget->EndDraw();
-					}
-
-					DeleteObject(hBitmap);
-				}
-
-				pLock->Release();
-			}
-
-			DeleteDC(hdcMemory);
-			pDCRenderTarget->Release();
+			*_ppWicBitmap = pWicBitmap;
 		}
+		else
+		{
+			pWicBitmap->Release();
+		}
+
+		pDstD2dBitmap->Release();
+		return hr;
 	}
 
-	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap)
+	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap)
 	{
-		if (_sourceBitmap == nullptr)
+		if (_pWicBitmap == nullptr)
 			return nullptr;
-		auto [width, height] = getBitmapSize(_sourceBitmap);
+		auto [width, height] = getBitmapSize(_pWicBitmap);
 		Color** pixelArrayPointer = new_memory_2d<Color>(width, height);
 		if (pixelArrayPointer != nullptr)
 		{
 			IWICBitmapLock* pILock = nullptr;
 			WICRect rcLock = { 0, 0, (int)width, (int)height };
-			_sourceBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
+			_pWicBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
 			UINT cbBufferSize = 0;
 			BYTE* pv = nullptr;
@@ -539,11 +490,11 @@ namespace suku
 		return pixelArrayPointer;
 	}
 
-	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap, UINT _x, UINT _y, UINT _width, UINT _height)
+	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		if (_sourceBitmap == nullptr)
+		if (_pWicBitmap == nullptr)
 			return nullptr;
-		auto [width, height] = getBitmapSize(_sourceBitmap);
+		auto [width, height] = getBitmapSize(_pWicBitmap);
 		if (_x + _width > width || _y + _height > height)
 			return nullptr;
 		Color** pixelArrayPointer = new_memory_2d<Color>(_width, _height);
@@ -551,7 +502,7 @@ namespace suku
 		{
 			IWICBitmapLock* pILock = nullptr;
 			WICRect rcLock = { 0, 0, (int)width, (int)height };
-			_sourceBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
+			_pWicBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
 
 			UINT cbBufferSize = 0;
 			BYTE* pv = nullptr;
@@ -600,33 +551,33 @@ namespace suku
 		return { size.width, size.height };
 	}
 
-	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _pBitmap)
+	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _ppBitmap)
 	{
-		if (!_pBitmap.isValid()) return { 0,0 };
-		UINT width = _pBitmap.getWidth();
-		UINT height = _pBitmap.getHeight();
+		if (!_ppBitmap.isValid()) return { 0,0 };
+		UINT width = _ppBitmap.getWidth();
+		UINT height = _ppBitmap.getHeight();
 		return { width, height };
 	}
 
-	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _bitmap, float _alphaThreshold)
+	void getHitAreaFromBitmap(bool** _ppHitArea, const Bitmap& _bitmap, float _alphaThreshold)
 	{
-		if (!_pHitArea)
+		if (!_ppHitArea)
 			return;
 		UINT width = _bitmap.getWidth();
 		BYTE alphaThreshold = (BYTE)(_alphaThreshold * 255.0f);
 		_bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
 			{
 				if (_color.alpha <= alphaThreshold)
-					_pHitArea[_x][_y] = 0;
-				else _pHitArea[_x][_y] = 1;
+					_ppHitArea[_x][_y] = 0;
+				else _ppHitArea[_x][_y] = 1;
 			});
 	}
 	/*
-	void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y, float _width, float _height, float _alpha,
+	void drawBitmap(ID2D1Bitmap* _ppBitmap, float _x, float _y, float _width, float _height, float _alpha,
 		float _angle, float _rotatingCenterX, float _rotatingCenterY)
 	{
 
-		if (!_pBitmap) return;
+		if (!_ppBitmap) return;
 
 		D2D1::Matrix3x2F transformMatrix;
 
@@ -640,7 +591,7 @@ namespace suku
 
 		pMainRenderTarget->SetTransform(transformMatrix);
 		pMainRenderTarget->drawBitmap(
-			_pBitmap,
+			_ppBitmap,
 			D2D1::RectF(
 				_x,
 				_y,

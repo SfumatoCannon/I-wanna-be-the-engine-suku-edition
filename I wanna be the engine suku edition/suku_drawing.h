@@ -217,16 +217,15 @@ namespace suku
 	void clearScreen();
 
 	HRESULT loadWICBitmap(
-		IWICBitmap** _pWicBitmap,
+		IWICBitmap** _ppWicBitmap,
 		const wchar_t* uri	//absolute path
 	);
 	HRESULT loadWICBitmap(
-		IWICBitmap** _pWicBitmap,
+		IWICBitmap** _ppWicBitmap,
 		const wchar_t* _uri,	//absolute path
 		UINT _x, UINT _y, UINT _width, UINT _height
 	);
 
-	//Due to technical reason, _width and _height in CreateWICBitmap() must <= 2048
 	HRESULT createWICBitmap(
 		IWICBitmap** _pWicBitmap,
 		UINT _width,
@@ -235,27 +234,27 @@ namespace suku
 
 	HRESULT getD2DBitmap(
 		IWICBitmap* _pWicBitmap,
-		ID2D1Bitmap** _pD2dBitmap
+		ID2D1Bitmap** _ppD2dBitmap
 	);
 
 	HRESULT getWICBitmap(
 		ID2D1Bitmap* _pD2dBitmap,
-		IWICBitmap** _pWicBitmap
+		IWICBitmap** _ppWicBitmap
 	);
 
 	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
-	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap);
+	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap);
 
 	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
-	Color** getPixelDetailFromWICBitmap(IWICBitmap* _sourceBitmap, UINT _x, UINT _y, UINT _width, UINT _height);
+	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap, UINT _x, UINT _y, UINT _width, UINT _height);
 
 	ID2D1Brush* createSolidColorBrush(const Color _color);
 
 	std::pair<UINT, UINT> getBitmapSize(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
 	std::pair<UINT, UINT> getBitmapSize(ID2D1Bitmap* _pBitmap);
-	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _pBitmap);
+	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _bitmap);
 
-	void getHitAreaFromBitmap(bool** _pHitArea, const Bitmap& _pBitmap, float _alphaThreshold = 0.0f);
+	void getHitAreaFromBitmap(bool** _ppHitArea, const Bitmap& _bitmap, float _alphaThreshold = 0.0f);
 	//void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
 	//	float _width, float _height, float _alpha,
 	//	float _angle, float _rotatingCenterX, float _rotatingCenterY);
