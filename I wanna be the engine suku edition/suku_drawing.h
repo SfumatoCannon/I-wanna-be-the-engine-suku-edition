@@ -14,6 +14,7 @@ namespace suku
 	class Bitmap;
 	class Color;
 	class Effect;
+	class PaintLayer;
 
 	extern ID2D1Factory* pD2DFactory;
 	extern ID2D1HwndRenderTarget* pMainRenderTarget;
@@ -210,6 +211,18 @@ namespace suku
 
 	};
 
+	class PaintLayer
+	{
+	private:
+		ID2D1RenderTarget* pRenderTarget_;
+	public:
+		void bindBitmap();
+		void beginDraw();
+		void endDraw();
+		HRESULT paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
+		HRESULT paintShape(const Shape& _shape, Transform _transform, float _alpha = 1.0f);
+	};
+
 	void SwapByte(BYTE* _a, BYTE* _b);
 
 	void beginDraw(HWND hWnd);
@@ -258,10 +271,10 @@ namespace suku
 	//void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
 	//	float _width, float _height, float _alpha,
 	//	float _angle, float _rotatingCenterX, float _rotatingCenterY);
-	void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
+	void drawBitmap(ID2D1RenderTarget* _renderTarget, ID2D1Bitmap* _pBitmap, float _x, float _y,
 		float _width, float _height, float _alpha,
 		Transform _transform = Transform());
-	void drawBitmap(ID2D1Bitmap* _pBitmap,
+	void drawBitmap(ID2D1RenderTarget* _renderTarget, ID2D1Bitmap* _pBitmap,
 		float _width, float _height, float _alpha,
 		Transform _transform = Transform());
 }

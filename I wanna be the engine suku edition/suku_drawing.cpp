@@ -601,12 +601,12 @@ namespace suku
 		);
 	}
 	*/
-	void drawBitmap(ID2D1Bitmap* _pBitmap, float _x, float _y,
+	void drawBitmap(ID2D1RenderTarget* _renderTarget, ID2D1Bitmap* _pBitmap, float _x, float _y,
 		float _width, float _height, float _alpha, Transform _transform)
 	{
 		if (!_pBitmap) return;
 		setPaintingTransform(_transform);
-		pMainRenderTarget->DrawBitmap(
+		_renderTarget->DrawBitmap(
 			_pBitmap,
 			D2D1::RectF(
 				_x, _y,
@@ -617,11 +617,11 @@ namespace suku
 		);
 	}
 
-	void drawBitmap(ID2D1Bitmap* _pBitmap, float _width, float _height, float _alpha, Transform _transform)
+	void drawBitmap(ID2D1RenderTarget* _renderTarget, ID2D1Bitmap* _pBitmap, float _width, float _height, float _alpha, Transform _transform)
 	{
 		if (!_pBitmap) return;
 		setPaintingTransform(_transform);
-		pMainRenderTarget->DrawBitmap(
+		_renderTarget->DrawBitmap(
 			_pBitmap,
 			D2D1::RectF(
 				0.0f, 0.0f,
@@ -1549,44 +1549,44 @@ namespace suku
 			return;
 		}
 
-			IWICBitmapLock* pILock = nullptr;
-			WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
-			wicBitmap_->Lock(&rcLock, WICBitmapLockRead, &pILock);
+		IWICBitmapLock* pILock = nullptr;
+		WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
+		wicBitmap_->Lock(&rcLock, WICBitmapLockRead, &pILock);
 
-			UINT stride;
-			UINT cbBufferSize;
-			BYTE* pv = nullptr;
+		UINT stride;
+		UINT cbBufferSize;
+		BYTE* pv = nullptr;
 
-			pILock->GetDataPointer(&cbBufferSize, &pv);
-			pILock->GetStride(&stride);
+		pILock->GetDataPointer(&cbBufferSize, &pv);
+		pILock->GetStride(&stride);
 
-			Color** pixelArrayPointer = *_pColorArray;
-			if (pv != nullptr)
+		Color** pixelArrayPointer = *_pColorArray;
+		if (pv != nullptr)
+		{
+			if (bytesPerPixel_ == 3)
 			{
-				if (bytesPerPixel_ == 3)
-				{
-					for (unsigned int i = 0; i < height_; i++)
-						for (unsigned int j = 0; j < width_; j++)
-						{
-							BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
-							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
-							pixelArrayPointer[i][j].alpha = 1.0f;
-						}
-				}
-				else if (bytesPerPixel_ == 4)
-				{
-					for (unsigned int i = 0; i < height_; i++)
-						for (unsigned int j = 0; j < width_; j++)
-						{
-							BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
-
-							pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
-							pixelArrayPointer[i][j].alpha = (float)(*(pixelData + 3)) / 255.0f;
-						}
-				}
+						pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
+						pixelArrayPointer[i][j].alpha = 1.0f;
+					}
 			}
-			pILock->Release();
+			else if (bytesPerPixel_ == 4)
+			{
+				for (unsigned int i = 0; i < height_; i++)
+					for (unsigned int j = 0; j < width_; j++)
+					{
+						BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
+
+						pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
+						pixelArrayPointer[i][j].alpha = (float)(*(pixelData + 3)) / 255.0f;
+					}
+			}
+		}
+		pILock->Release();
 	}
 
 	BYTE* Bitmap::getDataPointer()const
