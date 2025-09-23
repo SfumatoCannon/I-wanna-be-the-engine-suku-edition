@@ -226,8 +226,8 @@ namespace suku
 		virtual void updateState() {}
 		virtual void recheckState() {}
 
-		inline float totalHspeed()const;
-		inline float totalVspeed()const;
+		float totalHspeed()const;
+		float totalVspeed()const;
 
 		void setSpeed(float _hspeed, float _vspeed, float _hspeedTemp = 0.0f, float _vspeedTemp = 0.0f);
 		void setSpeedTemp(float _hspeedTemp, float _vspeedTemp);

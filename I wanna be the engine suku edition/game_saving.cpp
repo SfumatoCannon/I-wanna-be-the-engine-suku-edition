@@ -16,9 +16,9 @@ namespace suku
 
 	void suku_save_init()
 	{
-		GetModuleFileName(NULL, exePath, MAX_PATH);
-		(_tcsrchr(exePath, L'\\'))[1] = 0;
-		Path_len = _tcsclen(exePath);
+		GetModuleFileNameW(NULL, exePath, MAX_PATH);
+		(wcsrchr(exePath, L'\\'))[1] = 0;
+		Path_len = wcslen(exePath);
 	}
 
 	const wchar_t* AbsolutePath(const wchar_t* _relativePath)

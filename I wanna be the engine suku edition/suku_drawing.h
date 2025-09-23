@@ -102,10 +102,10 @@ namespace suku
 		bool operator==(const Shape& other) const = default;
 
 	private:
-		ID2D1Brush* fillBrush_;
-		ID2D1Brush* outlineBrush_;
-		float outlineWidth_;
-		ID2D1StrokeStyle* outlineStrokeStyle_;
+		ID2D1Brush* fillBrush_ = nullptr;
+		ID2D1Brush* outlineBrush_ = nullptr;
+		float outlineWidth_ = 1.0f;
+		ID2D1StrokeStyle* outlineStrokeStyle_ = nullptr;
 	};
 
 	class SquareShape :public Shape

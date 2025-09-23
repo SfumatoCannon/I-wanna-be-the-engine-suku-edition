@@ -378,12 +378,12 @@ namespace suku
 		else delete this;
 	}
 
-	inline float Object::totalHspeed()const
+	float Object::totalHspeed()const
 	{
 		return hspeed + hspeedTemp;
 	}
 
-	inline float Object::totalVspeed()const
+	float Object::totalVspeed()const
 	{
 		return vspeed + vspeedTemp;
 	}

@@ -772,6 +772,15 @@ namespace suku
 		pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 	}
 
+	void Shape::setFill(Color _color)
+	{
+
+	}
+
+	void Shape::setOutline(Color _color)
+	{
+	}
+
 	void Shape::paint(float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth,
 		ID2D1StrokeStyle* outlineStrokeStyle)
 	{
