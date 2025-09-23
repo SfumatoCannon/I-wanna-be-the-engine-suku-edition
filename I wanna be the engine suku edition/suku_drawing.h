@@ -241,8 +241,8 @@ namespace suku
 		void clear(Color _backgroundcolor = Color::WHITE());
 		void beginDraw();
 		Bitmap* endDraw();
-		HRESULT paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
-		HRESULT paintShape(const Shape& _shape, Transform _transform, float _alpha = 1.0f);
+		void paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
+		void paintShape(const Shape& _shape, Transform _transform, float _alpha = 1.0f);
 	};
 
 	void SwapByte(BYTE* _a, BYTE* _b);

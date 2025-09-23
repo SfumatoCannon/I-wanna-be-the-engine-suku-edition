@@ -140,13 +140,13 @@ namespace suku
 		return new Bitmap(pBitmap);
 	}
 
-	HRESULT PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
+	void PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
 	{
 		pBitmapRenderTarget_->SetTransform(_transform.matrix);
 		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_, D2D1::RectF(0, 0, _bitmap.getWidth(), _bitmap.getHeight()), _alpha);
 	}
 
-	HRESULT PaintLayer::paintShape(const Shape& _shape, Transform _transform, float _alpha)
+	void PaintLayer::paintShape(const Shape& _shape, Transform _transform, float _alpha)
 	{
 		// WIP
 	}
@@ -859,6 +859,21 @@ namespace suku
 		}
 	}
 
+	void Shape::paint(float _x, float _y)
+	{
+		paint(_x, _y, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+	}
+
+	void Shape::paint(float _x, float _y, Transform _paintingTransform)
+	{
+		paint(_x, _y, _paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+	}
+
+	void Shape::paint(Transform _paintingTransform)
+	{
+		paint(_paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+	}
+
 	bool Shape::isCrashed(Shape& _x)
 	{
 		D2D1_GEOMETRY_RELATION result;
@@ -1497,11 +1512,6 @@ namespace suku
 		return bytesPerPixel_;
 	}
 
-	ID2D1Bitmap* Bitmap::getD2DBitmap()
-	{
-		return d2dBitmap_;
-	}
-
 	Bitmap& Bitmap::operator=(const Bitmap& _bitmap)
 	{
 		if (&_bitmap == this)
@@ -1554,17 +1564,17 @@ namespace suku
 
 	void Bitmap::paint(float _x, float _y, float _alpha)const
 	{
-		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y));
+		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y));
 	}
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)const
 	{
-		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
+		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
 	}
 
 	void Bitmap::paint(Transform _transform, float _alpha) const
 	{
-		drawBitmap(d2dBitmap_, (float)width_, (float)height_, _alpha, _transform);
+		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, _transform);
 	}
 
 	UINT Bitmap::getWidth()const
