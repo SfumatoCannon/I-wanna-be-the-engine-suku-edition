@@ -74,8 +74,11 @@ namespace suku
 	L"Error", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));}
 #else
 #define INFOWINDOW(message)
+#define INFOWINDOW_GLOBAL(message)
 #define WARNINGWINDOW(message)
+#define WARNINGWINDOW_GLOBAL(message)
 #define ERRORWINDOW(message)
+#define ERRORWINDOW_GLOBAL(message)
 
 #endif
 

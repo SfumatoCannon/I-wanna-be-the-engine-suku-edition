@@ -70,6 +70,9 @@ namespace suku
 
 		void setOriginalGeometry(ID2D1Geometry* _geometry);
 		void setTransform(Transform _transform);
+		void setFill(Color _color);
+		void setOutline(Color _color);
+
 		void paint(float _x, float _y,
 			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
 			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
@@ -82,6 +85,10 @@ namespace suku
 		Bitmap* paintOnBitmap(const Bitmap& _bitmap, float _x, float _y,
 			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
 			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+		void paint(float _x, float _y);
+		void paint(float _x, float _y, Transform _paintingTransform);
+		void paint(Transform _paintingTransform);
+
 
 		bool isCrashed(Shape& _x);
 
@@ -93,6 +100,12 @@ namespace suku
 		Shape operator^(const Shape& _x);
 
 		bool operator==(const Shape& other) const = default;
+
+	private:
+		ID2D1Brush* fillBrush_;
+		ID2D1Brush* outlineBrush_;
+		float outlineWidth_;
+		ID2D1StrokeStyle* outlineStrokeStyle_;
 	};
 
 	class SquareShape :public Shape
@@ -171,6 +184,7 @@ namespace suku
 		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
 
 		friend class Shape;
+		friend class PaintLayer;
 	private:
 		bool isValid_;
 		UINT bytesPerPixel_;
@@ -184,8 +198,9 @@ namespace suku
 	public:
 		float alpha;	//range: 0.0f ~ 1.0f
 
-		Color();
-		Color(float _r, float _g, float _b, float _alpha = 1.0f);
+		constexpr Color() : r_(0.0f), g_(0.0f), b_(0.0f), alpha(1.0f) { }
+		constexpr Color(float _r, float _g, float _b, float _alpha = 1.0f)
+			: r_(_r), g_(_g), b_(_b), alpha(_alpha) { }
 
 		inline float r()const { return r_; }
 		inline float g()const { return g_; }
@@ -201,6 +216,12 @@ namespace suku
 		void setS(float _s);
 		void setV(float _v);
 		void setHSV(float _h, float _s, float _v);
+
+		static constexpr Color BLACK(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 0.0f, _alpha); }
+		static constexpr Color WHITE(float _alpha = 1.0f) { return Color(255.0f, 255.0f, 255.0f, _alpha); }
+		static constexpr Color RED(float _alpha = 1.0f) { return Color(255.0f, 0.0f, 0.0f, _alpha); }
+		static constexpr Color GREEN(float _alpha = 1.0f) { return Color(0.0f, 255.0f, 0.0f, _alpha); }
+		static constexpr Color BLUE(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 255.0f, _alpha); }
 	private:
 		float r_, g_, b_;	//range: 0.0f ~ 255.0f
 	};
@@ -214,11 +235,12 @@ namespace suku
 	class PaintLayer
 	{
 	private:
-		ID2D1RenderTarget* pRenderTarget_;
+		ID2D1BitmapRenderTarget* pBitmapRenderTarget_;
 	public:
-		void bindBitmap();
+		void newLayer(UINT _width, UINT _height);
+		void clear(Color _backgroundcolor = Color::WHITE());
 		void beginDraw();
-		void endDraw();
+		Bitmap* endDraw();
 		HRESULT paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
 		HRESULT paintShape(const Shape& _shape, Transform _transform, float _alpha = 1.0f);
 	};

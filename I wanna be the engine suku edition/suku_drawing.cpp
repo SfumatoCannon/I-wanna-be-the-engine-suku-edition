@@ -93,6 +93,64 @@ namespace suku
 		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
+	void PaintLayer::newLayer(UINT _width, UINT _height)
+	{
+		if (!pMainRenderTarget)
+		{
+			ERRORWINDOW("Main render target is null");
+			return;
+		}
+		if (pBitmapRenderTarget_)
+		{
+			SAFE_RELEASE(pBitmapRenderTarget_);
+		}
+		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
+			D2D1::SizeF((FLOAT)_width, (FLOAT)_height),
+			&pBitmapRenderTarget_
+		);
+		if (FAILED(hr))
+			ERRORWINDOW("Failed to create compatible render target");
+	}
+
+	void PaintLayer::clear(Color _backgroundcolor)
+	{
+		pBitmapRenderTarget_->Clear(D2D1::ColorF(
+			_backgroundcolor.r(),
+			_backgroundcolor.g(),
+			_backgroundcolor.b(),
+			_backgroundcolor.alpha
+		));
+	}
+
+	void PaintLayer::beginDraw()
+	{
+		pBitmapRenderTarget_->BeginDraw();
+	}
+
+	Bitmap* PaintLayer::endDraw()
+	{
+		pBitmapRenderTarget_->EndDraw();
+		ID2D1Bitmap* pBitmap = nullptr;
+		HRESULT hr = pBitmapRenderTarget_->GetBitmap(&pBitmap);
+		if (FAILED(hr))
+		{
+			ERRORWINDOW("Failed to get bitmap from bitmap render target");
+			return nullptr;
+		}
+		return new Bitmap(pBitmap);
+	}
+
+	HRESULT PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
+	{
+		pBitmapRenderTarget_->SetTransform(_transform.matrix);
+		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_, D2D1::RectF(0, 0, _bitmap.getWidth(), _bitmap.getHeight()), _alpha);
+	}
+
+	HRESULT PaintLayer::paintShape(const Shape& _shape, Transform _transform, float _alpha)
+	{
+		// WIP
+	}
+
 	void endDraw()
 	{
 		pMainRenderTarget->EndDraw();
@@ -788,11 +846,6 @@ namespace suku
 			hr = pBitmapRenderTarget->GetBitmap(&pBitmapResult);
 			if (SUCCEEDED(hr) && pBitmapResult)
 			{
-				//ID2D1RenderTarget* pTarget = nullptr;
-				//D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
-				//pMainRenderTarget->BeginDraw();
-				//pMainRenderTarget->DrawBitmap(pBitmapResult, destRect, 1.0f);
-				//pMainRenderTarget->EndDraw();
 				resultBitmap = new Bitmap(pBitmapResult);
 				pBitmapResult->Release();
 			}
@@ -1089,20 +1142,6 @@ namespace suku
 	void Transform::operator=(Transform _x)
 	{
 		matrix = _x.matrix;
-	}
-
-	Color::Color()
-	{
-		alpha = 1.0f;
-		r_ = g_ = b_ = 0.0f;
-	}
-
-	Color::Color(float _r, float _g, float _b, float _alpha)
-	{
-		alpha = _alpha;
-		r_ = _r;
-		g_ = _g;
-		b_ = _b;
 	}
 
 	float Color::h()const
@@ -1456,6 +1495,11 @@ namespace suku
 			pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel_);
 		bytesPerPixel_ /= 8;
 		return bytesPerPixel_;
+	}
+
+	ID2D1Bitmap* Bitmap::getD2DBitmap()
+	{
+		return d2dBitmap_;
 	}
 
 	Bitmap& Bitmap::operator=(const Bitmap& _bitmap)
