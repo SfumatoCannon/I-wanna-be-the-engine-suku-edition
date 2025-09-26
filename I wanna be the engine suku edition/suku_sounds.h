@@ -1,7 +1,7 @@
 #pragma once
 #include "framework.h"
 #include "resource.h"
-#include "suku_drawing.h"
+#include "suku_draw/includes.h"
 #include "game_saving.h"
 #include <string>
 #include <vector>

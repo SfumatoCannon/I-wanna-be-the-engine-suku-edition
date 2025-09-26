@@ -1,6 +1,6 @@
 #pragma once
 #include "suku_sounds.h"
-#include "suku_drawing.h"
+#include "suku_draw/includes.h"
 #include "suku_foundation.h"
 #include "game_saving.h"
 #include "global_value.h"
@@ -39,7 +39,6 @@ namespace suku
 		int hitX, hitY;
 		UINT hitWidth, hitHeight;
 		BitmapCollisionBox(bool** _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
-		BitmapCollisionBox(IWICBitmap* _bitmap, float _alphaThreshold = 0.0f);
 		BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
 

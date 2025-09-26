@@ -17,15 +17,6 @@ namespace suku
 		hitWidth = _hitWidth, hitHeight = _hitHeight;
 	}
 
-	BitmapCollisionBox::BitmapCollisionBox(IWICBitmap* _bitmap, float _alphaThreshold)
-	{
-		auto [width, height] = getBitmapSize(_bitmap);
-		hitWidth = width, hitHeight = height;
-		hitX = hitY = 0;
-		hitArea = new_memory_2d<bool>(hitWidth, hitHeight);
-		getHitAreaFromBitmap(hitArea, Bitmap(_bitmap), _alphaThreshold);
-	}
-
 	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold)
 	{
 		if (_pBitmap == nullptr)
@@ -1749,14 +1740,14 @@ namespace suku
 		ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
 	{
 		shape = _shape;
-		SAFE_ADDREF(_fillBrush);
+		addRef_safe(_fillBrush);
 		fillBrush = _fillBrush;
-		SAFE_ADDREF(_outlineBrush);
+		addRef_safe(_outlineBrush);
 		outlineBrush = _outlineBrush;
 
 		outlineWidth = _outlineWidth;
 
-		SAFE_ADDREF(_outlineStrokeStyle);
+		addRef_safe(_outlineStrokeStyle);
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
@@ -1819,15 +1810,15 @@ namespace suku
 			outlineBrush = nullptr;
 
 		outlineWidth = _outlineWidth;
-		SAFE_ADDREF(_outlineStrokeStyle);
+		addRef_safe(_outlineStrokeStyle);
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
 	ShapeSpriteZero::~ShapeSpriteZero()
 	{
-		SAFE_RELEASE(fillBrush);
-		SAFE_RELEASE(outlineBrush);
-		SAFE_RELEASE(outlineStrokeStyle);
+		release_safe(fillBrush);
+		release_safe(outlineBrush);
+		release_safe(outlineStrokeStyle);
 	}
 
 	void ShapeSpriteZero::setShapeTransform(Transform _transform)
@@ -1855,7 +1846,7 @@ namespace suku
 	void ShapeSpriteZero::setFillColor(const Color& _color)
 	{
 		if (fillBrush != nullptr)
-			SAFE_RELEASE(fillBrush);
+			release_safe(fillBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
@@ -1872,7 +1863,7 @@ namespace suku
 	void ShapeSpriteZero::setOutlineColor(const Color& _color)
 	{
 		if (outlineBrush != nullptr)
-			SAFE_RELEASE(outlineBrush);
+			release_safe(outlineBrush);
 		ID2D1SolidColorBrush* newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
