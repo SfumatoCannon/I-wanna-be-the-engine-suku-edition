@@ -1,4 +1,5 @@
 #include "object_definer.h"
+#include "suku_sounds.h"
 
 void loadFromJtoolMsg(suku::Room* room, std::string msg)
 {
