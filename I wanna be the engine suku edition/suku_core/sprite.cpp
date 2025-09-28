@@ -1,4 +1,5 @@
 #include "sprite.h"
+#include "collision_box.h"
 
 namespace suku
 {

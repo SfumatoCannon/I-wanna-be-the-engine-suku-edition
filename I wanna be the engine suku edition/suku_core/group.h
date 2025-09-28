@@ -1,9 +1,11 @@
 #pragma once
 #include "../framework.h"
-#include "object.h"
 
 namespace suku
 {
+	class Object;
+	class Room;
+
 	class Group
 	{
 	private:

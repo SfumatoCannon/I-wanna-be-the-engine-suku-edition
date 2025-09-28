@@ -1,8 +1,7 @@
 #pragma once
 #include "../framework.h"
 #include "../suku_foundation.h"
-#include "collision_box.h"
-
+#include "../suku_draw/includes.h"
 
 namespace suku
 {
@@ -14,6 +13,13 @@ namespace suku
 	class ShapeSpriteZero;
 	class Sprite;
 
+	class CollisionBox;
+	class BitmapCollisionBox;
+	class ShapeCollisionBox;
+	class Transform;
+	class Shape;
+	class Bitmap;
+
 	class SpriteZero
 	{
 	public:
@@ -23,12 +29,10 @@ namespace suku
 		SpriteZero() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
 
 		virtual void paint(float _x, float _y,
-			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) {
-		}
+			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) = 0;
 		virtual void paint(float _x, float _y,
-			Transform _transform, float _alpha = 1.0) {
-		}
-		virtual void paint(Transform _transform, float _alpha = 1.0) {}
+			Transform _transform, float _alpha = 1.0) = 0;
+		virtual void paint(Transform _transform, float _alpha = 1.0) = 0;
 		bool isCrashed(Transform _transform, const SpriteZero& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteZero* _other, Transform _otherTransform)const;
 	};
@@ -125,50 +129,6 @@ namespace suku
 	private:
 		int flipTime_;
 	};
-
-	template<typename SprZ>
-	inline Sprite::Sprite(const SprZ& _spriteZ)
-	{
-		flipTime_ = 1;
-		push(_spriteZ);
-	}
-
-	template<typename SprZ, typename ...SprZNext>
-	inline Sprite::Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
-	{
-		flipTime_ = _flipTime;
-		push(_spriteZ);
-		push(_spriteZNext...);
-	}
-
-	template<typename SprZ>
-	inline void Sprite::init(const SprZ& _spriteZ)
-	{
-		bodyList.clear();
-		flipTime_ = 1;
-		push(_spriteZ);
-	}
-
-	template<typename SprZ, typename ...SprZNext>
-	inline void Sprite::init(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
-	{
-		bodyList.clear();
-		flipTime_ = _flipTime;
-		push(_spriteZ);
-		push(_spriteZNext...);
-	}
-
-	template<typename SprZ>
-	inline void Sprite::push(const SprZ& _spriteZ)
-	{
-		SprZ* newSpriteZ = new SprZ(_spriteZ);
-		bodyList.push_back(newSpriteZ);
-	}
-
-	template<typename SprZ, typename ...SprZNext>
-	inline void Sprite::push(const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
-	{
-		push(_spriteZ);
-		push(_spriteZNext...);
-	}
 }
+
+#include "sprite.inl"

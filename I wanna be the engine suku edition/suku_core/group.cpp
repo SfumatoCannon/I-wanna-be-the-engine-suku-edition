@@ -1,6 +1,6 @@
 #include "group.h"
-#include "room.h"
 #include "object.h"
+#include "room.h"
 
 namespace suku
 {
