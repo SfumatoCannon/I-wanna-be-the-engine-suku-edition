@@ -1,6 +1,6 @@
 #include "suku_sounds.h"
 #include "framework.h"
-#include "suku_foundation.h"
+#include "suku_foundation/includes.h"
 
 #include <Digitalv.h>
 #include <mfapi.h>
