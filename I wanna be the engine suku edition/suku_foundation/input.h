@@ -39,6 +39,9 @@
 #define VK_Y 0x59
 #define VK_Z 0x5A
 
+#define INPUT_KEYDOWN 0x01
+#define INPUT_KEYUP 0x02
+
 namespace suku
 {
 	extern bool isKeyDown[256];

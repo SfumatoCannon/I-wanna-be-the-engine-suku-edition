@@ -23,13 +23,13 @@ namespace suku
 			keyMsg.pop();
 			switch (_message)
 			{
-			case WM_KEYDOWN:
+			case INPUT_KEYDOWN:
 				if (!isKeyHolding[_wParam])
 					isKeyDown[_wParam] = true;
 				isKeyHolding[_wParam] = true;
 				isKeyUp[_wParam] = false;
 				break;
-			case WM_KEYUP:
+			case INPUT_KEYUP:
 				isKeyHolding[_wParam] = false;
 				isKeyUp[_wParam] = true;
 				break;

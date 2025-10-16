@@ -118,17 +118,19 @@ void startSender()
 	thread.detach();
 }
 
+RAWINPUTDEVICE rid;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
-	//if (message > WM_SUKUAUDIO_START && message < WM_SUKUAUDIO_END)
-	//{
-	//	Sound::onWindowMessage(message, wParam, lParam);
-	//	return true;
-	//}
 	switch (message)
 	{
 	case WM_CREATE:
+		rid.usUsagePage = 0x01;
+		rid.usUsage = 0x06;
+		rid.dwFlags = 0;
+		rid.hwndTarget = hWnd;
+		RegisterRawInputDevices(&rid, 1, sizeof(rid));
 		PostMessage(hWnd, WM_CREATEFINISHED, 0, 0);
 		break;
 	case WM_CREATEFINISHED:		
@@ -139,12 +141,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init();
 		startSender();
 		break;
-	case WM_KEYDOWN:case WM_KEYUP:
-		pushKeyMessage(message, wParam);
+	case WM_INPUT:
+	{
+		UINT dwSize = 0;
+		GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+		std::vector<BYTE> lpb(dwSize);
+		if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb.data(), &dwSize, sizeof(RAWINPUTHEADER)) == dwSize)
+		{
+			RAWINPUT* raw = (RAWINPUT*)lpb.data();
+
+			if (raw->header.dwType == RIM_TYPEKEYBOARD)
+			{
+				const RAWKEYBOARD& kb = raw->data.keyboard;
+				USHORT vKey = kb.VKey;
+				bool isKeyUp = (kb.Flags & RI_KEY_BREAK) || (kb.Message == WM_KEYUP || kb.Message == WM_SYSKEYUP);
+				bool isKeyDown = !isKeyUp;
+				if (isKeyDown)
+					pushKeyMessage(INPUT_KEYDOWN, vKey);
+				else // isKeyUp
+					pushKeyMessage(INPUT_KEYUP, vKey);
+			}
+		}
 		break;
-	case MM_MCINOTIFY:
-		//suku::Sound::onWindowMessageCallback(wParam, lParam);
-		break;
+	}
 	case WM_ERASEBKGND:
 		return true;
 		break;
