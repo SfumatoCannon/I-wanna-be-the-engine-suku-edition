@@ -1,4 +1,6 @@
-#include "game_saving.h"
+#include "save.h"
+#include "../global_value.h"
+#include "../framework.h"
 #include <locale>
 #include <codecvt>
 

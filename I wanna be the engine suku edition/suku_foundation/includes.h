@@ -3,6 +3,8 @@
 #include "maths.h"
 #include "memory.h"
 #include "message.h"
+#include "save.h"
 #include "string.h"
 #include "type_tree.h"
+#include "var.h"
 #include "window.h"

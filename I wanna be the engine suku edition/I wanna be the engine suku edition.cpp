@@ -1,4 +1,5 @@
 ﻿#include "framework.h"
+#include "global_value.h"
 #include "I wanna be the engine suku edition.h"
 
 #define MAX_LOADSTRING 100
