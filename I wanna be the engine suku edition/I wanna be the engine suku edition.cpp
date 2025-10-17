@@ -142,28 +142,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		startSender();
 		break;
 	case WM_INPUT:
-	{
-		UINT dwSize = 0;
-		GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
-		std::vector<BYTE> lpb(dwSize);
-		if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb.data(), &dwSize, sizeof(RAWINPUTHEADER)) == dwSize)
-		{
-			RAWINPUT* raw = (RAWINPUT*)lpb.data();
-
-			if (raw->header.dwType == RIM_TYPEKEYBOARD)
-			{
-				const RAWKEYBOARD& kb = raw->data.keyboard;
-				USHORT vKey = kb.VKey;
-				bool isKeyUp = (kb.Flags & RI_KEY_BREAK) || (kb.Message == WM_KEYUP || kb.Message == WM_SYSKEYUP);
-				bool isKeyDown = !isKeyUp;
-				if (isKeyDown)
-					pushKeyMessage(INPUT_KEYDOWN, vKey);
-				else // isKeyUp
-					pushKeyMessage(INPUT_KEYUP, vKey);
-			}
-		}
+		suku::onWindowInput(lParam);
 		break;
-	}
 	case WM_ERASEBKGND:
 		return true;
 		break;
@@ -190,12 +170,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_IWANNAENGINE));
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SUKU));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = NULL;
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_IWANNAENGINE);
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SUKUSMALL));
 
 	return RegisterClassExW(&wcex);
 }

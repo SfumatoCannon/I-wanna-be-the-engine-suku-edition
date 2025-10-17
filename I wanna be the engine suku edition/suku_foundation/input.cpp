@@ -7,6 +7,29 @@ namespace suku
 	bool isKeyUp[256] = { false };
 	std::queue<std::pair<UINT, WPARAM> > keyMsg;
 
+	void onWindowInput(LPARAM _lParam)
+	{
+		UINT dwSize = 0;
+		GetRawInputData((HRAWINPUT)_lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+		std::vector<BYTE> lpb(dwSize);
+		if (GetRawInputData((HRAWINPUT)_lParam, RID_INPUT, lpb.data(), &dwSize, sizeof(RAWINPUTHEADER)) == dwSize)
+		{
+			RAWINPUT* raw = (RAWINPUT*)lpb.data();
+
+			if (raw->header.dwType == RIM_TYPEKEYBOARD)
+			{
+				const RAWKEYBOARD& kb = raw->data.keyboard;
+				USHORT vKey = kb.VKey;
+				bool isKeyUp = (kb.Flags & RI_KEY_BREAK) || (kb.Message == WM_KEYUP || kb.Message == WM_SYSKEYUP);
+				bool isKeyDown = !isKeyUp;
+				if (isKeyDown)
+					pushKeyMessage(INPUT_KEYDOWN, vKey);
+				else // isKeyUp
+					pushKeyMessage(INPUT_KEYUP, vKey);
+			}
+		}
+	}
+
 	void pushKeyMessage(UINT _message, WPARAM _wParam)
 	{
 		keyMsg.push(std::make_pair(_message, _wParam));
