@@ -11,8 +11,8 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
 
 HWND suku::GameWindow::hWnd;
 suku::String suku::GameWindow::title = L"I wanna be the engine suku edition";
-int suku::GameWindow::width = WINDOWWIDTH;
-int suku::GameWindow::height = WINDOWHEIGHT;
+int suku::GameWindow::width = WindowWidth;
+int suku::GameWindow::height = WindowHeight;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -20,34 +20,31 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 bool gameEndFlag = false;
-void endGame() {gameEndFlag = true;}
+void endGame() { gameEndFlag = true; }
 
-int fps = MAXFPS;
+double fps = 50.0;
 
 void Sender()
 {
-	double updateInterval = 20;	//  1000 / 50
-	double paintInterval = 1000.0 / MAXFPS;
-	double updateTick = 0;
-	double paintTick = 0;
+	//double updateInterval = 20;	//  1000 / 50
+	//double paintInterval = 1000.0 / 50.0;
+	//double updateTick = 0;
+	//double paintTick = 0;
 	auto updateAndPaintWork = []() {updateWork(), paintWork(); };
-	
+
 	std::future<void> task = std::async(updateAndPaintWork);
 
-	if (MAXFPS == 50)
+	while (1)
 	{
-		while (1)
+		Sleep((DWORD)(1000.0 / fps));
+		task.get();
+		if (gameEndFlag == true)
 		{
-			Sleep(20);
-			task.get();
-			if (gameEndFlag == true)
-			{
-				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-				break;
-			}
-			else
-				task = std::async(updateAndPaintWork);
+			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+			break;
 		}
+		else
+			task = std::async(updateAndPaintWork);
 	}
 }
 
@@ -133,7 +130,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		RegisterRawInputDevices(&rid, 1, sizeof(rid));
 		PostMessage(hWnd, WM_CREATEFINISHED, 0, 0);
 		break;
-	case WM_CREATEFINISHED:		
+	case WM_CREATEFINISHED:
 		timeBeginPeriod(1);
 		suku_save_init();
 		suku_drawing_init(hWnd);
@@ -180,15 +177,22 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	return RegisterClassExW(&wcex);
 }
 
+// #define FULLSCREEN_MODE
+
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance;
-
 	RECT rc;
-	SetRect(&rc, WINDOWX, WINDOWY, WINDOWX + WINDOWWIDTH, WINDOWY + WINDOWHEIGHT);
+	SetRect(&rc, suku::WindowX, suku::WindowY, suku::WindowX + suku::WindowWidth, suku::WindowY + suku::WindowHeight);
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+#ifdef FULLSCREEN_MODE
+	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
+		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
+#else
 	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
 		rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
+#endif
 
 	if (!suku::GameWindow::hWnd)
 	{

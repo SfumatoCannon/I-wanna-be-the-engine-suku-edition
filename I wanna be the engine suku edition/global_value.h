@@ -1,50 +1,18 @@
 #pragma once
+#include "framework.h"
 namespace suku
 {
-#define SAVE_DIR L"Data\\Save"
-#define WINDOWWIDTH 800
-#define WINDOWHEIGHT 608
-#define WINDOWX 100
-#define WINDOWY 50
-#define CLEAR_COLOR RGB(255,255,255)
+	constexpr const wchar_t* SaveDir = L"Data\\Save";
+	constexpr int WindowWidth = 800;
+	constexpr int WindowHeight = 608;
+	constexpr int WindowX = 100;
+	constexpr int WindowY = 50;
 
-#define MAXFPS 50
-
-#define DIR_LEFT 0
-#define DIR_RIGHT 1
-#define DIR_UP 2
-#define DIR_DOWN 3
-
-#define PLAYER_WIDTH 34
-#define PLAYER_HEIGHT 32
-#define PLAYER_PDX 12
-#define PLAYER_PDY 11
-#define PLAYER_PDWIDTH 11
-#define PLAYER_PDHEIGHT 21
-#define PLAYER_CENTERX 17
-#define PLAYER_CENTERY 23
-#define PLAYER_MOVINGSPEED 3
-#define PLAYER_JUMP1SPEED 8.5
-#define PLAYER_JUMP2SPEED 7
-#define PLAYER_BLOODNUMONCE 10
-#define PLAYER_BLOODNUMMAX 300
-#define PLAYER_BLOODHOFFSET 5.0f
-#define PLAYER_BLOODVOFFSET 6.0f
-
-#define VALUE_G 0.4f
-
-#define SIDE_LEFT 1
-#define SIDE_RIGHT 0
-
-#define BMPNUM_STANDING 4
-#define BMPNUM_RUNNING 2
-#define BMPNUM_SLIDING 2
-#define BMPNUM_JUMPING 2
-#define BMPNUM_FALLING 2
-
-#define BMPSPEED_STANDING 5
-#define BMPSPEED_RUNNING 3
-#define BMPSPEED_SLIDING 3
-#define BMPSPEED_JUMPING 4
-#define BMPSPEED_FALLING 4
+	enum Direction
+	{
+		Left,
+		Right,
+		Up,
+		Down
+	};
 }

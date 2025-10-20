@@ -22,16 +22,16 @@ void loadFromJtoolMsg(suku::Room* room, std::string msg)
 					room->create(Wall((float)value[0], (float)value[1]));
 					break;
 				case 3:
-					room->create(Spike((float)value[0], (float)value[1], DIR_UP));
+					room->create(Spike((float)value[0], (float)value[1], Direction::Up));
 					break;
 				case 4:
-					room->create(Spike((float)value[0], (float)value[1], DIR_RIGHT));
+					room->create(Spike((float)value[0], (float)value[1], Direction::Right));
 					break;
 				case 5:
-					room->create(Spike((float)value[0], (float)value[1], DIR_LEFT));
+					room->create(Spike((float)value[0], (float)value[1], Direction::Left));
 					break;
 				case 6:
-					room->create(Spike((float)value[0], (float)value[1], DIR_DOWN));
+					room->create(Spike((float)value[0], (float)value[1], Direction::Down));
 					break;
 				case 20:
 					room->setPlayerStart((float)value[0], (float)value[1]);
@@ -86,16 +86,16 @@ namespace suku
 		setPaintId(3);
 		switch (_dir)
 		{
-		case DIR_UP:
+		case Direction::Up:
 			sprite_ = sprUp;
 			break;
-		case DIR_DOWN:
+		case Direction::Down:
 			sprite_ = sprDown;
 			break;
-		case DIR_LEFT:
+		case Direction::Left:
 			sprite_ = sprLeft;
 			break;
-		case DIR_RIGHT:
+		case Direction::Right:
 			sprite_ = sprRight;
 			break;
 		default:
@@ -169,7 +169,7 @@ namespace suku
 		hspeed = _wspeed;
 		vspeed = _hspeed;
 		sprite_ = spr;
-		gravity = VALUE_G;
+		gravity = 0.2;
 	}
 
 	void Blood::reviseState()
@@ -217,11 +217,11 @@ namespace suku
 		isInfinityJump = false;
 		isFrozen = false;
 		maxJumpTime = 2;
-		movingSpeed = PLAYER_MOVINGSPEED;
-		gravity = VALUE_G;
+		movingSpeed = 3.0;
+		gravity = 0.4f;
 		spawnX = _x;
 		spawnY = _y;
-		side_ = SIDE_RIGHT;
+		side_ = Direction::Right;
 		jumpTime_ = maxJumpTime;
 		nowBloodNum_ = 0;
 		setReviseStateId(0);
@@ -337,14 +337,17 @@ namespace suku
 		SpriteZero* body2 = nowState();
 		if (!body2)
 			return;
-		while (nowBloodNum_ < PLAYER_BLOODNUMMAX)
+		while (nowBloodNum_ < 300)
 		{
 			i++;
-			float bloodhspeed = randF(-PLAYER_BLOODHOFFSET, PLAYER_BLOODHOFFSET);
-			float bloodvspeed = randF(-PLAYER_BLOODVOFFSET, PLAYER_BLOODVOFFSET);
-			inRoom()->create(Blood(centerX(), centerY()))->setSpeed(bloodhspeed, bloodvspeed);
+			float bloodhspeed = randF(-5, 5);
+			float bloodvspeed = randF(-5, 5);
+			Blood* newBlood = inRoom()->create(Blood(centerX(), centerY()));
+			newBlood->setSpeed(bloodhspeed, bloodvspeed);
+			newBlood->rotate(randF(0, 360));
+			newBlood->xScale = newBlood->yScale = randF(0.5f, 1.5f);
 			nowBloodNum_++;
-			if (i >= PLAYER_BLOODNUMONCE)
+			if (i >= 10)
 				break;
 		}
 	}
@@ -393,7 +396,7 @@ namespace suku
 
 		if (isOnVineLeft_ || isOnVineRight_)
 		{
-			side_ = isOnVineLeft_ ? SIDE_RIGHT : SIDE_LEFT;
+			side_ = isOnVineLeft_ ? Direction::Right : Direction::Left;
 			vspeed = 2.0;
 		}
 
@@ -428,12 +431,12 @@ namespace suku
 			{
 				if (isKeyHolding[VK_RIGHT])
 				{
-					side_ = SIDE_RIGHT;
+					side_ = Direction::Right;
 					moveRight();
 				}
 				else if (isKeyHolding[VK_LEFT])
 				{
-					side_ = SIDE_LEFT;
+					side_ = Direction::Left;
 					moveLeft();
 				}
 			}
@@ -462,7 +465,7 @@ namespace suku
 		}
 
 		//xScale = (side_ == 0 ? 1.0 : -1.0);
-		spriteTransform = scale(PLAYER_CENTERX, PLAYER_CENTERY, (side_ == 0 ? 1.0f : -1.0f), 1);
+		spriteTransform = scale(nowState()->centerX, nowState()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
 		if (vspeed > 9.4f)

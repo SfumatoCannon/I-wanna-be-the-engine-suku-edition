@@ -74,12 +74,12 @@ namespace suku
 	void saveToFile()
 	{
 		wchar_t saveFilePath[512];
-		swprintf_s(saveFilePath, L"%ls\\save%d", SAVE_DIR, saveFileId);
+		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
 		std::ofstream ofs;
 		ofs.open(saveFilePath, std::ios::binary);
 		if (!ofs.is_open())
 		{
-			createPath(SAVE_DIR);
+			createPath(SaveDir);
 			std::ofstream ofsForCreating(saveFilePath);
 			ofsForCreating.close();
 			ofs.open(saveFilePath, std::ios::binary);
@@ -96,7 +96,7 @@ namespace suku
 	void loadFromFile()
 	{
 		wchar_t saveFilePath[512];
-		swprintf_s(saveFilePath, L"%ls\\save%d", SAVE_DIR, saveFileId);
+		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
 		std::ifstream ifs;
 		ifs.open(saveFilePath, std::ios::binary);
 		if (!ifs.is_open())
