@@ -34,7 +34,7 @@ namespace suku
 	template<typename T>
 	inline bool setSavable(T& _x, std::string _name)
 	{
-		unsigned long long id = hash(_name);
+		unsigned long long id = maths::hash(_name);
 		if (varSaveList.find(id) != varSaveList.end())
 			return false;
 		T* pointer = new T;

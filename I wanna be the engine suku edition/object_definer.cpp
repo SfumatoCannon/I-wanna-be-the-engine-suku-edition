@@ -2,6 +2,8 @@
 #include "suku_sounds.h"
 #include "global_value.h"
 
+using namespace suku::maths;
+
 void loadFromJtoolMsg(suku::Room* room, std::string msg)
 {
 	using namespace suku;

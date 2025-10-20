@@ -3,6 +3,8 @@
 #include "sprite.h"
 #include "../suku_draw/includes.h"
 
+using namespace suku::maths;
+
 namespace suku
 {
 	void Object::paintBody()

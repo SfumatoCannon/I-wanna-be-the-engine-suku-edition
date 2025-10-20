@@ -9,7 +9,7 @@
 #define	INTERSECTING_LINES 3
 
 #define PI 3.14159265358979323846
-namespace suku
+namespace suku::maths
 {
 	double bRound(double _x);
 	float bRound(float _x);

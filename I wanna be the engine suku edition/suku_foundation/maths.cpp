@@ -3,7 +3,7 @@
 #include <ctime>
 #include <windows.h>
 
-namespace suku
+namespace suku::maths
 {
 	double bRound(double _x)
 	{
