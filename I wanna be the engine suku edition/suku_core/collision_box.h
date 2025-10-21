@@ -28,7 +28,7 @@ namespace suku
 		BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
 
-		virtual void release()override { delete_memory_2d(hitArea, hitWidth, hitHeight); }
+		virtual void release()override { memory::delete_2d(hitArea, hitWidth, hitHeight); }
 
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;

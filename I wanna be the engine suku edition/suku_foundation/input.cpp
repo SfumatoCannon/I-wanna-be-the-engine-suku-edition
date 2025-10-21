@@ -1,6 +1,6 @@
 #include "input.h"
 
-namespace suku
+namespace suku::input
 {
 	bool isKeyDown[256] = { false };
 	bool isKeyHolding[256] = { false };

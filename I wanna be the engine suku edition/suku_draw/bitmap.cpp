@@ -24,9 +24,9 @@ namespace suku
 	HRESULT createWICBitmap(IWICBitmap** _pWicBitmap, UINT _width, UINT _height);
 	HRESULT getD2DBitmap(IWICBitmap* _pWicBitmap, ID2D1Bitmap** _ppD2dBitmap);
 	HRESULT getWICBitmap(ID2D1Bitmap* _pD2dBitmap, IWICBitmap** _ppWicBitmap);
-	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
+	//This will create a new piece of memory; remember to use delete_2d() to delete it after using!
 	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap);
-	//This will create a new piece of memory; remember to use delete_memory_2d() to delete it after using!
+	//This will create a new piece of memory; remember to use delete_2d() to delete it after using!
 	Color** getPixelDetailFromWICBitmap(IWICBitmap* _pWicBitmap, UINT _x, UINT _y, UINT _width, UINT _height);
 	std::pair<UINT, UINT> getBitmapSize(IWICBitmap* _pBitmap, HRESULT* _pHResult = nullptr);
 	std::pair<UINT, UINT> getBitmapSize(ID2D1Bitmap* _pBitmap);
@@ -228,10 +228,10 @@ namespace suku
 			width_ = _otherBitmap.width_;
 			height_ = _otherBitmap.height_;
 			getPixelByte();
-			Color** pixelDetail = new_memory_2d<Color>(width_, height_);
+			Color** pixelDetail = memory::new_2d<Color>(width_, height_);
 			_otherBitmap.getPixelDetail(&pixelDetail);
 			updatePixelDetail(pixelDetail);
-			delete_memory_2d(pixelDetail, width_, height_);
+			memory::delete_2d(pixelDetail, width_, height_);
 		}
 		else
 		{
@@ -324,10 +324,10 @@ namespace suku
 		if (SUCCEEDED(hr))
 		{
 			getPixelByte();
-			Color** pixelDetail = new_memory_2d<Color>(width_, height_);
+			Color** pixelDetail = memory::new_2d<Color>(width_, height_);
 			_bitmap.getPixelDetail(&pixelDetail);
 			updatePixelDetail(pixelDetail);
-			delete_memory_2d(pixelDetail, width_, height_);
+			memory::delete_2d(pixelDetail, width_, height_);
 		}
 
 		return *this;
@@ -1074,7 +1074,7 @@ namespace suku
 		if (_pWicBitmap == nullptr)
 			return nullptr;
 		auto [width, height] = getBitmapSize(_pWicBitmap);
-		Color** pixelArrayPointer = new_memory_2d<Color>(width, height);
+		Color** pixelArrayPointer = memory::new_2d<Color>(width, height);
 		if (pixelArrayPointer != nullptr)
 		{
 			IWICBitmapLock* pILock = nullptr;
@@ -1110,7 +1110,7 @@ namespace suku
 		auto [width, height] = getBitmapSize(_pWicBitmap);
 		if (_x + _width > width || _y + _height > height)
 			return nullptr;
-		Color** pixelArrayPointer = new_memory_2d<Color>(_width, _height);
+		Color** pixelArrayPointer = memory::new_2d<Color>(_width, _height);
 		if (pixelArrayPointer != nullptr)
 		{
 			IWICBitmapLock* pILock = nullptr;

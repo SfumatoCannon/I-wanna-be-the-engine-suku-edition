@@ -171,12 +171,12 @@ namespace suku
 		hspeed = _wspeed;
 		vspeed = _hspeed;
 		sprite_ = spr;
-		gravity = 0.2;
+		gravity = 0.2f;
 	}
 
 	void Blood::reviseState()
 	{
-		if (isKeyDown[VK_R])
+		if (input::isKeyDown[VK_R])
 			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;
@@ -356,6 +356,7 @@ namespace suku
 
 	void Player::reviseState()
 	{
+		using namespace suku::input;
 		if (isKeyDown[VK_R])
 		{
 			spawn();

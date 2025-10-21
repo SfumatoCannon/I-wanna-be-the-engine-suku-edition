@@ -21,13 +21,13 @@ namespace suku
 		hitWidth = _pBitmap->getWidth();
 		hitHeight = _pBitmap->getHeight();
 		hitX = hitY = 0;
-		hitArea = new_memory_2d<bool>(hitWidth, hitHeight);
+		hitArea = memory::new_2d<bool>(hitWidth, hitHeight);
 		getHitAreaFromBitmap(hitArea, *_pBitmap, _alphaThreshold);
 	}
 
 	BitmapCollisionBox::~BitmapCollisionBox()
 	{
-		delete_memory_2d(hitArea, hitWidth, hitHeight);
+		memory::delete_2d(hitArea, hitWidth, hitHeight);
 	}
 
 	bool BitmapCollisionBox::isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const
