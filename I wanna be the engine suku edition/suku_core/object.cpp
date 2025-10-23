@@ -107,7 +107,7 @@ namespace suku
 		else paintId_ = _id;
 	}
 
-	float Object::centerX()
+	float Object::getCenterX()
 	{
 		float cx = nowState()->centerX;
 		float cy = nowState()->centerY;
@@ -115,7 +115,7 @@ namespace suku
 		return x + cx;
 	}
 
-	float Object::centerY()
+	float Object::getCenterY()
 	{
 		float cx = nowState()->centerX;
 		float cy = nowState()->centerY;
@@ -123,7 +123,7 @@ namespace suku
 		return y + cy;
 	}
 
-	Vector Object::center()
+	Vector Object::getCenterPosition()
 	{
 		auto result = spriteTransform.transformPoint(nowState()->centerX, nowState()->centerY);
 		result.first += x;

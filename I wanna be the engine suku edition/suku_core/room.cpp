@@ -62,7 +62,7 @@ namespace suku
 		{
 			if ((*i)->nowState() == nullptr)
 				continue;
-			if (getDistance((*i)->nowState()->centerX, (*i)->nowState()->centerY, _x, _y) < minDistance)
+			if (getDistance((*i)->nowState()->getCenterX, (*i)->nowState()->getCenterY, _x, _y) < minDistance)
 			{
 				minDistance = getDistance((*i)->x, (*i)->y, _x, _y);
 				result = (*i);

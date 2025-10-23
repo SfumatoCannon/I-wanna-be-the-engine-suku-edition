@@ -33,9 +33,9 @@ namespace suku
 		void setPaintId(double _id);
 
 		Transform spriteTransform;
-		float centerX();
-		float centerY();
-		Vector center();
+		float getCenterX();
+		float getCenterY();
+		Vector getCenterPosition();
 		double getSpriteAngle();
 		double getSpriteXScale();
 		double getSpriteYScale();
