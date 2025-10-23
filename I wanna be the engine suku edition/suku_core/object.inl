@@ -1,9 +1,10 @@
 #pragma once
 #include "room.h"
+#include "object.h"
 
 namespace suku
 {
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Object::getInsideObject()
 	{
 		if (!inRoom_)
@@ -13,7 +14,41 @@ namespace suku
 		return (*res);
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
+	inline Obj* Object::selectObject(std::function<bool(Obj*)> _function)
+	{
+		if (!inRoom_)
+			return nullptr;
+		typename std::list<Obj*>* targetList = inRoom_->objectList<Obj>();
+		if (targetList != nullptr)
+		{
+			for (auto& objPointer : *targetList)
+			{
+				if (objPointer != this && _function(objPointer))
+					return objPointer;
+			}
+		}
+	}
+
+	template<suku_object Obj>
+	inline std::list<Obj*> Object::selectObjectList(std::function<bool(Obj*)> _function)
+	{
+		if (!inRoom_)
+			return std::list<Obj*>();
+		typename std::list<Obj*>* targetList = inRoom_->objectList<Obj>();
+		typename std::list<Obj*> resultList;
+		if (targetList != nullptr)
+		{
+			for (auto& objPointer : *targetList)
+			{
+				if (objPointer != this && _function(objPointer))
+					resultList.push_back(objPointer);
+			}
+		}
+		return resultList;
+	}
+
+	template<suku_object Obj>
 	inline Obj* Object::getCrashedObjectPrecisely(bool _isPredict)
 	{
 		if (!inRoom_)
@@ -41,7 +76,7 @@ namespace suku
 		return nullptr;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Object* Object::getCrashedObject(bool _isPredict)
 	{
 		if (!inRoom_)
@@ -75,7 +110,7 @@ namespace suku
 		return nullptr;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Obj*> Object::getCrashedObjectListPrecisely(bool _isPredict)
 	{
 		typename std::list<Obj*> resultList;
@@ -104,7 +139,7 @@ namespace suku
 		return resultList;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Object*> Object::getCrashedObjectList(bool _isPredict)
 	{
 		if (!inRoom_)
@@ -139,7 +174,7 @@ namespace suku
 		return resultList;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Object::getCrashedObjectPrecisely(float _x, float _y, bool _isPredict)
 	{
 		if (!inRoom_)
@@ -167,7 +202,7 @@ namespace suku
 		return nullptr;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Object* Object::getCrashedObject(float _x, float _y, bool _isPredict)
 	{
 		if (!inRoom_)
@@ -201,7 +236,7 @@ namespace suku
 		return nullptr;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Obj*> Object::getCrashedObjectListPrecisely(float _x, float _y, bool _isPredict)
 	{
 		typename std::list<Obj*> resultList;
@@ -230,7 +265,7 @@ namespace suku
 		return resultList;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Object*> Object::getCrashedObjectList(float _x, float _y, bool _isPredict)
 	{
 		if (!inRoom_)
