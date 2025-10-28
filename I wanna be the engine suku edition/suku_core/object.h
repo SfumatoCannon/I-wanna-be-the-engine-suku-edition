@@ -11,7 +11,7 @@ namespace suku
 	class Object;
 
 	template<typename T>
-	concept suku_object = std::is_base_of<Object, T>::value;
+	concept suku_object = std::is_base_of_v<Object, T>;
 
 	class Object
 	{
@@ -83,11 +83,13 @@ namespace suku
 		void paintBody();
 		void paintBody(float _x, float _y);
 
-		bool isCrashed(const Object& _obj)const;
-		bool isCrashed(const Object& _obj, float _x, float _y)const;
-		bool isCrashed(const Object& _obj, float _x, float _y, float _objX, float _objY)const;
-		bool isCrashed(const std::list<Object*>& _objList)const;
-		bool isCrashed(const std::list<Object*>& _objList, float _x, float _y)const;
+		template<suku_object Obj> bool isCrashed(const Obj& _obj)const;
+		template<suku_object Obj> bool isCrashed(const Obj& _obj, float _x, float _y)const;
+		template<suku_object Obj> bool isCrashed(const Obj& _obj, float _x, float _y, float _objX, float _objY)const;
+		template<suku_object Obj> bool isCrashed(const Obj& _obj, Vector _position)const;
+		template<suku_object Obj> bool isCrashed(const Obj& _obj, Vector _position, Vector _objPosition)const;
+		template<suku_object Obj> bool isCrashed(const std::list<Obj*>& _objList)const;
+		template<suku_object Obj> bool isCrashed(const std::list<Obj*>& _objList, float _x, float _y)const;
 		void moveContactOld(const Object& _obj, bool _isPredict = false);
 		void moveContactOld(const std::list<Object*>& _objList, bool _isPredict = false);
 		void moveContactNew(const Object& _obj, bool _isPredict = false);
@@ -100,7 +102,6 @@ namespace suku
 		void contactToDown(Object _obj, bool _isPredict = false, bool _isMoveDirectly = false);
 		void contactToLeft(Object _obj, bool _isPredict = false, bool _isMoveDirectly = false);
 		void contactToRight(Object _obj, bool _isPredict = false, bool _isMoveDirectly = false);
-		//void contactToObject();
 		void moveContact(Object _obj, bool _isPredict = false, bool _isMoveDirectly = false);
 
 		template<suku_object Obj> Obj* selectObject(std::function<bool(Obj*)> _function);
@@ -114,8 +115,8 @@ namespace suku
 		template<suku_object Obj> std::list<Obj*> getCrashedObjectListPrecisely(float _x, float _y, bool _isPredict = false);
 		template<suku_object Obj> std::list<Object*> getCrashedObjectList(float _x, float _y, bool _isPredict = false);
 
-		Object* getCrashedObjectPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
-		std::list<Object*> getCrashedObjectListPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
+		//Object* getCrashedObjectPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
+		//std::list<Object*> getCrashedObjectListPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
 
 		void save();
 		void spawn();

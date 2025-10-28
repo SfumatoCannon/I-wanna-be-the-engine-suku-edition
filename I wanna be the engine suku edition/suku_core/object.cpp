@@ -127,8 +127,8 @@ namespace suku
 	Vector Object::getCenterPosition()
 	{
 		auto result = spriteTransform.transformPoint(nowState()->centerX, nowState()->centerY);
-		result.first += x;
-		result.second += y;
+		result.x += x;
+		result.y += y;
 		return result;
 	}
 
@@ -317,45 +317,7 @@ namespace suku
 			else return true;
 			});
 	}
-
-	bool Object::isCrashed(const Object& _obj)const
-	{
-		return nowState()->isCrashed(translation(bRound(x), bRound(y)) + spriteTransform, _obj.nowState(),
-			translation(bRound(_obj.x), bRound(_obj.y)) + _obj.spriteTransform);
-	}
-
-	bool Object::isCrashed(const Object& _obj, float _x, float _y)const
-	{
-		return nowState()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.nowState(),
-			translation(bRound(_obj.x), bRound(_obj.y)) + _obj.spriteTransform);
-	}
-
-	bool Object::isCrashed(const Object& _obj, float _x, float _y, float _objX, float _objY)const
-	{
-		return nowState()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.nowState(),
-			translation(bRound(_objX), bRound(_objY)) + _obj.spriteTransform);
-	}
-
-	bool Object::isCrashed(const std::list<Object*>& _objList) const
-	{
-		for (auto& i : _objList)
-		{
-			if (isCrashed(*i))
-				return true;
-		}
-		return false;
-	}
-
-	bool Object::isCrashed(const std::list<Object*>& _objList, float _x, float _y) const
-	{
-		for (auto& i : _objList)
-		{
-			if (isCrashed(*i, _x, _y))
-				return true;
-		}
-		return false;
-	}
-
+	
 	void Object::moveContactOld(const Object& _obj, bool _isPredict)
 	{
 		if (!isCrashed(_obj, x + totalHspeed(), y))
