@@ -8,6 +8,7 @@ namespace suku
 
 	//typedef double real;
 	//typedef std::pair<real, real> pair;
+	typedef size_t Typecode;
 	typedef std::pair<float, float> Vector;
 
 	class TypeNode

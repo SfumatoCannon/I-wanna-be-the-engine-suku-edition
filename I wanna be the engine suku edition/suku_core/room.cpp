@@ -6,9 +6,9 @@ namespace suku
 	Room* nowRoom;
 	TypeTree collisionInheritTree;
 
-	std::vector<std::pair<size_t, int>> reviseStateArray;
-	std::vector<std::pair<size_t, int>> updateStateArray;
-	std::vector<std::pair<size_t, int>> recheckStateArray;
+	std::vector<std::pair<Typecode, int>> reviseStateArray;
+	std::vector<std::pair<Typecode, int>> updateStateArray;
+	std::vector<std::pair<Typecode, int>> recheckStateArray;
 
 
 	Room::Room()
@@ -25,52 +25,11 @@ namespace suku
 		playerStartY = _y;
 	}
 
-	Object* Room::findObj(size_t _kindId, size_t _pos)
+	Object* Room::findObj(Typecode _kindId, size_t _pos)
 	{
-		size_t x = 0;
-		Object* objPointer = nullptr;
-		std::list<Object*>* targetList = objectList<Object>();
-		for (auto& i : *targetList)
-		{
-			x++;
-			if (x == _pos)
-				return i;
-		}
+		// WIP
 		return nullptr;
 	}
-	/*
-	Object* Room::findObjWithPosition(int _kind, double _x, double _y)
-	{
-		double minDistance = 100000000.0;
-		Object* result = nullptr;
-		for (auto i = kindStart[_kind]; i != kindEnd[_kind]; i++)
-		{
-			if (getDistance((*i)->x, (*i)->y, _x, _y) < minDistance)
-			{
-				minDistance = getDistance((*i)->x, (*i)->y, _x, _y);
-				result = (*i);
-			}
-		}
-		return result;
-	}
-
-	Object* Room::findObjWithCenterPosition(int _kind, double _x, double _y)
-	{
-		double minDistance = 100000000.0;
-		Object* result = nullptr;
-		for (auto i = kindStart[_kind]; i != kindEnd[_kind]; i++)
-		{
-			if ((*i)->nowState() == nullptr)
-				continue;
-			if (getDistance((*i)->nowState()->centerX, (*i)->nowState()->centerY, _x, _y) < minDistance)
-			{
-				minDistance = getDistance((*i)->x, (*i)->y, _x, _y);
-				result = (*i);
-			}
-		}
-		return result;
-	}*/
-
 
 	void Room::update()
 	{

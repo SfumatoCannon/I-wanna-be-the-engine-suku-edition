@@ -19,9 +19,9 @@ namespace suku
 
 	public:
 		//std::map<size_t, std::list<Var>> objectPointerArray;
-		std::map<size_t, Var> objectPointerArray;	//Var type: std::list<Obj*>*
-		std::map<size_t, std::list<Object*>> objectParentPointerArray;
-		std::map<size_t, std::list<Var>> objectPointerRemoveArray; //Var type: std::list<Obj*>::iterator
+		std::map<Typecode, Var> objectPointerArray;	//Var type: std::list<Obj*>*
+		std::map<Typecode, std::list<Object*>> objectParentPointerArray;
+		std::map<Typecode, std::list<Var>> objectPointerRemoveArray; //Var type: std::list<Obj*>::iterator
 		std::map<double, std::list<Object*>> reviseStateArray;
 		std::map<double, std::list<Object*>> updateStateArray;
 		std::map<double, std::list<Object*>> recheckStateArray;
@@ -36,7 +36,7 @@ namespace suku
 
 		template<typename Obj> std::list<Obj*>* objectList();
 		template<typename Obj> Obj* findObj(Obj _objectForType, size_t _pos)const;
-		Object* findObj(size_t _kindId, size_t _pos);
+		Object* findObj(Typecode _kindId, size_t _pos);
 
 		//Object* findObjWithPosition(int _kind, double _x, double _y);
 		//Object* findObjWithCenterPosition(int _kind, double _x, double _y);

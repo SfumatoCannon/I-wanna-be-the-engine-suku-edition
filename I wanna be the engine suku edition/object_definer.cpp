@@ -171,7 +171,7 @@ namespace suku
 		hspeed = _wspeed;
 		vspeed = _hspeed;
 		sprite_ = spr;
-		gravity = 0.2;
+		gravity = 0.2f;
 	}
 
 	void Blood::reviseState()
