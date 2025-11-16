@@ -55,9 +55,9 @@ void updateWork()
 	using namespace suku;
 	if (threadLock.try_lock())
 	{
-		keyCheck();
+		suku::input::keyCheck();
 
-		if (isKeyDown[VK_ESCAPE] && !gameEndFlag)
+		if (suku::input::isKeyDown[VK_ESCAPE] && !gameEndFlag)
 			endGame();
 		else
 		{
@@ -65,7 +65,7 @@ void updateWork()
 				nowRoom->update();
 		}
 
-		resetKey();
+		suku::input::resetKey();
 
 		threadLock.unlock();
 	}
@@ -97,7 +97,7 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 	if (devmode.dmDisplayFrequency != fps)
 	{
 		devmode.dmDisplayFlags &= !DM_INTERLACED;
-		devmode.dmDisplayFrequency = fps;
+		devmode.dmDisplayFrequency = (DWORD)fps;
 		LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
 	}
 	return true;
@@ -139,7 +139,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		startSender();
 		break;
 	case WM_INPUT:
-		suku::onWindowInput(lParam);
+		suku::input::onWindowInput(lParam);
 		break;
 	case WM_ERASEBKGND:
 		return true;

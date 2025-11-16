@@ -42,7 +42,7 @@
 #define INPUT_KEYDOWN 0x01
 #define INPUT_KEYUP 0x02
 
-namespace suku
+namespace suku::input
 {
 	extern bool isKeyDown[256];
 	extern bool isKeyHolding[256];

@@ -30,6 +30,42 @@ namespace suku
 		// WIP
 		return nullptr;
 	}
+<<<<<<< HEAD
+=======
+	/*
+	Object* Room::findObjWithPosition(int _kind, double _x, double _y)
+	{
+		double minDistance = 100000000.0;
+		Object* result = nullptr;
+		for (auto i = kindStart[_kind]; i != kindEnd[_kind]; i++)
+		{
+			if (getDistance((*i)->x, (*i)->y, _x, _y) < minDistance)
+			{
+				minDistance = getDistance((*i)->x, (*i)->y, _x, _y);
+				result = (*i);
+			}
+		}
+		return result;
+	}
+
+	Object* Room::findObjWithCenterPosition(int _kind, double _x, double _y)
+	{
+		double minDistance = 100000000.0;
+		Object* result = nullptr;
+		for (auto i = kindStart[_kind]; i != kindEnd[_kind]; i++)
+		{
+			if ((*i)->nowState() == nullptr)
+				continue;
+			if (getDistance((*i)->nowState()->getCenterX, (*i)->nowState()->getCenterY, _x, _y) < minDistance)
+			{
+				minDistance = getDistance((*i)->x, (*i)->y, _x, _y);
+				result = (*i);
+			}
+		}
+		return result;
+	}*/
+
+>>>>>>> 09d6be14b27eb1c5636adab7a05cbad36203ee48
 
 	void Room::update()
 	{

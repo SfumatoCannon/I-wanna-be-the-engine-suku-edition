@@ -176,7 +176,7 @@ namespace suku
 
 	void Blood::reviseState()
 	{
-		if (isKeyDown[VK_R])
+		if (input::isKeyDown[VK_R])
 			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;
@@ -344,7 +344,7 @@ namespace suku
 			i++;
 			float bloodhspeed = randF(-5, 5);
 			float bloodvspeed = randF(-5, 5);
-			Blood* newBlood = inRoom()->create(Blood(centerX(), centerY()));
+			Blood* newBlood = inRoom()->create(Blood(getCenterX(), getCenterY()));
 			newBlood->setSpeed(bloodhspeed, bloodvspeed);
 			newBlood->rotate(randF(0, 360));
 			newBlood->xScale = newBlood->yScale = randF(0.5f, 1.5f);
@@ -356,6 +356,7 @@ namespace suku
 
 	void Player::reviseState()
 	{
+		using namespace suku::input;
 		if (isKeyDown[VK_R])
 		{
 			spawn();
@@ -492,7 +493,7 @@ namespace suku
 
 		/*if (temp = touchObject(ID_PLATFORM))
 		{
-			if (y + nowState()->centerY - totalVspeed() / 2 <= temp->y)
+			if (y + nowState()->getCenterY - totalVspeed() / 2 <= temp->y)
 			{
 				if (temp->vspeed >= 0)
 				{

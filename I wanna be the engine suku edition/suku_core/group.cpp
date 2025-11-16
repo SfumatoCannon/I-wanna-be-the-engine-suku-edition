@@ -76,7 +76,7 @@ namespace suku
 		return member_.size();
 	}
 	/*
-	size_t Group::appendSelectively(Room* _room, std::function<bool(Object*)> _function, int _kind)
+	size_t Group::appendSelect(Room* _room, std::function<bool(Object*)> _function, int _kind)
 	{
 		for (auto i = _room->kindStart[_kind]; i != _room->kindEnd[_kind]; i++)
 			if ((*i)->id != 0 && !id_[*i] && _function(*i))
@@ -87,7 +87,7 @@ namespace suku
 		return member_.size();
 	}*/
 
-	size_t Group::appendSelectively(Room* _room, std::function<bool(Object*)> _function)
+	size_t Group::appendSelect(Room* _room, std::function<bool(Object*)> _function)
 	{
 		std::list<Object*>* objectList = _room->objectList<Object>();
 		for (auto& objPointer : *objectList)
@@ -98,7 +98,7 @@ namespace suku
 		return member_.size();
 	}
 
-	/*size_t Group::appendSelectively(Group* _group, std::function<bool(Object*)> _function, int _kind)
+	/*size_t Group::appendSelect(Group* _group, std::function<bool(Object*)> _function, int _kind)
 	{
 		size_t size = _group->getSize();
 		Object* obj;
@@ -111,7 +111,7 @@ namespace suku
 		return member_.size();
 	}*/
 
-	size_t Group::appendSelectively(Group* _group, std::function<bool(Object*)> _function)
+	size_t Group::appendSelect(Group* _group, std::function<bool(Object*)> _function)
 	{
 		size_t size = _group->getSize();
 		Object* obj;
@@ -124,7 +124,7 @@ namespace suku
 		return member_.size();
 	}
 
-	size_t Group::appendSelectively(std::list<Object*> _objectList, std::function<bool(Object*)> _function)
+	size_t Group::appendSelect(std::list<Object*> _objectList, std::function<bool(Object*)> _function)
 	{
 		for (auto& obj : _objectList)
 		{
@@ -139,6 +139,14 @@ namespace suku
 		return memberIterator_.find(_object) != memberIterator_.end();
 	}
 
+	void Group::foreach(std::function<void(Object*)> _function)
+	{
+		for (auto i = member_.begin(); i != member_.end(); i++)
+		{
+			if (i != member_.end())
+				_function(*i);
+		}
+	}
 
 	void Group::removeObj(size_t _pos)
 	{

@@ -10,6 +10,7 @@ namespace suku
 {
 	class Background;
 	class PlaceChanger;
+	class Warp;
 	class Wall;
 	class Spike;
 	class Cherry;

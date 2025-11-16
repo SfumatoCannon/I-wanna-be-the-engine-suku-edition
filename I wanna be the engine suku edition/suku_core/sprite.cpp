@@ -220,7 +220,7 @@ namespace suku
 		pBitmap_->paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
 			_alpha);
 		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha,
-		//	translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle));
+		//	translation(_x, _y) + scale(getCenterX, getCenterY, _xScale, _yScale) + rotation(getCenterX, getCenterY, _angle));
 	}
 
 	void BitmapSpriteZero::paint(float _x, float _y, Transform _transform, float _alpha)
