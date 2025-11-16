@@ -6,19 +6,40 @@ namespace suku
 	template<typename Obj>
 	inline std::list<Obj*>* Room::objectList()
 	{
-		typename std::list<Obj*>* result;
-		std::map<unsigned long long, Var>::iterator resultVar = objectPointerArray.find(typecode(Obj));
-		if (resultVar != objectPointerArray.end())
+		//typename std::list<Obj*>* result;
+		//std::map<unsigned long long, Var>::iterator resultVar = objectPointerArray.find(typecode(Obj));
+		//if (resultVar != objectPointerArray.end())
+		//{
+		//	objectPointerArray[typecode(Obj)] >> result;
+		//	auto& removeList = objectPointerRemoveArray[typecode(Obj)];
+		//	if (!removeList.empty())
+		//	{
+		//		for (auto& i : removeList)
+		//			result->erase(i.getValue<typename std::list<Obj*>::iterator>());
+		//		removeList.clear();
+		//	}
+		//	return result;
+		//}
+		//else return nullptr;
+
+		std::list<Object*>* result;
+		std::map<Typecode, std::list<Object*>>::iterator resultIter = objectParentPointerArray.find(typecode(Obj));
+		if (resultIter != objectParentPointerArray.end())
 		{
-			objectPointerArray[typecode(Obj)] >> result;
-			auto& removeList = objectPointerRemoveArray[typecode(Obj)];
+			result = &((*resultIter).second);
+			auto& removeList = objectParentPointerRemoveArray[typecode(Obj)];
 			if (!removeList.empty())
 			{
 				for (auto& i : removeList)
-					result->erase(i.getValue<typename std::list<Obj*>::iterator>());
+					result->erase(i);
 				removeList.clear();
 			}
-			return result;
+			std::list<Obj*>* objList = new std::list<Obj*>;
+			for (auto& objParent : *result)
+			{
+				objList->push_back(static_cast<Obj*>(objParent));
+			}
+			return objList;
 		}
 		else return nullptr;
 	}

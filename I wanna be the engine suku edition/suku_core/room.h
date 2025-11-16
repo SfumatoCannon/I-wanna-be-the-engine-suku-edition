@@ -22,6 +22,7 @@ namespace suku
 		std::map<Typecode, Var> objectPointerArray;	//Var type: std::list<Obj*>*
 		std::map<Typecode, std::list<Object*>> objectParentPointerArray;
 		std::map<Typecode, std::list<Var>> objectPointerRemoveArray; //Var type: std::list<Obj*>::iterator
+		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectParentPointerRemoveArray;
 		std::map<double, std::list<Object*>> reviseStateArray;
 		std::map<double, std::list<Object*>> updateStateArray;
 		std::map<double, std::list<Object*>> recheckStateArray;
