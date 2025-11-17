@@ -6,13 +6,7 @@
 namespace suku
 {
 
-	//typedef double real;
-	//typedef std::pair<real, real> pair;
-<<<<<<< HEAD
 	typedef size_t Typecode;
-	typedef std::pair<float, float> Vector;
-=======
-	//typedef std::pair<float, float> Vector;
 
 	class Vector
 	{
@@ -22,7 +16,6 @@ namespace suku
 		Vector(float _x, float _y) : x(_x), y(_y) {}
 		Vector(double _x, double _y) : x((float)_x), y((float)_y) {}
 	};
->>>>>>> 09d6be14b27eb1c5636adab7a05cbad36203ee48
 
 	class TypeNode
 	{
