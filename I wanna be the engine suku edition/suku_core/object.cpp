@@ -59,52 +59,28 @@ namespace suku
 	void Object::setReviseStateId(double _id)
 	{
 		if (inRoom_)
-		{
-			auto& reviseStateArray = inRoom_->reviseStateArray;
-			reviseStateArray[reviseStateId_].erase(reviseStateIterator_);
-			reviseStateId_ = _id;
-			reviseStateIterator_ =
-				reviseStateArray[reviseStateId_].insert(reviseStateArray[reviseStateId_].end(), this);
-		}
+			inRoom_->modifyObjectRevisePriority(this, _id);
 		else reviseStateId_ = _id;
 	}
 
 	void Object::setUpdateStateId(double _id)
 	{
 		if (inRoom_)
-		{
-			auto& updateStateArray = inRoom_->updateStateArray;
-			updateStateArray[updateStateId_].erase(updateStateIterator_);
-			updateStateId_ = _id;
-			updateStateIterator_ =
-				updateStateArray[updateStateId_].insert(updateStateArray[updateStateId_].end(), this);
-		}
+			inRoom_->modifyObjectUpdatePriority(this, _id);
 		else updateStateId_ = _id;
 	}
 
 	void Object::setRecheckStateId(double _id)
 	{
 		if (inRoom_)
-		{
-			auto& recheckStateArray = inRoom_->recheckStateArray;
-			recheckStateArray[recheckStateId_].erase(recheckStateIterator_);
-			recheckStateId_ = _id;
-			recheckStateIterator_ =
-				recheckStateArray[recheckStateId_].insert(recheckStateArray[recheckStateId_].end(), this);
-		}
+			inRoom_->modifyObjectRecheckPriority(this, _id);
 		else recheckStateId_ = _id;
 	}
 
 	void Object::setPaintId(double _id)
 	{
 		if (inRoom_)
-		{
-			auto& paintArray = inRoom_->paintArray;
-			paintArray[paintId_].erase(paintIterator_);
-			paintId_ = _id;
-			paintIterator_ =
-				paintArray[paintId_].insert(paintArray[paintId_].end(), this);
-		}
+			inRoom_->modifyObjectPaintPriority(this, _id);
 		else paintId_ = _id;
 	}
 
@@ -199,12 +175,7 @@ namespace suku
 				removeTag_ = true;
 			else
 			{
-				inRoom_->objectPointerRemoveArray[kindId_].push_back(objectIterator_);
-				inRoom_->objectPointerArray[kindId_].erase(objectIterator_);
-				inRoom_->reviseStateArray[reviseStateId_].erase(reviseStateIterator_);
-				inRoom_->updateStateArray[updateStateId_].erase(updateStateIterator_);
-				inRoom_->recheckStateArray[recheckStateId_].erase(recheckStateIterator_);
-				inRoom_->paintArray[paintId_].erase(paintIterator_);
+				inRoom_->remove(this);
 				inRoom_ = nullptr;
 			}
 		}

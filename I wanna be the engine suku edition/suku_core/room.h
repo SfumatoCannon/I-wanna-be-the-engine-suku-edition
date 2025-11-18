@@ -17,15 +17,15 @@ namespace suku
 	class Room
 	{
 	private:
+		std::map<Typecode, std::list<Object*>> objectPointerArray_;
+		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray_;
+		std::map<double, std::list<Object*>> reviseStateArray_;
+		std::map<double, std::list<Object*>> updateStateArray_;
+		std::map<double, std::list<Object*>> recheckStateArray_;
+		std::map<double, std::list<Object*>> paintArray_;
 		template<typename Obj> void createObjectList();
 	public:
-		//std::map<size_t, std::list<Var>> objectPointerArray;
-		std::map<Typecode, std::list<Object*>> objectPointerArray;
-		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray;
-		std::map<double, std::list<Object*>> reviseStateArray;
-		std::map<double, std::list<Object*>> updateStateArray;
-		std::map<double, std::list<Object*>> recheckStateArray;
-		std::map<double, std::list<Object*>> paintArray;
+		//std::map<size_t, std::list<Var>> objectPointerArray_;
 
 		float playerStartX, playerStartY;
 		bool hasCreated;
@@ -50,6 +50,13 @@ namespace suku
 		template<typename Obj, typename ... ObjNext> void createCenter(Obj _firstobject, ObjNext... _objectnext);
 		template<typename Obj> void createCenterFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
+
+		void remove(Object* _object);
+
+		void modifyObjectRevisePriority(Object* _object, double _newId);
+		void modifyObjectUpdatePriority(Object* _object, double _newId);
+		void modifyObjectRecheckPriority(Object* _object, double _newId);
+		void modifyObjectPaintPriority(Object* _object, double _newId);
 
 		virtual void onCreate() {};
 		virtual void onJoin() {};

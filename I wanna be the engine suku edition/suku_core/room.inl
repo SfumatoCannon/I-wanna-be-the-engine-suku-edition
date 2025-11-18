@@ -8,7 +8,7 @@ namespace suku
 	inline void Room::createObjectList()
 	{
 		std::list<Object*> newList;
-		objectPointerArray[typecode(Obj)] = newList;
+		objectPointerArray_[typecode(Obj)] = newList;
 	}
 
 	template<typename Obj>
@@ -16,9 +16,9 @@ namespace suku
 	{
 		if (typecode(Obj) == typecode(Object))
 		{
-			// get all objects in objectPointerArray
+			// get all objects in objectPointerArray_
 			std::list<Obj*> resultList;
-			for (auto& [kindId, objList] : objectPointerArray)
+			for (auto& [kindId, objList] : objectPointerArray_)
 			{
 				for (auto& object : objList)
 				{
@@ -28,11 +28,11 @@ namespace suku
 			return resultList;
 		}
 
-		auto resultIter = objectPointerArray.find(typecode(Obj));
-		if (resultIter != objectPointerArray.end())
+		auto resultIter = objectPointerArray_.find(typecode(Obj));
+		if (resultIter != objectPointerArray_.end())
 		{
 			std::list<Object*>& targetList = (*resultIter).second;
-			auto& removeList = objectPointerRemoveArray[typecode(Obj)];
+			auto& removeList = objectPointerRemoveArray_[typecode(Obj)];
 			if (!removeList.empty())
 			{
 				for (auto& i : removeList)
@@ -69,20 +69,20 @@ namespace suku
 		newObj->kindId_ = typecode(Obj);
 		newObj->inRoom_ = this;
 
-		newObj->objectIterator_ = objectPointerArray[typecode(Obj)].insert(
-			objectPointerArray[typecode(Obj)].end(), static_cast<Object*>(newObj));
+		newObj->objectIterator_ = objectPointerArray_[typecode(Obj)].insert(
+			objectPointerArray_[typecode(Obj)].end(), static_cast<Object*>(newObj));
 
-		newObj->reviseStateIterator_ = reviseStateArray[newObj->reviseStateId_].insert(
-			reviseStateArray[newObj->reviseStateId_].end(), static_cast<Object*>(newObj));
+		newObj->reviseStateIterator_ = reviseStateArray_[newObj->reviseStateId_].insert(
+			reviseStateArray_[newObj->reviseStateId_].end(), static_cast<Object*>(newObj));
 
-		newObj->updateStateIterator_ = updateStateArray[newObj->updateStateId_].insert(
-			updateStateArray[newObj->updateStateId_].end(), static_cast<Object*>(newObj));
+		newObj->updateStateIterator_ = updateStateArray_[newObj->updateStateId_].insert(
+			updateStateArray_[newObj->updateStateId_].end(), static_cast<Object*>(newObj));
 
-		newObj->recheckStateIterator_ = recheckStateArray[newObj->recheckStateId_].insert(
-			recheckStateArray[newObj->recheckStateId_].end(), static_cast<Object*>(newObj));
+		newObj->recheckStateIterator_ = recheckStateArray_[newObj->recheckStateId_].insert(
+			recheckStateArray_[newObj->recheckStateId_].end(), static_cast<Object*>(newObj));
 
-		newObj->paintIterator_ = paintArray[newObj->paintId_].insert(
-			paintArray[newObj->paintId_].end(), static_cast<Object*>(newObj));
+		newObj->paintIterator_ = paintArray_[newObj->paintId_].insert(
+			paintArray_[newObj->paintId_].end(), static_cast<Object*>(newObj));
 
 		if (isFirstObjInClass)
 		{

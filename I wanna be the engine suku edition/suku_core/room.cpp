@@ -6,15 +6,15 @@ namespace suku
 	Room* nowRoom;
 	TypeTree collisionInheritTree;
 
-	std::vector<std::pair<Typecode, int>> reviseStateArray;
-	std::vector<std::pair<Typecode, int>> updateStateArray;
-	std::vector<std::pair<Typecode, int>> recheckStateArray;
+	std::vector<std::pair<Typecode, int>> reviseStateArray_;
+	std::vector<std::pair<Typecode, int>> updateStateArray_;
+	std::vector<std::pair<Typecode, int>> recheckStateArray_;
 
 
 	Room::Room()
 	{
 		hasCreated = false;
-		objectPointerArray.clear();
+		objectPointerArray_.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
 	}
@@ -29,6 +29,56 @@ namespace suku
 	{
 		// WIP
 		return nullptr;
+	}
+
+	void Room::remove(Object* _object)
+	{
+		if (_object->isUpdating_)
+		{
+			_object->removeTag_ = true;
+			return;
+		}
+		else
+		{
+			objectPointerRemoveArray_[_object->kindId_].push_back(_object->objectIterator_);
+			objectPointerArray_[_object->kindId_].erase(_object->objectIterator_);
+			reviseStateArray_[_object->reviseStateId_].erase(_object->reviseStateIterator_);
+			updateStateArray_[_object->updateStateId_].erase(_object->updateStateIterator_);
+			recheckStateArray_[_object->recheckStateId_].erase(_object->recheckStateIterator_);
+			paintArray_[_object->paintId_].erase(_object->paintIterator_);
+		}
+	}
+
+	void Room::modifyObjectRevisePriority(Object* _object, double _newId)
+	{
+		reviseStateArray_[_object->reviseStateId_].erase(_object->reviseStateIterator_);
+		_object->reviseStateId_ = _newId;
+		_object->reviseStateIterator_ =
+			reviseStateArray_[_newId].insert(reviseStateArray_[_newId].end(), _object);
+	}
+
+	void Room::modifyObjectUpdatePriority(Object* _object, double _newId)
+	{
+		updateStateArray_[_object->updateStateId_].erase(_object->updateStateIterator_);
+		_object->updateStateId_ = _newId;
+		_object->updateStateIterator_ =
+			updateStateArray_[_newId].insert(updateStateArray_[_newId].end(), _object);
+	}
+
+	void Room::modifyObjectRecheckPriority(Object* _object, double _newId)
+	{
+		recheckStateArray_[_object->recheckStateId_].erase(_object->recheckStateIterator_);
+		_object->recheckStateId_ = _newId;
+		_object->recheckStateIterator_ =
+			recheckStateArray_[_newId].insert(recheckStateArray_[_newId].end(), _object);
+	}
+
+	void Room::modifyObjectPaintPriority(Object* _object, double _newId)
+	{
+		paintArray_[_object->paintId_].erase(_object->paintIterator_);
+		_object->paintId_ = _newId;
+		_object->paintIterator_ =
+			paintArray_[_newId].insert(paintArray_[_newId].end(), _object);
 	}
 
 	void Room::update()
@@ -68,7 +118,7 @@ namespace suku
 			}
 		}
 
-		for (auto& x : reviseStateArray)
+		for (auto& x : reviseStateArray_)
 			for (auto& obj : x.second)
 			{
 				if (previousObj && previousObj->removeTag_)
@@ -97,7 +147,7 @@ namespace suku
 			}
 		}
 
-		for (auto& x : updateStateArray)
+		for (auto& x : updateStateArray_)
 			for (auto& obj : x.second)
 			{
 				if (previousObj && previousObj->removeTag_)
@@ -126,7 +176,7 @@ namespace suku
 			}
 		}
 
-		for (auto& x : recheckStateArray)
+		for (auto& x : recheckStateArray_)
 			for (auto& obj : x.second)
 			{
 				if (previousObj && previousObj->removeTag_)
@@ -168,7 +218,7 @@ namespace suku
 	{
 		onPaintStart();
 
-		for (auto& x : paintArray)
+		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
 				if (!obj->onPaint())
@@ -180,7 +230,7 @@ namespace suku
 
 	void Room::additionalFramePaint(float _offset)
 	{
-		for (auto& x : paintArray)
+		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
 				float deltaX = obj->x - obj->var["xBefore"].getValue<float>();
@@ -208,7 +258,7 @@ namespace suku
 		std::list<Object*> object_painting_array[VALUE_MAXPAINT];
 		//for (j = 0; j < VALUE_MAXPAINT; j++)
 		//	object_painting_array[j].clear();
-		for (auto& i : objectPointerArray[typeid(Object).hash_code()])
+		for (auto& i : objectPointerArray_[typeid(Object).hash_code()])
 		{
 			Object* obj;
 			i >> obj;

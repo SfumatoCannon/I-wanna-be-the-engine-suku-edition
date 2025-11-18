@@ -7,7 +7,6 @@ class Room1 : public Room
 public:
 	virtual void onCreate()override
 	{
-		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
 		create(Player(0, 0))->rotate(50.0f);
@@ -28,7 +27,6 @@ public:
 
 	virtual void onCreate()override
 	{
-		objectPointerArray.clear();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
 
