@@ -188,7 +188,10 @@ namespace suku
 		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
 
 		float vspeedBefore = totalVspeed();
-		moveContactOld(tempList);
+
+		for (auto& wall : tempList)
+			moveContactOld(*wall);
+
 		if (vspeedBefore != totalVspeed())
 		{
 			vspeedTemp = totalVspeed();
@@ -482,7 +485,8 @@ namespace suku
 		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
 
 		float vspeedBefore = totalVspeed();
-		moveContactOld(tempList);
+		for (auto& wall : tempList)
+			moveContactOld(*wall);
 		if (vspeedBefore != totalVspeed())
 		{
 			vspeedTemp = totalVspeed();
@@ -513,7 +517,7 @@ namespace suku
 			die();
 			return;
 		}
-		if (auto warp = getCrashedObjectPrecisely<Warp>())
+		if (auto warp = getCrashedObject<Warp>())
 		{
 			if (warp->roomTo != nullptr)
 			{

@@ -36,10 +36,8 @@ namespace suku
 		onUpdateStart();
 
 		Object* previousObj = nullptr;
-		std::list<Object*>* objectList;
-		objectPointerArray[typecode(Object)] >> objectList;
 
-		for (auto& obj : *objectList)
+		for (auto& obj : getObjectList<Object>())
 		{
 			if (previousObj && previousObj->removeTag_)
 			{
@@ -157,7 +155,7 @@ namespace suku
 			}
 		}
 
-		for (auto& obj : *objectList)
+		for (auto& obj : getObjectList<Object>())
 		{
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
@@ -194,8 +192,8 @@ namespace suku
 
 	void Room::reset()
 	{
-		std::list<Object*>* allObjList = objectList<Object>();
-		for (auto& objPointer : *allObjList)
+		std::list<Object*> allObjList = getObjectList<Object>();
+		for (auto& objPointer : allObjList)
 		{
 			objPointer->onRestarting();
 		}

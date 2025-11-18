@@ -199,10 +199,8 @@ namespace suku
 				removeTag_ = true;
 			else
 			{
-				inRoom_->objectList<Object>()->erase(objectIterator_);
-				inRoom_->objectParentPointerArray[kindId_].erase(objectParentIterator_);
-				inRoom_->objectPointerRemoveArray[kindId_].push_back(insideObjectIterator_);
-				//inRoom_->objectPointerArray[kindId_].erase(insideObjectIterator_);
+				inRoom_->objectPointerRemoveArray[kindId_].push_back(objectIterator_);
+				inRoom_->objectPointerArray[kindId_].erase(objectIterator_);
 				inRoom_->reviseStateArray[reviseStateId_].erase(reviseStateIterator_);
 				inRoom_->updateStateArray[updateStateId_].erase(updateStateIterator_);
 				inRoom_->recheckStateArray[recheckStateId_].erase(recheckStateIterator_);

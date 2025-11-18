@@ -30,7 +30,6 @@ namespace suku
 		double paintId()const { return paintId_; }
 		size_t kind()const { return kindId_; }
 
-		template<suku_object Obj> Obj* getInsideObject();
 		void setReviseStateId(double _id);
 		void setUpdateStateId(double _id);
 		void setRecheckStateId(double _id);
@@ -106,17 +105,10 @@ namespace suku
 
 		template<suku_object Obj> Obj* selectObject(std::function<bool(Obj*)> _function);
 		template<suku_object Obj> std::list<Obj*> selectObjectList(std::function<bool(Obj*)> _function);
-		template<suku_object Obj> Obj* getCrashedObjectPrecisely(bool _isPredict = false);
-		template<suku_object Obj> Object* getCrashedObject(bool _isPredict = false);
-		template<suku_object Obj> std::list<Obj*> getCrashedObjectListPrecisely(bool _isPredict = false);
-		template<suku_object Obj> std::list<Object*> getCrashedObjectList(bool _isPredict = false);
-		template<suku_object Obj> Obj* getCrashedObjectPrecisely(float _x, float _y, bool _isPredict = false);
-		template<suku_object Obj> Object* getCrashedObject(float _x, float _y, bool _isPredict = false);
-		template<suku_object Obj> std::list<Obj*> getCrashedObjectListPrecisely(float _x, float _y, bool _isPredict = false);
-		template<suku_object Obj> std::list<Object*> getCrashedObjectList(float _x, float _y, bool _isPredict = false);
-
-		//Object* getCrashedObjectPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
-		//std::list<Object*> getCrashedObjectListPrecisely(size_t _tag, float _x, float _y, bool _isPredict = false);
+		template<suku_object Obj> Obj* getCrashedObject(bool _isPredict = false);
+		template<suku_object Obj> std::list<Obj*> getCrashedObjectList(bool _isPredict = false);
+		template<suku_object Obj> Obj* getCrashedObject(float _x, float _y, bool _isPredict = false);
+		template<suku_object Obj> std::list<Obj*> getCrashedObjectList(float _x, float _y, bool _isPredict = false);
 
 		void save();
 		void spawn();
@@ -127,8 +119,6 @@ namespace suku
 		size_t kindId_;
 		double reviseStateId_, updateStateId_, recheckStateId_, paintId_;
 		std::list<Object*>::iterator objectIterator_;
-		std::list<Object*>::iterator objectParentIterator_;
-		Var insideObjectIterator_;	//Var type: std::list<Obj*>::iterator
 		std::list<Object*>::iterator reviseStateIterator_;
 		std::list<Object*>::iterator updateStateIterator_;
 		std::list<Object*>::iterator recheckStateIterator_;

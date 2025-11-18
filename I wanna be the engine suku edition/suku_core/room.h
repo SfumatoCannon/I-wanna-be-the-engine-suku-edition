@@ -16,13 +16,12 @@ namespace suku
 
 	class Room
 	{
-
+	private:
+		template<typename Obj> void createObjectList();
 	public:
 		//std::map<size_t, std::list<Var>> objectPointerArray;
-		std::map<Typecode, Var> objectPointerArray;	//Var type: std::list<Obj*>*
-		std::map<Typecode, std::list<Object*>> objectParentPointerArray;
-		std::map<Typecode, std::list<Var>> objectPointerRemoveArray; //Var type: std::list<Obj*>::iterator
-		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectParentPointerRemoveArray;
+		std::map<Typecode, std::list<Object*>> objectPointerArray;
+		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray;
 		std::map<double, std::list<Object*>> reviseStateArray;
 		std::map<double, std::list<Object*>> updateStateArray;
 		std::map<double, std::list<Object*>> recheckStateArray;
@@ -35,14 +34,13 @@ namespace suku
 		Room();
 		void setPlayerStart(float _x, float _y);
 
-		template<typename Obj> std::list<Obj*>* objectList();
-		template<typename Obj> Obj* findObj(Obj _objectForType, size_t _pos)const;
+		template<typename Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
 
 		//Object* findObjWithPosition(int _kind, double _x, double _y);
 		//Object* findObjWithCenterPosition(int _kind, double _x, double _y);
 
-		template<typename Obj> Obj* append(const Obj* _objectPointer);
+		template<typename Obj> Obj* append(Obj* _objectPointer);
 		template<typename Obj> Obj* create(Obj& _object);
 		template<typename Obj> Obj* create(Obj&& _object);
 		template<typename Obj, typename ... ObjNext> void create(Obj _firstobject, ObjNext...	_objectnext);

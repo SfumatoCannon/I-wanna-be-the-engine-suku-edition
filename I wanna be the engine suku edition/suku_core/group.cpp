@@ -89,8 +89,8 @@ namespace suku
 
 	size_t Group::appendSelect(Room* _room, std::function<bool(Object*)> _function)
 	{
-		std::list<Object*>* objectList = _room->objectList<Object>();
-		for (auto& objPointer : *objectList)
+		std::list<Object*> objectList = _room->getObjectList<Object>();
+		for (auto& objPointer : objectList)
 		{
 			if (_function(objPointer))
 				append(objPointer);
