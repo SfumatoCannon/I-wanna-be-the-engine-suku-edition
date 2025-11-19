@@ -5,8 +5,12 @@
 #define typecode(T) typeid(T).hash_code()
 namespace suku
 {
-
 	typedef size_t Typecode;
+
+	class Vector;
+	class TypeNode;
+	class TypeTree;
+	extern TypeTree sukuObjectTypeTree;
 
 	class Vector
 	{
