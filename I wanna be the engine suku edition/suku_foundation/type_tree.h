@@ -20,7 +20,7 @@ namespace suku
 	class TypeNode
 	{
 	public:
-		size_t code = 0;
+		Typecode code = 0;
 		std::list<TypeNode*> child;
 		TypeNode* father = nullptr;
 	};
@@ -28,7 +28,7 @@ namespace suku
 	class TypeTree
 	{
 	private:
-		std::map<size_t, TypeNode*> typeMap_;
+		std::map<Typecode, TypeNode*> typeMap_;
 	public:
 		template<typename T> void append();
 
@@ -36,9 +36,9 @@ namespace suku
 
 		template<typename Son> void unlink();
 
-		template<typename T> std::list<TypeNode*> getImmediateChildrenList();
+		template<typename T> std::list<Typecode> getImmediateChildrenList();
 
-		template<typename T> std::list<TypeNode*> getAllChildrenList();
+		template<typename T> std::list<Typecode> getAllChildrenList();
 	};
 }
 

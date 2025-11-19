@@ -42,26 +42,31 @@ namespace suku
 		sonNode->father = nullptr;
 	}
 
-	template<typename T> std::list<TypeNode*> TypeTree::getImmediateChildrenList()
+	template<typename T> std::list<Typecode> TypeTree::getImmediateChildrenList()
 	{
 		TypeNode* targetNode = typeMap_[typecode(T)];
+		std::list<Typecode> resultList;
 		if (targetNode != nullptr)
-			return targetNode->child;
+		{
+			for (auto& childNode : targetNode->child)
+				resultList.push_back(childNode->code);
+			return resultList;
+		}
 		else
-			return std::list<TypeNode*>();
+			return resultList;
 	}
 
-	template<typename T> std::list<TypeNode*> TypeTree::getAllChildrenList()
+	template<typename T> std::list<Typecode> TypeTree::getAllChildrenList()
 	{
 		TypeNode* rootNode = typeMap_[typecode(T)];
+		std::list<Typecode> resultList;
 		if (rootNode == nullptr)
-			return std::list<TypeNode*>();
+			return resultList;
 
-		std::list<TypeNode*> resultList;
 		std::list<TypeNode*> searchList;
-		std::map<size_t, bool> checkMap;
+		std::map<Typecode, bool> checkMap;
 		searchList.push_back(rootNode);
-		resultList.push_back(rootNode);
+		resultList.push_back(rootNode->code);
 		checkMap[rootNode->code] = true;
 		while (!searchList.empty())
 		{
@@ -71,7 +76,7 @@ namespace suku
 				if (checkMap.find(sonNode->code) == checkMap.end())
 				{
 					searchList.push_back(sonNode);
-					resultList.push_back(sonNode);
+					resultList.push_back(sonNode->code);
 					checkMap[sonNode->code] = true;
 				}
 			searchList.erase(currentNodeIterator);
