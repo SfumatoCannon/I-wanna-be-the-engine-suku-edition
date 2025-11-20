@@ -7,7 +7,6 @@ namespace suku
 	class Object;
 	class Room;
 	extern Room* nowRoom;
-	extern TypeTree collisionInheritTree;
 
 	template<typename Father, typename Son>
 	inline void linkCollisionType();

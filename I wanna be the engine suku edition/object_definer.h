@@ -57,6 +57,7 @@ namespace suku
 
 	class Spike :public Object
 	{
+		SUKU_DERIVE(Spike, Wall);
 	public:
 		static Sprite* sprUp;
 		static Sprite* sprDown;

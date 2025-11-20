@@ -28,28 +28,28 @@ namespace suku
 			return resultList;
 		}
 
-		auto resultIter = objectPointerArray_.find(typecode(Obj));
-		if (resultIter != objectPointerArray_.end())
+		std::list<Typecode> allTypeList = suku::SukuObjectTypeTree::getInstance().getAllChildrenList<Obj>();
+		std::list<Obj*> resultList;
+		for (auto typecode : allTypeList)
 		{
-			std::list<Object*>& targetList = (*resultIter).second;
-			auto& removeList = objectPointerRemoveArray_[typecode(Obj)];
-			if (!removeList.empty())
+			auto resultIter = objectPointerArray_.find(typecode);
+			if (resultIter != objectPointerArray_.end())
 			{
-				for (auto& i : removeList)
-					targetList.erase(i);
-				removeList.clear();
+				std::list<Object*>& targetList = (*resultIter).second;
+				auto& removeList = objectPointerRemoveArray_[typecode];
+				if (!removeList.empty())
+				{
+					for (auto& i : removeList)
+						targetList.erase(i);
+					removeList.clear();
+				}
+				for (auto& object : targetList)
+				{
+					resultList.push_back(static_cast<Obj*>(object));
+				}
 			}
-			std::list<Obj*> resultList;
-			for (auto& object : targetList)
-			{
-				resultList.push_back(static_cast<Obj*>(object));
-			}
-			return resultList;
 		}
-		else
-		{
-			return std::list<Obj*>();
-		}
+		return resultList;
 	}
 
 
@@ -62,8 +62,8 @@ namespace suku
 		if (objList.empty())
 		{
 			isFirstObjInClass = true;
-			collisionInheritTree.append<Obj>();
 			createObjectList<Obj>();
+			suku::SukuObjectTypeTree::getInstance().append<Obj>();
 		}
 
 		newObj->kindId_ = typecode(Obj);
@@ -146,18 +146,5 @@ namespace suku
 	{
 		_object.setPlaceAndSave(_object.x - _object.nowState()->centerX, _object.y - _object.nowState()->centerY);
 		createFill(_object, _fillwidth, _fillheight, _footx, _footy);
-	}
-
-	template<typename Father, typename Son>
-	inline void linkCollisionType()
-	{
-		collisionInheritTree.unlink<Son>();
-		collisionInheritTree.link<Father, Son>();
-	}
-
-	template<typename Son>
-	void unlinkCollisionType()
-	{
-		collisionInheritTree.unlink<Son>();
 	}
 }

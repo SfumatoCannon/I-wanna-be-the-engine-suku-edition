@@ -3,5 +3,4 @@
 
 namespace suku
 {
-	TypeTree sukuObjectTypeTree;
 }

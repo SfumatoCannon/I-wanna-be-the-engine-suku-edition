@@ -3,14 +3,15 @@
 #include <map>
 
 #define typecode(T) typeid(T).hash_code()
+#define SUKU_DERIVE(Derived, Base) \
+	static inline TypeRegisterInheritance<Derived, Base> __suku_type_register_inheritance_instance_##Derived##_##Base {};
 namespace suku
 {
 	typedef size_t Typecode;
 
 	class Vector;
 	class TypeNode;
-	class TypeTree;
-	extern TypeTree sukuObjectTypeTree;
+	class SukuObjectTypeTree;
 
 	class Vector
 	{
@@ -29,11 +30,22 @@ namespace suku
 		TypeNode* father = nullptr;
 	};
 
-	class TypeTree
+	class SukuObjectTypeTree
 	{
 	private:
 		std::map<Typecode, TypeNode*> typeMap_;
+		SukuObjectTypeTree() {}
+
 	public:
+		static SukuObjectTypeTree& getInstance()
+		{
+			static SukuObjectTypeTree instance;
+			return instance;
+		}
+
+		SukuObjectTypeTree(const SukuObjectTypeTree&) = delete;
+		SukuObjectTypeTree& operator=(const SukuObjectTypeTree&) = delete;
+
 		template<typename T> void append();
 
 		template<typename Father, typename Son> void link();
@@ -43,6 +55,15 @@ namespace suku
 		template<typename T> std::list<Typecode> getImmediateChildrenList();
 
 		template<typename T> std::list<Typecode> getAllChildrenList();
+	};
+
+	template<typename Derived, typename Base>
+	struct TypeRegisterInheritance 
+	{
+		TypeRegisterInheritance()
+		{
+			SukuObjectTypeTree::getInstance().link<Base, Derived>();
+		}
 	};
 }
 

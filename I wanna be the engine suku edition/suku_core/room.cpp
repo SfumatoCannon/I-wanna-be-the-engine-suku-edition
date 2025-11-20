@@ -4,7 +4,6 @@
 namespace suku
 {
 	Room* nowRoom;
-	TypeTree collisionInheritTree;
 
 	std::vector<std::pair<Typecode, int>> reviseStateArray_;
 	std::vector<std::pair<Typecode, int>> updateStateArray_;

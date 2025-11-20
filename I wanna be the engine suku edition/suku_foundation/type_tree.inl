@@ -2,7 +2,7 @@
 
 namespace suku
 {
-	template<typename T> void TypeTree::append()
+	template<typename T> void SukuObjectTypeTree::append()
 	{
 		if (typeMap_[typecode(T)] == nullptr)
 		{
@@ -13,19 +13,26 @@ namespace suku
 		}
 	}
 
-	template<typename Father, typename Son> void TypeTree::link()
+	template<typename Father, typename Son> void SukuObjectTypeTree::link()
 	{
 		TypeNode* fatherNode = typeMap_[typecode(Father)];
 		TypeNode* sonNode = typeMap_[typecode(Son)];
-		if (fatherNode != nullptr && sonNode != nullptr)
+		if (fatherNode == nullptr)
 		{
-			this->unlink<Son>();
-			sonNode->father = fatherNode;
-			fatherNode->child.push_back(sonNode);
+			append<Father>();
+			fatherNode = typeMap_[typecode(Father)];
 		}
+		if (sonNode == nullptr)
+		{
+			append<Son>();
+			sonNode = typeMap_[typecode(Son)];
+		}
+		this->unlink<Son>();
+		sonNode->father = fatherNode;
+		fatherNode->child.push_back(sonNode);
 	}
 
-	template<typename Son> void TypeTree::unlink()
+	template<typename Son> void SukuObjectTypeTree::unlink()
 	{
 		TypeNode* sonNode = typeMap_[typecode(Son)];
 		if (sonNode == nullptr)
@@ -42,7 +49,7 @@ namespace suku
 		sonNode->father = nullptr;
 	}
 
-	template<typename T> std::list<Typecode> TypeTree::getImmediateChildrenList()
+	template<typename T> std::list<Typecode> SukuObjectTypeTree::getImmediateChildrenList()
 	{
 		TypeNode* targetNode = typeMap_[typecode(T)];
 		std::list<Typecode> resultList;
@@ -56,7 +63,7 @@ namespace suku
 			return resultList;
 	}
 
-	template<typename T> std::list<Typecode> TypeTree::getAllChildrenList()
+	template<typename T> std::list<Typecode> SukuObjectTypeTree::getAllChildrenList()
 	{
 		TypeNode* rootNode = typeMap_[typecode(T)];
 		std::list<Typecode> resultList;
