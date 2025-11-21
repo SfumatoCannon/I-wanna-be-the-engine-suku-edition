@@ -40,6 +40,16 @@ namespace suku
 	// End of private functions declaration
 
 
+	void Bitmap::refreshD2DBitmap()
+	{
+		if (d2dBitmapUpdateTag_)
+		{
+			release_safe(d2dBitmap_);
+			getD2DBitmap(wicBitmap_, &d2dBitmap_);
+			d2dBitmapUpdateTag_ = false;
+		}
+	}
+
 	Bitmap::Bitmap(UINT _width, UINT _height)
 	{
 		HRESULT hr = createWICBitmap(&wicBitmap_, _width, _height);
@@ -51,7 +61,7 @@ namespace suku
 			height_ = h;
 			bytesPerPixel_ = 0;
 			getPixelByte();
-			getD2DBitmap(wicBitmap_, &d2dBitmap_);
+			d2dBitmapUpdateTag_ = true;
 		}
 		else
 		{
@@ -75,7 +85,7 @@ namespace suku
 				height_ = h;
 				bytesPerPixel_ = 0;
 				getPixelByte();
-				getD2DBitmap(wicBitmap_, &d2dBitmap_);
+				d2dBitmapUpdateTag_ = true;
 				return;
 			}
 		}
@@ -99,7 +109,7 @@ namespace suku
 				height_ = h;
 				bytesPerPixel_ = 0;
 				getPixelByte();
-				getD2DBitmap(wicBitmap_, &d2dBitmap_);
+				d2dBitmapUpdateTag_ = true;
 				return;
 			}
 		}
@@ -118,6 +128,7 @@ namespace suku
 		bytesPerPixel_ = 0;
 		getPixelByte();
 		updatePixelDetail(_pixels);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	Bitmap::Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height)
@@ -128,6 +139,7 @@ namespace suku
 		bytesPerPixel_ = 0;
 		getPixelByte();
 		updatePixelDetail(_pixels, _x, _y);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	Bitmap::Bitmap(ID2D1Bitmap* _d2dBitmap)
@@ -185,7 +197,7 @@ namespace suku
 			bytesPerPixel_ = 0;
 			return;
 		}
-		_wicBitmap->AddRef();
+		addRef_safe(_wicBitmap);
 		wicBitmap_ = _wicBitmap;
 		HRESULT hr;
 		auto [w, h] = getBitmapSize(_wicBitmap, &hr);
@@ -196,7 +208,7 @@ namespace suku
 			height_ = h;
 			bytesPerPixel_ = 0;
 			getPixelByte();
-			getD2DBitmap(wicBitmap_, &d2dBitmap_);
+			d2dBitmapUpdateTag_ = true;
 		}
 		else
 		{
@@ -323,7 +335,6 @@ namespace suku
 		bytesPerPixel_ = 0;
 		if (SUCCEEDED(hr))
 		{
-			getPixelByte();
 			Color** pixelDetail = memory::new_2d<Color>(width_, height_);
 			_bitmap.getPixelDetail(&pixelDetail);
 			updatePixelDetail(pixelDetail);
@@ -354,18 +365,21 @@ namespace suku
 		return *this;
 	}
 
-	void Bitmap::paint(float _x, float _y, float _alpha)const
+	void Bitmap::paint(float _x, float _y, float _alpha)
 	{
+		refreshD2DBitmap();
 		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y));
 	}
 
-	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)const
+	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
+		refreshD2DBitmap();
 		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
 	}
 
-	void Bitmap::paint(Transform _transform, float _alpha) const
+	void Bitmap::paint(Transform _transform, float _alpha)
 	{
+		refreshD2DBitmap();
 		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)width_, (float)height_, _alpha, _transform);
 	}
 
@@ -456,8 +470,6 @@ namespace suku
 		if (_detail == nullptr || wicBitmap_ == nullptr)
 			return;
 
-		release_safe(d2dBitmap_);
-
 		UINT bytesPerPixel = getPixelByte();
 
 		IWICBitmapLock* pILock = nullptr;
@@ -500,7 +512,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		getD2DBitmap(wicBitmap_, &d2dBitmap_);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	void Bitmap::updatePixelDetail(Color** _detail, UINT _startX, UINT _startY)
@@ -551,7 +563,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		getD2DBitmap(wicBitmap_, &d2dBitmap_);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	void Bitmap::changePixelDetailRough(std::function<void(Color&)> _function)
@@ -609,8 +621,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		release_safe(d2dBitmap_);
-		getD2DBitmap(wicBitmap_, &d2dBitmap_);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	void Bitmap::changePixelDetail(std::function<void(UINT, UINT, Color&)> _function)
@@ -668,8 +679,7 @@ namespace suku
 			}
 		}
 		pILock->Release();
-		release_safe(d2dBitmap_);
-		getD2DBitmap(wicBitmap_, &d2dBitmap_);
+		d2dBitmapUpdateTag_ = true;
 	}
 
 	void Bitmap::viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const

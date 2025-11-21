@@ -44,7 +44,7 @@ namespace suku
 		void paint(Transform _paintingTransform,
 			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
 			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
-		Bitmap* paintOnBitmap(const Bitmap& _bitmap, float _x, float _y,
+		Bitmap* paintOnBitmap(Bitmap& _bitmap, float _x, float _y,
 			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
 			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
 		void paint(float _x, float _y);

@@ -134,8 +134,9 @@ namespace suku
 		}
 	}
 
-	Bitmap* Shape::paintOnBitmap(const Bitmap& _bitmap, float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
+	Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
 	{
+		_bitmap.refreshD2DBitmap();
 		if (!_bitmap.d2dBitmap_ || !currentGeometry)
 			return nullptr;
 

@@ -9,14 +9,25 @@ namespace suku
 
 	class Bitmap
 	{
+	private:
+		bool isValid_ = false;
+		UINT bytesPerPixel_ = 0;
+		UINT width_ = 0, height_ = 0;
+		ID2D1Bitmap* d2dBitmap_ = nullptr;
+		IWICBitmap* wicBitmap_ = nullptr;
+		// 目前不存在 WIC 位图版本比 D2D 位图版本旧的情况
+		bool d2dBitmapUpdateTag_ = false;
+		// bool wicBitmapUpdateTag_ = false;
+		void refreshD2DBitmap();
+		// void refreshWICBitmap();
 	public:
 		Bitmap() = default;
-		//Create an empty bitmap
+		// Create an empty bitmap
 		Bitmap(UINT _width, UINT _height);
-		//Create bitmap from file
+		// Create bitmap from file
 		Bitmap(String _url);
 		Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height);
-		//Create bitmap from Color[][]
+		// Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
 		Bitmap(ID2D1Bitmap* _d2dBitmap);
@@ -29,14 +40,14 @@ namespace suku
 
 		UINT getPixelByte();
 
-		void paint(float _x, float _y, float _alpha = 1.0f)const;
-		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f)const;
-		void paint(Transform _transform, float _alpha = 1.0f)const;
+		void paint(float _x, float _y, float _alpha = 1.0f);
+		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f);
+		void paint(Transform _transform, float _alpha = 1.0f);
 		UINT getWidth()const;
 		UINT getHeight()const;
 		std::pair<UINT, UINT> getSize()const;
 
-		//Make sure the size of color array is not smaller than the bitmap size
+		// Make sure the size of color array is not smaller than the bitmap size
 		void getPixelDetail(Color*** _pColorArray)const;
 
 		BYTE* getDataPointer()const;
@@ -48,20 +59,14 @@ namespace suku
 		void updatePixelDetail(Color** _detail, UINT _startX, UINT _startY);
 		void changePixelDetailRough(std::function<void(Color&)> _function);
 
-		//Parameters: x, y, the corresponding color of position (x,y)
+		// Parameters: x, y, the corresponding color of position (x,y)
 		void changePixelDetail(std::function<void(UINT, UINT, Color&)> _function);
 
-		//Parameters: x, y, the corresponding color of position (x,y)
+		// Parameters: x, y, the corresponding color of position (x,y)
 		void viewPixelDetail(std::function<void(UINT, UINT, const Color&)> _viewFunction)const;
 
 		friend class Shape;
 		friend class PaintLayer;
-	private:
-		bool isValid_ = false;
-		UINT bytesPerPixel_ = 0;
-		UINT width_ = 0, height_ = 0;
-		ID2D1Bitmap* d2dBitmap_ = nullptr;
-		IWICBitmap* wicBitmap_ = nullptr;
 	};
 
 	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _bitmap);
