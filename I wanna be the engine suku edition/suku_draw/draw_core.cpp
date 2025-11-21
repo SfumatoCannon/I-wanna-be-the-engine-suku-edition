@@ -9,7 +9,7 @@ namespace suku
 	ID2D1HwndRenderTarget* pMainRenderTarget = nullptr;	// Render target
 	IWICImagingFactory* pIWICFactory;
 
-	void suku_drawing_init(HWND _hWnd)
+	void suku_drawing_preinit()
 	{
 		// Init WIC resource
 		HRESULT hr = CoInitialize(nullptr);
@@ -22,10 +22,12 @@ namespace suku
 				IID_PPV_ARGS(&pIWICFactory)
 			);
 		}
+	}
 
+	void suku_drawing_postinit(HWND _hWnd)
+	{
 		// Init D2D resource
-
-		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
+		HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
 		if (FAILED(hr))
 		{
 			ERRORWINDOW_GLOBAL("Failed to create D2D factory");

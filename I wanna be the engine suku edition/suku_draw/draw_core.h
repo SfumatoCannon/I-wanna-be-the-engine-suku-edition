@@ -14,7 +14,8 @@ namespace suku
 	template<typename T>
 	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }
 
-	void suku_drawing_init(HWND _hWnd);
+	void suku_drawing_preinit();
+	void suku_drawing_postinit(HWND _hWnd);
 	void suku_drawing_uninit();
 
 	void setPaintingTransform(Transform _transform);

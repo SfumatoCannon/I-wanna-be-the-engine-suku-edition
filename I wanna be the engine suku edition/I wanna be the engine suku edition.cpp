@@ -133,7 +133,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATEFINISHED:
 		timeBeginPeriod(1);
 		suku_save_init();
-		suku_drawing_init(hWnd);
+		suku_drawing_preinit();
+		suku_drawing_postinit(hWnd);
 		soundInit();
 		init();
 		startSender();
