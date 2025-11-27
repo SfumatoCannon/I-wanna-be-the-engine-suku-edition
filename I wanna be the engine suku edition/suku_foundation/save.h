@@ -8,16 +8,29 @@
 
 namespace suku
 {
-	void suku_save_init();
+	class SaveAssetGlobal
+	{
+	private:
+		void suku_save_init();
+		SaveAssetGlobal() { suku_save_init(); }
+	public:
+		SaveAssetGlobal(const SaveAssetGlobal&) = delete;
+		void operator=(const SaveAssetGlobal&) = delete;
+		static SaveAssetGlobal& getInstance()
+		{
+			static SaveAssetGlobal instance;
+			return instance;
+		}
 
-	extern std::map<unsigned long long, std::pair<char*, size_t>> varSaveList;
-	extern std::map<unsigned long long, Var> varFinderList;
-	extern std::map<char*, unsigned long long> varIdList;
+		std::map<unsigned long long, std::pair<char*, size_t>> varSaveList;
+		std::map<unsigned long long, Var> varFinderList;
+		std::map<char*, unsigned long long> varIdList;
 
-	extern int saveFileId;
-	//extern wchar_t saveFilePath[512];
-	extern wchar_t exePath[MAX_PATH + 1];
-	extern size_t Path_len;
+		int saveFileId;
+		//extern wchar_t saveFilePath[512];
+		wchar_t exePath[MAX_PATH + 1];
+		size_t Path_len;
+	};
 
 	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
 	const wchar_t* AbsolutePath(const char* _relativePath);
@@ -35,6 +48,9 @@ namespace suku
 	inline bool setSavable(T& _x, std::string _name)
 	{
 		unsigned long long id = maths::hash(_name);
+		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
+		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
+		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
 		if (varSaveList.find(id) != varSaveList.end())
 			return false;
 		T* pointer = new T;
@@ -51,6 +67,8 @@ namespace suku
 	template<typename T>
 	inline void saveVar(T& _x)
 	{
+		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
+		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
 		Var pointerInVar = varFinderList[varIdList[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;
@@ -62,6 +80,8 @@ namespace suku
 	inline void loadVar(T& _x)
 	{
 		loadFromFile();
+		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
+		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
 		Var pointerInVar = varFinderList[varIdList[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;

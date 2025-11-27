@@ -6,17 +6,7 @@
 
 namespace suku
 {
-
-	std::map<unsigned long long, std::pair<char*, size_t>> varSaveList;
-	std::map<unsigned long long, Var> varFinderList;
-	std::map<char*, unsigned long long> varIdList;
-
-	int saveFileId;
-	//wchar_t saveFilePath[512];
-	wchar_t exePath[MAX_PATH + 1];
-	size_t Path_len;
-
-	void suku_save_init()
+	void SaveAssetGlobal::suku_save_init()
 	{
 		GetModuleFileNameW(NULL, exePath, MAX_PATH);
 		(wcsrchr(exePath, L'\\'))[1] = 0;
@@ -30,6 +20,7 @@ namespace suku
 			return _relativePath;
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
+		auto exePath = SaveAssetGlobal::getInstance().exePath;
 		lstrcatW(result, exePath);
 		lstrcatW(result, _relativePath);
 		return result;
@@ -43,6 +34,7 @@ namespace suku
 		wchar_t* wideCharRelativePath = getWideString(_relativePath);
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
+		auto exePath = SaveAssetGlobal::getInstance().exePath;
 		lstrcatW(result, exePath);
 		lstrcatW(result, wideCharRelativePath);
 		delete[] wideCharRelativePath;
@@ -74,6 +66,7 @@ namespace suku
 	void saveToFile()
 	{
 		wchar_t saveFilePath[512];
+		auto saveFileId = SaveAssetGlobal::getInstance().saveFileId;
 		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
 		std::ofstream ofs;
 		ofs.open(saveFilePath, std::ios::binary);
@@ -84,6 +77,7 @@ namespace suku
 			ofsForCreating.close();
 			ofs.open(saveFilePath, std::ios::binary);
 		}
+		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
 		for (const auto& i : varSaveList)
 		{
 			unsigned long long id = i.first;
@@ -96,6 +90,7 @@ namespace suku
 	void loadFromFile()
 	{
 		wchar_t saveFilePath[512];
+		auto saveFileId = SaveAssetGlobal::getInstance().saveFileId;
 		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
 		std::ifstream ifs;
 		ifs.open(saveFilePath, std::ios::binary);
@@ -105,6 +100,7 @@ namespace suku
 			ofsForCreating.close();
 			ifs.open(saveFilePath, std::ios::binary);
 		}
+		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
 		while (ifs.good())
 		{
 			unsigned long long id;

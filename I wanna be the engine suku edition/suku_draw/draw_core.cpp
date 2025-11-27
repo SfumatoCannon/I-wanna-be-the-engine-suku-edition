@@ -7,9 +7,8 @@ namespace suku
 {
 	ID2D1Factory* pD2DFactory = nullptr;	// Direct2D factory
 	ID2D1HwndRenderTarget* pMainRenderTarget = nullptr;	// Render target
-	IWICImagingFactory* pIWICFactory;
 
-	void suku_drawing_preinit()
+	void suku_drawing_preinit(IWICImagingFactory** ppWICFactory)
 	{
 		// Init WIC resource
 		HRESULT hr = CoInitialize(nullptr);
@@ -19,7 +18,7 @@ namespace suku
 				CLSID_WICImagingFactory1,
 				nullptr,
 				CLSCTX_INPROC_SERVER,
-				IID_PPV_ARGS(&pIWICFactory)
+				IID_PPV_ARGS(ppWICFactory)
 			);
 		}
 	}

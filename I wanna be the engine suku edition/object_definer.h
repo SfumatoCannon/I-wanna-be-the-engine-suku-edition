@@ -51,6 +51,7 @@ namespace suku
 	class Wall :public Object
 	{
 	public:
+		static Sprite testSpr;
 		static Sprite* spr;
 		Wall(float _x = 0, float _y = 0);
 	};

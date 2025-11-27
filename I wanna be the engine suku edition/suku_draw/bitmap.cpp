@@ -304,8 +304,9 @@ namespace suku
 		hr = wicBitmap_->GetPixelFormat(&pixelFormat);
 
 		IWICComponentInfo* componentInfo = nullptr;
+		auto pWICFactory = WICFactoryGlobal::getWICFactory();
 		if (SUCCEEDED(hr))
-			hr = pIWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
+			hr = pWICFactory->CreateComponentInfo(pixelFormat, &componentInfo);
 		IWICPixelFormatInfo2* pixelFormatInfo = nullptr;
 		if (SUCCEEDED(hr))
 			hr = componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
@@ -909,7 +910,8 @@ namespace suku
 		UINT					originalWidth = 0;
 		UINT					originalHeight = 0;
 
-		HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
+		auto pWICFactory = WICFactoryGlobal::getWICFactory();
+		HRESULT hr = pWICFactory->CreateDecoderFromFilename(
 			_uri,
 			nullptr,
 			GENERIC_READ,
@@ -929,7 +931,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = pIWICFactory->CreateBitmapFromSourceRect(
+			hr = pWICFactory->CreateBitmapFromSourceRect(
 				pSource, 0, 0, (UINT)originalWidth, (UINT)originalHeight, _ppWicBitmap);
 		}
 
@@ -943,7 +945,8 @@ namespace suku
 		IWICBitmapDecoder* pDecoder = nullptr;
 		IWICBitmapFrameDecode* pSource = nullptr;
 
-		HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
+		auto pWICFactory = WICFactoryGlobal::getWICFactory();
+		HRESULT hr = pWICFactory->CreateDecoderFromFilename(
 			_uri,
 			nullptr,
 			GENERIC_READ,
@@ -958,7 +961,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = pIWICFactory->CreateBitmapFromSourceRect(
+			hr = pWICFactory->CreateBitmapFromSourceRect(
 				pSource, _x, _y, _width, _height, _ppWicBitmap);
 		}
 
@@ -997,13 +1000,14 @@ namespace suku
 		UINT width = 0, height = 0;
 		HRESULT hr = S_OK;
 
+		auto pWICFactory = WICFactoryGlobal::getWICFactory();
 		if (SUCCEEDED(hr))
 		{
-			hr = pIWICFactory->CreateFormatConverter(&pConverter);
+			hr = pWICFactory->CreateFormatConverter(&pConverter);
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = pIWICFactory->CreateBitmapScaler(&pScaler);
+			hr = pWICFactory->CreateBitmapScaler(&pScaler);
 		}
 		if (SUCCEEDED(hr))
 		{
