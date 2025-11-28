@@ -8,9 +8,9 @@ namespace suku
 	// Macro for initializing a sprite
 #define SPR_INIT(sprPointer, func) static Sprite* temp_##sprPointer = sprPointer = new Sprite func;
 
-	class SpriteZero;
-	class BitmapSpriteZero;
-	class ShapeSpriteZero;
+	class SpriteElement;
+	class BitmapSpriteElement;
+	class ShapeSpriteElement;
 	class Sprite;
 
 	class CollisionBox;
@@ -20,39 +20,39 @@ namespace suku
 	class Shape;
 	class Bitmap;
 
-	class SpriteZero
+	class SpriteElement
 	{
 	public:
 		UINT height, width;
 		float centerX, centerY;
 		CollisionBox* hitArea;
-		SpriteZero() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
+		SpriteElement() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
 
 		virtual void paint(float _x, float _y,
 			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) = 0;
 		virtual void paint(float _x, float _y,
 			Transform _transform, float _alpha = 1.0) = 0;
 		virtual void paint(Transform _transform, float _alpha = 1.0) = 0;
-		bool isCrashed(Transform _transform, const SpriteZero& _other, Transform _otherTransform)const;
-		bool isCrashed(Transform _transform, const SpriteZero* _other, Transform _otherTransform)const;
+		bool isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const;
+		bool isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const;
 	};
 
-	class BitmapSpriteZero :public SpriteZero
+	class BitmapSpriteElement :public SpriteElement
 	{
 	public:
-		BitmapSpriteZero();
-		BitmapSpriteZero(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
+		BitmapSpriteElement();
+		BitmapSpriteElement(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteElement(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteElement(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 			float _centerX = 0, float _centerY = 0, String _path = String());
 
-		BitmapSpriteZero(String _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
-		BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		BitmapSpriteElement(String _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		BitmapSpriteElement(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 
 
-		BitmapSpriteZero(String _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
-		BitmapSpriteZero(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
+		BitmapSpriteElement(String _path, float _centerX = 0, float _centerY = 0, float _alphaThreshold = 0.0f);
+		BitmapSpriteElement(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 
 
@@ -69,7 +69,7 @@ namespace suku
 		Bitmap* pBitmap_;
 	};
 
-	class ShapeSpriteZero :public SpriteZero
+	class ShapeSpriteElement :public SpriteElement
 	{
 	public:
 		Shape shape;
@@ -77,12 +77,12 @@ namespace suku
 		ID2D1Brush* outlineBrush;
 		ID2D1StrokeStyle* outlineStrokeStyle;
 		float outlineWidth;
-		ShapeSpriteZero(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
+		ShapeSpriteElement(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
 			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
-		ShapeSpriteZero(const Shape& _shape, const Color& _fillColor);
-		ShapeSpriteZero(const Shape& _shape, const Color& _fillColor,
+		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor);
+		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
 			const Color& _outlineColor, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
-		~ShapeSpriteZero();
+		~ShapeSpriteElement();
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
 			float _xScale = 1.0f, float _yScale = 1.0f, float _angle = 0.0f);
@@ -102,7 +102,7 @@ namespace suku
 	class Sprite
 	{
 	public:
-		std::vector<SpriteZero*> bodyList;
+		std::vector<SpriteElement*> bodyList;
 		Sprite();
 		template<typename SprZ> Sprite(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
@@ -125,7 +125,7 @@ namespace suku
 		void setSpeed(int _speed);
 		template<typename SprZ> void push(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
-		SpriteZero* getState(int _wp);
+		SpriteElement* getState(int _wp);
 	private:
 		int flipTime_;
 	};

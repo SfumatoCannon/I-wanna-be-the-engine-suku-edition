@@ -60,15 +60,15 @@ namespace suku
 	Sprite* Warp::spr;
 	Warp::Warp(float _x, float _y, Room* _roomTo) :PlaceChanger(_x, _y, _roomTo)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\warp.png", 16, 16, 0.2f)));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f)));
 		sprite_ = spr;
 	}
 
-	Sprite Wall::testSpr(BitmapSpriteZero("Image\\wall.png"));
+	Sprite Wall::testSpr(BitmapSpriteElement("Image\\wall.png"));
 	Sprite* Wall::spr;
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		//SPR_INIT(spr, (BitmapSpriteZero("Image\\wall.png", SquareShape(32), 16, 16)));
+		//SPR_INIT(spr, (BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16)));
 		//sprite_ = spr;
 		sprite_ = &testSpr;
 		setReviseStateId(-1);
@@ -83,10 +83,10 @@ namespace suku
 	Sprite* Spike::sprRight;
 	Spike::Spike(float _x, float _y, short _dir) :Object(_x, _y)
 	{
-		SPR_INIT(sprUp, (BitmapSpriteZero("Image\\spike_u.png", 16, 16)));
-		SPR_INIT(sprDown, (BitmapSpriteZero("Image\\spike_d.png", 16, 16)));
-		SPR_INIT(sprLeft, (BitmapSpriteZero("Image\\spike_l.png", 16, 16)));
-		SPR_INIT(sprRight, (BitmapSpriteZero("Image\\spike_r.png", 16, 16)));
+		SPR_INIT(sprUp, (BitmapSpriteElement("Image\\spike_u.png", 16, 16)));
+		SPR_INIT(sprDown, (BitmapSpriteElement("Image\\spike_d.png", 16, 16)));
+		SPR_INIT(sprLeft, (BitmapSpriteElement("Image\\spike_l.png", 16, 16)));
+		SPR_INIT(sprRight, (BitmapSpriteElement("Image\\spike_r.png", 16, 16)));
 		setPaintId(3);
 		switch (_dir)
 		{
@@ -112,8 +112,8 @@ namespace suku
 	Cherry::Cherry(float _x, float _y) :Object(_x, _y)
 	{
 		SPR_INIT(spr, (25,
-			BitmapSpriteZero("Image\\cherry1.png", 10, 12),
-			BitmapSpriteZero("Image\\cherry2.png", 10, 12)));
+			BitmapSpriteElement("Image\\cherry1.png", 10, 12),
+			BitmapSpriteElement("Image\\cherry2.png", 10, 12)));
 		sprite_ = spr;
 		setPaintId(3);
 	}
@@ -121,7 +121,7 @@ namespace suku
 	Sprite* Platform::spr;
 	Platform::Platform(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\platform.png", 8, 16)));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\platform.png", 8, 16)));
 		sprite_ = spr;
 		setPaintId(2);
 	}
@@ -129,7 +129,7 @@ namespace suku
 	Sprite* Water::spr;
 	Water::Water(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\water_noextrajump.png", SquareShape(32))));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\water_noextrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		paintId_ = 4;
 	}
@@ -137,7 +137,7 @@ namespace suku
 	Sprite* WaterExtraJump::spr;
 	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\water_extrajump.png", SquareShape(32))));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\water_extrajump.png", SquareShape(32))));
 		sprite_ = spr;
 		setPaintId(4);
 	}
@@ -145,14 +145,14 @@ namespace suku
 	Sprite* Trigger::spr;
 	Trigger::Trigger(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero(32, 32, SquareShape(32), 0, 0)));
+		SPR_INIT(spr, (BitmapSpriteElement(32, 32, SquareShape(32), 0, 0)));
 		sprite_ = spr;
 	}
 
 	Sprite* VineLeft::spr;
 	VineLeft::VineLeft(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0))));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0))));
 		sprite_ = spr;
 		setPaintId(3);
 	}
@@ -160,7 +160,7 @@ namespace suku
 	Sprite* VineRight::spr;
 	VineRight::VineRight(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0))));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0))));
 		sprite_ = spr;
 		setPaintId(3);
 	}
@@ -168,7 +168,7 @@ namespace suku
 	Sprite* Blood::spr;
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteZero("Image\\blood.png", SquareShape(2))));
+		SPR_INIT(spr, (BitmapSpriteElement("Image\\blood.png", SquareShape(2))));
 		setPaintId(4);
 		hspeed = _wspeed;
 		vspeed = _hspeed;
@@ -341,7 +341,7 @@ namespace suku
 		i = 0;
 		if (!inRoom())
 			return;
-		SpriteZero* body2 = nowState();
+		SpriteElement* body2 = nowState();
 		if (!body2)
 			return;
 		while (nowBloodNum_ < 300)

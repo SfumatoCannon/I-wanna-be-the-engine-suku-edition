@@ -6,7 +6,7 @@
 namespace suku
 {
 	class Sprite;
-	class SpriteZero;
+	class SpriteElement;
 	class Room;
 	class Object;
 
@@ -49,7 +49,7 @@ namespace suku
 		Var& operator[](std::string _str);
 		Object(float _x = 0, float _y = 0);
 		//Object(Object&& _others);
-		SpriteZero* nowState()const;
+		SpriteElement* nowState()const;
 
 		void remove();
 		void destroy();

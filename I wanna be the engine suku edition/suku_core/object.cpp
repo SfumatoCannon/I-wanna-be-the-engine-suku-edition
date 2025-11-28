@@ -12,7 +12,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteZero* spr = nowState();
+		SpriteElement* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -24,7 +24,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteZero* spr = nowState();
+		SpriteElement* spr = nowState();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -49,7 +49,7 @@ namespace suku
 		y = spawnY;
 	}
 
-	SpriteZero* Object::nowState()const
+	SpriteElement* Object::nowState()const
 	{
 		if (!sprite_)
 			return nullptr;
@@ -619,7 +619,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -636,7 +636,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 			{
 				x = tx;
@@ -660,7 +660,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -676,7 +676,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -698,7 +698,7 @@ namespace suku
 				x = tx, y = ty;
 				return result;
 			}
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -715,7 +715,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteZero* body2 = nowState();
+			BitmapSpriteElement* body2 = nowState();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
