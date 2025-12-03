@@ -134,7 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		timeBeginPeriod(1);
 		//suku_save_init();
 		WICFactoryGlobal::getWICFactory();
-		//suku_drawing_preinit();
+		//suku_drawing_preinit_WIC();
 		suku_drawing_postinit(hWnd);
 		soundInit();
 		init();

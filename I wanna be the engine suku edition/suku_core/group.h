@@ -8,9 +8,6 @@ namespace suku
 
 	class Group
 	{
-	private:
-		std::list<Object*> member_;
-		std::map<Object*, std::list<Object*>::iterator> memberIterator_;
 	public:
 		Group operator&(Group& _group);
 		Group operator|(Group& _group);
@@ -28,5 +25,8 @@ namespace suku
 		void removeObj(Object* _obj);
 		Object* findObj(size_t _pos);
 		void setAction(std::function<void(Object*, int)> _function);
+	private:
+		std::list<Object*> member_;
+		std::map<Object*, std::list<Object*>::iterator> memberIterator_;
 	};
 }

@@ -9,17 +9,6 @@ namespace suku
 
 	class Bitmap
 	{
-	private:
-		bool isValid_ = false;
-		UINT bytesPerPixel_ = 0;
-		UINT width_ = 0, height_ = 0;
-		ID2D1Bitmap* d2dBitmap_ = nullptr;
-		IWICBitmap* wicBitmap_ = nullptr;
-		// 目前不存在 WIC 位图版本比 D2D 位图版本旧的情况
-		bool d2dBitmapUpdateTag_ = false;
-		// bool wicBitmapUpdateTag_ = false;
-		void refreshD2DBitmap();
-		// void refreshWICBitmap();
 	public:
 		Bitmap() = default;
 		// Create an empty bitmap
@@ -67,6 +56,17 @@ namespace suku
 
 		friend class Shape;
 		friend class PaintLayer;
+	private:
+		bool isValid_ = false;
+		UINT bytesPerPixel_ = 0;
+		UINT width_ = 0, height_ = 0;
+		ID2D1Bitmap* d2dBitmap_ = nullptr;
+		IWICBitmap* wicBitmap_ = nullptr;
+		// 目前不存在 WIC 位图版本比 D2D 位图版本旧的情况
+		bool d2dBitmapUpdateTag_ = false;
+		// bool wicBitmapUpdateTag_ = false;
+		void refreshD2DBitmap();
+		// void refreshWICBitmap();
 	};
 
 	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _bitmap);

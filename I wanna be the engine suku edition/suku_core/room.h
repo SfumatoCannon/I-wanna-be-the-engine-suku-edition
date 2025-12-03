@@ -8,21 +8,8 @@ namespace suku
 	class Room;
 	extern Room* nowRoom;
 
-	template<typename Father, typename Son>
-	inline void linkCollisionType();
-	template<typename Son>
-	void unlinkCollisionType();
-
 	class Room
 	{
-	private:
-		std::map<Typecode, std::list<Object*>> objectPointerArray_;
-		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray_;
-		std::map<double, std::list<Object*>> reviseStateArray_;
-		std::map<double, std::list<Object*>> updateStateArray_;
-		std::map<double, std::list<Object*>> recheckStateArray_;
-		std::map<double, std::list<Object*>> paintArray_;
-		template<typename Obj> void createObjectList();
 	public:
 		//std::map<size_t, std::list<Var>> objectPointerArray_;
 
@@ -69,6 +56,14 @@ namespace suku
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
+	private:
+		std::map<Typecode, std::list<Object*>> objectPointerArray_;
+		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray_;
+		std::map<double, std::list<Object*>> reviseStateArray_;
+		std::map<double, std::list<Object*>> updateStateArray_;
+		std::map<double, std::list<Object*>> recheckStateArray_;
+		std::map<double, std::list<Object*>> paintArray_;
+		template<typename Obj> void createObjectList();
 	};
 
 	void gotoRoom(Room& _room);

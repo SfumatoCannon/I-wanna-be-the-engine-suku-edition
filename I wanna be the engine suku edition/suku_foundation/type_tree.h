@@ -32,10 +32,6 @@ namespace suku
 
 	class SukuObjectTypeTree
 	{
-	private:
-		std::map<Typecode, TypeNode*> typeMap_;
-		SukuObjectTypeTree() {}
-
 	public:
 		static SukuObjectTypeTree& getInstance()
 		{
@@ -47,14 +43,14 @@ namespace suku
 		SukuObjectTypeTree& operator=(const SukuObjectTypeTree&) = delete;
 
 		template<typename T> void append();
-
 		template<typename Father, typename Son> void link();
-
 		template<typename Son> void unlink();
-
 		template<typename T> std::list<Typecode> getImmediateChildrenList();
-
 		template<typename T> std::list<Typecode> getAllChildrenList();
+
+	private:
+		std::map<Typecode, TypeNode*> typeMap_;
+		SukuObjectTypeTree() {}
 	};
 
 	template<typename Derived, typename Base>

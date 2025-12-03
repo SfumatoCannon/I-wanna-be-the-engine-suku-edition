@@ -129,18 +129,6 @@ namespace suku
 
 	class Player :public Object
 	{
-	private:
-		short nowBloodNum_;
-		short jumpTime_;
-		bool side_;
-		bool isDied_;
-		bool isOnPlatform_;
-		bool isOnFloor_;
-		bool isOnVineLeft_;
-		bool isOnVineRight_;
-
-		void die();
-		void bleed();
 	public:
 		static Sprite* sprStanding;
 		static Sprite* sprRunning;
@@ -171,6 +159,18 @@ namespace suku
 		void save();
 		void spawn();
 		bool isAlive();
+	private:
+		short nowBloodNum_;
+		short jumpTime_;
+		bool side_;
+		bool isDied_;
+		bool isOnPlatform_;
+		bool isOnFloor_;
+		bool isOnVineLeft_;
+		bool isOnVineRight_;
+
+		void die();
+		void bleed();
 	};
 
 	// .......................................................................................

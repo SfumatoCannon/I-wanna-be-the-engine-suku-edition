@@ -26,6 +26,7 @@ namespace suku
 			}
 			else
 			{
+				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 				pD2DFactory->
 					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 			}
@@ -73,7 +74,8 @@ namespace suku
 		if (_geometry)
 		{
 			_geometry->AddRef();
-			originalGeometry = _geometry;
+			originalGeometry = _geometry; 
+			auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 			pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 		}
 		else
@@ -84,6 +86,7 @@ namespace suku
 	{
 		transform = _transform;
 		release_safe(currentGeometry);
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 	}
 
@@ -225,6 +228,7 @@ namespace suku
 			}
 			else
 			{
+				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 				pD2DFactory->
 					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
 			}
@@ -254,6 +258,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
@@ -280,6 +285,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
@@ -306,6 +312,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
@@ -332,6 +339,7 @@ namespace suku
 		ID2D1GeometrySink* resGeometrySink = nullptr;
 		ID2D1PathGeometry* resGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreatePathGeometry(&resGeometry);
 		hr = resGeometry->Open(&resGeometrySink);
 		if (SUCCEEDED(hr))
@@ -358,6 +366,7 @@ namespace suku
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
@@ -376,6 +385,7 @@ namespace suku
 	{
 		ID2D1RectangleGeometry* newGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
@@ -394,6 +404,7 @@ namespace suku
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
@@ -414,6 +425,7 @@ namespace suku
 	{
 		ID2D1EllipseGeometry* newGeometry;
 		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(

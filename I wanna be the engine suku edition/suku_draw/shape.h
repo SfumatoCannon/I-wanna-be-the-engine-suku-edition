@@ -1,6 +1,5 @@
 #pragma once
-#include "../framework.h"
-#include "../suku_foundation/includes.h"
+#include <d2d1.h>
 #include "transform.h"
 
 namespace suku

@@ -5,10 +5,9 @@
 
 namespace suku
 {
-	ID2D1Factory* pD2DFactory = nullptr;	// Direct2D factory
 	ID2D1HwndRenderTarget* pMainRenderTarget = nullptr;	// Render target
 
-	void suku_drawing_preinit(IWICImagingFactory** ppWICFactory)
+	void suku_drawing_preinit_WIC(IWICImagingFactory** ppWICFactory)
 	{
 		// Init WIC resource
 		HRESULT hr = CoInitialize(nullptr);
@@ -23,20 +22,24 @@ namespace suku
 		}
 	}
 
-	void suku_drawing_postinit(HWND _hWnd)
+	void suku_drawing_preinit_D2D(ID2D1Factory** ppD2DFactory)
 	{
 		// Init D2D resource
-		HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory);
+		HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, ppD2DFactory);
 		if (FAILED(hr))
 		{
 			ERRORWINDOW_GLOBAL("Failed to create D2D factory");
+			*ppD2DFactory = nullptr;
 			return;
 		}
+	}
 
+	void suku_drawing_postinit(HWND _hWnd)
+	{
 		RECT rc;
 		GetClientRect(_hWnd, &rc);
-
-		hr = pD2DFactory->CreateHwndRenderTarget(
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
+		HRESULT hr = pD2DFactory->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(
 				_hWnd,
@@ -47,6 +50,7 @@ namespace suku
 		if (FAILED(hr))
 		{
 			ERRORWINDOW_GLOBAL("Failed to create render target");
+			pMainRenderTarget = nullptr;
 			return;
 		}
 	}
@@ -55,7 +59,6 @@ namespace suku
 	{
 		CoUninitialize();
 		release_safe(pMainRenderTarget);
-		release_safe(pD2DFactory);
 	}
 
 	void setPaintingTransform(Transform _transform)
