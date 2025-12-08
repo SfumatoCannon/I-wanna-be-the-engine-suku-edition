@@ -4,6 +4,7 @@
 
 namespace suku
 {
+	using Microsoft::WRL::ComPtr;
 
 	Shape::Shape()
 	{
@@ -27,8 +28,7 @@ namespace suku
 			else
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-				pD2DFactory->
-					CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -47,7 +47,7 @@ namespace suku
 		_x.currentGeometry.Reset();
 	}
 
-	Shape::Shape(ID2D1Geometry* _geometry, Transform _transform)
+	Shape::Shape(const ComPtr<ID2D1Geometry>& _geometry, Transform _transform)
 	{
 		originalGeometry = nullptr;
 		transform = Transform();
@@ -67,14 +67,14 @@ namespace suku
 		release_safe(currentGeometry);
 	}
 
-	void Shape::setOriginalGeometry(ID2D1Geometry* _geometry)
+	void Shape::setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry)
 	{
 		release_safe(originalGeometry);
 		release_safe(currentGeometry);
 		if (_geometry)
 		{
-			_geometry->AddRef();
-			originalGeometry.Attach(_geometry);
+			originalGeometry = _geometry;
+			originalGeometry->AddRef();
 			auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 			pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 		}
@@ -100,44 +100,44 @@ namespace suku
 
 	}
 
-	void Shape::paint(float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth,
-		ID2D1StrokeStyle* outlineStrokeStyle)
+	void Shape::paint(float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth,
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y));
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
 		}
 	}
 
-	void Shape::paint(float _x, float _y, Transform _paintingTransform, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
+	void Shape::paint(float _x, float _y, Transform _paintingTransform, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
 		}
 	}
 
-	void Shape::paint(Transform _paintingTransform, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
+	void Shape::paint(Transform _paintingTransform, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(_paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
 		}
 	}
 
-	Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* outlineStrokeStyle)
+	Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
 		_bitmap.refreshD2DBitmap();
 		if (!_bitmap.d2dBitmap_ || !currentGeometry)
@@ -159,16 +159,16 @@ namespace suku
 				nullptr,
 				1.0f,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				nullptr
+			nullptr
 			);
 
 			pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
 
 			if (_outlineBrush)
-				pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 
 			if (_fillBrush)
-				pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush);
+				pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get());
 
 			hr = pBitmapRenderTarget->EndDraw();
 
@@ -184,7 +184,7 @@ namespace suku
 			hr = pBitmapRenderTarget->GetBitmap(pBitmapResult.GetAddressOf());
 			if (SUCCEEDED(hr) && pBitmapResult)
 			{
-				resultBitmap = new Bitmap(pBitmapResult.Get());
+				resultBitmap = new Bitmap(pBitmapResult); // pass ComPtr overload
 			}
 			pBitmapRenderTarget.Reset();
 			return resultBitmap;
@@ -198,17 +198,17 @@ namespace suku
 
 	void Shape::paint(float _x, float _y)
 	{
-		paint(_x, _y, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
+		paint(_x, _y, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
 	}
 
 	void Shape::paint(float _x, float _y, Transform _paintingTransform)
 	{
-		paint(_x, _y, _paintingTransform, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
+		paint(_x, _y, _paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
 	}
 
 	void Shape::paint(Transform _paintingTransform)
 	{
-		paint(_paintingTransform, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
+		paint(_paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
 	}
 
 	bool Shape::isCrashed(Shape& _x)
@@ -237,8 +237,7 @@ namespace suku
 			else
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-				pD2DFactory->
-					CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -445,13 +444,17 @@ namespace suku
 		setTransform(_transform);
 	}
 
-	ID2D1Brush* createSolidColorBrush(const Color _color)
+	ComPtr<ID2D1Brush> createSolidColorBrush(const Color _color)
 	{
-		ID2D1SolidColorBrush* newBrush = nullptr;
-		pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_color.r(), _color.g(), _color.b(), _color.alpha),
+		ComPtr<ID2D1SolidColorBrush> newBrush;
+		HRESULT hr = pMainRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
 			&newBrush
 		);
+		if (FAILED(hr))
+			return nullptr;
+		// AddRef not needed; ComPtr takes ownership
 		return newBrush;
 	}
-}
+
+} // namespace suku

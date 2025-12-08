@@ -14,12 +14,17 @@ namespace suku
 		{
 			release_safe(pBitmapRenderTarget_);
 		}
+		ComPtr<ID2D1BitmapRenderTarget> tmpRenderTarget;
 		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
 			D2D1::SizeF((FLOAT)_width, (FLOAT)_height),
-			&pBitmapRenderTarget_
+			tmpRenderTarget.GetAddressOf()
 		);
 		if (FAILED(hr))
+		{
 			ERRORWINDOW("Failed to create compatible render target");
+			return;
+		}
+		pBitmapRenderTarget_ = std::move(tmpRenderTarget);
 	}
 
 	void PaintLayer::clear(Color _backgroundcolor)
@@ -40,20 +45,20 @@ namespace suku
 	Bitmap* PaintLayer::endDraw()
 	{
 		pBitmapRenderTarget_->EndDraw();
-		ID2D1Bitmap* pBitmap = nullptr;
-		HRESULT hr = pBitmapRenderTarget_->GetBitmap(&pBitmap);
+		ComPtr<ID2D1Bitmap> pBitmap;
+		HRESULT hr = pBitmapRenderTarget_->GetBitmap(pBitmap.GetAddressOf());
 		if (FAILED(hr))
 		{
 			ERRORWINDOW("Failed to get bitmap from bitmap render target");
 			return nullptr;
 		}
-		return new Bitmap(pBitmap);
+		return new Bitmap(pBitmap); // pass ComPtr overload
 	}
 
 	void PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
 	{
 		pBitmapRenderTarget_->SetTransform(_transform.matrix);
-		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_.Get(), 
+		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_.Get(),
 			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 	}
 

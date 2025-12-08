@@ -73,15 +73,15 @@ namespace suku
 	{
 	public:
 		Shape shape;
-		ID2D1Brush* fillBrush;
-		ID2D1Brush* outlineBrush;
-		ID2D1StrokeStyle* outlineStrokeStyle;
+		Microsoft::WRL::ComPtr<ID2D1Brush> fillBrush;
+		Microsoft::WRL::ComPtr<ID2D1Brush> outlineBrush;
+		Microsoft::WRL::ComPtr<ID2D1StrokeStyle> outlineStrokeStyle;
 		float outlineWidth;
-		ShapeSpriteElement(const Shape& _shape, ID2D1Brush* _fillBrush = nullptr,
-			ID2D1Brush* _outlineBrush = nullptr, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+		ShapeSpriteElement(const Shape& _shape, const Microsoft::WRL::ComPtr<ID2D1Brush>& _fillBrush = nullptr,
+			const Microsoft::WRL::ComPtr<ID2D1Brush>& _outlineBrush = nullptr, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
 		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor);
 		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
-			const Color& _outlineColor, float _outlineWidth = 1.0f, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+			const Color& _outlineColor, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
 		~ShapeSpriteElement();
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,

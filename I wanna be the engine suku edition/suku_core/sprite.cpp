@@ -17,18 +17,15 @@ namespace suku
 		return hitArea->isCrashed(_transform, *(_other->hitArea), _otherTransform);
 	}
 
-	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, ID2D1Brush* _fillBrush,
-		ID2D1Brush* _outlineBrush, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
+	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const ComPtr<ID2D1Brush>& _fillBrush,
+		const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle)
 	{
 		shape = _shape;
-		addRef_safe(_fillBrush);
 		fillBrush = _fillBrush;
-		addRef_safe(_outlineBrush);
 		outlineBrush = _outlineBrush;
 
 		outlineWidth = _outlineWidth;
 
-		addRef_safe(_outlineStrokeStyle);
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
@@ -36,7 +33,7 @@ namespace suku
 	{
 		shape = _shape;
 
-		ID2D1SolidColorBrush* newBrush;
+		ComPtr<ID2D1SolidColorBrush> newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
@@ -44,9 +41,7 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 		{
-			newBrush->AddRef();
 			fillBrush = newBrush;
-			newBrush->AddRef();
 			outlineBrush = newBrush;
 		}
 		else
@@ -60,11 +55,11 @@ namespace suku
 	}
 
 	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
-		const Color& _outlineColor, float _outlineWidth, ID2D1StrokeStyle* _outlineStrokeStyle)
+		const Color& _outlineColor, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle)
 	{
 		shape = _shape;
 
-		ID2D1SolidColorBrush* newBrush;
+		ComPtr<ID2D1SolidColorBrush> newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
@@ -72,7 +67,6 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 		{
-			newBrush->AddRef();
 			fillBrush = newBrush;
 		}
 		else
@@ -84,14 +78,12 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 		{
-			newBrush->AddRef();
 			outlineBrush = newBrush;
 		}
 		else
 			outlineBrush = nullptr;
 
 		outlineWidth = _outlineWidth;
-		addRef_safe(_outlineStrokeStyle);
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
@@ -128,7 +120,7 @@ namespace suku
 	{
 		if (fillBrush != nullptr)
 			release_safe(fillBrush);
-		ID2D1SolidColorBrush* newBrush;
+		ComPtr<ID2D1SolidColorBrush> newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
@@ -136,7 +128,6 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 		{
-			newBrush->AddRef();
 			fillBrush = newBrush;
 		}
 	}
@@ -145,7 +136,7 @@ namespace suku
 	{
 		if (outlineBrush != nullptr)
 			release_safe(outlineBrush);
-		ID2D1SolidColorBrush* newBrush;
+		ComPtr<ID2D1SolidColorBrush> newBrush;
 		HRESULT hr;
 		hr = pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
@@ -153,7 +144,6 @@ namespace suku
 		);
 		if (SUCCEEDED(hr))
 		{
-			newBrush->AddRef();
 			outlineBrush = newBrush;
 		}
 	}

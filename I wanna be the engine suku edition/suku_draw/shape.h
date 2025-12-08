@@ -15,43 +15,34 @@ namespace suku
 		Transform transform;
 		ComPtr<ID2D1TransformedGeometry> currentGeometry;
 		ComPtr<ID2D1Geometry> originalGeometry;
-		//ID2D1Brush* fillBrush;
-		//ID2D1Brush* outlineBrush;
-		//ID2D1StrokeStyle* outlineStrokeStyle;
-		//float outlineWidth;
-
-		//Shape& operator= (Shape& _x)const = delete;
 
 		Shape();
 		Shape(const Shape& _x);
 		Shape(Shape&& _x)noexcept;
-		Shape(ID2D1Geometry* _geometry, Transform _transform = Transform());
-		//Shape(ID2D1Geometry* _geometry, ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush,
-		//	float _edgeWidth = 1.0, ID2D1StrokeStyle* _outlineStrokeStyle = nullptr);
+		Shape(const ComPtr<ID2D1Geometry>& _geometry, Transform _transform = Transform());
 		void join();
 		~Shape();
 
-		void setOriginalGeometry(ID2D1Geometry* _geometry);
+		void setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry);
 		void setTransform(Transform _transform);
 		void setFill(Color _color);
 		void setOutline(Color _color);
 
 		void paint(float _x, float _y,
-			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
-			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(float _x, float _y, Transform _paintingTransform,
-			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
-			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(Transform _paintingTransform,
-			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
-			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		Bitmap* paintOnBitmap(Bitmap& _bitmap, float _x, float _y,
-			ID2D1Brush* _fillBrush, ID2D1Brush* _outlineBrush, float _outlineWidth = 1.0,
-			ID2D1StrokeStyle* outlineStrokeStyle = nullptr);
+			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(float _x, float _y);
 		void paint(float _x, float _y, Transform _paintingTransform);
 		void paint(Transform _paintingTransform);
-
 
 		bool isCrashed(Shape& _x);
 
@@ -99,5 +90,5 @@ namespace suku
 		EllipseShape(float _radiusX, float _radiusY, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 
-	ID2D1Brush* createSolidColorBrush(const Color _color);
+	ComPtr<ID2D1Brush> createSolidColorBrush(const Color _color);
 }

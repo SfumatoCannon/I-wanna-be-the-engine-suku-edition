@@ -17,12 +17,15 @@ namespace suku
 		Bitmap(UINT _width, UINT _height);
 		// Create bitmap from file
 		Bitmap(String _url);
+		Bitmap(const char* _url);
+		Bitmap(const wchar_t* _url);
 		Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		// Create bitmap from Color[][]
 		Bitmap(Color** _pixels, UINT _width, UINT _height);
 		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
-		Bitmap(ID2D1Bitmap* _d2dBitmap);
-		Bitmap(IWICBitmap* _wicBitmap);
+		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
+		explicit Bitmap(const ComPtr<ID2D1Bitmap>& _d2dBitmap);
+		explicit Bitmap(const ComPtr<IWICBitmap>& _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
 		Bitmap(Bitmap&& _otherBitmap)noexcept;
 		~Bitmap();
