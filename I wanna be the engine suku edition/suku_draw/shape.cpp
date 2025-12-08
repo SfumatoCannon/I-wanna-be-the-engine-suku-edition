@@ -28,7 +28,7 @@ namespace suku
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 				pD2DFactory->
-					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+					CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -41,10 +41,10 @@ namespace suku
 	Shape::Shape(Shape&& _x) noexcept
 	{
 		transform = _x.transform;
-		originalGeometry = _x.originalGeometry;
-		currentGeometry = _x.currentGeometry;
-		_x.originalGeometry = nullptr;
-		_x.currentGeometry = nullptr;
+		originalGeometry = std::move(_x.originalGeometry);
+		currentGeometry = std::move(_x.currentGeometry);
+		_x.originalGeometry.Reset();
+		_x.currentGeometry.Reset();
 	}
 
 	Shape::Shape(ID2D1Geometry* _geometry, Transform _transform)
@@ -74,9 +74,9 @@ namespace suku
 		if (_geometry)
 		{
 			_geometry->AddRef();
-			originalGeometry = _geometry; 
+			originalGeometry.Attach(_geometry);
 			auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-			pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+			pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 		}
 		else
 			originalGeometry = currentGeometry = nullptr;
@@ -87,7 +87,7 @@ namespace suku
 		transform = _transform;
 		release_safe(currentGeometry);
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+		pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 	}
 
 	void Shape::setFill(Color _color)
@@ -107,9 +107,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y));
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
 		}
 	}
 
@@ -119,9 +119,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
 		}
 	}
 
@@ -131,9 +131,9 @@ namespace suku
 		{
 			setPaintingTransform(_paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry, _fillBrush, NULL);
+				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush, NULL);
 		}
 	}
 
@@ -143,42 +143,50 @@ namespace suku
 		if (!_bitmap.d2dBitmap_ || !currentGeometry)
 			return nullptr;
 
-		ID2D1BitmapRenderTarget* pBitmapRenderTarget = nullptr;
+		ComPtr<ID2D1BitmapRenderTarget> pBitmapRenderTarget = nullptr;
 		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
 			D2D1::SizeF((FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()),
-			&pBitmapRenderTarget
+			pBitmapRenderTarget.GetAddressOf()
 		);
 
 		if (SUCCEEDED(hr) && pBitmapRenderTarget)
 		{
 			pBitmapRenderTarget->BeginDraw();
-			pBitmapRenderTarget->DrawBitmap(_bitmap.d2dBitmap_, D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()));
+			D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
+			// draw the bitmap to the compatible render target using simple overload
+			pBitmapRenderTarget->DrawBitmap(
+				_bitmap.d2dBitmap_.Get(),
+				nullptr,
+				1.0f,
+				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				nullptr
+			);
+
 			pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
 
 			if (_outlineBrush)
-				pBitmapRenderTarget->DrawGeometry(currentGeometry, _outlineBrush, _outlineWidth, outlineStrokeStyle);
+				pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush, _outlineWidth, outlineStrokeStyle);
 
 			if (_fillBrush)
-				pBitmapRenderTarget->FillGeometry(currentGeometry, _fillBrush);
+				pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush);
 
 			hr = pBitmapRenderTarget->EndDraw();
 
 			if (hr == D2DERR_RECREATE_TARGET)
 			{
 				ERRORWINDOW_GLOBAL("Render target needs to be recreated");
-				pBitmapRenderTarget->Release();
+				pBitmapRenderTarget.Reset();
 				return nullptr;
 			}
 
-			ID2D1Bitmap* pBitmapResult = nullptr;
+			ComPtr<ID2D1Bitmap> pBitmapResult = nullptr;
 			Bitmap* resultBitmap = nullptr;
-			hr = pBitmapRenderTarget->GetBitmap(&pBitmapResult);
+			hr = pBitmapRenderTarget->GetBitmap(pBitmapResult.GetAddressOf());
 			if (SUCCEEDED(hr) && pBitmapResult)
 			{
-				resultBitmap = new Bitmap(pBitmapResult);
-				pBitmapResult->Release();
+				resultBitmap = new Bitmap(pBitmapResult.Get());
 			}
-			pBitmapRenderTarget->Release();
+			pBitmapRenderTarget.Reset();
 			return resultBitmap;
 		}
 		else
@@ -190,23 +198,23 @@ namespace suku
 
 	void Shape::paint(float _x, float _y)
 	{
-		paint(_x, _y, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_x, _y, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
 	}
 
 	void Shape::paint(float _x, float _y, Transform _paintingTransform)
 	{
-		paint(_x, _y, _paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_x, _y, _paintingTransform, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
 	}
 
 	void Shape::paint(Transform _paintingTransform)
 	{
-		paint(_paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_paintingTransform, fillBrush_.Get(), outlineBrush_.Get(), outlineWidth_, outlineStrokeStyle_.Get());
 	}
 
 	bool Shape::isCrashed(Shape& _x)
 	{
 		D2D1_GEOMETRY_RELATION result;
-		currentGeometry->CompareWithGeometry(_x.currentGeometry, nullptr, &result);
+		currentGeometry->CompareWithGeometry(_x.currentGeometry.Get(), nullptr, &result);
 		if (result == D2D1_GEOMETRY_RELATION_DISJOINT)
 			return false;
 		else return true;
@@ -230,7 +238,7 @@ namespace suku
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 				pD2DFactory->
-					CreateTransformedGeometry(originalGeometry, transform.matrix, &currentGeometry);
+					CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -246,29 +254,29 @@ namespace suku
 		transform = _x.transform;
 		release_safe(originalGeometry);
 		release_safe(currentGeometry);
-		originalGeometry = _x.originalGeometry;
-		currentGeometry = _x.currentGeometry;
-		_x.originalGeometry = nullptr;
-		_x.currentGeometry = nullptr;
+		originalGeometry = std::move(_x.originalGeometry);
+		currentGeometry = std::move(_x.currentGeometry);
+		_x.originalGeometry.Reset();
+		_x.currentGeometry.Reset();
 		return (*this);
 	}
 
 	Shape Shape::operator-(const Shape& _x)
 	{
-		ID2D1GeometrySink* resGeometrySink = nullptr;
-		ID2D1PathGeometry* resGeometry;
+		ComPtr<ID2D1GeometrySink> resGeometrySink = nullptr;
+		ComPtr<ID2D1PathGeometry> resGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreatePathGeometry(&resGeometry);
-		hr = resGeometry->Open(&resGeometrySink);
+		pD2DFactory->CreatePathGeometry(resGeometry.GetAddressOf());
+		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
 			hr = currentGeometry->CombineWithGeometry(
-				_x.currentGeometry,
+				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_EXCLUDE,
 				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
-				resGeometrySink
+				resGeometrySink.Get()
 			);
 		}
 		if (SUCCEEDED(hr))
@@ -277,25 +285,25 @@ namespace suku
 		}
 		release_safe(resGeometrySink);
 
-		return Shape(resGeometry);
+		return Shape(resGeometry.Get());
 	}
 
 	Shape Shape::operator&(const Shape& _x)
 	{
-		ID2D1GeometrySink* resGeometrySink = nullptr;
-		ID2D1PathGeometry* resGeometry;
+		ComPtr<ID2D1GeometrySink> resGeometrySink = nullptr;
+		ComPtr<ID2D1PathGeometry> resGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreatePathGeometry(&resGeometry);
-		hr = resGeometry->Open(&resGeometrySink);
+		pD2DFactory->CreatePathGeometry(resGeometry.GetAddressOf());
+		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
 			hr = currentGeometry->CombineWithGeometry(
-				_x.currentGeometry,
+				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_INTERSECT,
 				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
-				resGeometrySink
+				resGeometrySink.Get()
 			);
 		}
 		if (SUCCEEDED(hr))
@@ -304,25 +312,25 @@ namespace suku
 		}
 		release_safe(resGeometrySink);
 
-		return Shape(resGeometry);
+		return Shape(resGeometry.Get());
 	}
 
 	Shape Shape::operator|(const Shape& _x)
 	{
-		ID2D1GeometrySink* resGeometrySink = nullptr;
-		ID2D1PathGeometry* resGeometry;
+		ComPtr<ID2D1GeometrySink> resGeometrySink = nullptr;
+		ComPtr<ID2D1PathGeometry> resGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreatePathGeometry(&resGeometry);
-		hr = resGeometry->Open(&resGeometrySink);
+		pD2DFactory->CreatePathGeometry(resGeometry.GetAddressOf());
+		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
 			hr = currentGeometry->CombineWithGeometry(
-				_x.currentGeometry,
+				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_UNION,
 				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
-				resGeometrySink
+				resGeometrySink.Get()
 			);
 		}
 		if (SUCCEEDED(hr))
@@ -331,25 +339,25 @@ namespace suku
 		}
 		release_safe(resGeometrySink);
 
-		return Shape(resGeometry);
+		return Shape(resGeometry.Get());
 	}
 
 	Shape Shape::operator^(const Shape& _x)
 	{
-		ID2D1GeometrySink* resGeometrySink = nullptr;
-		ID2D1PathGeometry* resGeometry;
+		ComPtr<ID2D1GeometrySink> resGeometrySink = nullptr;
+		ComPtr<ID2D1PathGeometry> resGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreatePathGeometry(&resGeometry);
-		hr = resGeometry->Open(&resGeometrySink);
+		pD2DFactory->CreatePathGeometry(resGeometry.GetAddressOf());
+		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
 			hr = currentGeometry->CombineWithGeometry(
-				_x.currentGeometry,
+				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_XOR,
 				transform.invertTransform().matrix * _x.transform.matrix,
 				NULL,
-				resGeometrySink
+				resGeometrySink.Get()
 			);
 		}
 		if (SUCCEEDED(hr))
@@ -358,13 +366,13 @@ namespace suku
 		}
 		release_safe(resGeometrySink);
 
-		return Shape(resGeometry);
+		return Shape(resGeometry.Get());
 	}
 
 	SquareShape::SquareShape(float _length, float _startX, float _startY, Transform _transform)
 		:length(_length), startX(_startX), startY(_startY)
 	{
-		ID2D1RectangleGeometry* newGeometry;
+		ComPtr<ID2D1RectangleGeometry> newGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateRectangleGeometry(
@@ -372,18 +380,17 @@ namespace suku
 				_startX, _startY,
 				_startX + _length - 1.0f, _startY + _length - 1.0f
 			),
-			&newGeometry
+			newGeometry.GetAddressOf()
 		);
 		if (SUCCEEDED(hr))
-			setOriginalGeometry(newGeometry);
+			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
-		release_safe(newGeometry);
 	}
 
 	RectangleShape::RectangleShape(float _width, float _height, float _startX, float _startY, Transform _transform)
 		:width(_width), height(_height), startX(_startX), startY(_startY)
 	{
-		ID2D1RectangleGeometry* newGeometry;
+		ComPtr<ID2D1RectangleGeometry> newGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateRectangleGeometry(
@@ -391,18 +398,17 @@ namespace suku
 				_startX, _startY,
 				_startX + _width - 1.0f, _startY + _height - 1.0f
 			),
-			&newGeometry
+			newGeometry.GetAddressOf()
 		);
 		if (SUCCEEDED(hr))
-			setOriginalGeometry(newGeometry);
+			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
-		release_safe(newGeometry);
 	}
 
 	CircleShape::CircleShape(float _radius, float _startX, float _startY, Transform _transform)
 		:radius(_radius), startX(_startX), startY(_startY)
 	{
-		ID2D1EllipseGeometry* newGeometry;
+		ComPtr<ID2D1EllipseGeometry> newGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateEllipseGeometry(
@@ -412,18 +418,17 @@ namespace suku
 				),
 				_radius, _radius
 			),
-			&newGeometry
+			newGeometry.GetAddressOf()
 		);
 		if (SUCCEEDED(hr))
-			setOriginalGeometry(newGeometry);
+			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
-		release_safe(newGeometry);
 	}
 
 	EllipseShape::EllipseShape(float _radiusX, float _radiusY, float _startX, float _startY, Transform _transform)
 		:radiusX(_radiusX), radiusY(_radiusY), startX(_startX), startY(_startY)
 	{
-		ID2D1EllipseGeometry* newGeometry;
+		ComPtr<ID2D1EllipseGeometry> newGeometry;
 		HRESULT hr;
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		hr = pD2DFactory->CreateEllipseGeometry(
@@ -433,17 +438,16 @@ namespace suku
 				),
 				_radiusX, _radiusY
 			),
-			&newGeometry
+			newGeometry.GetAddressOf()
 		);
 		if (SUCCEEDED(hr))
-			setOriginalGeometry(newGeometry);
+			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
-		release_safe(newGeometry);
 	}
 
 	ID2D1Brush* createSolidColorBrush(const Color _color)
 	{
-		ID2D1SolidColorBrush* newBrush;
+		ID2D1SolidColorBrush* newBrush = nullptr;
 		pMainRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(_color.r(), _color.g(), _color.b(), _color.alpha),
 			&newBrush

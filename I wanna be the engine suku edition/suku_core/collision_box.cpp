@@ -68,11 +68,12 @@ namespace suku
 			{
 				if (hitArea[i][j])
 				{
+					// compute a local transform so we can take address of matrix
+					Transform t = (_transform + translation((float)i, (float)j)).invertTransform() + _otherTransform;
 					pixelShape.currentGeometry->CompareWithGeometry(
 
-						_other.shape.currentGeometry,
-						((_transform + translation((float)i, (float)j)).invertTransform()
-							+ _otherTransform).matrix,
+						_other.shape.currentGeometry.Get(),
+						&t.matrix,
 						&result);
 					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
 						return true;
@@ -103,10 +104,10 @@ namespace suku
 			{
 				if (_other.hitArea[i][j])
 				{
+					Transform t = (_otherTransform + translation((float)i, (float)j)).invertTransform() + _transform;
 					pixelShape.currentGeometry->CompareWithGeometry(
-						shape.currentGeometry,
-						((_otherTransform + translation((float)i, (float)j)).invertTransform()
-							+ _transform).matrix,
+						shape.currentGeometry.Get(),
+						&t.matrix,
 						&result);
 					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
 						return true;
@@ -120,8 +121,8 @@ namespace suku
 		D2D1_GEOMETRY_RELATION result;
 		Transform targetTransform = _otherTransform * _transform.invertTransform();
 		shape.currentGeometry->CompareWithGeometry(
-			_other.shape.currentGeometry,
-			targetTransform.matrix,
+			_other.shape.currentGeometry.Get(),
+			&targetTransform.matrix,
 			&result
 		);
 		if (result != D2D1_GEOMETRY_RELATION_DISJOINT)

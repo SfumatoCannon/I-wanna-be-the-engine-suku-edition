@@ -53,7 +53,8 @@ namespace suku
 	void PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
 	{
 		pBitmapRenderTarget_->SetTransform(_transform.matrix);
-		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_, D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
+		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_.Get(), 
+			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 	}
 
 	void PaintLayer::paintShape(const Shape& _shape, Transform _transform, float _alpha)

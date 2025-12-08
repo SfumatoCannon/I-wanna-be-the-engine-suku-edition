@@ -1,9 +1,11 @@
 #pragma once
 #include <d2d1.h>
+#include <wrl/client.h>
 #include "transform.h"
 
 namespace suku
 {
+    using Microsoft::WRL::ComPtr;
 	class Bitmap;
 	class Color;
 
@@ -11,8 +13,8 @@ namespace suku
 	{
 	public:
 		Transform transform;
-		ID2D1TransformedGeometry* currentGeometry;
-		ID2D1Geometry* originalGeometry;
+		ComPtr<ID2D1TransformedGeometry> currentGeometry;
+		ComPtr<ID2D1Geometry> originalGeometry;
 		//ID2D1Brush* fillBrush;
 		//ID2D1Brush* outlineBrush;
 		//ID2D1StrokeStyle* outlineStrokeStyle;
@@ -63,10 +65,10 @@ namespace suku
 		bool operator==(const Shape& other) const = default;
 
 	private:
-		ID2D1Brush* fillBrush_ = nullptr;
-		ID2D1Brush* outlineBrush_ = nullptr;
+		ComPtr<ID2D1Brush> fillBrush_ = nullptr;
+		ComPtr<ID2D1Brush> outlineBrush_ = nullptr;
 		float outlineWidth_ = 1.0f;
-		ID2D1StrokeStyle* outlineStrokeStyle_ = nullptr;
+		ComPtr<ID2D1StrokeStyle> outlineStrokeStyle_ = nullptr;
 	};
 
 	class SquareShape :public Shape
