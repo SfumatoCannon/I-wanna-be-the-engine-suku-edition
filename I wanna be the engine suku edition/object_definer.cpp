@@ -64,13 +64,10 @@ namespace suku
 		sprite_ = spr;
 	}
 
-	Sprite Wall::testSpr(BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16));
-	Sprite* Wall::spr;
+	Sprite Wall::spr(BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16));
 	Wall::Wall(float _x, float _y) : Object(_x, _y)
 	{
-		//SPR_INIT(spr, (BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16)));
-		//sprite_ = spr;
-		sprite_ = &testSpr;
+		sprite_ = &spr;
 		setReviseStateId(-1);
 		setUpdateStateId(-1);
 		setRecheckStateId(-1);
