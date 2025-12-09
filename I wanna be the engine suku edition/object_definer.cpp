@@ -53,15 +53,14 @@ namespace suku
 {
 	PlaceChanger::PlaceChanger(float _x, float _y, Room* _roomTo) :Object(_x, _y)
 	{
-		sprite_ = Trigger::spr;
+		sprite_ = &Trigger::spr;
 		roomTo = _roomTo;
 	}
 
-	Sprite* Warp::spr;
+	Sprite Warp::spr(BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f));
 	Warp::Warp(float _x, float _y, Room* _roomTo) :PlaceChanger(_x, _y, _roomTo)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f)));
-		sprite_ = spr;
+		sprite_ = &spr;
 	}
 
 	Sprite Wall::spr(BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16));
@@ -74,102 +73,90 @@ namespace suku
 		setPaintId(2);
 	}
 
-	Sprite* Spike::sprUp;
-	Sprite* Spike::sprDown;
-	Sprite* Spike::sprLeft;
-	Sprite* Spike::sprRight;
+	Sprite Spike::sprUp(BitmapSpriteElement("Image\\spike_u.png", 16, 16));
+	Sprite Spike::sprDown(BitmapSpriteElement("Image\\spike_d.png", 16, 16));
+	Sprite Spike::sprLeft(BitmapSpriteElement("Image\\spike_l.png", 16, 16));
+	Sprite Spike::sprRight(BitmapSpriteElement("Image\\spike_r.png", 16, 16));
 	Spike::Spike(float _x, float _y, short _dir) :Object(_x, _y)
 	{
-		SPR_INIT(sprUp, (BitmapSpriteElement("Image\\spike_u.png", 16, 16)));
-		SPR_INIT(sprDown, (BitmapSpriteElement("Image\\spike_d.png", 16, 16)));
-		SPR_INIT(sprLeft, (BitmapSpriteElement("Image\\spike_l.png", 16, 16)));
-		SPR_INIT(sprRight, (BitmapSpriteElement("Image\\spike_r.png", 16, 16)));
 		setPaintId(3);
 		switch (_dir)
 		{
 		case Direction::Up:
-			sprite_ = sprUp;
+			sprite_ = &sprUp;
 			break;
 		case Direction::Down:
-			sprite_ = sprDown;
+			sprite_ = &sprDown;
 			break;
 		case Direction::Left:
-			sprite_ = sprLeft;
+			sprite_ = &sprLeft;
 			break;
 		case Direction::Right:
-			sprite_ = sprRight;
+			sprite_ = &sprRight;
 			break;
 		default:
-			sprite_ = sprUp;
+			sprite_ = &sprUp;
 			break;
 		}
 	}
 
-	Sprite* Cherry::spr;
+	Sprite Cherry::spr(25,
+		BitmapSpriteElement("Image\\cherry1.png", 10, 12),
+		BitmapSpriteElement("Image\\cherry2.png", 10, 12));
 	Cherry::Cherry(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (25,
-			BitmapSpriteElement("Image\\cherry1.png", 10, 12),
-			BitmapSpriteElement("Image\\cherry2.png", 10, 12)));
-		sprite_ = spr;
+		sprite_ = &spr;
 		setPaintId(3);
 	}
 
-	Sprite* Platform::spr;
+	Sprite Platform::spr(BitmapSpriteElement("Image\\platform.png", 8, 16));
 	Platform::Platform(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\platform.png", 8, 16)));
-		sprite_ = spr;
+		sprite_ = &spr;
 		setPaintId(2);
 	}
 
-	Sprite* Water::spr;
+	Sprite Water::spr(BitmapSpriteElement("Image\\water_noextrajump.png", SquareShape(32)));
 	Water::Water(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\water_noextrajump.png", SquareShape(32))));
-		sprite_ = spr;
-		paintId_ = 4;
-	}
-
-	Sprite* WaterExtraJump::spr;
-	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
-	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\water_extrajump.png", SquareShape(32))));
-		sprite_ = spr;
+		sprite_ = &spr;
 		setPaintId(4);
 	}
 
-	Sprite* Trigger::spr;
+	Sprite WaterExtraJump::spr(BitmapSpriteElement("Image\\water_extrajump.png", SquareShape(32)));
+	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
+	{
+		sprite_ = &spr;
+		setPaintId(4);
+	}
+
+	Sprite Trigger::spr(BitmapSpriteElement(32, 32, SquareShape(32), 0, 0));
 	Trigger::Trigger(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement(32, 32, SquareShape(32), 0, 0)));
-		sprite_ = spr;
+		sprite_ = &spr;
 	}
 
-	Sprite* VineLeft::spr;
+	Sprite VineLeft::spr(BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0)));
 	VineLeft::VineLeft(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0))));
-		sprite_ = spr;
+		sprite_ = &spr;
 		setPaintId(3);
 	}
 
-	Sprite* VineRight::spr;
+	Sprite VineRight::spr(BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0)));
 	VineRight::VineRight(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0))));
-		sprite_ = spr;
+		sprite_ = &spr;
 		setPaintId(3);
 	}
 
-	Sprite* Blood::spr;
+	Sprite Blood::spr(BitmapSpriteElement("Image\\blood.png", SquareShape(2)));
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
-		SPR_INIT(spr, (BitmapSpriteElement("Image\\blood.png", SquareShape(2))));
 		setPaintId(4);
 		hspeed = _wspeed;
 		vspeed = _hspeed;
-		sprite_ = spr;
+		sprite_ = &spr;
 		gravity = 0.2f;
 	}
 
@@ -200,19 +187,13 @@ namespace suku
 			hspeed = hspeedTemp = 0;
 	}
 
-	Sprite* Player::sprStanding;
-	Sprite* Player::sprRunning;
-	Sprite* Player::sprJumping;
-	Sprite* Player::sprFalling;
-	Sprite* Player::sprSliding;
+	Sprite Player::sprStanding("Image\\player_standing.png", 4, 5, RectangleShape(11, 21, 12, 11), 17, 23);
+	Sprite Player::sprRunning("Image\\player_running.png", 4, 2, RectangleShape(11, 21, 12, 11), 17, 23);
+	Sprite Player::sprJumping("Image\\player_jumping.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
+	Sprite Player::sprFalling("Image\\player_falling.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
+	Sprite Player::sprSliding("Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23);
 	Player::Player(float _x, float _y) :Object(_x, _y)
 	{
-		SPR_INIT(sprStanding, ("Image\\player_standing.png", 4, 5, RectangleShape(11, 21, 12, 11), 17, 23));
-		SPR_INIT(sprRunning, ("Image\\player_running.png", 4, 2, RectangleShape(11, 21, 12, 11), 17, 23));
-		SPR_INIT(sprJumping, ("Image\\player_jumping.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23));
-		SPR_INIT(sprFalling, ("Image\\player_falling.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23));
-		SPR_INIT(sprSliding, ("Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23));
-
 		isDied_ = false;
 		isOnPlatform_ = false;
 		isOnFloor_ = false;
@@ -233,7 +214,7 @@ namespace suku
 		setRecheckStateId(0);
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
-		sprite_ = sprStanding;
+		sprite_ = &sprStanding;
 	}
 
 	void Player::onAppearing()
@@ -454,19 +435,19 @@ namespace suku
 		}
 
 		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown[VK_SHIFT]))
-			sprite_ = sprJumping;
+			sprite_ = &sprJumping;
 		else if (!isOnFloor_ && totalVspeed() > (isOnPlatform_ ? 0.4 : 0))
 		{
 			if (isOnVineLeft_ || isOnVineRight_)
-				sprite_ = sprSliding;
-			else sprite_ = sprFalling;
+				sprite_ = &sprSliding;
+			else sprite_ = &sprFalling;
 		}
 		else
 		{
 			if (isKeyHolding[VK_LEFT] || isKeyHolding[VK_RIGHT])
-				sprite_ = sprRunning;
+				sprite_ = &sprRunning;
 			else
-				sprite_ = sprStanding;
+				sprite_ = &sprStanding;
 		}
 
 		//xScale = (side_ == 0 ? 1.0 : -1.0);

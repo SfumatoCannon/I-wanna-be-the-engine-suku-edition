@@ -44,7 +44,7 @@ namespace suku
 	class Warp :public PlaceChanger
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		Warp(float _x = 0, float _y = 0, Room* _roomTo = nullptr);
 	};
 
@@ -59,66 +59,66 @@ namespace suku
 	{
 		SUKU_DERIVE(Spike, Wall);
 	public:
-		static Sprite* sprUp;
-		static Sprite* sprDown;
-		static Sprite* sprLeft;
-		static Sprite* sprRight;
+		static Sprite sprUp;
+		static Sprite sprDown;
+		static Sprite sprLeft;
+		static Sprite sprRight;
 		Spike(float _x = 0, float _y = 0, short _dir = 0);
 	};
 
 	class Cherry :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		Cherry(float _x = 0, float _y = 0);
 	};
 
 	class Platform :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		Platform(float _x = 0, float _y = 0);
 	};
 
 	class VineLeft :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		VineLeft(float _x = 0, float _y = 0);
 	};
 
 	class VineRight :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		VineRight(float _x = 0, float _y = 0);
 	};
 
 	class Trigger :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		Trigger(float _x = 0, float _y = 0);
 	};
 
 	class Water :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		Water(float _x = 0, float _y = 0);
 	};
 
 	class WaterExtraJump :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		WaterExtraJump(float _x = 0, float _y = 0);
 	};
 
 	class Blood :public Object
 	{
 	public:
-		static Sprite* spr;
+		static Sprite spr;
 		float gravity;
 		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
 
@@ -129,11 +129,11 @@ namespace suku
 	class Player :public Object
 	{
 	public:
-		static Sprite* sprStanding;
-		static Sprite* sprRunning;
-		static Sprite* sprJumping;
-		static Sprite* sprFalling;
-		static Sprite* sprSliding;
+		static Sprite sprStanding;
+		static Sprite sprRunning;
+		static Sprite sprJumping;
+		static Sprite sprFalling;
+		static Sprite sprSliding;
 
 		bool isInfinityJump;
 		bool isFrozen;

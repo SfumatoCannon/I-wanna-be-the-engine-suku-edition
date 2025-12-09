@@ -1172,7 +1172,6 @@ namespace suku
     {
         if (!_ppHitArea)
             return;
-        UINT width = _bitmap.getWidth();
         _bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
             {
                 if (_color.alpha <= _alphaThreshold)
