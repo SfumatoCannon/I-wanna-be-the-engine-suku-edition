@@ -5,6 +5,7 @@
 namespace suku
 {
     using Microsoft::WRL::ComPtr;
+    using memory::Array2D;
     // Private functions declaration
     // ----------------------------------------------------------------------------
     ComPtr<ID2D1Bitmap> GetBlendedBitmapFromFile(
@@ -25,10 +26,6 @@ namespace suku
     HRESULT createWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, UINT _width, UINT _height);
     HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap>& _ppD2dBitmap);
     HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap>& _pD2dBitmap, ComPtr<IWICBitmap>& _ppWicBitmap);
-    //This will create a new piece of memory; remember to use delete_2d() to delete it after using!
-    Color** getPixelDetailFromWICBitmap(const ComPtr<IWICBitmap>& _pWicBitmap);
-    //This will create a new piece of memory; remember to use delete_2d() to delete it after using!
-    Color** getPixelDetailFromWICBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, UINT _x, UINT _y, UINT _width, UINT _height);
     std::pair<UINT, UINT> getBitmapSize(const ComPtr<IWICBitmap>& _pBitmap, HRESULT* _pHResult = nullptr);
     std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap>& _pBitmap);
     void drawBitmap(const ComPtr<ID2D1RenderTarget>& _renderTarget, const ComPtr<ID2D1Bitmap>& _pBitmap, float _x, float _y,
@@ -129,7 +126,7 @@ namespace suku
         bytesPerPixel_ = 0;
     }
 
-    Bitmap::Bitmap(Color** _pixels, UINT _width, UINT _height)
+    Bitmap::Bitmap(const Array2D<Color>& _pixels, UINT _width, UINT _height)
     {
         width_ = _width;
         height_ = _height;
@@ -142,7 +139,7 @@ namespace suku
         d2dBitmapUpdateTag_ = true;
     }
 
-    Bitmap::Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height)
+    Bitmap::Bitmap(const Array2D<Color>& _pixels, UINT _x, UINT _y, UINT _width, UINT _height)
     {
         width_ = _width;
         height_ = _height;
@@ -252,10 +249,9 @@ namespace suku
             width_ = _otherBitmap.width_;
             height_ = _otherBitmap.height_;
             getPixelByte();
-            Color** pixelDetail = memory::new_2d<Color>(width_, height_);
-            _otherBitmap.getPixelDetail(&pixelDetail);
-            updatePixelDetail(pixelDetail);
-            memory::delete_2d(pixelDetail, width_, height_);
+            Array2D<Color> pixelArray(width_, height_);
+            _otherBitmap.getPixelDetail(pixelArray);
+            updatePixelDetail(pixelArray);
         }
         else
         {
@@ -348,10 +344,9 @@ namespace suku
         bytesPerPixel_ = 0;
         if (SUCCEEDED(hr))
         {
-            Color** pixelDetail = memory::new_2d<Color>(width_, height_);
-            _bitmap.getPixelDetail(&pixelDetail);
-            updatePixelDetail(pixelDetail);
-            memory::delete_2d(pixelDetail, width_, height_);
+			Array2D<Color> pixelArray(width_, height_);
+            _bitmap.getPixelDetail(pixelArray);
+            updatePixelDetail(pixelArray);
         }
 
         return *this;
@@ -411,12 +406,8 @@ namespace suku
         return std::make_pair(width_, height_);
     }
 
-    void Bitmap::getPixelDetail(Color*** _pColorArray)const
+    void Bitmap::getPixelDetail(Array2D<Color>& _pColorArray)const
     {
-        if (_pColorArray == nullptr) {
-            WARNINGWINDOW("Pointer to store pixel detail is null");
-            return;
-        }
         if (!isValid()) {
             WARNINGWINDOW("Bitmap is not valid");
             return;
@@ -426,6 +417,9 @@ namespace suku
         WICRect rcLock = { 0, 0, (int)width_, (int)height_ };
         wicBitmap_->Lock(&rcLock, WICBitmapLockRead, pILock.GetAddressOf());
 
+        if (width_ != _pColorArray.getRows() || height_ != _pColorArray.getCols())
+			_pColorArray.resize(width_, height_);
+
         UINT stride;
         UINT cbBufferSize;
         BYTE* pv = nullptr;
@@ -433,7 +427,6 @@ namespace suku
         pILock->GetDataPointer(&cbBufferSize, &pv);
         pILock->GetStride(&stride);
 
-        Color** pixelArrayPointer = *_pColorArray;
         if (pv != nullptr)
         {
             if (bytesPerPixel_ == 3)
@@ -443,8 +436,8 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
-                        pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
-                        pixelArrayPointer[i][j].alpha = 1.0f;
+                        _pColorArray(j, i).setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
+                        _pColorArray(j, i).alpha = 1.0f;
                     }
             }
             else if (bytesPerPixel_ == 4)
@@ -454,8 +447,8 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel_;
 
-                        pixelArrayPointer[i][j].setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
-                        pixelArrayPointer[i][j].alpha = (float)(*(pixelData + 3)) / 255.0f;
+                        _pColorArray(j, i).setRGB(*(pixelData + 2), *(pixelData + 1), *pixelData);
+                        _pColorArray(j, i).alpha = (float)(*(pixelData + 3)) / 255.0f;
                     }
             }
         }
@@ -478,9 +471,9 @@ namespace suku
         return pv;
     }
 
-    void Bitmap::updatePixelDetail(Color** _detail)
+    void Bitmap::updatePixelDetail(const Array2D<Color>& _detail)
     {
-        if (_detail == nullptr || wicBitmap_ == nullptr)
+        if (_detail.isEmpty() || wicBitmap_ == nullptr)
             return;
 
         UINT bytesPerPixel = getPixelByte();
@@ -505,9 +498,9 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-                        *(pixelData + 2) = (BYTE)_detail[i][j].r();
-                        *(pixelData + 1) = (BYTE)_detail[i][j].g();
-                        *pixelData = (BYTE)_detail[i][j].b();
+                        *(pixelData + 2) = (BYTE)_detail(j, i).r();
+                        *(pixelData + 1) = (BYTE)_detail(j, i).g();
+                        *pixelData = (BYTE)_detail(j, i).b();
                     }
             }
             else if (bytesPerPixel == 4)
@@ -517,10 +510,10 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-                        *(pixelData + 3) = (BYTE)(_detail[i][j].alpha * 255.0f);
-                        *(pixelData + 2) = (BYTE)_detail[i][j].r();
-                        *(pixelData + 1) = (BYTE)_detail[i][j].g();
-                        *pixelData = (BYTE)_detail[i][j].b();
+                        *(pixelData + 3) = (BYTE)(_detail(j, i).alpha * 255.0f);
+                        *(pixelData + 2) = (BYTE)_detail(j, i).r();
+                        *(pixelData + 1) = (BYTE)_detail(j, i).g();
+                        *pixelData = (BYTE)_detail(j, i).b();
                     }
             }
         }
@@ -528,9 +521,9 @@ namespace suku
         d2dBitmapUpdateTag_ = true;
     }
 
-    void Bitmap::updatePixelDetail(Color** _detail, UINT _startX, UINT _startY)
+    void Bitmap::updatePixelDetail(const Array2D<Color>& _detail, UINT _startX, UINT _startY)
     {
-        if (_detail == nullptr || wicBitmap_ == nullptr)
+        if (_detail.isEmpty() || wicBitmap_ == nullptr)
             return;
 
         UINT bytesPerPixel = getPixelByte();
@@ -556,9 +549,9 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-                        *(pixelData + 2) = (BYTE)_detail[_startY + i][_startX + j].r();
-                        *(pixelData + 1) = (BYTE)_detail[_startY + i][_startX + j].g();
-                        *pixelData = (BYTE)_detail[_startY + i][_startX + j].b();
+                        *(pixelData + 2) = (BYTE)_detail(_startX + j, _startY + i).r();
+                        *(pixelData + 1) = (BYTE)_detail(_startX + j, _startY + i).g();
+                        *pixelData = (BYTE)_detail(_startX + j, _startY + i).b();
                     }
             }
             else if (bytesPerPixel == 4)
@@ -568,10 +561,10 @@ namespace suku
                     {
                         BYTE* pixelData = pv + i * stride + j * bytesPerPixel;
 
-                        *(pixelData + 3) = (BYTE)(_detail[_startY + i][_startX + j].alpha * 255.0f);
-                        *(pixelData + 2) = (BYTE)_detail[_startY + i][_startX + j].r();
-                        *(pixelData + 1) = (BYTE)_detail[_startY + i][_startX + j].g();
-                        *pixelData = (BYTE)_detail[_startY + i][_startX + j].b();
+                        *(pixelData + 3) = (BYTE)(_detail(_startX + j, _startY + i).alpha * 255.0f);
+                        *(pixelData + 2) = (BYTE)_detail(_startX + j, _startY + i).r();
+                        *(pixelData + 1) = (BYTE)_detail(_startX + j, _startY + i).g();
+                        *pixelData = (BYTE)_detail(_startX + j, _startY + i).b();
                     }
             }
         }
@@ -1075,76 +1068,6 @@ namespace suku
         return hr;
     }
 
-    Color** getPixelDetailFromWICBitmap(const ComPtr<IWICBitmap>& _pWicBitmap)
-    {
-        if (_pWicBitmap == nullptr)
-            return nullptr;
-        auto [width, height] = getBitmapSize(_pWicBitmap);
-        Color** pixelArrayPointer = memory::new_2d<Color>(width, height);
-        if (pixelArrayPointer != nullptr)
-        {
-            ComPtr<IWICBitmapLock> pILock = nullptr;
-            WICRect rcLock = { 0, 0, (int)width, (int)height };
-            _pWicBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
-
-            UINT cbBufferSize = 0;
-            BYTE* pv = nullptr;
-
-            pILock->GetDataPointer(&cbBufferSize, &pv);
-            if (pv)
-            {
-                for (unsigned int i = 0; i < width * 4; i += 4)
-                    for (unsigned int j = 0; j < height; j++)
-                    {
-                        UINT k = i + j * width * 4;
-                        if (k + 3 < cbBufferSize)
-                        {
-                            pixelArrayPointer[i / 4][j].setRGB(pv[k + 2], pv[k + 1], pv[k]);
-                            pixelArrayPointer[i / 4][j].alpha = (float)pv[k + 3] / 255.0f;
-                        }
-                    }
-            }
-            pILock->Release();
-        }
-        return pixelArrayPointer;
-    }
-
-    Color** getPixelDetailFromWICBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, UINT _x, UINT _y, UINT _width, UINT _height)
-    {
-        if (_pWicBitmap == nullptr)
-            return nullptr;
-        auto [width, height] = getBitmapSize(_pWicBitmap);
-        if (_x + _width > width || _y + _height > height)
-            return nullptr;
-        Color** pixelArrayPointer = memory::new_2d<Color>(_width, _height);
-        if (pixelArrayPointer != nullptr)
-        {
-            ComPtr<IWICBitmapLock> pILock = nullptr;
-            WICRect rcLock = { 0, 0, (int)width, (int)height };
-            _pWicBitmap->Lock(&rcLock, WICBitmapLockWrite, &pILock);
-
-            UINT cbBufferSize = 0;
-            BYTE* pv = nullptr;
-
-            pILock->GetDataPointer(&cbBufferSize, &pv);
-            if (pv)
-            {
-                for (unsigned int i = _x * 4; i < (_x + _width) * 4; i += 4)
-                    for (unsigned int j = _y; j < _y + _height; j++)
-                    {
-                        UINT k = i + j * width * 4;
-                        if (k + 3 < cbBufferSize)
-                        {
-                            pixelArrayPointer[i / 4 - _x][j - _y].setRGB(pv[k + 2], pv[k + 1], pv[k]);
-                            pixelArrayPointer[i / 4 - _x][j - _y].alpha = (float)pv[k + 3] / 255.0f;
-                        }
-                    }
-            }
-            pILock->Release();
-        }
-        return pixelArrayPointer;
-    }
-
     std::pair<UINT, UINT> getBitmapSize(const ComPtr<IWICBitmap>& _pBitmap, HRESULT* _pHResult)
     {
         if (!_pBitmap) return { 0,0 };
@@ -1168,15 +1091,19 @@ namespace suku
         return { width, height };
     }
 
-    void getHitAreaFromBitmap(bool** _ppHitArea, const Bitmap& _bitmap, float _alphaThreshold)
+    void getHitAreaFromBitmap(memory::Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold)
     {
-        if (!_ppHitArea)
+        auto [w, h] = _hitArea.getSize(); // rows -> width, cols -> height
+        if (w != _bitmap.getWidth() || h != _bitmap.getHeight())
+        {
+			WARNINGWINDOW_GLOBAL("The size of hit area does not match the bitmap size.");
             return;
+		}
         _bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
             {
                 if (_color.alpha <= _alphaThreshold)
-                    _ppHitArea[_x][_y] = 0;
-                else _ppHitArea[_x][_y] = 1;
+                    _hitArea(_x, _y) = 0;
+                else _hitArea(_x, _y) = 1;
             });
     }
 

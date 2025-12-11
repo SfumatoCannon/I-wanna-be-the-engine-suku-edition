@@ -12,23 +12,21 @@ namespace suku
 	class CollisionBox
 	{
 	public:
-		virtual void release() = 0;
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const = 0;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const = 0;
 		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const = 0;
 	};
 
+	using namespace suku::memory;
 	class BitmapCollisionBox :public CollisionBox
 	{
 	public:
-		bool** hitArea;
+		Array2D<bool> hitArea;
 		int hitX, hitY;
 		UINT hitWidth, hitHeight;
-		BitmapCollisionBox(bool** _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
+		BitmapCollisionBox(Array2D<bool> _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
 		BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
-
-		virtual void release()override { memory::delete_2d(hitArea, hitWidth, hitHeight); }
 
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;
@@ -42,7 +40,6 @@ namespace suku
 		ShapeCollisionBox(const Shape& _shape);
 		//~ShapeCollisionBox();
 
-		virtual void release()override { shape.originalGeometry->Release(), shape.currentGeometry->Release(); }
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const override;

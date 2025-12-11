@@ -6,6 +6,7 @@
 namespace suku
 {
     using Microsoft::WRL::ComPtr;
+	using memory::Array2D;
 	class Color;
 	class Transform;
 
@@ -20,9 +21,9 @@ namespace suku
 		Bitmap(const char* _url);
 		Bitmap(const wchar_t* _url);
 		Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height);
-		// Create bitmap from Color[][]
-		Bitmap(Color** _pixels, UINT _width, UINT _height);
-		Bitmap(Color** _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
+		// Create bitmap from Array2D<Color>
+		Bitmap(const Array2D<Color>& _pixels, UINT _width, UINT _height);
+		Bitmap(const Array2D<Color>& _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
 		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
 		explicit Bitmap(const ComPtr<ID2D1Bitmap>& _d2dBitmap);
 		explicit Bitmap(const ComPtr<IWICBitmap>& _wicBitmap);
@@ -42,15 +43,15 @@ namespace suku
 		std::pair<UINT, UINT> getSize()const;
 
 		// Make sure the size of color array is not smaller than the bitmap size
-		void getPixelDetail(Color*** _pColorArray)const;
+		void getPixelDetail(Array2D<Color>& _pColorArray)const;
 
 		BYTE* getDataPointer()const;
 
 		Bitmap& operator=(const Bitmap& _bitmap);
 		Bitmap& operator=(Bitmap&& _bitmap)noexcept;
 
-		void updatePixelDetail(Color** _detail);
-		void updatePixelDetail(Color** _detail, UINT _startX, UINT _startY);
+		void updatePixelDetail(const Array2D<Color>& _detail);
+		void updatePixelDetail(const Array2D<Color>& _detail, UINT _startX, UINT _startY);
 		void changePixelDetailRough(std::function<void(Color&)> _function);
 
 		// Parameters: x, y, the corresponding color of position (x,y)
@@ -75,5 +76,5 @@ namespace suku
 	};
 
 	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _bitmap);
-	void getHitAreaFromBitmap(bool** _ppHitArea, const Bitmap& _bitmap, float _alphaThreshold = 0.0f);
+	void getHitAreaFromBitmap(memory::Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold = 0.0f);
 }
