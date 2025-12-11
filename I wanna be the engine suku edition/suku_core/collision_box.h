@@ -24,7 +24,7 @@ namespace suku
 		Array2D<bool> hitArea;
 		int hitX, hitY;
 		UINT hitWidth, hitHeight;
-		BitmapCollisionBox(Array2D<bool> _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight);
+		BitmapCollisionBox(Array2D<bool> _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight) :hitArea(_hitArea), hitX(_hitX), hitY(_hitY), hitWidth(_hitWidth), hitHeight(_hitHeight) {}
 		BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold = 0.0f);
 		~BitmapCollisionBox();
 
@@ -37,7 +37,7 @@ namespace suku
 	{
 	public:
 		Shape shape;
-		ShapeCollisionBox(const Shape& _shape);
+		ShapeCollisionBox(const Shape& _shape) :shape(_shape) {}
 		//~ShapeCollisionBox();
 
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;

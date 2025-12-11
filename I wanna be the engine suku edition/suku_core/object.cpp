@@ -132,11 +132,6 @@ namespace suku
 		return (double)y / (double)height;
 	}
 
-	Var& Object::operator[](std::string _str)
-	{
-		return var[_str];
-	}
-
 	Object::Object(float _x, float _y)
 	{
 		var.clear();

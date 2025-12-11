@@ -11,20 +11,13 @@ namespace suku
 	class Room
 	{
 	public:
-		//std::map<size_t, std::list<Var>> objectPointerArray_;
-
 		float playerStartX, playerStartY;
 		bool hasCreated;
-		//std::list<Object*> object_painting_array[VALUE_MAXPAINT];
-
 		Room();
 		void setPlayerStart(float _x, float _y);
 
 		template<typename Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
-
-		//Object* findObjWithPosition(int _kind, double _x, double _y);
-		//Object* findObjWithCenterPosition(int _kind, double _x, double _y);
 
 		template<typename Obj> Obj* append(Obj* _objectPointer);
 		template<typename Obj> Obj* create(Obj& _object);
@@ -44,13 +37,13 @@ namespace suku
 		void modifyObjectRecheckPriority(Object* _object, double _newId);
 		void modifyObjectPaintPriority(Object* _object, double _newId);
 
-		virtual void onCreate() {};
-		virtual void onJoin() {};
-		virtual void onRestart() {};
-		virtual void onPaintStart() {};
-		virtual void onPaintEnd() {};
-		virtual void onUpdateStart() {};
-		virtual void onUpdateEnd() {};
+		virtual void onCreate() {}
+		virtual void onJoin() {}
+		virtual void onRestart() {}
+		virtual void onPaintStart() {}
+		virtual void onPaintEnd() {}
+		virtual void onUpdateStart() {}
+		virtual void onUpdateEnd() {}
 
 		void update();
 		void paint();

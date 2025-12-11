@@ -3,10 +3,6 @@
 using namespace suku::memory;
 namespace suku
 {
-	BitmapCollisionBox::BitmapCollisionBox(Array2D<bool> _hitArea, int _hitX, int _hitY, UINT _hitWidth, UINT _hitHeight)
-		:hitArea(_hitArea), hitX(_hitX), hitY(_hitY), hitWidth(_hitWidth), hitHeight(_hitHeight)
-	{
-	}
 
 	BitmapCollisionBox::BitmapCollisionBox(Bitmap* _pBitmap, float _alphaThreshold)
 	{
@@ -82,11 +78,6 @@ namespace suku
 	bool BitmapCollisionBox::isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const
 	{
 		return _other.isCrashed(_otherTransform, *this, _transform);
-	}
-
-	ShapeCollisionBox::ShapeCollisionBox(const Shape& _shape)
-	{
-		shape = _shape;
 	}
 
 	bool ShapeCollisionBox::isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const

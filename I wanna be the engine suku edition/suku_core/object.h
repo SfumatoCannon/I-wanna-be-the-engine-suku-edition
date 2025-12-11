@@ -46,9 +46,8 @@ namespace suku
 		float alpha;
 		std::map<std::string, Var> var;
 
-		Var& operator[](std::string _str);
+		Var& operator[](std::string _str) { return var[_str]; }
 		Object(float _x = 0, float _y = 0);
-		//Object(Object&& _others);
 		SpriteElement* nowState()const;
 
 		void remove();
