@@ -44,10 +44,9 @@
 
 namespace suku::input
 {
-	extern bool isKeyDown[256];
-	extern bool isKeyHolding[256];
-	extern bool isKeyUp[256];
-	extern std::queue<std::pair<UINT, WPARAM> > keyMsg;
+	bool isKeyDown(UINT8 _keyVCode);
+	bool isKeyUp(UINT8 _keyVCode);
+	bool isKeyHolding(UINT8 _keyVCode);
 	void onWindowInput(LPARAM _lParam);
 	void pushKeyMessage(UINT _message, WPARAM _wParam);
 	void keyCheck();

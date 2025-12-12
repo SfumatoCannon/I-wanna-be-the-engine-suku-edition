@@ -91,7 +91,7 @@ namespace suku
 
 	void Blood::reviseState()
 	{
-		if (input::isKeyDown[VK_R])
+		if (input::isKeyDown(VK_R))
 			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;
@@ -164,7 +164,6 @@ namespace suku
 
 	void Player::startJump()
 	{
-		//static SoundSource jump("Audio\\sndJump.wav");
 		static Sound sndJump("Audio\\sndJump.wav");
 		static Sound sndDJump("Audio\\sndDJump.wav");
 		if (!isAlive())
@@ -269,7 +268,7 @@ namespace suku
 	void Player::reviseState()
 	{
 		using namespace suku::input;
-		if (isKeyDown[VK_R])
+		if (isKeyDown(VK_R))
 		{
 			spawn();
 		}
@@ -330,40 +329,40 @@ namespace suku
 		{
 			if (isOnVineLeft_)
 			{
-				if (isKeyDown[VK_RIGHT] && isKeyHolding[VK_SHIFT])
+				if (isKeyDown(VK_RIGHT) && isKeyHolding(VK_SHIFT))
 					vineJumpRight();
-				else if (isKeyHolding[VK_RIGHT])
+				else if (isKeyHolding(VK_RIGHT))
 					moveRight();
 			}
 			else if (isOnVineRight_)
 			{
-				if (isKeyDown[VK_LEFT] && isKeyHolding[VK_SHIFT])
+				if (isKeyDown(VK_LEFT) && isKeyHolding(VK_SHIFT))
 					vineJumpLeft();
-				else if (isKeyHolding[VK_LEFT])
+				else if (isKeyHolding(VK_LEFT))
 					moveLeft();
 			}
 			else	// not on vine
 			{
-				if (isKeyHolding[VK_RIGHT])
+				if (isKeyHolding(VK_RIGHT))
 				{
 					side_ = Direction::Right;
 					moveRight();
 				}
-				else if (isKeyHolding[VK_LEFT])
+				else if (isKeyHolding(VK_LEFT))
 				{
 					side_ = Direction::Left;
 					moveLeft();
 				}
 			}
-			if (isKeyDown[VK_S])
+			if (isKeyDown(VK_S))
 				save();
-			if (isKeyDown[VK_SHIFT])
+			if (isKeyDown(VK_SHIFT))
 				startJump();
-			if (isKeyUp[VK_SHIFT])
+			if (isKeyUp(VK_SHIFT))
 				stopJump();
 		}
 
-		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown[VK_SHIFT]))
+		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown(VK_SHIFT)))
 			sprite_ = &sprJumping;
 		else if (!isOnFloor_ && totalVspeed() > (isOnPlatform_ ? 0.4 : 0))
 		{
@@ -373,7 +372,7 @@ namespace suku
 		}
 		else
 		{
-			if (isKeyHolding[VK_LEFT] || isKeyHolding[VK_RIGHT])
+			if (isKeyHolding(VK_LEFT) || isKeyHolding(VK_RIGHT))
 				sprite_ = &sprRunning;
 			else
 				sprite_ = &sprStanding;

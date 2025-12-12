@@ -57,7 +57,7 @@ void updateWork()
 	{
 		suku::input::keyCheck();
 
-		if (suku::input::isKeyDown[VK_ESCAPE] && !gameEndFlag)
+		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
 		else
 		{
