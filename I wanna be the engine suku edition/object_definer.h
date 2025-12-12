@@ -34,25 +34,48 @@ namespace suku
 		Bitmap picture;
 	};
 
+	class Trigger :public Object
+	{
+	public:
+		inline static Sprite spr{ BitmapSpriteElement(32, 32, SquareShape(32), 0, 0) };
+		Trigger(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+		}
+	};
+
 	class PlaceChanger :public Object
 	{
 	public:
 		Room* roomTo;
-		PlaceChanger(float _x = 0, float _y = 0, Room* _roomTo = nullptr);
+		PlaceChanger(float _x = 0, float _y = 0, Room* _roomTo = nullptr) : Object(_x, _y), roomTo(_roomTo)
+		{
+			sprite_ = &Trigger::spr;
+		}
 	};
 
 	class Warp :public PlaceChanger
 	{
 	public:
-		static Sprite spr;
-		Warp(float _x = 0, float _y = 0, Room* _roomTo = nullptr);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f) };
+		Warp(float _x = 0, float _y = 0, Room* _roomTo = nullptr) : PlaceChanger(_x, _y, _roomTo)
+		{
+			sprite_ = &spr;
+		}
 	};
 
 	class Wall :public Object
 	{
 	public:
-		static Sprite spr;
-		Wall(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16) };
+		Wall(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setReviseStateId(-1);
+			setUpdateStateId(-1);
+			setRecheckStateId(-1);
+			setPaintId(2);
+		}
 	};
 
 	class Spike :public Object
@@ -69,50 +92,69 @@ namespace suku
 	class Cherry :public Object
 	{
 	public:
-		static Sprite spr;
-		Cherry(float _x = 0, float _y = 0);
+		inline static Sprite spr{ 25,
+			BitmapSpriteElement("Image\\cherry1.png", 10, 12),
+			BitmapSpriteElement("Image\\cherry2.png", 10, 12) };
+		Cherry(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(3);
+		}
 	};
 
 	class Platform :public Object
 	{
 	public:
-		static Sprite spr;
-		Platform(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\platform.png", 8, 16) };
+		Platform(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(2);
+		}
 	};
 
 	class VineLeft :public Object
 	{
 	public:
-		static Sprite spr;
-		VineLeft(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0)) };
+		VineLeft(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(3);
+		}
 	};
 
 	class VineRight :public Object
 	{
 	public:
-		static Sprite spr;
-		VineRight(float _x = 0, float _y = 0);
-	};
-
-	class Trigger :public Object
-	{
-	public:
-		static Sprite spr;
-		Trigger(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0)) };
+		VineRight(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(3);
+		}
 	};
 
 	class Water :public Object
 	{
 	public:
-		static Sprite spr;
-		Water(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\water_noextrajump.png", SquareShape(32)) };
+		Water(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(4);
+		}
 	};
 
 	class WaterExtraJump :public Object
 	{
 	public:
-		static Sprite spr;
-		WaterExtraJump(float _x = 0, float _y = 0);
+		inline static Sprite spr{ BitmapSpriteElement("Image\\water_extrajump.png", SquareShape(32)) };
+		WaterExtraJump(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			setPaintId(4);
+		}
 	};
 
 	class Blood :public Object

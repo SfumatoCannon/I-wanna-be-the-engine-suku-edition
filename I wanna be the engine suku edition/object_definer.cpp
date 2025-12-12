@@ -51,27 +51,6 @@ void loadFromJtoolMsg(suku::Room* room, std::string msg)
 
 namespace suku
 {
-	PlaceChanger::PlaceChanger(float _x, float _y, Room* _roomTo) :Object(_x, _y)
-	{
-		sprite_ = &Trigger::spr;
-		roomTo = _roomTo;
-	}
-
-	Sprite Warp::spr(BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f));
-	Warp::Warp(float _x, float _y, Room* _roomTo) :PlaceChanger(_x, _y, _roomTo)
-	{
-		sprite_ = &spr;
-	}
-
-	Sprite Wall::spr(BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16));
-	Wall::Wall(float _x, float _y) : Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setReviseStateId(-1);
-		setUpdateStateId(-1);
-		setRecheckStateId(-1);
-		setPaintId(2);
-	}
 
 	Sprite Spike::sprUp(BitmapSpriteElement("Image\\spike_u.png", 16, 16));
 	Sprite Spike::sprDown(BitmapSpriteElement("Image\\spike_d.png", 16, 16));
@@ -98,56 +77,6 @@ namespace suku
 			sprite_ = &sprUp;
 			break;
 		}
-	}
-
-	Sprite Cherry::spr(25,
-		BitmapSpriteElement("Image\\cherry1.png", 10, 12),
-		BitmapSpriteElement("Image\\cherry2.png", 10, 12));
-	Cherry::Cherry(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(3);
-	}
-
-	Sprite Platform::spr(BitmapSpriteElement("Image\\platform.png", 8, 16));
-	Platform::Platform(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(2);
-	}
-
-	Sprite Water::spr(BitmapSpriteElement("Image\\water_noextrajump.png", SquareShape(32)));
-	Water::Water(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(4);
-	}
-
-	Sprite WaterExtraJump::spr(BitmapSpriteElement("Image\\water_extrajump.png", SquareShape(32)));
-	WaterExtraJump::WaterExtraJump(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(4);
-	}
-
-	Sprite Trigger::spr(BitmapSpriteElement(32, 32, SquareShape(32), 0, 0));
-	Trigger::Trigger(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-	}
-
-	Sprite VineLeft::spr(BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0)));
-	VineLeft::VineLeft(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(3);
-	}
-
-	Sprite VineRight::spr(BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0)));
-	VineRight::VineRight(float _x, float _y) :Object(_x, _y)
-	{
-		sprite_ = &spr;
-		setPaintId(3);
 	}
 
 	Sprite Blood::spr(BitmapSpriteElement("Image\\blood.png", SquareShape(2)));
