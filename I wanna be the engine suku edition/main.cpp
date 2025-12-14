@@ -51,13 +51,9 @@ public:
 	{
 		auto brush = createSolidColorBrush(Color(255, 255, 255, 255));
 		auto brush2 = createSolidColorBrush(Color(0, 0, 0, 255));
-		Shape A(SquareShape(4));
+		Shape A(SquareShape(64));
 		Bitmap B("Image\\bg.jpg");
-		Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
-		if (C) {
-			C->paint(0, 0);
-			delete C;
-		}
+		// Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
 	}
 }room0;
 
