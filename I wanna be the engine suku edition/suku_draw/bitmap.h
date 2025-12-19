@@ -94,6 +94,9 @@ namespace suku
 		RenderBitmap(RenderBitmap&& _otherBitmap)noexcept : d2dBitmap_(std::move(_otherBitmap.d2dBitmap_)) {}
 
 		ComPtr<ID2D1Bitmap> getD2DBitmap() { return d2dBitmap_; }
+		UINT getWidth()const;
+		UINT getHeight()const;
+		std::pair<UINT, UINT> getSize()const { return { getWidth(), getHeight() }; }
 
 		void paint() const;
 

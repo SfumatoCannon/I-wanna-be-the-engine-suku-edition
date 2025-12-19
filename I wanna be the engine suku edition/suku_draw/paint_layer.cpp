@@ -17,6 +17,8 @@ namespace suku
 		{
 			release_safe(pBitmapRenderTarget_);
 		}
+		width_ = _width;
+		height_ = _height;
 		ComPtr<ID2D1BitmapRenderTarget> tmpRenderTarget;
 		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
 			D2D1::SizeF((FLOAT)_width, (FLOAT)_height),
@@ -59,6 +61,13 @@ namespace suku
 	}
 
 	void PaintLayer::drawBitmap(Bitmap& _bitmap, Transform _transform, float _alpha)
+	{
+		pBitmapRenderTarget_->SetTransform(_transform.matrix);
+		pBitmapRenderTarget_->DrawBitmap(_bitmap.getD2DBitmap().Get(),
+			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
+	}
+
+	void PaintLayer::drawBitmap(RenderBitmap& _bitmap, Transform _transform, float _alpha)
 	{
 		pBitmapRenderTarget_->SetTransform(_transform.matrix);
 		pBitmapRenderTarget_->DrawBitmap(_bitmap.getD2DBitmap().Get(),

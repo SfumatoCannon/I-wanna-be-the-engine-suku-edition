@@ -987,14 +987,14 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap>& _pD2dBitmap, ComPtr<IWICBitmap>& _ppWicBitmap)
+	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap>& _d2dBitmap, ComPtr<IWICBitmap>& _wicBitmap)
 	{
-		if (!_pD2dBitmap || !_ppWicBitmap.GetAddressOf())
+		if (!_d2dBitmap || !_wicBitmap.GetAddressOf())
 			return E_POINTER;
 
-		_ppWicBitmap = nullptr;
+		_wicBitmap = nullptr;
 
-		D2D1_SIZE_U size = _pD2dBitmap->GetPixelSize();
+		D2D1_SIZE_U size = _d2dBitmap->GetPixelSize();
 		HRESULT hr;
 
 		ComPtr<IWICBitmap> pWicBitmap = nullptr;
@@ -1007,20 +1007,20 @@ namespace suku
 
 		hr = pDstD2dBitmap->CopyFromBitmap(
 			nullptr,
-			_pD2dBitmap.Get(),
+			_d2dBitmap.Get(),
 			nullptr
 		);
 
 		if (SUCCEEDED(hr))
 		{
-			_ppWicBitmap = pWicBitmap.Detach();
+			_wicBitmap = pWicBitmap.Detach();
 		}
 		else
 		{
-			// pWicBitmap will be released by ComPtr destructor
+			WARNINGWINDOW_GLOBAL("Failed to copy WIC bitmap from D2D bitmap");
+			_wicBitmap = nullptr;
 		}
 
-		// pDstD2dBitmap will be released by ComPtr destructor
 		return hr;
 	}
 
@@ -1098,6 +1098,20 @@ namespace suku
 			),
 			_alpha
 		);
+	}
+
+	UINT RenderBitmap::getWidth() const
+	{
+		if (d2dBitmap_ == nullptr)
+			return 0;
+		return d2dBitmap_->GetPixelSize().width;
+	}
+
+	UINT RenderBitmap::getHeight() const
+	{
+		if (d2dBitmap_ == nullptr)
+			return 0;
+		return d2dBitmap_->GetPixelSize().height;
 	}
 
 	void RenderBitmap::paint() const
