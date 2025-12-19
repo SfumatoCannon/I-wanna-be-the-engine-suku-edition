@@ -78,9 +78,9 @@ void paintWork()
 	{
 		if (!gameEndFlag)
 		{
-			beginDraw(suku::GameWindow::hWnd);
+			beginDrawGlobal();
 			nowRoom->paint();
-			endDraw();
+			endDrawGlobal();
 		}
 		threadLock.unlock();
 	}

@@ -1,5 +1,8 @@
 #include "paint_layer.h"
-#include "includes.h"
+#include "bitmap.h"
+#include "draw_core.h"
+#include "shape.h"
+#include "transform.h"
 
 namespace suku
 {
@@ -27,6 +30,24 @@ namespace suku
 		pBitmapRenderTarget_ = std::move(tmpRenderTarget);
 	}
 
+	void PaintLayer::beginDraw()
+	{
+		pBitmapRenderTarget_->BeginDraw();
+	}
+
+	RenderBitmap PaintLayer::endDraw()
+	{
+		pBitmapRenderTarget_->EndDraw();
+		ComPtr<ID2D1Bitmap> pBitmap;
+		HRESULT hr = pBitmapRenderTarget_->GetBitmap(pBitmap.GetAddressOf());
+		if (FAILED(hr))
+		{
+			ERRORWINDOW("Failed to get bitmap from bitmap render target");
+			return RenderBitmap();
+		}
+		return RenderBitmap(pBitmap);
+	}
+
 	void PaintLayer::clear(Color _backgroundcolor)
 	{
 		pBitmapRenderTarget_->Clear(D2D1::ColorF(
@@ -37,33 +58,20 @@ namespace suku
 		));
 	}
 
-	void PaintLayer::beginDraw()
-	{
-		pBitmapRenderTarget_->BeginDraw();
-	}
-
-	Bitmap* PaintLayer::endDraw()
-	{
-		pBitmapRenderTarget_->EndDraw();
-		ComPtr<ID2D1Bitmap> pBitmap;
-		HRESULT hr = pBitmapRenderTarget_->GetBitmap(pBitmap.GetAddressOf());
-		if (FAILED(hr))
-		{
-			ERRORWINDOW("Failed to get bitmap from bitmap render target");
-			return nullptr;
-		}
-		return new Bitmap(pBitmap); // pass ComPtr overload
-	}
-
-	void PaintLayer::paintBitmap(const Bitmap& _bitmap, Transform _transform, float _alpha)
+	void PaintLayer::drawBitmap(Bitmap& _bitmap, Transform _transform, float _alpha)
 	{
 		pBitmapRenderTarget_->SetTransform(_transform.matrix);
-		pBitmapRenderTarget_->DrawBitmap(_bitmap.d2dBitmap_.Get(),
+		pBitmapRenderTarget_->DrawBitmap(_bitmap.getD2DBitmap().Get(),
 			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 	}
 
-	void PaintLayer::paintShape(const Shape& _shape, Transform _transform, float _alpha)
+	void PaintLayer::drawShape(const Shape& _shape, Transform _transform,
+		const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
-		// WIP
+		pBitmapRenderTarget_->SetTransform(_transform.matrix);
+		if (_outlineBrush)
+			pBitmapRenderTarget_->DrawGeometry(_shape.currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+		if (_fillBrush)
+			pBitmapRenderTarget_->FillGeometry(_shape.currentGeometry.Get(), _fillBrush.Get());
 	}
 }

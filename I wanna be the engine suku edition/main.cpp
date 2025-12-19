@@ -53,7 +53,14 @@ public:
 		auto brush2 = createSolidColorBrush(Color(0, 0, 0, 255));
 		Shape A(SquareShape(64));
 		Bitmap B("Image\\bg.jpg");
-		// Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
+		//Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
+		static PaintLayer layer;
+		layer.newLayer(800, 608);
+		layer.beginDraw();
+		layer.clear(Color::WHITE());
+		layer.drawBitmap(B, translation(0, 0), 0.5f);
+		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
+		layer.endDraw().paint();
 	}
 }room0;
 

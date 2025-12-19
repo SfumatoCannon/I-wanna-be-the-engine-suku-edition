@@ -78,13 +78,13 @@ namespace suku
 		pMainRenderTarget->SetTransform(_transform.matrix);
 	}
 
-	void beginDraw(HWND hWnd)
+	void beginDrawGlobal()
 	{
 		pMainRenderTarget->BeginDraw();
 		pMainRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
-	void endDraw()
+	void endDrawGlobal()
 	{
 		pMainRenderTarget->EndDraw();
 	}

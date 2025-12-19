@@ -1,7 +1,8 @@
 #pragma once
 #include <wrl/client.h>
 #include "../framework.h"
-#include "../suku_foundation/includes.h"
+#include "../suku_foundation/memory.h"
+#include "../suku_foundation/string.h"
 
 namespace suku
 {
@@ -9,6 +10,8 @@ namespace suku
 	using memory::Array2D;
 	class Color;
 	class Transform;
+	class Bitmap;
+	class RenderBitmap;
 
 	class Bitmap
 	{
@@ -18,15 +21,15 @@ namespace suku
 		Bitmap(UINT _width, UINT _height);
 		// Create bitmap from file
 		Bitmap(String _url);
-		Bitmap(const char* _url);
-		Bitmap(const wchar_t* _url);
+		Bitmap(const char* _url) : Bitmap(String(_url)) {}
+		Bitmap(const wchar_t* _url) : Bitmap(String(_url)) {}
 		Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height);
 		// Create bitmap from Array2D<Color>
 		Bitmap(const Array2D<Color>& _pixels, UINT _width, UINT _height);
 		Bitmap(const Array2D<Color>& _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
 		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
-		explicit Bitmap(const ComPtr<ID2D1Bitmap>& _d2dBitmap);
-		explicit Bitmap(const ComPtr<IWICBitmap>& _wicBitmap);
+		explicit Bitmap(ComPtr<ID2D1Bitmap> _d2dBitmap);
+		explicit Bitmap(ComPtr<IWICBitmap> _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
 		Bitmap(Bitmap&& _otherBitmap)noexcept;
 		~Bitmap();
@@ -34,6 +37,8 @@ namespace suku
 		bool isValid()const;
 
 		UINT getPixelByte();
+		ComPtr<ID2D1Bitmap> getD2DBitmap();
+		ComPtr<IWICBitmap> getWICBitmap();
 
 		void paint(float _x, float _y, float _alpha = 1.0f);
 		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f);
@@ -73,8 +78,27 @@ namespace suku
 		// bool wicBitmapUpdateTag_ = false;
 		void refreshD2DBitmap();
 		// void refreshWICBitmap();
+		void refreshPixelByte();
 	};
 
-	std::pair<UINT, UINT> getBitmapSize(const Bitmap& _bitmap);
-	void getHitAreaFromBitmap(memory::Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold = 0.0f);
+	void getHitAreaFromBitmap(Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold = 0.0f);
+
+	class RenderBitmap
+	{
+	public:
+		RenderBitmap() = default;
+		// Create bitmap from D2D bitmap
+		explicit RenderBitmap(ComPtr<ID2D1Bitmap> _d2dBitmap) : d2dBitmap_(_d2dBitmap) {}
+		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
+		RenderBitmap(const RenderBitmap& _otherBitmap) : d2dBitmap_(_otherBitmap.d2dBitmap_) {}
+		RenderBitmap(RenderBitmap&& _otherBitmap)noexcept : d2dBitmap_(std::move(_otherBitmap.d2dBitmap_)) {}
+
+		ComPtr<ID2D1Bitmap> getD2DBitmap() { return d2dBitmap_; }
+
+		void paint() const;
+
+		friend class PaintLayer;
+	private:
+		ComPtr<ID2D1Bitmap> d2dBitmap_ = nullptr;
+	};
 }

@@ -26,8 +26,8 @@ namespace suku
 
 	void setPaintingTransform(Transform _transform);
 
-	void beginDraw(HWND hWnd);
-	void endDraw();
+	void beginDrawGlobal();
+	void endDrawGlobal();
 	void clearScreen();
 
 	class WICFactoryGlobal

@@ -7,4 +7,4 @@
 #include "string.h"
 #include "type_tree.h"
 #include "var.h"
-#include "window.h"
+#include "game_window.h"
