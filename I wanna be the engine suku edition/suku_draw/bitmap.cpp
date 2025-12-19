@@ -1102,6 +1102,7 @@ namespace suku
 
 	void RenderBitmap::paint() const
 	{
-		drawBitmap(pMainRenderTarget, d2dBitmap_, 0, 0, GameWindow::width, GameWindow::height, 1.0);
+		drawBitmap(pMainRenderTarget, d2dBitmap_, 
+			0, 0, (float)GameWindow::width, (float)GameWindow::height, 1.0);
 	}
 }

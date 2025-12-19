@@ -1,6 +1,8 @@
 ﻿#include "framework.h"
 #include "global_value.h"
 #include "I wanna be the engine suku edition.h"
+#include <future>
+#include <mutex>
 
 #define MAX_LOADSTRING 100
 #define WM_CREATEFINISHED (WM_USER + 1)

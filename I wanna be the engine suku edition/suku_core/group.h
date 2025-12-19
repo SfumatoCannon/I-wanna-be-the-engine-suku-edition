@@ -1,5 +1,7 @@
 #pragma once
-#include "../framework.h"
+#include <list>
+#include <map>
+#include <functional>
 
 namespace suku
 {

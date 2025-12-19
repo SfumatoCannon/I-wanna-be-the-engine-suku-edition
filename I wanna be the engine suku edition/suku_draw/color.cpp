@@ -1,4 +1,5 @@
 #include "color.h"
+#include <algorithm>
 
 namespace suku
 {
@@ -7,8 +8,8 @@ namespace suku
 		float R = r_ / 255.0f;
 		float G = g_ / 255.0f;
 		float B = b_ / 255.0f;
-		float maxValue = max(R, max(G, B));
-		float minValue = min(R, min(G, B));
+		float maxValue = std::max(R, std::max(G, B));
+		float minValue = std::min(R, std::min(G, B));
 		float delta = maxValue - minValue;
 		if (delta == 0)
 			return 0.0f;
@@ -25,8 +26,8 @@ namespace suku
 		float R = r_ / 255.0f;
 		float G = g_ / 255.0f;
 		float B = b_ / 255.0f;
-		float maxValue = max(R, max(G, B));
-		float minValue = min(R, min(G, B));
+		float maxValue = std::max(R, std::max(G, B));
+		float minValue = std::min(R, std::min(G, B));
 		float delta = maxValue - minValue;
 		if (maxValue == 0.0f)
 			return 0.0f;
@@ -39,7 +40,7 @@ namespace suku
 		float R = r_ / 255.0f;
 		float G = g_ / 255.0f;
 		float B = b_ / 255.0f;
-		float maxValue = max(R, max(G, B));
+		float maxValue = std::max(R, std::max(G, B));
 		return maxValue;
 	}
 

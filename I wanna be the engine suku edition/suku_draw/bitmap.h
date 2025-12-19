@@ -1,8 +1,8 @@
 #pragma once
-#include <wrl/client.h>
 #include "../framework.h"
 #include "../suku_foundation/memory.h"
 #include "../suku_foundation/string.h"
+#include <functional>
 
 namespace suku
 {

@@ -10,7 +10,7 @@ namespace suku
 	void suku_drawing_preinit_WIC(ComPtr<IWICImagingFactory>* ppWICFactory)
 	{
 		// Init WIC resource
-		HRESULT hr = CoInitialize(nullptr);
+		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 		if (SUCCEEDED(hr))
 		{
 			ComPtr<IWICImagingFactory> localFactory;
@@ -24,6 +24,10 @@ namespace suku
 			{
 				*ppWICFactory = std::move(localFactory);
 			}
+		}
+		else
+		{
+			ERRORWINDOW_GLOBAL("Failed to initialize COM library for WIC");
 		}
 	}
 

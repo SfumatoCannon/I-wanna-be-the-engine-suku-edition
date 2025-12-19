@@ -1,8 +1,7 @@
 #include "save.h"
 #include "../global_value.h"
-#include "../framework.h"
-#include <locale>
-#include <codecvt>
+#include <ios>
+#include <fstream>
 
 namespace suku
 {

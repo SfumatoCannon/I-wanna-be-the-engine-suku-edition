@@ -1,6 +1,7 @@
 #include "suku_sounds.h"
 #include "framework.h"
-#include "suku_foundation/includes.h"
+#include "suku_foundation/message.h"
+#include "suku_foundation/save.h"
 
 #include <Digitalv.h>
 #include <mfapi.h>
@@ -8,7 +9,6 @@
 #include <mfreadwrite.h>
 #include <mfobjects.h>
 #include <mferror.h>
-#include <wrl/client.h>
 #include <propvarutil.h>
 #include <comdef.h>
 #include <xaudio2.h>
@@ -272,9 +272,16 @@ namespace suku
 
 	void soundInit() {
 		MFStartup(MF_VERSION);
-		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-		XAudio2Create(&g_xaudio2, 0);
-		g_xaudio2->CreateMasteringVoice(&g_masterVoice);
+		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+		if (SUCCEEDED(hr))
+		{
+			XAudio2Create(&g_xaudio2, 0);
+			g_xaudio2->CreateMasteringVoice(&g_masterVoice);
+		}
+		else
+		{
+			WARNINGWINDOW_GLOBAL("Failed to initialize COM library for sound system.");
+		}
 	}
 
 	void soundUninit()

@@ -1,9 +1,6 @@
 #pragma once
 #include "framework.h"
-#include "resource.h"
-#include "suku_draw/includes.h"
-#include "suku_foundation/includes.h"
-#include <string>
+#include "suku_foundation/string.h"
 #include <vector>
 #include <xaudio2.h>
 
