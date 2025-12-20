@@ -1,6 +1,6 @@
 #pragma once
-#include "framework.h"
 #include "suku_foundation/string.h"
+#include <Windows.h>
 #include <vector>
 #include <xaudio2.h>
 

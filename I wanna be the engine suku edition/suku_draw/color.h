@@ -1,6 +1,4 @@
 #pragma once
-#include "../framework.h"
-#include "../suku_foundation/includes.h"
 
 namespace suku
 {

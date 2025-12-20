@@ -1,5 +1,4 @@
 #pragma once
-#include "../framework.h"
 #include "../suku_foundation/memory.h"
 #include "../suku_foundation/string.h"
 #include <functional>

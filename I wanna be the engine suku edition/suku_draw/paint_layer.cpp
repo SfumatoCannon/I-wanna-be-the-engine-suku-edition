@@ -1,8 +1,11 @@
+#include "pch.h"
 #include "paint_layer.h"
-#include "bitmap.h"
+#include <utility>
 #include "draw_core.h"
 #include "shape.h"
-#include "transform.h"
+#include "suku_foundation/string.h"
+#include "suku_foundation/message.h"
+#include "bitmap.h"
 
 namespace suku
 {

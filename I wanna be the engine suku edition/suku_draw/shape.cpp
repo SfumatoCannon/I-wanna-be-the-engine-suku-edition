@@ -1,6 +1,9 @@
+#include "pch.h"
 #include "shape.h"
-#include "includes.h"
-#include "../framework.h"
+#include "bitmap.h"
+#include "color.h"
+#include "draw_core.h"
+#include "suku_foundation/message.h"
 
 namespace suku
 {

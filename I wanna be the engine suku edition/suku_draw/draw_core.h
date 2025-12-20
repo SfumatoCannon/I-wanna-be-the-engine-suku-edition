@@ -1,6 +1,5 @@
 #pragma once
 #include <wrl/client.h>
-#include "../framework.h"
 
 namespace suku
 {

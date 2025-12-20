@@ -1,4 +1,4 @@
-﻿#include "framework.h"
+﻿#include "pch.h"
 #include "global_value.h"
 #include "I wanna be the engine suku edition.h"
 #include <future>
@@ -10,11 +10,6 @@
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
-
-HWND suku::GameWindow::hWnd;
-suku::String suku::GameWindow::title = L"I wanna be the engine suku edition";
-int suku::GameWindow::width = WindowWidth;
-int suku::GameWindow::height = WindowHeight;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);

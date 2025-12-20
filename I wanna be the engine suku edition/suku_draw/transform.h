@@ -1,6 +1,6 @@
 #pragma once
-#include "../framework.h"
-#include "../suku_foundation/includes.h"
+#include <d2d1helper.h>
+#include <suku_foundation/type_tree.h>
 
 namespace suku
 {

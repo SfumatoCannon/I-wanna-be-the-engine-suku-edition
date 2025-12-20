@@ -1,6 +1,11 @@
+#include "pch.h"
 #include "bitmap.h"
-#include "includes.h"
-#include "../suku_foundation/includes.h"
+#include "color.h"
+#include "draw_core.h"
+#include "transform.h"
+#include <suku_foundation/message.h>
+#include <suku_foundation/save.h>
+#include <Windows.h>
 
 namespace suku
 {
@@ -1117,6 +1122,6 @@ namespace suku
 	void RenderBitmap::paint() const
 	{
 		drawBitmap(pMainRenderTarget, d2dBitmap_, 
-			0, 0, (float)GameWindow::width, (float)GameWindow::height, 1.0);
+			0, 0, (float)getWidth(), (float)getHeight(), 1.0);
 	}
 }
