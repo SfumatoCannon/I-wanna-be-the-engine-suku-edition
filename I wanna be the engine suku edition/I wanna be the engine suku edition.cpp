@@ -181,16 +181,31 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance;
-	RECT rc;
-	SetRect(&rc, suku::WindowX, suku::WindowY, suku::WindowX + suku::WindowWidth, suku::WindowY + suku::WindowHeight);
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
 #ifdef FULLSCREEN_MODE
 	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
 		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
 #else
-	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
-		rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
+	RECT rc = { 0, 0, suku::WindowWidth, suku::WindowHeight };
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+	int winW = rc.right - rc.left;
+	int winH = rc.bottom - rc.top;
+
+	int screenW = GetSystemMetrics(SM_CXSCREEN);
+	int screenH = GetSystemMetrics(SM_CYSCREEN);
+
+	int x = (screenW - winW) / 2;
+	int y = (screenH - winH) / 2;
+
+	suku::GameWindow::hWnd = CreateWindowW(
+		szWindowClass,
+		szTitle,
+		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
+		x, y,
+		winW, winH,
+		nullptr, nullptr, hInstance, nullptr
+	);
 #endif
 
 	if (!suku::GameWindow::hWnd)
