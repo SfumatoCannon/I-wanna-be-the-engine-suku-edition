@@ -100,11 +100,11 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 	return true;
 }
 
-void setFPS(int _fps)
-{
-	fps = _fps;
-	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
-}
+//void setFPS(int _fps)
+//{
+//	fps = _fps;
+//	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
+//}
 
 void startSender()
 {
