@@ -160,6 +160,7 @@
     <ClInclude Include="object_definer.h" />
     <ClInclude Include="suku_draw\bitmap.h" />
     <ClInclude Include="suku_draw\color.h" />
+    <ClInclude Include="suku_draw\d3d_draw_core.h" />
     <ClInclude Include="suku_draw\draw_core.h" />
     <ClInclude Include="suku_draw\includes.h" />
     <ClInclude Include="suku_draw\paint_layer.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="suku_draw\color.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="suku_draw\d3d_draw_core.cpp" />
     <ClCompile Include="suku_draw\draw_core.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>

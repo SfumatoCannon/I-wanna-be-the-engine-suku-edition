@@ -111,6 +111,9 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_draw\d3d_draw_core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="I wanna be the engine suku edition.cpp">
@@ -405,6 +408,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_draw\d3d_draw_core.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
