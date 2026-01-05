@@ -15,5 +15,7 @@ namespace suku
 		void createD3DDevice();
 		void createSwapChain(HWND _hWnd);
 
+		void suku_d3d_preinit();
+		void suku_d3d_postinit(HWND _hWnd);
 	}
 }
