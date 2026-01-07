@@ -1,4 +1,5 @@
 #pragma once
+
 namespace suku
 {
 	constexpr const wchar_t* SaveDir = L"Data\\Save";

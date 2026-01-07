@@ -131,7 +131,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		timeBeginPeriod(1);
 		//suku_save_init();
 		WICFactoryGlobal::getWICFactory();
-		//suku_drawing_preinit_WIC();
+		D2DFactoryGlobal::getD2DFactory();
+//#ifdef USE_D3D11
+//		suku::Graphics::suku_d3d_postinit(hWnd);
+//#endif
 		suku_drawing_postinit(hWnd);
 		soundInit();
 		init();
