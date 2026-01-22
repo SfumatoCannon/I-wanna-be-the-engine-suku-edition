@@ -37,9 +37,9 @@ namespace suku
 		void paint(Transform _paintingTransform,
 			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
-		Bitmap* paintOnBitmap(Bitmap& _bitmap, float _x, float _y,
-			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
-			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
+		//Bitmap* paintOnBitmap(Bitmap& _bitmap, float _x, float _y,
+		//	const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+		//	const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(float _x, float _y);
 		void paint(float _x, float _y, Transform _paintingTransform);
 		void paint(Transform _paintingTransform);
@@ -89,6 +89,4 @@ namespace suku
 		const float radiusX, radiusY, startX, startY;
 		EllipseShape(float _radiusX, float _radiusY, float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
-
-	ComPtr<ID2D1Brush> createSolidColorBrush(const Color _color);
 }

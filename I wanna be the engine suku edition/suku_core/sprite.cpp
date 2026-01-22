@@ -34,21 +34,9 @@ namespace suku
 		shape = _shape;
 
 		ComPtr<ID2D1SolidColorBrush> newBrush;
-		HRESULT hr;
-		hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
-			&newBrush
-		);
-		if (SUCCEEDED(hr))
-		{
-			fillBrush = newBrush;
-			outlineBrush = newBrush;
-		}
-		else
-		{
-			fillBrush = nullptr;
-			outlineBrush = nullptr;
-		}
+		newBrush = createSolidColorBrush(_fillColor);
+		fillBrush = newBrush;
+		outlineBrush = newBrush;
 
 		outlineWidth = 1.0f;
 		outlineStrokeStyle = nullptr;
@@ -59,29 +47,8 @@ namespace suku
 	{
 		shape = _shape;
 
-		ComPtr<ID2D1SolidColorBrush> newBrush;
-		HRESULT hr;
-		hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_fillColor.r() / 255.0f, _fillColor.g() / 255.0f, _fillColor.b() / 255.0f, _fillColor.alpha),
-			&newBrush
-		);
-		if (SUCCEEDED(hr))
-		{
-			fillBrush = newBrush;
-		}
-		else
-			fillBrush = nullptr;
-
-		hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_outlineColor.r() / 255.0f, _outlineColor.g() / 255.0f, _outlineColor.b() / 255.0f, _outlineColor.alpha),
-			&newBrush
-		);
-		if (SUCCEEDED(hr))
-		{
-			outlineBrush = newBrush;
-		}
-		else
-			outlineBrush = nullptr;
+		fillBrush = createSolidColorBrush(_fillColor);
+		outlineBrush = createSolidColorBrush(_outlineColor);
 
 		outlineWidth = _outlineWidth;
 		outlineStrokeStyle = _outlineStrokeStyle;
@@ -120,32 +87,14 @@ namespace suku
 	{
 		if (fillBrush != nullptr)
 			release_safe(fillBrush);
-		ComPtr<ID2D1SolidColorBrush> newBrush;
-		HRESULT hr;
-		hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
-			&newBrush
-		);
-		if (SUCCEEDED(hr))
-		{
-			fillBrush = newBrush;
-		}
+		fillBrush = createSolidColorBrush(_color);
 	}
 
 	void ShapeSpriteElement::setOutlineColor(const Color& _color)
 	{
 		if (outlineBrush != nullptr)
 			release_safe(outlineBrush);
-		ComPtr<ID2D1SolidColorBrush> newBrush;
-		HRESULT hr;
-		hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
-			&newBrush
-		);
-		if (SUCCEEDED(hr))
-		{
-			outlineBrush = newBrush;
-		}
+		outlineBrush = createSolidColorBrush(_color);
 	}
 
 	void ShapeSpriteElement::setOutlineWidth(int _width)

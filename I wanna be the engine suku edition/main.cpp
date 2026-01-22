@@ -52,14 +52,15 @@ public:
 		auto brush = createSolidColorBrush(Color(255, 255, 255, 255));
 		auto brush2 = createSolidColorBrush(Color(0, 0, 0, 255));
 		Shape A(SquareShape(64));
-		Bitmap B("Image\\bg.jpg");
+		A.paint(300, 400, brush, brush2);
+		//Bitmap B("Image\\bg.jpg");
 		//Bitmap* C = A.paintOnBitmap(B, 400, 300, brush, brush2);
-		static PaintLayer layer(800, 608);
-		layer.beginDraw();
-		layer.clear(Color::GREEN());
-		layer.drawBitmap(B, translation(0, 0), 0.5f);
-		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
-		layer.endDraw().paint();
+		//static PaintLayer layer(800, 608);
+		//layer.beginDraw();
+		//layer.clear(Color::GREEN());
+		//layer.drawBitmap(B, translation(0, 0), 0.5f);
+		//layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
+		//layer.endDraw().paint();
 	}
 }room0;
 

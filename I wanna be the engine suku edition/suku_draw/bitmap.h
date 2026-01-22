@@ -27,7 +27,7 @@ namespace suku
 		Bitmap(const Array2D<Color>& _pixels, UINT _width, UINT _height);
 		Bitmap(const Array2D<Color>& _pixels, UINT _x, UINT _y, UINT _width, UINT _height);
 		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
-		explicit Bitmap(ComPtr<ID2D1Bitmap> _d2dBitmap);
+		explicit Bitmap(ComPtr<ID2D1Bitmap1> _d2dBitmap);
 		explicit Bitmap(ComPtr<IWICBitmap> _wicBitmap);
 		Bitmap(const Bitmap& _otherBitmap);
 		Bitmap(Bitmap&& _otherBitmap)noexcept;
@@ -36,7 +36,7 @@ namespace suku
 		bool isValid()const;
 
 		UINT getPixelByte();
-		ComPtr<ID2D1Bitmap> getD2DBitmap();
+		ComPtr<ID2D1Bitmap1> getD2DBitmap();
 		ComPtr<IWICBitmap> getWICBitmap();
 
 		void paint(float _x, float _y, float _alpha = 1.0f);
@@ -70,7 +70,7 @@ namespace suku
 		bool isValid_ = false;
 		UINT bytesPerPixel_ = 0;
 		UINT width_ = 0, height_ = 0;
-		ComPtr<ID2D1Bitmap> d2dBitmap_ = nullptr;
+		ComPtr<ID2D1Bitmap1> d2dBitmap_ = nullptr;
 		ComPtr<IWICBitmap> wicBitmap_ = nullptr;
 		// 目前不存在 WIC 位图版本比 D2D 位图版本旧的情况
 		bool d2dBitmapUpdateTag_ = false;
@@ -87,12 +87,12 @@ namespace suku
 	public:
 		RenderBitmap() = default;
 		// Create bitmap from D2D bitmap
-		explicit RenderBitmap(ComPtr<ID2D1Bitmap> _d2dBitmap) : d2dBitmap_(_d2dBitmap) {}
+		explicit RenderBitmap(ComPtr<ID2D1Bitmap1> _d2dBitmap) : d2dBitmap_(_d2dBitmap) {}
 		// Constructors from COM bitmaps: use ComPtr to avoid raw COM pointers
 		RenderBitmap(const RenderBitmap& _otherBitmap) : d2dBitmap_(_otherBitmap.d2dBitmap_) {}
 		RenderBitmap(RenderBitmap&& _otherBitmap)noexcept : d2dBitmap_(std::move(_otherBitmap.d2dBitmap_)) {}
 
-		ComPtr<ID2D1Bitmap> getD2DBitmap() { return d2dBitmap_; }
+		ComPtr<ID2D1Bitmap1> getD2DBitmap() { return d2dBitmap_; }
 		UINT getWidth()const;
 		UINT getHeight()const;
 		std::pair<UINT, UINT> getSize()const { return { getWidth(), getHeight() }; }
@@ -101,6 +101,6 @@ namespace suku
 
 		friend class PaintLayer;
 	private:
-		ComPtr<ID2D1Bitmap> d2dBitmap_ = nullptr;
+		ComPtr<ID2D1Bitmap1> d2dBitmap_ = nullptr;
 	};
 }

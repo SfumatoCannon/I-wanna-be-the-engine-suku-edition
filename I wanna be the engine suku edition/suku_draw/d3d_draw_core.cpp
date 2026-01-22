@@ -5,11 +5,10 @@ namespace suku
 {
 	namespace Graphics
 	{
-		ComPtr<ID3D11Device>           pD3DDevice = nullptr;
-		ComPtr<ID3D11DeviceContext>    pD3DDeviceContext = nullptr;
-		ComPtr<IDXGISwapChain1>         pSwapChain = nullptr;
+		ComPtr<IDXGISwapChain1>         pSwapChain;
 
-		void createD3DDevice()
+		void createD3DDevice(ComPtr<ID3D11Device>& _pD3DDevice,
+			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext)
 		{
 			D3D_FEATURE_LEVEL levels[] = {
 				D3D_FEATURE_LEVEL_11_0,
@@ -23,15 +22,16 @@ namespace suku
 				levels,
 				_countof(levels),
 				D3D11_SDK_VERSION,
-				pD3DDevice.GetAddressOf(),
+				_pD3DDevice.GetAddressOf(),
 				nullptr,
-				pD3DDeviceContext.GetAddressOf()
+				_pD3DDeviceContext.GetAddressOf()
 			);
 		}
 
 		void createSwapChain(HWND _hWnd)
 		{
 			ComPtr<IDXGIDevice> dxgiDevice;
+			const auto& pD3DDevice = Graphics::D3DFactoryGlobal::GetD3DDevice();
 			pD3DDevice.As(&dxgiDevice);
 
 			ComPtr<IDXGIAdapter> adapter;
@@ -68,14 +68,31 @@ namespace suku
 			);
 		}
 
-		void suku_d3d_preinit()
+		void suku_d3d_preinit(ComPtr<ID3D11Device>& _pD3DDevice,
+			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext)
 		{
-			createD3DDevice();
+			createD3DDevice(_pD3DDevice, _pD3DDeviceContext);
 		}
 
 		void suku_d3d_postinit(HWND _hWnd)
 		{
 			createSwapChain(_hWnd);
+		}
+
+		void suku_d3d_uninit(ComPtr<ID3D11Device>& _pD3DDevice,
+			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext)
+		{
+			if (_pD3DDeviceContext)
+			{
+				_pD3DDeviceContext->ClearState();
+				_pD3DDeviceContext->Flush();
+			}
+
+			pSwapChain.Reset();
+
+			_pD3DDeviceContext.Reset();
+
+			_pD3DDevice.Reset();
 		}
 	}
 }

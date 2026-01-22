@@ -20,14 +20,15 @@ namespace suku
 		void newLayer(UINT _width, UINT _height);
 		void beginDraw();
 		RenderBitmap endDraw();
-		void clear(Color _backgroundcolor = Color::WHITE());
+		void clear();
+		void clear(Color _backgroundcolor);
 		void drawBitmap(Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
 		void drawBitmap(RenderBitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
 		void drawShape(const Shape& _shape, Transform _transform, 
 			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 	private:
-		ComPtr<ID2D1BitmapRenderTarget> pBitmapRenderTarget_;
+		ComPtr<ID2D1Bitmap1> pLayerBitmap_;
 		UINT width_;
 		UINT height_;
 	};

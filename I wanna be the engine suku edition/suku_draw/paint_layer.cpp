@@ -11,79 +11,56 @@ namespace suku
 {
 	void PaintLayer::newLayer(UINT _width, UINT _height)
 	{
-		if (!pMainRenderTarget)
-		{
-			ERRORWINDOW("Main render target is null");
-			return;
-		}
-		if (pBitmapRenderTarget_)
-		{
-			release_safe(pBitmapRenderTarget_);
-		}
-		width_ = _width;
-		height_ = _height;
-		ComPtr<ID2D1BitmapRenderTarget> tmpRenderTarget;
-		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
-			D2D1::SizeF((FLOAT)_width, (FLOAT)_height),
-			tmpRenderTarget.GetAddressOf()
-		);
-		if (FAILED(hr))
-		{
-			ERRORWINDOW("Failed to create compatible render target");
-			return;
-		}
-		pBitmapRenderTarget_ = std::move(tmpRenderTarget);
+		pLayerBitmap_ = createLayerBitmap(_width, _height);
 	}
 
 	void PaintLayer::beginDraw()
 	{
-		pBitmapRenderTarget_->BeginDraw();
+		pD2DContext->SetTarget(pLayerBitmap_.Get());
+		pD2DContext->BeginDraw();
 	}
 
 	RenderBitmap PaintLayer::endDraw()
 	{
-		pBitmapRenderTarget_->EndDraw();
-		ComPtr<ID2D1Bitmap> pBitmap;
-		HRESULT hr = pBitmapRenderTarget_->GetBitmap(pBitmap.GetAddressOf());
-		if (FAILED(hr))
-		{
-			ERRORWINDOW("Failed to get bitmap from bitmap render target");
-			return RenderBitmap();
-		}
-		return RenderBitmap(pBitmap);
+		pD2DContext->EndDraw();
+		pD2DContext->SetTarget(nullptr);
+		return RenderBitmap(pLayerBitmap_);
+	}
+
+	void PaintLayer::clear()
+	{
+		pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
 
 	void PaintLayer::clear(Color _backgroundcolor)
 	{
-		pBitmapRenderTarget_->Clear(D2D1::ColorF(
-			_backgroundcolor.r(),
-			_backgroundcolor.g(),
-			_backgroundcolor.b(),
-			_backgroundcolor.alpha
-		));
+		pD2DContext->Clear(D2D1::ColorF(_backgroundcolor.r() / 255.0f,
+			_backgroundcolor.g() / 255.0f,
+			_backgroundcolor.b() / 255.0f,
+			_backgroundcolor.alpha));
 	}
 
 	void PaintLayer::drawBitmap(Bitmap& _bitmap, Transform _transform, float _alpha)
 	{
-		pBitmapRenderTarget_->SetTransform(_transform.matrix);
-		pBitmapRenderTarget_->DrawBitmap(_bitmap.getD2DBitmap().Get(),
+		pD2DContext->SetTransform(_transform.matrix);
+		pD2DContext->DrawBitmap(_bitmap.getD2DBitmap().Get(),
 			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 	}
 
 	void PaintLayer::drawBitmap(RenderBitmap& _bitmap, Transform _transform, float _alpha)
 	{
-		pBitmapRenderTarget_->SetTransform(_transform.matrix);
-		pBitmapRenderTarget_->DrawBitmap(_bitmap.getD2DBitmap().Get(),
+		pD2DContext->SetTransform(_transform.matrix);
+		pD2DContext->DrawBitmap(_bitmap.getD2DBitmap().Get(),
 			D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 	}
 
 	void PaintLayer::drawShape(const Shape& _shape, Transform _transform,
 		const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
 	{
-		pBitmapRenderTarget_->SetTransform(_transform.matrix);
+		pD2DContext->SetTransform(_transform.matrix);
 		if (_outlineBrush)
-			pBitmapRenderTarget_->DrawGeometry(_shape.currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+			pD2DContext->DrawGeometry(_shape.currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 		if (_fillBrush)
-			pBitmapRenderTarget_->FillGeometry(_shape.currentGeometry.Get(), _fillBrush.Get());
+			pD2DContext->FillGeometry(_shape.currentGeometry.Get(), _fillBrush.Get());
 	}
 }

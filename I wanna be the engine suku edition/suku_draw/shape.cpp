@@ -110,9 +110,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y));
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.Get());
 		}
 	}
 
@@ -122,9 +122,9 @@ namespace suku
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.Get());
 		}
 	}
 
@@ -134,70 +134,70 @@ namespace suku
 		{
 			setPaintingTransform(_paintingTransform);
 			if (_outlineBrush != nullptr)
-				pMainRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush != nullptr)
-				pMainRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get(), NULL);
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.Get());
 		}
 	}
 
-	Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
-	{
-		_bitmap.refreshD2DBitmap();
-		if (!_bitmap.d2dBitmap_ || !currentGeometry)
-			return nullptr;
+	//Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	//{
+	//	_bitmap.refreshD2DBitmap();
+	//	if (!_bitmap.d2dBitmap_ || !currentGeometry)
+	//		return nullptr;
 
-		ComPtr<ID2D1BitmapRenderTarget> pBitmapRenderTarget = nullptr;
-		HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
-			D2D1::SizeF((FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()),
-			pBitmapRenderTarget.GetAddressOf()
-		);
+	//	ComPtr<ID2D1BitmapRenderTarget> pBitmapRenderTarget = nullptr;
+	//	HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
+	//		D2D1::SizeF((FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()),
+	//		pBitmapRenderTarget.GetAddressOf()
+	//	);
 
-		if (SUCCEEDED(hr) && pBitmapRenderTarget)
-		{
-			pBitmapRenderTarget->BeginDraw();
-			D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
-			// draw the bitmap to the compatible render target using simple overload
-			pBitmapRenderTarget->DrawBitmap(
-				_bitmap.d2dBitmap_.Get(),
-				nullptr,
-				1.0f,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			nullptr
-			);
+	//	if (SUCCEEDED(hr) && pBitmapRenderTarget)
+	//	{
+	//		pBitmapRenderTarget->BeginDraw();
+	//		D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
+	//		// draw the bitmap to the compatible render target using simple overload
+	//		pBitmapRenderTarget->DrawBitmap(
+	//			_bitmap.d2dBitmap_.Get(),
+	//			nullptr,
+	//			1.0f,
+	//			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	//		nullptr
+	//		);
 
-			pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
+	//		pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
 
-			if (_outlineBrush)
-				pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
+	//		if (_outlineBrush)
+	//			pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 
-			if (_fillBrush)
-				pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get());
+	//		if (_fillBrush)
+	//			pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get());
 
-			hr = pBitmapRenderTarget->EndDraw();
+	//		hr = pBitmapRenderTarget->EndDraw();
 
-			if (hr == D2DERR_RECREATE_TARGET)
-			{
-				ERRORWINDOW_GLOBAL("Render target needs to be recreated");
-				pBitmapRenderTarget.Reset();
-				return nullptr;
-			}
+	//		if (hr == D2DERR_RECREATE_TARGET)
+	//		{
+	//			ERRORWINDOW_GLOBAL("Render target needs to be recreated");
+	//			pBitmapRenderTarget.Reset();
+	//			return nullptr;
+	//		}
 
-			ComPtr<ID2D1Bitmap> pBitmapResult = nullptr;
-			Bitmap* resultBitmap = nullptr;
-			hr = pBitmapRenderTarget->GetBitmap(pBitmapResult.GetAddressOf());
-			if (SUCCEEDED(hr) && pBitmapResult)
-			{
-				resultBitmap = new Bitmap(pBitmapResult); // pass ComPtr overload
-			}
-			pBitmapRenderTarget.Reset();
-			return resultBitmap;
-		}
-		else
-		{
-			ERRORWINDOW_GLOBAL("Failed to create compatible render target for bitmap painting");
-			return nullptr;
-		}
-	}
+	//		ComPtr<ID2D1Bitmap1> pBitmapResult = nullptr;
+	//		Bitmap* resultBitmap = nullptr;
+	//		hr = pBitmapRenderTarget->GetBitmap(pBitmapResult.GetAddressOf());
+	//		if (SUCCEEDED(hr) && pBitmapResult)
+	//		{
+	//			resultBitmap = new Bitmap(pBitmapResult); // pass ComPtr overload
+	//		}
+	//		pBitmapRenderTarget.Reset();
+	//		return resultBitmap;
+	//	}
+	//	else
+	//	{
+	//		ERRORWINDOW_GLOBAL("Failed to create compatible render target for bitmap painting");
+	//		return nullptr;
+	//	}
+	//}
 
 	void Shape::paint(float _x, float _y)
 	{
@@ -446,18 +446,4 @@ namespace suku
 			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
 	}
-
-	ComPtr<ID2D1Brush> createSolidColorBrush(const Color _color)
-	{
-		ComPtr<ID2D1SolidColorBrush> newBrush;
-		HRESULT hr = pMainRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(_color.r() / 255.0f, _color.g() / 255.0f, _color.b() / 255.0f, _color.alpha),
-			&newBrush
-		);
-		if (FAILED(hr))
-			return nullptr;
-		// AddRef not needed; ComPtr takes ownership
-		return newBrush;
-	}
-
 } // namespace suku

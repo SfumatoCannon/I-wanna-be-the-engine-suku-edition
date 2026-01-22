@@ -13,32 +13,15 @@ namespace suku
 	using memory::Array2D;
 	// Private functions declaration
 	// ----------------------------------------------------------------------------
-	ComPtr<ID2D1Bitmap> GetBlendedBitmapFromFile(
-		const ComPtr<IWICImagingFactory>& pIWICFactory,
-		const ComPtr<ID2D1RenderTarget>& pRenderTarget,
-		const wchar_t* uri,
-		const D2D1_COLOR_F& color);
-	HRESULT LoadBitmapFromFile(
-		const ComPtr<ID2D1RenderTarget>& pRenderTarget,
-		const ComPtr<IWICImagingFactory>& pIWICFactory,
-		PCWSTR uri,
-		UINT destinationWidth,
-		UINT destinationHeight,
-		ComPtr<ID2D1Bitmap>& ppBitmap);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* uri    /*absolute path*/);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _url, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
 	HRESULT createWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, UINT _width, UINT _height);
-	HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap>& _ppD2dBitmap);
-	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap>& _pD2dBitmap, ComPtr<IWICBitmap>& _ppWicBitmap);
+	HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap1>& _ppD2dBitmap);
+	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap1>& _pD2dBitmap, ComPtr<IWICBitmap>& _ppWicBitmap);
 	std::pair<UINT, UINT> getBitmapSize(const ComPtr<IWICBitmap>& _pBitmap);
-	std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap>& _pBitmap);
-	void drawBitmap(const ComPtr<ID2D1RenderTarget>& _renderTarget, const ComPtr<ID2D1Bitmap>& _pBitmap, float _x, float _y,
-		float _width, float _height, float _alpha,
-		Transform _transform = Transform());
-	void drawBitmap(const ComPtr<ID2D1RenderTarget>& _renderTarget, const ComPtr<ID2D1Bitmap>& _pBitmap,
-		float _width, float _height, float _alpha,
-		Transform _transform = Transform());
+	std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap1>& _pBitmap);
+
 	// ----------------------------------------------------------------------------
 	// End of private functions declaration
 
@@ -48,7 +31,7 @@ namespace suku
 		if (d2dBitmapUpdateTag_)
 		{
 			release_safe(d2dBitmap_);
-			ComPtr<ID2D1Bitmap> pD2d = nullptr;
+			ComPtr<ID2D1Bitmap1> pD2d = nullptr;
 			suku::getD2DBitmap(wicBitmap_.Get(), pD2d);
 			d2dBitmap_.Attach(pD2d.Detach());
 			d2dBitmapUpdateTag_ = false;
@@ -180,7 +163,7 @@ namespace suku
 		d2dBitmapUpdateTag_ = true;
 	}
 
-	Bitmap::Bitmap(ComPtr<ID2D1Bitmap> _d2dBitmap)
+	Bitmap::Bitmap(ComPtr<ID2D1Bitmap1> _d2dBitmap)
 		:isValid_(false), width_(0), height_(0), bytesPerPixel_(0)
 	{
 		if (!_d2dBitmap)
@@ -274,7 +257,7 @@ namespace suku
 		return bytesPerPixel_;
 	}
 
-	ComPtr<ID2D1Bitmap> Bitmap::getD2DBitmap()
+	ComPtr<ID2D1Bitmap1> Bitmap::getD2DBitmap()
 	{
 		if (d2dBitmap_ == nullptr || d2dBitmapUpdateTag_)
 			refreshD2DBitmap();
@@ -337,19 +320,22 @@ namespace suku
 	void Bitmap::paint(float _x, float _y, float _alpha)
 	{
 		refreshD2DBitmap();
-		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)_x, (float)_y, (float)width_, (float)height_, _alpha, translation(_x, _y));
+		setPaintingTransform(translation(_x, _y));
+		drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
-		refreshD2DBitmap();
-		drawBitmap(pMainRenderTarget, d2dBitmap_, (float)_x, (float)_y, (float)width_, (float)height_, _alpha, translation(_x, _y) + _transform);
+		refreshD2DBitmap();		
+		setPaintingTransform(translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		drawBitmap(pMainRenderTarget, d2dBitmap_, 0.0f, 0.0f, (float)width_, (float)height_, _alpha, _transform);
+		setPaintingTransform(_transform);
+		drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	UINT Bitmap::getWidth()const
@@ -700,165 +686,6 @@ namespace suku
 		pILock.Reset();
 	}
 
-	ComPtr<ID2D1Bitmap> GetBlendedBitmapFromFile(
-		const ComPtr<IWICImagingFactory>& pIWICFactory,
-		const ComPtr<ID2D1RenderTarget>& pRenderTarget,
-		const wchar_t* uri,
-		const D2D1_COLOR_F& color)
-	{
-		ComPtr<ID2D1Bitmap> pBitmap;
-		ComPtr<IWICBitmapDecoder> pDecoder = NULL;
-		ComPtr<IWICBitmapFrameDecode> pSource = NULL;
-		ComPtr<IWICBitmap> pWIC = NULL;
-		ComPtr<IWICFormatConverter> pConverter = NULL;
-		ComPtr<IWICBitmapScaler> pScaler = NULL;
-		UINT            originalWidth = 0;
-		UINT            originalHeight = 0;
-
-		HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
-			uri,
-			nullptr,
-			GENERIC_READ,
-			WICDecodeMetadataCacheOnLoad,
-			&pDecoder
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pDecoder->GetFrame(0, pSource.GetAddressOf());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pSource->GetSize(&originalWidth, &originalHeight);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pIWICFactory->CreateBitmapFromSourceRect(
-				pSource.Get(), 0, 0, (UINT)originalWidth, (UINT)originalHeight, pWIC.GetAddressOf());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pIWICFactory->CreateFormatConverter(pConverter.GetAddressOf());
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pIWICFactory->CreateBitmapScaler(pScaler.GetAddressOf());
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pScaler->Initialize(pWIC.Get(), (UINT)originalWidth, (UINT)originalHeight, WICBitmapInterpolationModeCubic);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pConverter->Initialize(
-				pScaler.Get(),
-				GUID_WICPixelFormat32bppPBGRA,
-				WICBitmapDitherTypeNone,
-				NULL,
-				0.f,
-				WICBitmapPaletteTypeMedianCut
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pRenderTarget->CreateBitmapFromWicBitmap(
-				pConverter.Get(),
-				NULL,
-				pBitmap.GetAddressOf()
-			);
-		}
-
-		return pBitmap;
-	}
-
-	HRESULT LoadBitmapFromFile(
-		const ComPtr<ID2D1RenderTarget>& pRenderTarget,
-		const ComPtr<IWICImagingFactory>& pIWICFactory,
-		PCWSTR uri,
-		UINT destinationWidth,
-		UINT destinationHeight,
-		ComPtr<ID2D1Bitmap>& ppBitmap
-	)
-	{
-		HRESULT hr = S_OK;
-
-		ComPtr<IWICBitmapDecoder> pDecoder = NULL;
-		ComPtr<IWICBitmapFrameDecode> pSource = NULL;
-		ComPtr<IWICStream> pStream = NULL;
-		ComPtr<IWICFormatConverter> pConverter = NULL;
-		ComPtr<IWICBitmapScaler> pScaler = NULL;
-		ComPtr<IWICBitmap> pWIC = NULL;
-
-		hr = pIWICFactory->CreateDecoderFromFilename(
-			uri,
-			NULL,
-			GENERIC_READ,
-			WICDecodeMetadataCacheOnDemand,
-			&pDecoder
-		);
-		if (SUCCEEDED(hr))
-		{
-			hr = pDecoder->GetFrame(0, pSource.GetAddressOf());
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pIWICFactory->CreateFormatConverter(pConverter.GetAddressOf());
-		}
-		if (destinationWidth != 0 || destinationHeight != 0)
-		{
-			UINT originalWidth, originalHeight;
-			hr = pSource->GetSize(&originalWidth, &originalHeight);
-			if (SUCCEEDED(hr))
-			{
-				if (destinationWidth == 0)
-				{
-					float scalar = static_cast<float>(destinationHeight) / static_cast<float>(originalHeight);
-					destinationWidth = static_cast<UINT>(scalar * static_cast<float>(originalWidth));
-				}
-				else if (destinationHeight == 0)
-				{
-					float scalar = static_cast<float>(destinationWidth) / static_cast<float>(originalWidth);
-					destinationHeight = static_cast<UINT>(scalar * static_cast<float>(originalHeight));
-				}
-
-				hr = pIWICFactory->CreateBitmapScaler(pScaler.GetAddressOf());
-				if (SUCCEEDED(hr))
-				{
-					hr = pScaler->Initialize(
-						pSource.Get(),
-						destinationWidth,
-						destinationHeight,
-						WICBitmapInterpolationModeCubic
-					);
-				}
-				if (SUCCEEDED(hr))
-				{
-					hr = pConverter->Initialize(
-						pScaler.Get(),
-						GUID_WICPixelFormat32bppPBGRA,
-						WICBitmapDitherTypeNone,
-						NULL,
-						0.f,
-						WICBitmapPaletteTypeMedianCut
-					);
-				}
-			}
-		}
-		if (SUCCEEDED(hr) && pConverter != 0)
-		{
-			hr = pRenderTarget->CreateBitmapFromWicBitmap(
-				pConverter.Get(),
-				nullptr,
-				ppBitmap.GetAddressOf()
-			);
-		}
-		return hr;
-	}
-
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _uri)
 	{
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
@@ -940,7 +767,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap>& _ppD2dBitmap)
+	HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap1>& _ppD2dBitmap)
 	{
 		if (!_pWicBitmap) return S_FALSE;
 
@@ -982,7 +809,7 @@ namespace suku
 
 		if (SUCCEEDED(hr))
 		{
-			hr = pMainRenderTarget->CreateBitmapFromWicBitmap(
+			hr = pD2DContext->CreateBitmapFromWicBitmap(
 				pConverter.Get(),
 				NULL,
 				_ppD2dBitmap.GetAddressOf()
@@ -992,7 +819,7 @@ namespace suku
 		return hr;
 	}
 
-	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap>& _d2dBitmap, ComPtr<IWICBitmap>& _wicBitmap)
+	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap1>& _d2dBitmap, ComPtr<IWICBitmap>& _wicBitmap)
 	{
 		if (!_d2dBitmap || !_wicBitmap.GetAddressOf())
 			return E_POINTER;
@@ -1006,8 +833,8 @@ namespace suku
 		hr = createWICBitmap(pWicBitmap, size.width, size.height);
 		if (FAILED(hr)) return hr;
 
-		ComPtr<ID2D1Bitmap> pDstD2dBitmap = nullptr;
-		hr = pMainRenderTarget->CreateBitmapFromWicBitmap(pWicBitmap.Get(), nullptr, &pDstD2dBitmap);
+		ComPtr<ID2D1Bitmap1> pDstD2dBitmap = nullptr;
+		hr = pD2DContext->CreateBitmapFromWicBitmap(pWicBitmap.Get(), nullptr, &pDstD2dBitmap);
 		if (FAILED(hr)) { return hr; }
 
 		hr = pDstD2dBitmap->CopyFromBitmap(
@@ -1047,7 +874,7 @@ namespace suku
 		}
 	}
 
-	std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap>& _d2dBitmap)
+	std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap1>& _d2dBitmap)
 	{
 		if (!_d2dBitmap)
 		{
@@ -1074,37 +901,6 @@ namespace suku
 			});
 	}
 
-	void drawBitmap(const ComPtr<ID2D1RenderTarget>& _renderTarget, const ComPtr<ID2D1Bitmap>& _pBitmap, float _x, float _y,
-		float _width, float _height, float _alpha, Transform _transform)
-	{
-		if (!_pBitmap) return;
-		setPaintingTransform(_transform);
-		_renderTarget->DrawBitmap(
-			_pBitmap.Get(),
-			D2D1::RectF(
-				_x, _y,
-				_x + fabs(_width),
-				_y + fabs(_height)
-			),
-			_alpha
-		);
-	}
-
-	void drawBitmap(const ComPtr<ID2D1RenderTarget>& _renderTarget, const ComPtr<ID2D1Bitmap>& _pBitmap, float _width, float _height, float _alpha, Transform _transform)
-	{
-		if (!_pBitmap) return;
-		setPaintingTransform(_transform);
-		_renderTarget->DrawBitmap(
-			_pBitmap.Get(),
-			D2D1::RectF(
-				0.0f, 0.0f,
-				fabs(_width),
-				fabs(_height)
-			),
-			_alpha
-		);
-	}
-
 	UINT RenderBitmap::getWidth() const
 	{
 		if (d2dBitmap_ == nullptr)
@@ -1121,7 +917,6 @@ namespace suku
 
 	void RenderBitmap::paint() const
 	{
-		drawBitmap(pMainRenderTarget, d2dBitmap_, 
-			0, 0, (float)getWidth(), (float)getHeight(), 1.0);
+		drawBitmap(d2dBitmap_);
 	}
 }
