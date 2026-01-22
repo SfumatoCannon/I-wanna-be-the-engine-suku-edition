@@ -17,13 +17,11 @@ namespace suku
 	void PaintLayer::beginDraw()
 	{
 		pD2DContext->SetTarget(pLayerBitmap_.Get());
-		pD2DContext->BeginDraw();
 	}
 
 	RenderBitmap PaintLayer::endDraw()
 	{
-		pD2DContext->EndDraw();
-		pD2DContext->SetTarget(nullptr);
+		pD2DContext->SetTarget(pScreenTargetBitmap.Get());
 		return RenderBitmap(pLayerBitmap_);
 	}
 

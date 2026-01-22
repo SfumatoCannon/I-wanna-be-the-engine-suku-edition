@@ -207,13 +207,17 @@ namespace suku
 
 		ComPtr<ID2D1Bitmap1> newBitmap;
 
-		pD2DContext->CreateBitmap(
+		HRESULT hr = pD2DContext->CreateBitmap(
 			D2D1::SizeU(_width, _height),
 			nullptr,
 			0,
 			&props,
 			&newBitmap
 		);
+		if (FAILED(hr))
+		{
+			ERRORWINDOW_GLOBAL("Failed to create bitmap");
+		}
 		return newBitmap;
 	}
 
@@ -227,18 +231,23 @@ namespace suku
 
 		ComPtr<ID2D1Bitmap1> newLayerBitmap;
 
-		pD2DContext->CreateBitmap(
+		HRESULT hr = pD2DContext->CreateBitmap(
 			D2D1::SizeU(_width, _height),
 			nullptr,
 			0,
 			&props,
 			&newLayerBitmap
 		);
+		if (FAILED(hr))
+		{
+			ERRORWINDOW_GLOBAL("Failed to create layer bitmap");
+		}
 		return newLayerBitmap;
 	}
 
 	void beginDrawGlobal()
 	{
+		pD2DContext->SetTarget(pScreenTargetBitmap.Get());
 		pD2DContext->BeginDraw();
 		pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	}
@@ -246,6 +255,7 @@ namespace suku
 	void endDrawGlobal()
 	{
 		pD2DContext->EndDraw();
+		pD2DContext->SetTarget(nullptr);
 		Graphics::pSwapChain->Present(1, 0);
 	}
 

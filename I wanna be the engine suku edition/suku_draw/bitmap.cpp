@@ -326,7 +326,7 @@ namespace suku
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
-		refreshD2DBitmap();		
+		refreshD2DBitmap();
 		setPaintingTransform(translation(_x, _y) + _transform);
 		drawBitmap(d2dBitmap_, _alpha);
 	}
@@ -917,6 +917,7 @@ namespace suku
 
 	void RenderBitmap::paint() const
 	{
+		setPaintingTransform(translation(0, 0));
 		drawBitmap(d2dBitmap_);
 	}
 }
