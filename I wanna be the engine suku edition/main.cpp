@@ -43,14 +43,15 @@ public:
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
+		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
 		create(Warp(128, 0, &room1));
 	}
 
 	virtual void onPaintStart()override
 	{
-		auto brush = createSolidColorBrush(Color(255, 255, 255, 255));
-		auto brush2 = createSolidColorBrush(Color(0, 0, 0, 255));
+		auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 255));
+		auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 255));
 		Shape A(SquareShape(64));
 		Bitmap B("Image\\bg.jpg");
 		static PaintLayer layer(800, 608);

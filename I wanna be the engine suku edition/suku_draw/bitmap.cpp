@@ -11,8 +11,19 @@ namespace suku
 {
 	using Microsoft::WRL::ComPtr;
 	using memory::Array2D;
+	using namespace suku::graphics;
+
 	// Private functions declaration
 	// ----------------------------------------------------------------------------
+	template<typename T>
+	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
+	template<typename T>
+	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
+	template<typename T>
+	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
+	template<typename T>
+	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
+
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* uri    /*absolute path*/);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _url, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
@@ -49,7 +60,7 @@ namespace suku
 		hr = wicBitmap_->GetPixelFormat(&pixelFormat);
 
 		ComPtr<IWICComponentInfo> componentInfo = nullptr;
-		auto pWICFactory = WICFactoryGlobal::getWICFactory();
+		auto pWICFactory = graphics::WICFactoryGlobal::getWICFactory();
 		if (SUCCEEDED(hr))
 			hr = pWICFactory->CreateComponentInfo(pixelFormat, componentInfo.GetAddressOf());
 		ComPtr<IWICPixelFormatInfo2> pixelFormatInfo = nullptr;
@@ -320,22 +331,22 @@ namespace suku
 	void Bitmap::paint(float _x, float _y, float _alpha)
 	{
 		refreshD2DBitmap();
-		setPaintingTransform(translation(_x, _y));
-		drawBitmap(d2dBitmap_, _alpha);
+		graphics::setPaintingTransform(translation(_x, _y));
+		graphics::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		setPaintingTransform(translation(_x, _y) + _transform);
-		drawBitmap(d2dBitmap_, _alpha);
+		graphics::setPaintingTransform(translation(_x, _y) + _transform);
+		graphics::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		setPaintingTransform(_transform);
-		drawBitmap(d2dBitmap_, _alpha);
+		graphics::setPaintingTransform(_transform);
+		graphics::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	UINT Bitmap::getWidth()const

@@ -8,6 +8,22 @@
 namespace suku
 {
 	using Microsoft::WRL::ComPtr;
+	using namespace suku::graphics;
+
+	// Private functions declaration
+	// ----------------------------------------------------------------------------
+	template<typename T>
+	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
+	template<typename T>
+	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
+	template<typename T>
+	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
+	template<typename T>
+	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
+
+	// ----------------------------------------------------------------------------
+	// End of private functions declaration
+	
 
 	Shape::Shape()
 	{

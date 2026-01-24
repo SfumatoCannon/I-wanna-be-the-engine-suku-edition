@@ -1,6 +1,7 @@
 #pragma once
 #include "suku_foundation/includes.h"
 #include "suku_core/includes.h"
+#include "suku_foundation/type_tree.h"
 
 void loadFromJtoolMsg(suku::Room* _room, std::string _msg);
 

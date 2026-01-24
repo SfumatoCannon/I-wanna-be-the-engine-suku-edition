@@ -3,6 +3,20 @@
 
 namespace suku
 {
+	// Private functions declaration
+	// ----------------------------------------------------------------------------
+	template<typename T>
+	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
+	template<typename T>
+	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
+	template<typename T>
+	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
+	template<typename T>
+	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
+
+	// ----------------------------------------------------------------------------
+	// End of private functions declaration
+
 	bool SpriteElement::isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const
 	{
 		if (!hitArea || !(_other.hitArea))
@@ -34,7 +48,7 @@ namespace suku
 		shape = _shape;
 
 		ComPtr<ID2D1SolidColorBrush> newBrush;
-		newBrush = createSolidColorBrush(_fillColor);
+		newBrush = graphics::createSolidColorBrush(_fillColor);
 		fillBrush = newBrush;
 		outlineBrush = newBrush;
 
@@ -47,8 +61,8 @@ namespace suku
 	{
 		shape = _shape;
 
-		fillBrush = createSolidColorBrush(_fillColor);
-		outlineBrush = createSolidColorBrush(_outlineColor);
+		fillBrush = graphics::createSolidColorBrush(_fillColor);
+		outlineBrush = graphics::createSolidColorBrush(_outlineColor);
 
 		outlineWidth = _outlineWidth;
 		outlineStrokeStyle = _outlineStrokeStyle;
@@ -87,14 +101,14 @@ namespace suku
 	{
 		if (fillBrush != nullptr)
 			release_safe(fillBrush);
-		fillBrush = createSolidColorBrush(_color);
+		fillBrush = graphics::createSolidColorBrush(_color);
 	}
 
 	void ShapeSpriteElement::setOutlineColor(const Color& _color)
 	{
 		if (outlineBrush != nullptr)
 			release_safe(outlineBrush);
-		outlineBrush = createSolidColorBrush(_color);
+		outlineBrush = graphics::createSolidColorBrush(_color);
 	}
 
 	void ShapeSpriteElement::setOutlineWidth(int _width)

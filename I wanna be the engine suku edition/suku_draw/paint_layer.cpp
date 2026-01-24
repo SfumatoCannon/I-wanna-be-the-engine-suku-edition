@@ -9,6 +9,8 @@
 
 namespace suku
 {
+	using namespace suku::graphics;
+
 	void PaintLayer::newLayer(UINT _width, UINT _height)
 	{
 		pLayerBitmap_ = createLayerBitmap(_width, _height);

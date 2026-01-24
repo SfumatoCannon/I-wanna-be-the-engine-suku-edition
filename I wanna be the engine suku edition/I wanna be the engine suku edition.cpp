@@ -75,9 +75,9 @@ void paintWork()
 	{
 		if (!gameEndFlag)
 		{
-			beginDrawGlobal();
+			graphics::beginDrawGlobal();
 			nowRoom->paint();
-			endDrawGlobal();
+			graphics::endDrawGlobal();
 		}
 		threadLock.unlock();
 	}
@@ -130,9 +130,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATEFINISHED:
 		timeBeginPeriod(1);
 		//suku_save_init();
-		WICFactoryGlobal::getWICFactory();
-		D2DFactoryGlobal::getD2DFactory();
-		suku_drawing_postinit(hWnd);
+		graphics::WICFactoryGlobal::getWICFactory();
+		graphics::D2DFactoryGlobal::getD2DFactory();
+		graphics::suku_drawing_postinit(hWnd);
 		soundInit();
 		init();
 		startSender();
@@ -145,7 +145,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		timeEndPeriod(1);
-		suku_drawing_uninit();
+		graphics::suku_drawing_uninit();
 		soundUninit();
 		PostQuitMessage(0);
 		break;

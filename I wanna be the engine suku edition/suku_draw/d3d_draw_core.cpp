@@ -3,7 +3,7 @@
 
 namespace suku
 {
-	namespace Graphics
+	namespace graphics
 	{
 		ComPtr<IDXGISwapChain1>         pSwapChain;
 
@@ -31,7 +31,7 @@ namespace suku
 		void createSwapChain(HWND _hWnd)
 		{
 			ComPtr<IDXGIDevice> dxgiDevice;
-			const auto& pD3DDevice = Graphics::D3DFactoryGlobal::GetD3DDevice();
+			const auto& pD3DDevice = graphics::D3DFactoryGlobal::GetD3DDevice();
 			pD3DDevice.As(&dxgiDevice);
 
 			ComPtr<IDXGIAdapter> adapter;
