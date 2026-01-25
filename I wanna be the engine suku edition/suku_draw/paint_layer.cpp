@@ -11,6 +11,8 @@ namespace suku
 {
 	using namespace suku::graphics;
 
+	std::stack<ComPtr<ID2D1Bitmap1>> PaintLayer::CurrentLayerStateStack_;
+
 	void PaintLayer::newLayer(UINT _width, UINT _height)
 	{
 		pLayerBitmap_ = createLayerBitmap(_width, _height);
@@ -18,12 +20,32 @@ namespace suku
 
 	void PaintLayer::beginDraw()
 	{
+		CurrentLayerStateStack_.push(pLayerBitmap_);
 		pD2DContext->SetTarget(pLayerBitmap_.Get());
 	}
 
 	RenderBitmap PaintLayer::endDraw()
 	{
-		pD2DContext->SetTarget(pScreenTargetBitmap.Get());
+		if (CurrentLayerStateStack_.empty())
+		{
+			WARNINGWINDOW("Couldn't found layer data in drawing stack \"PaintLayer::CurrentLayerStateStack_\".\n\
+				Unexpected error may happen.");
+			pD2DContext->SetTarget(pScreenTargetBitmap.Get());
+		}
+		else if (CurrentLayerStateStack_.top() != pLayerBitmap_)
+		{
+			WARNINGWINDOW("The top layer data in drawing stack \"PaintLayer::CurrentLayerStateStack_\" is not matching the current layer.\n\
+				Unexpected error may happen.");
+		}
+		else
+		{
+			CurrentLayerStateStack_.pop();
+		}
+
+		if (CurrentLayerStateStack_.empty())
+			pD2DContext->SetTarget(pScreenTargetBitmap.Get());
+		else
+			pD2DContext->SetTarget(CurrentLayerStateStack_.top().Get());
 		return RenderBitmap(pLayerBitmap_);
 	}
 

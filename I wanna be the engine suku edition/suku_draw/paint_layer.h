@@ -2,6 +2,7 @@
 #include <d2d1.h>
 #include <Windows.h>
 #include "color.h"
+#include <stack>
 #include <wrl/client.h>
 
 namespace suku
@@ -28,6 +29,7 @@ namespace suku
 			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 	private:
+		static std::stack<ComPtr<ID2D1Bitmap1>> CurrentLayerStateStack_;
 		ComPtr<ID2D1Bitmap1> pLayerBitmap_;
 		UINT width_;
 		UINT height_;
