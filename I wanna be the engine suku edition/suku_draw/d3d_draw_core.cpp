@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "d3d_draw_core.h"
+#include "../suku_foundation/includes.h"
 
 namespace suku
 {
@@ -40,25 +41,26 @@ namespace suku
 			ComPtr<IDXGIFactory2> factory;
 			adapter->GetParent(IID_PPV_ARGS(&factory));
 
-			RECT rc;
-			GetClientRect(_hWnd, &rc);
+			UINT logicalWidth = GetSystemMetrics(SM_CXSCREEN);
+			UINT logicalHeight = GetSystemMetrics(SM_CYSCREEN);
 
-			float dpi = GetDpiForWindow(_hWnd);
-			float scale = dpi / 96.0f;
+			UINT dpi = GetDpiForWindow(_hWnd);
+			float scale = (float)dpi / 96.0f;
 
-			UINT pixelWidth = UINT((rc.right - rc.left) * scale);
-			UINT pixelHeight = UINT((rc.bottom - rc.top) * scale);
+			UINT pixelWidth = (UINT)(logicalWidth * scale);
+			UINT pixelHeight = (UINT)(logicalHeight * scale);
 
 			DXGI_SWAP_CHAIN_DESC1 desc = {};
 			desc.Width = pixelWidth;
 			desc.Height = pixelHeight;
 			desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 			desc.SampleDesc.Count = 1;
+			desc.Scaling = DXGI_SCALING_NONE;
 			desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 			desc.BufferCount = 2;
-			desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+			desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
-			factory->CreateSwapChainForHwnd(
+			HRESULT hr = factory->CreateSwapChainForHwnd(
 				pD3DDevice.Get(),
 				_hWnd,
 				&desc,
@@ -66,6 +68,11 @@ namespace suku
 				nullptr,
 				&pSwapChain
 			);
+
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create DXGI swap chain!");
+			}
 		}
 
 		void suku_d3d_preinit(ComPtr<ID3D11Device>& _pD3DDevice,

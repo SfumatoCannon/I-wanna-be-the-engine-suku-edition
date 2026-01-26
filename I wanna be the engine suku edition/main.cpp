@@ -27,6 +27,7 @@ public:
 
 	virtual void onCreate()override
 	{
+		Room::onCreate();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
 

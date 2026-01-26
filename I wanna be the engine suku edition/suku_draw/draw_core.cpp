@@ -251,7 +251,7 @@ namespace suku
 		{
 			pD2DContext->SetTarget(pScreenTargetBitmap.Get());
 			pD2DContext->BeginDraw();
-			pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+			pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 		}
 
 		void endDrawGlobal()
@@ -263,7 +263,7 @@ namespace suku
 
 		void clearScreen()
 		{
-			pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+			pD2DContext->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 		}
 	}
 }

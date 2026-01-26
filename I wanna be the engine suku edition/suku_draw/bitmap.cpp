@@ -926,9 +926,27 @@ namespace suku
 		return d2dBitmap_->GetPixelSize().height;
 	}
 
-	void RenderBitmap::paint() const
+	void RenderBitmap::paint(float _alpha) const
 	{
 		setPaintingTransform(translation(0, 0));
 		drawBitmap(d2dBitmap_);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _alpha) const
+	{
+		setPaintingTransform(translation(_x, _y));
+		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, Transform _transform, float _alpha) const
+	{
+		setPaintingTransform(translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(Transform _transform, float _alpha) const
+	{
+		setPaintingTransform(_transform);
+		drawBitmap(d2dBitmap_, _alpha);
 	}
 }

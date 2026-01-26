@@ -413,6 +413,9 @@
     <ClCompile Include="suku_draw\d3d_draw_core.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="suku_foundation\game_window.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="I wanna be the engine suku edition.rc">

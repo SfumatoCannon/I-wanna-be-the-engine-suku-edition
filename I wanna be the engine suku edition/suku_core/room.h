@@ -1,6 +1,7 @@
 #pragma once
 #include "../framework.h"
 #include "../suku_foundation/includes.h"
+#include <suku_draw/paint_layer.h>
 
 namespace suku
 {
@@ -11,9 +12,9 @@ namespace suku
 	class Room
 	{
 	public:
-		float playerStartX, playerStartY;
-		bool hasCreated;
-		Room();
+		float playerStartX = 0.0, playerStartY = 0.0;
+		bool hasCreated = false;
+		Room() = default;
 		void setPlayerStart(float _x, float _y);
 
 		template<typename Obj> std::list<Obj*> getObjectList();
@@ -37,7 +38,7 @@ namespace suku
 		void modifyObjectRecheckPriority(Object* _object, double _newId);
 		void modifyObjectPaintPriority(Object* _object, double _newId);
 
-		virtual void onCreate() {}
+		virtual void onCreate() { displayLayer_.newLayer(800, 608); }
 		virtual void onJoin() {}
 		virtual void onRestart() {}
 		virtual void onPaintStart() {}
@@ -50,6 +51,7 @@ namespace suku
 		void additionalFramePaint(float _offset);
 		void reset();
 	private:
+		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<Object*>> objectPointerArray_;
 		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray_;
 		std::map<double, std::list<Object*>> reviseStateArray_;

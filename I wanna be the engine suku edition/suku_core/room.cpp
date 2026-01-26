@@ -1,5 +1,6 @@
 #include "room.h"
 #include "object.h"
+#include "../suku_draw/draw_core.h"
 
 namespace suku
 {
@@ -8,15 +9,6 @@ namespace suku
 	std::vector<std::pair<Typecode, int>> reviseStateArray_;
 	std::vector<std::pair<Typecode, int>> updateStateArray_;
 	std::vector<std::pair<Typecode, int>> recheckStateArray_;
-
-
-	Room::Room()
-	{
-		hasCreated = false;
-		objectPointerArray_.clear();
-		playerStartX = 0.0;
-		playerStartY = 0.0;
-	}
 
 	void Room::setPlayerStart(float _x, float _y)
 	{
@@ -215,6 +207,7 @@ namespace suku
 
 	void Room::paint()
 	{
+		displayLayer_.beginDraw();
 		onPaintStart();
 
 		for (auto& x : paintArray_)
@@ -225,6 +218,7 @@ namespace suku
 			}
 
 		onPaintEnd();
+		displayLayer_.endDraw().paint(GameWindow::getPixelMappingTransform());
 	}
 
 	void Room::additionalFramePaint(float _offset)

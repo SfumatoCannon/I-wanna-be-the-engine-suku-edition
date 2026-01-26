@@ -149,6 +149,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		soundUninit();
 		PostQuitMessage(0);
 		break;
+	case WM_SIZE:
+		suku::GameWindow::RefreshSizeInfo();
+		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -201,7 +204,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	suku::GameWindow::hWnd = CreateWindowW(
 		szWindowClass,
 		szTitle,
-		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
+		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX,
 		x, y,
 		winW, winH,
 		nullptr, nullptr, hInstance, nullptr

@@ -97,7 +97,10 @@ namespace suku
 		UINT getHeight()const;
 		std::pair<UINT, UINT> getSize()const { return { getWidth(), getHeight() }; }
 
-		void paint() const;
+		void paint(float _alpha = 1.0f) const;
+		void paint(float _x, float _y, float _alpha = 1.0f) const;
+		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f) const;
+		void paint(Transform _transform, float _alpha = 1.0f) const;
 
 		friend class PaintLayer;
 	private:

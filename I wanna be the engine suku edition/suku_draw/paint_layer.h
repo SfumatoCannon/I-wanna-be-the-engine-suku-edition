@@ -19,6 +19,11 @@ namespace suku
 		PaintLayer() = default;
 		PaintLayer(UINT _width, UINT _height) { newLayer(_width, _height); }
 		void newLayer(UINT _width, UINT _height);
+
+		UINT getWidth() { return width_; }
+		UINT getHeight() { return height_; }
+		std::pair<UINT, UINT> getSize() { return { width_, height_ }; }
+
 		void beginDraw();
 		RenderBitmap endDraw();
 		void clear();
