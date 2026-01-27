@@ -189,7 +189,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
 		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
 #else
-	RECT rc = { 0, 0, suku::WindowWidth, suku::WindowHeight };
+	UINT dpi = GetDpiForSystem();
+	float scale = (float)dpi / 96.0f;
+	if (scale < 1.0f)
+		scale = 1.0f;
+
+	RECT rc = { 0, 0, 
+		static_cast<LONG>(suku::WindowWidth * scale), 
+		static_cast<LONG>(suku::WindowHeight * scale)};
+
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
 	int winW = rc.right - rc.left;
