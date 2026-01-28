@@ -72,7 +72,10 @@ namespace suku
 			if (FAILED(hr))
 			{
 				ERRORWINDOW_GLOBAL("Failed to create DXGI swap chain!");
+				return;
 			}
+
+			factory->MakeWindowAssociation(_hWnd, DXGI_MWA_NO_ALT_ENTER);
 		}
 
 		void suku_d3d_preinit(ComPtr<ID3D11Device>& _pD3DDevice,
