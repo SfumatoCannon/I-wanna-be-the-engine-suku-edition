@@ -56,6 +56,13 @@ void updateWork()
 
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
+		if (suku::input::isKeyDown(VK_F1))
+		{
+			static bool fullscreenTag = false;
+			fullscreenTag = !fullscreenTag;
+			suku::GameWindow::setFullscreen(fullscreenTag);
+		}
+
 		else
 		{
 			if (nowRoom)

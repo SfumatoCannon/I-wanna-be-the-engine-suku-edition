@@ -39,6 +39,37 @@ namespace suku
         pixelMappingTransformUpdateTag_ = true;
     }
 
+    void GameWindow::setFullscreen(bool _isFullscreen)
+    {
+        if (isFullscreen_ == _isFullscreen)
+            return;
+        DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+        if (_isFullscreen == true)
+        {
+            MONITORINFO mi = { sizeof(mi) };
+            if (GetWindowPlacement(hWnd, &previousWindowPlacement_) 
+                && GetMonitorInfo(MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY), &mi))
+            {
+                SetWindowLong(hWnd, GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW);
+                SetWindowPos(hWnd, HWND_TOP,
+                    mi.rcMonitor.left, mi.rcMonitor.top,
+                    mi.rcMonitor.right - mi.rcMonitor.left,
+                    mi.rcMonitor.bottom - mi.rcMonitor.top,
+                    SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+            }
+			isFullscreen_ = true;
+        }
+        else
+        {
+            SetWindowLong(hWnd, GWL_STYLE, dwStyle | WS_OVERLAPPEDWINDOW);
+            SetWindowPlacement(hWnd, &previousWindowPlacement_);
+            SetWindowPos(hWnd, NULL, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+                SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+            isFullscreen_ = false;
+        }
+    }
+
     void GameWindow::RefreshSizeInfo()
     {
 		sizeUpdateTag_ = true;

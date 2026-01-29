@@ -18,7 +18,10 @@ namespace suku
 		static std::pair<UINT, UINT> getLogicalSize() { return { logicalWidth_, logicalHeight_ }; }
 		static UINT getLogicalWidth() { return logicalWidth_; }
 		static UINT getLogicalHeight() { return logicalHeight_; }
+		static bool isFullscreen() { return isFullscreen_; }
+
 		static void setLogicalSize(UINT _width, UINT _height);
+		static void setFullscreen(bool _isFullscreen);
 		static void RefreshSizeInfo();
 
 		static Transform getPixelMappingTransform();
@@ -32,5 +35,7 @@ namespace suku
 		inline static Transform pixelMappingTransform_;
 		inline static bool sizeUpdateTag_ = true;
 		inline static bool pixelMappingTransformUpdateTag_ = true;
+		inline static bool isFullscreen_ = false;
+		inline static WINDOWPLACEMENT previousWindowPlacement_ = { sizeof(WINDOWPLACEMENT) };
 	};
 }
