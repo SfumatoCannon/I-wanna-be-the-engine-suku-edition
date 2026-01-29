@@ -3,6 +3,7 @@
 #include "includes.h"
 #include "../suku_foundation/includes.h"
 #include "d3d_draw_core.h"
+#include "bitmap_scale_mode.h"
 
 namespace suku
 {
@@ -163,24 +164,24 @@ namespace suku
 			);
 		}
 
-		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, float _opacity)
+		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, float _opacity, BitmapScaleMode _scaleMode)
 		{
 			pD2DContext->DrawBitmap(
 				_bitmap.Get(),
 				nullptr,
 				_opacity,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				static_cast<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
 				nullptr
 			);
 		}
 
-		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect, float _opacity)
+		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect, float _opacity, BitmapScaleMode _scaleMode)
 		{
 			pD2DContext->DrawBitmap(
 				_bitmap.Get(),
 				&_destRect,
 				_opacity,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				static_cast<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
 				&_srcRect
 			);
 		}

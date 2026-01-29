@@ -166,6 +166,7 @@
     <ClInclude Include="suku_draw\draw_core.h" />
     <ClInclude Include="suku_draw\includes.h" />
     <ClInclude Include="suku_draw\paint_layer.h" />
+    <ClInclude Include="suku_draw\bitmap_scale_mode.h" />
     <ClInclude Include="suku_draw\shape.h" />
     <ClInclude Include="suku_draw\shape_builder.h" />
     <ClInclude Include="suku_draw\transform.h" />
