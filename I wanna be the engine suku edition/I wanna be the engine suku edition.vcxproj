@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -164,9 +164,11 @@
     <ClInclude Include="suku_draw\color.h" />
     <ClInclude Include="suku_draw\d3d_draw_core.h" />
     <ClInclude Include="suku_draw\draw_core.h" />
+    <ClInclude Include="suku_draw\effect.h" />
     <ClInclude Include="suku_draw\includes.h" />
     <ClInclude Include="suku_draw\paint_layer.h" />
     <ClInclude Include="suku_draw\bitmap_scale_mode.h" />
+    <ClInclude Include="suku_draw\scale_mode.h" />
     <ClInclude Include="suku_draw\shape.h" />
     <ClInclude Include="suku_draw\shape_builder.h" />
     <ClInclude Include="suku_draw\transform.h" />
@@ -244,6 +246,7 @@
     <ClCompile Include="suku_draw\draw_core.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="suku_draw\effect.cpp" />
     <ClCompile Include="suku_draw\paint_layer.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>

@@ -4,7 +4,7 @@
 #include <d2d1.h>
 #include "color.h"
 #include "transform.h"
-#include "bitmap_scale_mode.h"
+#include "scale_mode.h"
 
 namespace suku
 {

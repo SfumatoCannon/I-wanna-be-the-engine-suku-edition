@@ -3,7 +3,7 @@
 #include "includes.h"
 #include "../suku_foundation/includes.h"
 #include "d3d_draw_core.h"
-#include "bitmap_scale_mode.h"
+#include "scale_mode.h"
 
 namespace suku
 {

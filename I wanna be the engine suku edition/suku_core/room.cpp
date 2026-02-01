@@ -1,5 +1,6 @@
 #include "room.h"
 #include "object.h"
+#include "../suku_draw/effect.h"
 #include "../suku_draw/draw_core.h"
 
 namespace suku
@@ -218,7 +219,11 @@ namespace suku
 			}
 
 		onPaintEnd();
-		displayLayer_.endDraw().paint(GameWindow::getPixelMappingTransform());
+		auto pic = displayLayer_.endDraw();
+		Effect scaleEffect = Effect::scaleEffect(2, 2, EffectScaleMode::Cubic);
+		scaleEffect.setInput(pic);
+		scaleEffect.drawEffect();
+		//pic.paint(GameWindow::getPixelMappingTransform());
 	}
 
 	void Room::additionalFramePaint(float _offset)
