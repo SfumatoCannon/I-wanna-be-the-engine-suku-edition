@@ -302,6 +302,7 @@
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />
     <None Include="suku_core\sprite.inl" />
+    <None Include="suku_draw\scale_mode.inl" />
     <None Include="suku_foundation\type_tree.inl" />
     <None Include="suku_foundation\var.inl" />
   </ItemGroup>

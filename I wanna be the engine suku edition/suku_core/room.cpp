@@ -220,10 +220,10 @@ namespace suku
 
 		onPaintEnd();
 		auto pic = displayLayer_.endDraw();
-		static EffectTransform scaleEffect(EffectScaleMode::HighQualityCubic, 0.0f);
+		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, 0.0f);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
-		scaleEffect.drawEffect();
+		scaleEffect.paint();
 	}
 
 	void Room::additionalFramePaint(float _offset)

@@ -11,6 +11,7 @@ namespace suku
 
 		Transform();
 		Transform(D2D1::Matrix3x2F _matrix);
+		static Transform Identity() { return Transform(); }
 
 		void transformPoint(float* _x, float* _y);
 		Vector transformPoint(float _x, float _y);

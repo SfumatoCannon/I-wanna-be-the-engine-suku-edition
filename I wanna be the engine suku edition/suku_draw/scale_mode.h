@@ -1,22 +1,32 @@
 #pragma once
 #include <d2d1.h>
 #include <d2d1effects.h>
+#include "../suku_foundation/message.h"
+
 
 namespace suku
 {
-	enum class EffectScaleMode
+	template<typename T>
+	concept ScaleModeTargetType =
+		std::same_as<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, T> ||
+		std::same_as<D2D1_BITMAP_INTERPOLATION_MODE, T>;
+
+	enum class ScaleMode
 	{
-		NearestNeighbor = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-		Linear = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_LINEAR,
-		Cubic = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_CUBIC,
-		MultiSampleLinear = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_MULTI_SAMPLE_LINEAR,
-		Anisotropic = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_ANISOTROPIC,
-		HighQualityCubic = D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_HIGH_QUALITY_CUBIC
+		NearestNeighbor,
+		Linear,
+		Cubic,
+		MultiSampleLinear,
+		Anisotropic,
+		HighQualityCubic
 	};
 
-	enum class BitmapScaleMode
+	class ScaleModeTranslator
 	{
-		NearestNeighbor = D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-		Linear = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	public:
+		template <ScaleModeTargetType T>
+		static T toNative(ScaleMode _scaleMode);
 	};
 }
+
+#include "scale_mode.inl"

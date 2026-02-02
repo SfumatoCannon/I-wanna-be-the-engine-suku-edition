@@ -21,9 +21,9 @@ namespace suku
 		pEffect_->SetInputEffect(_index, _effect.pEffect_.Get());
 	}
 
-	void Effect::drawEffect() const
+	void Effect::paint() const
 	{
-		graphics::pD2DContext->SetTransform(D2D1::Matrix3x2F::Identity());
+		graphics::setPaintingTransform(Transform::Identity());
 		graphics::pD2DContext->DrawImage(pEffect_.Get());
 	}
 
@@ -32,18 +32,20 @@ namespace suku
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 	}
 
-	EffectTransform::EffectTransform(Transform _transform, EffectScaleMode _scaleMode, float _sharpness)
+	EffectTransform::EffectTransform(Transform _transform, ScaleMode _scaleMode, float _sharpness)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.matrix);
-		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, static_cast<D2D1_SCALE_INTERPOLATION_MODE>(_scaleMode));
+		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
+			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
 	}
 
-	EffectTransform::EffectTransform(EffectScaleMode _scaleMode, float _sharpness)
+	EffectTransform::EffectTransform(ScaleMode _scaleMode, float _sharpness)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
-		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, static_cast<D2D1_SCALE_INTERPOLATION_MODE>(_scaleMode));
+		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
+			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
 	}
 
@@ -53,9 +55,10 @@ namespace suku
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.matrix);
 	}
 
-	void EffectTransform::setScaleMode(EffectScaleMode _scaleMode)
+	void EffectTransform::setScaleMode(ScaleMode _scaleMode)
 	{
-		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, static_cast<D2D1_SCALE_INTERPOLATION_MODE>(_scaleMode));
+		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
+			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 	}
 
 	void EffectTransform::setSharpness(float _sharpness)

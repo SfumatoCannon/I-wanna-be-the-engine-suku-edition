@@ -2,7 +2,6 @@
 
 namespace suku
 {
-
 	template<typename SprZ>
 	inline Sprite::Sprite(const SprZ& _spriteZ)
 	{

@@ -164,24 +164,24 @@ namespace suku
 			);
 		}
 
-		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, float _opacity, BitmapScaleMode _scaleMode)
+		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, float _opacity, ScaleMode _scaleMode)
 		{
 			pD2DContext->DrawBitmap(
 				_bitmap.Get(),
 				nullptr,
 				_opacity,
-				static_cast<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
+				ScaleModeTranslator::toNative<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
 				nullptr
 			);
 		}
 
-		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect, float _opacity, BitmapScaleMode _scaleMode)
+		void drawBitmap(const ComPtr<ID2D1Bitmap1>& _bitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect, float _opacity, ScaleMode _scaleMode)
 		{
 			pD2DContext->DrawBitmap(
 				_bitmap.Get(),
 				&_destRect,
 				_opacity,
-				static_cast<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
+				ScaleModeTranslator::toNative<D2D1_BITMAP_INTERPOLATION_MODE>(_scaleMode),
 				&_srcRect
 			);
 		}
