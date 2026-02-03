@@ -45,16 +45,16 @@ namespace suku
 			float _opacity = 1.0,
 			ScaleMode _scaleMode = ScaleMode::Linear
 		);
-		//void drawEffect(
-
-		//);
-		//void drawEffect(
-		//	const ComPtr<ID2D1Effect>& _effect,
-		//	const D2D1_RECT_F& _destRect,
-		//	const D2D1_RECT_F& _srcRect,
-		//	float _opacity = 1.0,
-		//	BitmapScaleMode _scaleMode = BitmapScaleMode::Linear
-		//);
+		void drawEffect(
+			const ComPtr<ID2D1Effect>& _effect,
+			ScaleMode _scaleMode = ScaleMode::Linear
+		);
+		void drawEffect(
+			const ComPtr<ID2D1Effect>& _effect,
+			const D2D1_RECT_F& _destRect,
+			const D2D1_RECT_F& _srcRect,
+			ScaleMode _scaleMode = ScaleMode::Linear
+		);
 		
 		ComPtr<ID2D1Bitmap1> createBitmapFromWicBitmap(const ComPtr<IWICBitmap>& _wicBitmap);
 		ComPtr<ID2D1Bitmap1> createBitmap(UINT _width, UINT _height);

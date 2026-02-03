@@ -186,6 +186,25 @@ namespace suku
 			);
 		}
 
+		void drawEffect(const ComPtr<ID2D1Effect>& _effect, ScaleMode _scaleMode)
+		{
+			pD2DContext->DrawImage(
+				_effect.Get(),
+				ScaleModeTranslator::toNative<D2D1_INTERPOLATION_MODE>(_scaleMode)
+			);
+		}
+
+		void drawEffect(const ComPtr<ID2D1Effect>& _effect, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect, ScaleMode _scaleMode)
+		{
+			D2D1_POINT_2F destPoint = D2D1::Point2F(_destRect.left, _destRect.top);
+			pD2DContext->DrawImage(
+				_effect.Get(),
+				&destPoint,
+				&_srcRect,
+				ScaleModeTranslator::toNative<D2D1_INTERPOLATION_MODE>(_scaleMode)
+			);
+		}
+
 		ComPtr<ID2D1Bitmap1> createBitmapFromWicBitmap(const ComPtr<IWICBitmap>& _wicBitmap)
 		{
 			ComPtr<ID2D1Bitmap1> bitmap;

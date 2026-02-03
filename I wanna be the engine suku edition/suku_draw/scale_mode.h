@@ -9,7 +9,8 @@ namespace suku
 	template<typename T>
 	concept ScaleModeTargetType =
 		std::same_as<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, T> ||
-		std::same_as<D2D1_BITMAP_INTERPOLATION_MODE, T>;
+		std::same_as<D2D1_BITMAP_INTERPOLATION_MODE, T> ||
+		std::same_as<D2D1_INTERPOLATION_MODE, T>;
 
 	enum class ScaleMode
 	{

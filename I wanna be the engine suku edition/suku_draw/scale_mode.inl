@@ -39,10 +39,28 @@ namespace suku
 			case ScaleMode::MultiSampleLinear:
 			case ScaleMode::Anisotropic:
 			case ScaleMode::HighQualityCubic:
-				WARNINGWINDOW_GLOBAL("The selected ScaleMode is not supported in BitmapScaleMode. Using Linear instead.");
+				WARNINGWINDOW_GLOBAL("The selected ScaleMode is not supported in Bitmap Painting ScaleMode. Using Linear instead.");
 				return D2D1_BITMAP_INTERPOLATION_MODE_LINEAR;
 			default:
 				return D2D1_BITMAP_INTERPOLATION_MODE_LINEAR;
+			}
+		}
+		else if constexpr (std::is_same_v<T, D2D1_INTERPOLATION_MODE>)
+		{
+			switch (_scaleMode)
+			{
+			case ScaleMode::NearestNeighbor:
+				return D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+			case ScaleMode::Linear:
+				return D2D1_INTERPOLATION_MODE_LINEAR;
+			case ScaleMode::Cubic:
+			case ScaleMode::MultiSampleLinear:
+			case ScaleMode::Anisotropic:
+			case ScaleMode::HighQualityCubic:
+				WARNINGWINDOW_GLOBAL("The selected ScaleMode is not supported in Image Painting ScaleMode. Using Linear instead.");
+				return D2D1_INTERPOLATION_MODE_LINEAR;
+			default:
+				return D2D1_INTERPOLATION_MODE_LINEAR;
 			}
 		}
 	}

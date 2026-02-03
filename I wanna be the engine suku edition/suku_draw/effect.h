@@ -42,8 +42,8 @@ namespace suku
 		float getSharpness() { return sharpness_; }
 		void setSharpness(float _sharpness);
 	private:
-		Transform transform_;
-		ScaleMode scaleMode_;
+		Transform transform_ = Transform();
+		ScaleMode scaleMode_ = ScaleMode::Linear;
 		float sharpness_ = 0.0f;
 	};
 }

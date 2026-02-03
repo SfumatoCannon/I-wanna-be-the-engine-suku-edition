@@ -24,7 +24,7 @@ namespace suku
 	void Effect::paint() const
 	{
 		graphics::setPaintingTransform(Transform::Identity());
-		graphics::pD2DContext->DrawImage(pEffect_.Get());
+		graphics::drawEffect(pEffect_);
 	}
 
 	EffectTransform::EffectTransform()
