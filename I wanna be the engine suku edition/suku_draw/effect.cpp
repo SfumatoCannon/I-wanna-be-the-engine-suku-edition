@@ -4,6 +4,7 @@
 #include "bitmap.h"
 #include <d2d1effects.h>
 
+
 namespace suku
 {
 	void Effect::setInput(Bitmap& _bitmap, int _index)
@@ -64,5 +65,35 @@ namespace suku
 	void EffectTransform::setSharpness(float _sharpness)
 	{
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
+	}
+
+	EffectOpacityMask::EffectOpacityMask()
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
+	}
+
+	EffectOpacityMask::EffectOpacityMask(Bitmap& _maskBitmap)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
+		setMaskBitmap(_maskBitmap);
+	}
+
+	EffectOpacityMask::EffectOpacityMask(RenderBitmap& _maskBitmap)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
+		setMaskBitmap(_maskBitmap);
+	}
+
+	void EffectOpacityMask::setMaskBitmap(Bitmap& _maskBitmap)
+	{
+		pEffect_->SetInput(1, _maskBitmap.getD2DBitmap().Get());
+	}
+
+	void EffectOpacityMask::setMaskBitmap(RenderBitmap& _maskBitmap)
+	{
+		pEffect_->SetInput(1, _maskBitmap.getD2DBitmap().Get());
 	}
 }

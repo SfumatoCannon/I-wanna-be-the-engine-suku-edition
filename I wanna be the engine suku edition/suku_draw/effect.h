@@ -11,6 +11,7 @@ namespace suku
 
 	class Effect;
 	class EffectTransform;
+	class EffectOpacityMask;
 
 	class Effect
 	{
@@ -45,5 +46,16 @@ namespace suku
 		Transform transform_ = Transform();
 		ScaleMode scaleMode_ = ScaleMode::Linear;
 		float sharpness_ = 0.0f;
+	};
+
+	class EffectOpacityMask : public Effect
+	{
+	public:
+		EffectOpacityMask();
+		EffectOpacityMask(Bitmap& _maskBitmap);
+		EffectOpacityMask(RenderBitmap& _maskBitmap);
+
+		void setMaskBitmap(Bitmap& _maskBitmap);
+		void setMaskBitmap(RenderBitmap& _maskBitmap);
 	};
 }
