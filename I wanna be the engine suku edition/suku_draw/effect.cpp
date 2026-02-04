@@ -96,4 +96,127 @@ namespace suku
 	{
 		pEffect_->SetInput(1, _maskBitmap.getD2DBitmap().Get());
 	}
+
+	EffectCut::EffectCut(bool _isAtlasMode) : isAtlasMode_(_isAtlasMode)
+	{
+		if (_isAtlasMode == false)
+		{
+			graphics::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
+		}
+		else
+		{
+			graphics::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
+		}
+	}
+
+	EffectCut::EffectCut(float _x, float _y, float _width, float _height, bool _isAtlasMode)
+		: x_(_x), y_(_y), width_(_width), height_(_height), isAtlasMode_(_isAtlasMode)
+	{
+		if (_isAtlasMode == false)
+		{
+			graphics::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ _x, _y, _x + _width, _y + _height });
+		}
+		else
+		{
+			graphics::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ _x, _y, _x + _width, _y + _height });
+		}
+	}
+
+	void EffectCut::setCutArea(float _x, float _y, float _width, float _height)
+	{
+		x_ = _x;
+		y_ = _y;
+		width_ = _width;
+		height_ = _height;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ _x, _y, _x + _width, _y + _height });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ _x, _y, _x + _width, _y + _height });
+		}
+	}
+
+	void EffectCut::setCutX(float _x)
+	{
+		x_ = _x;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
+
+	void EffectCut::setCutY(float _y)
+	{
+		y_ = _y;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
+
+	void EffectCut::setCutWidth(float _width)
+	{
+		width_ = _width;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
+
+	void EffectCut::setCutHeight(float _height)
+	{
+		height_ = _height;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
+
+	void EffectCut::setCutPosition(float _x, float _y)
+	{
+		x_ = _x;
+		y_ = _y;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
+
+	void EffectCut::setCutSize(float _width, float _height)
+	{
+		width_ = _width;
+		height_ = _height;
+		if (isAtlasMode_ == false)
+		{
+			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+		else
+		{
+			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
+		}
+	}
 }
