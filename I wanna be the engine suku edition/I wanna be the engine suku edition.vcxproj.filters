@@ -123,6 +123,9 @@
     <ClInclude Include="suku_draw\scale_mode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_core\view.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="I wanna be the engine suku edition.cpp">

@@ -1,7 +1,6 @@
 #pragma once
-#include "../framework.h"
-#include "../suku_foundation/includes.h"
 #include <suku_draw/paint_layer.h>
+#include <suku_foundation/type_tree.h>
 
 namespace suku
 {

@@ -4,3 +4,4 @@
 #include "object.h"
 #include "room.h"
 #include "sprite.h"
+#include "view.h"

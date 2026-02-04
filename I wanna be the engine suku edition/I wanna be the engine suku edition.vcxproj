@@ -160,6 +160,7 @@
     <ClInclude Include="suku_core\sprite.h" />
     <ClInclude Include="I wanna be the engine suku edition.h" />
     <ClInclude Include="object_definer.h" />
+    <ClInclude Include="suku_core\view.h" />
     <ClInclude Include="suku_draw\bitmap.h" />
     <ClInclude Include="suku_draw\color.h" />
     <ClInclude Include="suku_draw\d3d_draw_core.h" />
