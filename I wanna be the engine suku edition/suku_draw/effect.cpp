@@ -2,6 +2,7 @@
 #include "effect.h"
 #include "draw_core.h"
 #include "bitmap.h"
+#include <d2d1_1.h>
 #include <d2d1effects.h>
 
 
@@ -218,5 +219,22 @@ namespace suku
 		{
 			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ x_, y_, x_ + width_, y_ + height_ });
 		}
+	}
+
+	EffectContrast::EffectContrast()
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Contrast, &pEffect_);
+	}
+
+	EffectContrast::EffectContrast(float _contrast) : contrast_(_contrast)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Contrast, &pEffect_);
+		pEffect_->SetValue(D2D1_CONTRAST_PROP_CONTRAST, _contrast);
+	}
+
+	void EffectContrast::setContrast(float _contrast)
+	{
+		contrast_ = _contrast;
+		pEffect_->SetValue(D2D1_CONTRAST_PROP_CONTRAST, _contrast);
 	}
 }

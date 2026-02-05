@@ -11,6 +11,7 @@ namespace suku
 
 	class Effect;
 	class EffectCut;
+	class EffectContrast;
 	class EffectTransform;
 	class EffectOpacityMask;
 
@@ -53,6 +54,17 @@ namespace suku
 		float y_ = 0;
 		float width_ = FLT_MAX;
 		float height_ = FLT_MAX;
+	};
+
+	class EffectContrast : public Effect
+	{
+	public:
+		EffectContrast();
+		EffectContrast(float _contrast);
+		void setContrast(float _contrast);
+		float getContrast()const { return contrast_; }
+	private:
+		float contrast_ = 0.0f;
 	};
 
 	class EffectTransform : public Effect
