@@ -229,7 +229,16 @@ namespace suku
 	EffectContrast::EffectContrast(float _contrast) : contrast_(_contrast)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
-		setContrast(_contrast);
+		float offset = 0.5f * (1.0f - _contrast);
+		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
+			D2D1::Matrix5x4F{
+				_contrast, 0, 0, 0,
+				0, _contrast, 0, 0,
+				0, 0, _contrast, 0,
+				0, 0, 0, 1,
+				offset, offset, offset, 0
+			}
+		);
 	}
 
 	void EffectContrast::setContrast(float _contrast)
@@ -243,6 +252,39 @@ namespace suku
 				0, 0, _contrast, 0,
 				0, 0, 0, 1,
 				offset, offset, offset, 0
+			}
+		);
+	}
+
+	EffectBrightness::EffectBrightness()
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+	}
+
+	EffectBrightness::EffectBrightness(float _brightness) : brightness_(_brightness)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
+			D2D1::Matrix5x4F{
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1,
+				_brightness, _brightness, _brightness, 0
+			}
+		);
+	}
+
+	void EffectBrightness::setBrightness(float _brightness)
+	{
+		brightness_ = _brightness;
+		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
+			D2D1::Matrix5x4F{
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1,
+				_brightness, _brightness, _brightness, 0
 			}
 		);
 	}

@@ -12,6 +12,7 @@ namespace suku
 	class Effect;
 	class EffectCut;
 	class EffectContrast;
+	class EffectBrightness;
 	class EffectTransform;
 	class EffectOpacityMask;
 
@@ -61,10 +62,25 @@ namespace suku
 	public:
 		EffectContrast();
 		EffectContrast(float _contrast);
-		void setContrast(float _contrast);
+		// contrast argument range: (-inf, +inf)
+		// 1.0f -> no change, 0.0f -> completely gray
+		void setContrast(float _contrast); 
 		float getContrast()const { return contrast_; }
 	private:
 		float contrast_ = 1.0f;
+	};
+
+	class EffectBrightness : public Effect
+	{
+	public:
+		EffectBrightness();
+		EffectBrightness(float _brightness);
+		// brightness argument range: (-1.0f, +1.0f)
+		// 0.0f -> no change, positive -> brighter, negative -> darker
+		void setBrightness(float _brightness); 
+		float getBrightness()const { return brightness_; }
+	private:
+		float brightness_ = 0.0f;
 	};
 
 	class EffectTransform : public Effect
