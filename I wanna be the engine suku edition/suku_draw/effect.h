@@ -13,6 +13,7 @@ namespace suku
 	class EffectCut;
 	class EffectContrast;
 	class EffectBrightness;
+	class EffectSaturation;
 	class EffectTransform;
 	class EffectOpacityMask;
 
@@ -77,10 +78,24 @@ namespace suku
 		EffectBrightness(float _brightness);
 		// brightness argument range: (-1.0f, +1.0f)
 		// 0.0f -> no change, positive -> brighter, negative -> darker
-		void setBrightness(float _brightness); 
+		void setBrightness(float _brightness);
 		float getBrightness()const { return brightness_; }
 	private:
 		float brightness_ = 0.0f;
+	};
+
+	class EffectSaturation : public Effect
+	{
+	public:
+		EffectSaturation();
+		EffectSaturation(float _saturation);
+		// saturation argument range: (0.0f, +inf)
+		// 0.5f -> no change, 0.0f -> completely gray
+		// <= 2.0f recommended
+		void setSaturation(float _saturation);
+		float getSaturation()const { return saturation_; }
+	private:
+		float saturation_ = 0.5f;
 	};
 
 	class EffectTransform : public Effect

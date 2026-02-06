@@ -288,4 +288,21 @@ namespace suku
 			}
 		);
 	}
+
+	EffectSaturation::EffectSaturation()
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
+	}
+
+	EffectSaturation::EffectSaturation(float _saturation) : saturation_(_saturation)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
+		pEffect_->SetValue(D2D1_SATURATION_PROP_SATURATION, _saturation);
+	}
+
+	void EffectSaturation::setSaturation(float _saturation)
+	{
+		saturation_ = _saturation;
+		pEffect_->SetValue(D2D1_SATURATION_PROP_SATURATION, _saturation);
+	}
 }
