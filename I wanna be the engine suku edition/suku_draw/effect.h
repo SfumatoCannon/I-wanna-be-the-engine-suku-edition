@@ -64,7 +64,7 @@ namespace suku
 		void setContrast(float _contrast);
 		float getContrast()const { return contrast_; }
 	private:
-		float contrast_ = 0.0f;
+		float contrast_ = 1.0f;
 	};
 
 	class EffectTransform : public Effect

@@ -223,18 +223,27 @@ namespace suku
 
 	EffectContrast::EffectContrast()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Contrast, &pEffect_);
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
 	}
 
 	EffectContrast::EffectContrast(float _contrast) : contrast_(_contrast)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Contrast, &pEffect_);
-		pEffect_->SetValue(D2D1_CONTRAST_PROP_CONTRAST, _contrast);
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		setContrast(_contrast);
 	}
 
 	void EffectContrast::setContrast(float _contrast)
 	{
 		contrast_ = _contrast;
-		pEffect_->SetValue(D2D1_CONTRAST_PROP_CONTRAST, _contrast);
+		float offset = 0.5f * (1.0f - _contrast);
+		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
+			D2D1::Matrix5x4F{
+				_contrast, 0, 0, 0,
+				0, _contrast, 0, 0,
+				0, 0, _contrast, 0,
+				0, 0, 0, 1,
+				offset, offset, offset, 0
+			}
+		);
 	}
 }
