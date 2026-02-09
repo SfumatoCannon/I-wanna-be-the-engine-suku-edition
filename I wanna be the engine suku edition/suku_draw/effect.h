@@ -10,11 +10,17 @@ namespace suku
 	using Microsoft::WRL::ComPtr;
 
 	class Effect;
+
 	class EffectCut;
+
 	class EffectContrast;
 	class EffectBrightness;
 	class EffectSaturation;
+	
 	class EffectTransform;
+	
+	class EffectBlur;
+	// class EffectBlurDirectional;
 	class EffectOpacityMask;
 
 	class Effect
@@ -116,6 +122,21 @@ namespace suku
 		Transform transform_ = Transform();
 		ScaleMode scaleMode_ = ScaleMode::Linear;
 		float sharpness_ = 0.0f;
+	};
+
+	class EffectBlur : public Effect
+	{
+	public:
+		EffectBlur(bool _isBorderSoftMode = false);
+		EffectBlur(float _blurRadius, bool _isBorderSoftMode = false);
+
+		float getBlurRadius()const { return blurRadius_; }
+		void setBlurRadius(float _blurRadius);
+		bool isBorderSoftMode()const { return isBorderSoftMode_; }
+		void setBorderSoftMode(bool _isBorderSoftMode);
+	private:
+		float blurRadius_ = 9.0f;
+		bool isBorderSoftMode_ = false;
 	};
 
 	class EffectOpacityMask : public Effect

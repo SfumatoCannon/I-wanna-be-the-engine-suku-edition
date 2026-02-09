@@ -305,4 +305,40 @@ namespace suku
 		saturation_ = _saturation;
 		pEffect_->SetValue(D2D1_SATURATION_PROP_SATURATION, _saturation);
 	}
+
+	EffectBlur::EffectBlur(bool _isBorderSoftMode) 
+		: blurRadius_(9.0f), isBorderSoftMode_(_isBorderSoftMode)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
+
+	EffectBlur::EffectBlur(float _blurRadius, bool _isBorderSoftMode) 
+		: blurRadius_(_blurRadius), isBorderSoftMode_(_isBorderSoftMode)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
+		pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
+
+	void EffectBlur::setBlurRadius(float _blurRadius)
+	{
+		blurRadius_ = _blurRadius;
+		pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
+	}
+
+	void EffectBlur::setBorderSoftMode(bool _isBorderSoftMode)
+	{
+		isBorderSoftMode_ = _isBorderSoftMode;
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
 }
