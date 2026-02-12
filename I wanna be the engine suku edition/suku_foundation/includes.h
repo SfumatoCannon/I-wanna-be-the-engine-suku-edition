@@ -1,7 +1,7 @@
 #pragma once
 #include "input.h"
 #include "maths.h"
-#include "memory.h"
+#include "array.h"
 #include "message.h"
 #include "save.h"
 #include "string.h"

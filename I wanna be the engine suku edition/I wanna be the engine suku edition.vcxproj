@@ -178,7 +178,7 @@
     <ClInclude Include="suku_foundation\includes.h" />
     <ClInclude Include="suku_foundation\input.h" />
     <ClInclude Include="suku_foundation\maths.h" />
-    <ClInclude Include="suku_foundation\memory.h" />
+    <ClInclude Include="suku_foundation\array.h" />
     <ClInclude Include="suku_foundation\message.h" />
     <ClInclude Include="suku_foundation\save.h" />
     <ClInclude Include="suku_foundation\string.h" />

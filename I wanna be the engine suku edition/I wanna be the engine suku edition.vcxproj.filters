@@ -84,7 +84,7 @@
     <ClInclude Include="suku_foundation\maths.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_foundation\memory.h">
+    <ClInclude Include="suku_foundation\array.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_foundation\message.h">
