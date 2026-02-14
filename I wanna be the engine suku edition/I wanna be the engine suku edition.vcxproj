@@ -157,6 +157,7 @@
     <ClInclude Include="suku_core\includes.h" />
     <ClInclude Include="suku_core\object.h" />
     <ClInclude Include="suku_core\room.h" />
+    <ClInclude Include="suku_core\room_collision_pool.h" />
     <ClInclude Include="suku_core\sprite.h" />
     <ClInclude Include="I wanna be the engine suku edition.h" />
     <ClInclude Include="object_definer.h" />
@@ -218,6 +219,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_core\room_collision_pool.cpp" />
     <ClCompile Include="suku_core\sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
