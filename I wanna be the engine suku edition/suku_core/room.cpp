@@ -220,7 +220,7 @@ namespace suku
 
 		onPaintEnd();
 		auto pic = displayLayer_.endDraw();
-		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, 0.0f);
+		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
 		scaleEffect.paint();

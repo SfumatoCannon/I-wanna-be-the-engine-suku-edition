@@ -34,20 +34,34 @@ namespace suku
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 	}
 
-	EffectTransform::EffectTransform(Transform _transform, ScaleMode _scaleMode, float _sharpness)
+	EffectTransform::EffectTransform(Transform _transform, ScaleMode _scaleMode, bool _isBorderSoftMode, float _sharpness)
+		: transform_(_transform), scaleMode_(_scaleMode), isBorderSoftMode_(_isBorderSoftMode), sharpness_(_sharpness)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.matrix);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
+		if (_isBorderSoftMode)
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+		if (scaleMode_ != ScaleMode::HighQualityCubic && _sharpness != 0.0f)
+			WARNINGWINDOW("Sharpness argument can be available only when scaleMode_ == scaleMode::HighQualityCubic");
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
 	}
 
-	EffectTransform::EffectTransform(ScaleMode _scaleMode, float _sharpness)
+	EffectTransform::EffectTransform(ScaleMode _scaleMode, bool _isBorderSoftMode, float _sharpness)
+		: scaleMode_(_scaleMode), isBorderSoftMode_(_isBorderSoftMode), sharpness_(_sharpness)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
+		if (_isBorderSoftMode)
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+		if (scaleMode_ != ScaleMode::HighQualityCubic && _sharpness != 0.0f)
+			WARNINGWINDOW("Sharpness argument can be available only when scaleMode_ == scaleMode::HighQualityCubic");
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
 	}
 
@@ -59,12 +73,25 @@ namespace suku
 
 	void EffectTransform::setScaleMode(ScaleMode _scaleMode)
 	{
+		scaleMode_ = _scaleMode;
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 	}
 
+	void EffectTransform::setBorderSoftMode(bool _isBorderSoftMode)
+	{
+		isBorderSoftMode_ = _isBorderSoftMode;
+		if (_isBorderSoftMode)
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
+
 	void EffectTransform::setSharpness(float _sharpness)
 	{
+		sharpness_ = _sharpness;
+		if (scaleMode_ != ScaleMode::HighQualityCubic)
+			WARNINGWINDOW("Sharpness argument can be available only when scaleMode_ == scaleMode::HighQualityCubic");
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_SHARPNESS, _sharpness);
 	}
 

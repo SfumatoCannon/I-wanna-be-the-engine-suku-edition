@@ -109,19 +109,24 @@ namespace suku
 	public:
 		EffectTransform();
 		EffectTransform(Transform _transform,
-			ScaleMode _scaleMode = ScaleMode::HighQualityCubic, float _sharpness = 0.0f);
-		EffectTransform(ScaleMode _scaleMode, float _sharpness = 0.0f);
+			ScaleMode _scaleMode = ScaleMode::HighQualityCubic, bool _isBorderSoftMode = false, float _sharpness = 0.0f);
+		EffectTransform(ScaleMode _scaleMode, bool _isBorderSoftMode = false, float _sharpness = 0.0f);
 
-		Transform getTransform() { return transform_; }
+		Transform getTransform()const { return transform_; }
 		void setTransform(Transform _transform);
-		ScaleMode getScaleMode() { return scaleMode_; }
+		ScaleMode getScaleMode()const { return scaleMode_; }
 		void setScaleMode(ScaleMode _scaleMode);
+		bool isBorderSoftMode()const { return isBorderSoftMode_; }
+		void setBorderSoftMode(bool _isBorderSoftMode);
+		// sharpness argument range: (0.0f, 1.0f)
+		// can be available only when scaleMode_ == scaleMode::HighQualityCubic
 		float getSharpness() { return sharpness_; }
 		void setSharpness(float _sharpness);
 	private:
 		Transform transform_ = Transform();
 		ScaleMode scaleMode_ = ScaleMode::Linear;
 		float sharpness_ = 0.0f;
+		bool isBorderSoftMode_ = false;
 	};
 
 	class EffectBlur : public Effect
