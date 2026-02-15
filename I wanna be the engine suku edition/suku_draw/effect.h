@@ -16,17 +16,17 @@ namespace suku
 	class EffectContrast;
 	class EffectBrightness;
 	class EffectSaturation;
-	
+
 	class EffectTransform;
-	
+
 	class EffectBlur;
-	// class EffectBlurDirectional;
+	class EffectBlurDirectional;
 	class EffectOpacityMask;
 
 	class Effect
 	{
 	public:
-		
+
 		void setInput(Bitmap& _bitmap, int _index = 0);
 		void setInput(RenderBitmap& _renderBitmap, int _index = 0);
 		void setInput(const Effect& _effect, int _index = 0);
@@ -71,7 +71,7 @@ namespace suku
 		EffectContrast(float _contrast);
 		// contrast argument range: (-inf, +inf)
 		// 1.0f -> no change, 0.0f -> completely gray
-		void setContrast(float _contrast); 
+		void setContrast(float _contrast);
 		float getContrast()const { return contrast_; }
 	private:
 		float contrast_ = 1.0f;
@@ -108,13 +108,13 @@ namespace suku
 	{
 	public:
 		EffectTransform();
-		EffectTransform(Transform _transform, 
+		EffectTransform(Transform _transform,
 			ScaleMode _scaleMode = ScaleMode::HighQualityCubic, float _sharpness = 0.0f);
 		EffectTransform(ScaleMode _scaleMode, float _sharpness = 0.0f);
 
 		Transform getTransform() { return transform_; }
 		void setTransform(Transform _transform);
-		ScaleMode getScaleMode(){ return scaleMode_; }
+		ScaleMode getScaleMode() { return scaleMode_; }
 		void setScaleMode(ScaleMode _scaleMode);
 		float getSharpness() { return sharpness_; }
 		void setSharpness(float _sharpness);
@@ -135,6 +135,24 @@ namespace suku
 		bool isBorderSoftMode()const { return isBorderSoftMode_; }
 		void setBorderSoftMode(bool _isBorderSoftMode);
 	private:
+		float blurRadius_ = 9.0f;
+		bool isBorderSoftMode_ = false;
+	};
+
+	class EffectBlurDirectional : public Effect
+	{
+	public:
+		EffectBlurDirectional(float _blurAngle, bool _isBorderSoftMode = false);
+		EffectBlurDirectional(float _blurAngle, float _blurRadius, bool _isBorderSoftMode = false);
+
+		float getBlurAngle()const { return blurAngle_; }
+		void setBlurAngle(float _blurAngle);
+		float getBlurRadius()const { return blurRadius_; }
+		void setBlurRadius(float _blurRadius);
+		bool isBorderSoftMode()const { return isBorderSoftMode_; }
+		void setBorderSoftMode(bool _isBorderSoftMode);
+	private:
+		float blurAngle_ = 0.0f;
 		float blurRadius_ = 9.0f;
 		bool isBorderSoftMode_ = false;
 	};

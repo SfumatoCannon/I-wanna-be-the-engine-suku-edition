@@ -341,4 +341,48 @@ namespace suku
 		else
 			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
 	}
+
+	EffectBlurDirectional::EffectBlurDirectional(float _blurAngle, bool _isBorderSoftMode)
+		: blurAngle_(_blurAngle), blurRadius_(9.0f), isBorderSoftMode_(_isBorderSoftMode)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
+		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, _blurAngle);		
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
+
+	EffectBlurDirectional::EffectBlurDirectional(float _blurAngle, float _blurRadius, bool _isBorderSoftMode)
+		: blurAngle_(_blurAngle), blurRadius_(_blurRadius), isBorderSoftMode_(_isBorderSoftMode)
+	{
+		graphics::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
+		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
+		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, _blurAngle);
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
+
+	void EffectBlurDirectional::setBlurAngle(float _blurAngle)
+	{
+		blurAngle_ = _blurAngle;
+		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, _blurAngle);
+	}
+
+	void EffectBlurDirectional::setBlurRadius(float _blurRadius)
+	{
+		blurRadius_ = _blurRadius; 
+		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
+	}
+
+	void EffectBlurDirectional::setBorderSoftMode(bool _isBorderSoftMode)
+	{
+		isBorderSoftMode_ = _isBorderSoftMode;
+		if (isBorderSoftMode_)
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
+		else
+			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
+	}
 }
