@@ -290,8 +290,7 @@ namespace suku
 	}
 
 	Sprite::Sprite()
-	{
-		flipTime_ = 1;
+		: flipTime_(1), width_(0), height_(0), centerX_(0), centerY_(0) {
 	}
 
 	Sprite::Sprite(String _path, UINT _amount, int _flipTime, const Shape& _collisionBox, float _centerX, float _centerY)
@@ -300,6 +299,12 @@ namespace suku
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
+
+		width_ = width;
+		height_ = originalHeight;
+		centerX_ = _centerX;
+		centerY_ = _centerY;
+
 		for (UINT i = 0; i < _amount; i++)
 		{
 			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
@@ -314,6 +319,12 @@ namespace suku
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
+
+		width_ = width;
+		height_ = originalHeight;
+		centerX_ = _centerX;
+		centerY_ = _centerY;
+
 		for (UINT i = 0; i < _amount; i++)
 		{
 			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
@@ -326,6 +337,12 @@ namespace suku
 		const Shape& _collisionBox, float _centerX, float _centerY)
 	{
 		flipTime_ = _flipTime;
+
+		width_ = _width;
+		height_ = _height;
+		centerX_ = _centerX;
+		centerY_ = _centerY;
+
 		for (UINT i = 0; i < _amount; i++)
 		{
 			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
@@ -338,6 +355,12 @@ namespace suku
 		float _centerX, float _centerY, float _alphaThreshold)
 	{
 		flipTime_ = _flipTime;
+
+		width_ = _width;
+		height_ = _height;
+		centerX_ = _centerX;
+		centerY_ = _centerY;
+
 		for (UINT i = 0; i < _amount; i++)
 		{
 			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
