@@ -24,4 +24,18 @@ namespace suku
         objectChunk_.erase(_obj);
 		objectIterator_.erase(_obj);
     }
+
+    void RoomCollisionPool::updateObject(Object* _obj)
+    {
+        // no existence check for performance
+		std::pair<int, int> newChunk = getChunk(_obj->x, _obj->y);
+        if (newChunk != objectChunk_[_obj])
+        {
+            std::pair<int, int> oldChunk = objectChunk_[_obj];
+            chunk_[oldChunk].erase(objectIterator_[_obj]);
+            chunk_[newChunk].push_back(_obj);
+            objectChunk_[_obj] = newChunk;
+            objectIterator_[_obj] = --chunk_[newChunk].end();
+		}
+    }
 }

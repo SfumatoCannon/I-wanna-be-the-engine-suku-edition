@@ -15,6 +15,7 @@ namespace suku
 		RoomCollisionPool() = default;
 		void addObject(Object* _obj);
 		void removeObject(Object* _obj);
+		void updateObject(Object* _obj);
 	private:
 		std::map<std::pair<int, int>, std::list<Object*>> chunk_;
 		std::map<Object*, std::pair<int, int>> objectChunk_;
