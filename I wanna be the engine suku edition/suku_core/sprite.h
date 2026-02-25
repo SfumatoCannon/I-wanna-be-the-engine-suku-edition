@@ -127,6 +127,8 @@ namespace suku
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 		SpriteElement* getState(int _wp);
 	private:
+		UINT width_, height_;
+		float centerX_, centerY_;
 		int flipTime_;
 	};
 }
