@@ -2,6 +2,7 @@
 #include "../framework.h"
 #include "../suku_draw/includes.h"
 #include "../suku_foundation/includes.h"
+#include <suku_foundation/type_tree.h>
 
 namespace suku
 {
@@ -36,6 +37,9 @@ namespace suku
 		void setPaintId(double _id);
 
 		Transform spriteTransform;
+		float getWidth();
+		float getHeight();
+		Vector getSize();
 		float getCenterX();
 		float getCenterY();
 		Vector getCenterPosition();
@@ -51,6 +55,7 @@ namespace suku
 		
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
+		UINT getSpriteFrameIndex()const;
 
 		void remove();
 		void destroy();

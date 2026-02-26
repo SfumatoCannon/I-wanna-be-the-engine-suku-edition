@@ -56,6 +56,13 @@ namespace suku
 		return sprite_->getFrameState(clock_);
 	}
 
+	UINT Object::getSpriteFrameIndex() const
+	{
+		if (!sprite_)
+			return 0;
+		return sprite_->getFrameStateIndex(clock_);
+	}
+
 	void Object::setReviseStateId(double _id)
 	{
 		if (inRoom_)
@@ -82,6 +89,27 @@ namespace suku
 		if (inRoom_)
 			inRoom_->modifyObjectPaintPriority(this, _id);
 		else paintId_ = _id;
+	}
+
+	float Object::getWidth()
+	{
+		if (sprite_ == nullptr)
+			return 0;
+		return sprite_->getWidth() * getSpriteXScale();
+	}
+
+	float Object::getHeight()
+	{
+		if (sprite_ == nullptr)
+			return 0;
+		return sprite_->getHeight() * getSpriteYScale();
+	}
+
+	Vector Object::getSize()
+	{
+		if (sprite_ == nullptr)
+			return Vector(0.0f, 0.0f);
+		return Vector(sprite_->getWidth() * getSpriteXScale(), sprite_->getHeight() * getSpriteYScale());
 	}
 
 	float Object::getCenterX()
