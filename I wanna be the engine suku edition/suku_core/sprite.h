@@ -125,7 +125,14 @@ namespace suku
 		void setSpeed(int _speed);
 		template<typename SprZ> void push(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
-		SpriteElement* getState(int _wp);
+
+		UINT getWidth()const { return width_; }
+		UINT getHeight()const { return height_; }
+		std::pair<UINT, UINT> getSize()const { return { width_, height_ }; }
+		float getCenterX()const { return centerX_; }
+		float getCenterY()const { return centerY_; }
+		std::pair<float, float> getCenterPosition()const { return { centerX_, centerY_ }; }
+		SpriteElement* getState(int _frameTick);
 	private:
 		UINT width_, height_;
 		float centerX_, centerY_;

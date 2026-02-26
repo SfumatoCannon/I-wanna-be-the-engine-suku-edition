@@ -374,10 +374,10 @@ namespace suku
 		flipTime_ = _speed;
 	}
 
-	SpriteElement* Sprite::getState(int _wp)
+	SpriteElement* Sprite::getState(int _frameTick)
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else return bodyList[_wp / flipTime_ % bodyList.size()];
+		else return bodyList[_frameTick / flipTime_ % bodyList.size()];
 	}
 }
