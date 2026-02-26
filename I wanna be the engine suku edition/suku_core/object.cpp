@@ -12,7 +12,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteElement* spr = nowState();
+		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -24,7 +24,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return;
-		SpriteElement* spr = nowState();
+		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
 		if (isClearPainting)
@@ -49,11 +49,11 @@ namespace suku
 		y = spawnY;
 	}
 
-	SpriteElement* Object::nowState()const
+	SpriteElement* Object::getSpriteFrame()const
 	{
 		if (!sprite_)
 			return nullptr;
-		return sprite_->getState(clock_);
+		return sprite_->getFrameState(clock_);
 	}
 
 	void Object::setReviseStateId(double _id)
@@ -86,23 +86,23 @@ namespace suku
 
 	float Object::getCenterX()
 	{
-		float cx = nowState()->centerX;
-		float cy = nowState()->centerY;
+		float cx = sprite_->getCenterX();
+		float cy = sprite_->getCenterY();
 		spriteTransform.transformPoint(&cx, &cy);
 		return x + cx;
 	}
 
 	float Object::getCenterY()
 	{
-		float cx = nowState()->centerX;
-		float cy = nowState()->centerY;
+		float cx = sprite_->getCenterX();
+		float cy = sprite_->getCenterY();
 		spriteTransform.transformPoint(&cx, &cy);
 		return y + cy;
 	}
 
 	Vector Object::getCenterPosition()
 	{
-		auto result = spriteTransform.transformPoint(nowState()->centerX, nowState()->centerY);
+		auto result = spriteTransform.transformPoint(sprite_->getCenterX(), sprite_->getCenterY());
 		result.x += x;
 		result.y += y;
 		return result;
@@ -110,24 +110,24 @@ namespace suku
 
 	double Object::getSpriteAngle()
 	{
-		float width = (float)nowState()->width;
-		float height = (float)nowState()->height;
+		float width = (float)sprite_->getWidth();
+		float height = (float)sprite_->getHeight();
 		auto [x, y] = spriteTransform.transformPoint(width, height);
 		return atan((double)(width / height)) - atan((double)(x / y)) / PI * 180.0;
 	}
 
 	double Object::getSpriteXScale()
 	{
-		float width = (float)nowState()->width;
-		float height = (float)nowState()->height;
+		float width = (float)sprite_->getWidth();
+		float height = (float)sprite_->getHeight();
 		auto [x, y] = spriteTransform.transformPoint(width, height);
 		return (double)x / (double)width;
 	}
 
 	double Object::getSpriteYScale()
 	{
-		float width = (float)nowState()->width;
-		float height = (float)nowState()->height;
+		float width = (float)sprite_->getWidth();
+		float height = (float)sprite_->getHeight();
 		auto [x, y] = spriteTransform.transformPoint(width, height);
 		return (double)y / (double)height;
 	}
@@ -210,15 +210,15 @@ namespace suku
 
 	void Object::rotate(float _angle)
 	{
-		spriteTransform = spriteTransform + rotation(nowState()->centerX, nowState()->centerY, _angle);
+		spriteTransform = spriteTransform + rotation(sprite_->getCenterX(), sprite_->getCenterY(), _angle);
 	}
 
 	void Object::rotate(float _angle, double _rotatingCenterX, double _rotatingCenterY, bool _isRotatingItself)
 	{
-		double centerX = x + nowState()->centerX * xScale, centerY = y + nowState()->centerY * yScale;
+		double centerX = x + sprite_->getCenterX() * xScale, centerY = y + sprite_->getCenterY() * yScale;
 		rotateDot(_rotatingCenterX, _rotatingCenterY, _angle, &centerX, &centerY);
-		x = (float)centerX - nowState()->centerX * xScale;
-		y = (float)centerY - nowState()->centerY * yScale;
+		x = (float)centerX - sprite_->getCenterX() * xScale;
+		y = (float)centerY - sprite_->getCenterY() * yScale;
 		if (_isRotatingItself)
 			rotate(_angle);
 	}
@@ -472,7 +472,7 @@ namespace suku
 
 	void Object::contactToUp(Object _obj, bool _isPredict, bool _isMoveDirectly)
 	{
-		if (!_obj.nowState() || !nowState())
+		if (!_obj.getSpriteFrame() || !getSpriteFrame())
 			return;
 		if (_isPredict)
 		{
@@ -480,7 +480,7 @@ namespace suku
 			_obj.y += _obj.totalVspeed();
 		}
 		float yTo;
-		//yTo = _obj.y + _obj.nowState()->hitY - nowState()->hitHeight - nowState()->hitY + y - round(y);
+		//yTo = _obj.y + _obj.getSpriteFrame()->hitY - getSpriteFrame()->hitHeight - getSpriteFrame()->hitY + y - round(y);
 
 		float yBefore = y;
 		while (!isCrashed(_obj))
@@ -495,7 +495,7 @@ namespace suku
 
 	void Object::contactToDown(Object _obj, bool _isPredict, bool _isMoveDirectly)
 	{
-		if (!_obj.nowState() || !nowState())
+		if (!_obj.getSpriteFrame() || !getSpriteFrame())
 			return;
 		if (_isPredict)
 		{
@@ -503,7 +503,7 @@ namespace suku
 			_obj.y += _obj.totalVspeed();
 		}
 		float yTo;
-		//yTo = _obj.y + _obj.nowState()->hitY + _obj.nowState()->hitHeight - nowState()->hitY + y - round(y) + 1;
+		//yTo = _obj.y + _obj.getSpriteFrame()->hitY + _obj.getSpriteFrame()->hitHeight - getSpriteFrame()->hitY + y - round(y) + 1;
 
 		float yBefore = y;
 		while (!isCrashed(_obj))
@@ -518,7 +518,7 @@ namespace suku
 
 	void Object::contactToLeft(Object _obj, bool _isPredict, bool _isMoveDirectly)
 	{
-		if (!_obj.nowState() || !nowState())
+		if (!_obj.getSpriteFrame() || !getSpriteFrame())
 			return;
 		if (_isPredict)
 		{
@@ -526,7 +526,7 @@ namespace suku
 			_obj.y += _obj.totalVspeed();
 		}
 		float xTo;
-		//xTo = _obj.x + _obj.nowState()->hitX - nowState()->hitWidth - nowState()->hitX + x - round(x);
+		//xTo = _obj.x + _obj.getSpriteFrame()->hitX - getSpriteFrame()->hitWidth - getSpriteFrame()->hitX + x - round(x);
 
 		float xBefore = x;
 		while (!isCrashed(_obj))
@@ -541,7 +541,7 @@ namespace suku
 
 	void Object::contactToRight(Object _obj, bool _isPredict, bool _isMoveDirectly)
 	{
-		if (!_obj.nowState() || !nowState())
+		if (!_obj.getSpriteFrame() || !getSpriteFrame())
 			return;
 		if (_isPredict)
 		{
@@ -549,7 +549,7 @@ namespace suku
 			_obj.y += _obj.totalVspeed();
 		}
 		float xTo;
-		//xTo = _obj.x + _obj.nowState()->hitX + _obj.nowState()->hitWidth - nowState()->hitX + x - round(x);
+		//xTo = _obj.x + _obj.getSpriteFrame()->hitX + _obj.getSpriteFrame()->hitWidth - getSpriteFrame()->hitX + x - round(x);
 
 		float xBefore = x;
 		while (!isCrashed(_obj))
@@ -614,7 +614,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -631,7 +631,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 			{
 				x = tx;
@@ -655,7 +655,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return nullptr;
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 				return nullptr;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -671,7 +671,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -693,7 +693,7 @@ namespace suku
 				x = tx, y = ty;
 				return result;
 			}
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)
@@ -710,7 +710,7 @@ namespace suku
 		if (inRoom_)
 		{
 			if (!sprite_) return result;
-			BitmapSpriteElement* body2 = nowState();
+			BitmapSpriteElement* body2 = getSpriteFrame();
 			if (!body2)
 				return result;
 			for (auto i = inRoom_->kindStart[_objectkind]; i != inRoom_->kindEnd[_objectkind]; i++)

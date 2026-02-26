@@ -48,7 +48,9 @@ namespace suku
 
 		Var& operator[](std::string _str) { return var[_str]; }
 		Object(float _x = 0, float _y = 0);
-		SpriteElement* nowState()const;
+		
+		Sprite* getSprite()const { return sprite_; }
+		SpriteElement* getSpriteFrame()const;
 
 		void remove();
 		void destroy();

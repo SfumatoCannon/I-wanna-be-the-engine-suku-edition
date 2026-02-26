@@ -10,35 +10,35 @@ namespace suku
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj)const
 	{
-		return nowState()->isCrashed(translation(bRound(x), bRound(y)) + spriteTransform, _obj.nowState(),
+		return getSpriteFrame()->isCrashed(translation(bRound(x), bRound(y)) + spriteTransform, _obj.getSpriteFrame(),
 			translation(bRound(_obj.x), bRound(_obj.y)) + _obj.spriteTransform);
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, float _x, float _y)const
 	{
-		return nowState()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.nowState(),
+		return getSpriteFrame()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.getSpriteFrame(),
 			translation(bRound(_obj.x), bRound(_obj.y)) + _obj.spriteTransform);
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, float _x, float _y, float _objX, float _objY)const
 	{
-		return nowState()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.nowState(),
+		return getSpriteFrame()->isCrashed(translation(bRound(_x), bRound(_y)) + spriteTransform, _obj.getSpriteFrame(),
 			translation(bRound(_objX), bRound(_objY)) + _obj.spriteTransform);
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, Vector _position) const
 	{
-		return nowState()->isCrashed(translation(bRound(_position.x), bRound(_position.y)) + spriteTransform, _obj.nowState(),
+		return getSpriteFrame()->isCrashed(translation(bRound(_position.x), bRound(_position.y)) + spriteTransform, _obj.getSpriteFrame(),
 			translation(bRound(_obj.x), bRound(_obj.y)) + _obj.spriteTransform);
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, Vector _position, Vector _objPosition) const
 	{
-		return nowState()->isCrashed(translation(bRound(_position.x), bRound(_position.y)) + spriteTransform, _obj.nowState(),
+		return getSpriteFrame()->isCrashed(translation(bRound(_position.x), bRound(_position.y)) + spriteTransform, _obj.getSpriteFrame(),
 			translation(bRound(_objPosition.x), bRound(_objPosition.y)) + _obj.spriteTransform);
 	}
 

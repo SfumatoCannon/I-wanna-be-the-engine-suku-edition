@@ -247,7 +247,7 @@ namespace suku
 		i = 0;
 		if (!inRoom())
 			return;
-		SpriteElement* body2 = nowState();
+		SpriteElement* body2 = getSpriteFrame();
 		if (!body2)
 			return;
 		while (nowBloodNum_ < 300)
@@ -379,7 +379,7 @@ namespace suku
 		}
 
 		//xScale = (side_ == 0 ? 1.0 : -1.0);
-		spriteTransform = scale(nowState()->centerX, nowState()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
+		spriteTransform = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
 		if (vspeed > 9.4f)
@@ -405,11 +405,11 @@ namespace suku
 
 		/*if (temp = touchObject(ID_PLATFORM))
 		{
-			if (y + nowState()->getCenterY - totalVspeed() / 2 <= temp->y)
+			if (y + getSpriteFrame()->getCenterY - totalVspeed() / 2 <= temp->y)
 			{
 				if (temp->vspeed >= 0)
 				{
-					y = temp->y + temp->nowState()->hitY - nowState()->hitHeight - nowState()->hitY;
+					y = temp->y + temp->getSpriteFrame()->hitY - getSpriteFrame()->hitHeight - getSpriteFrame()->hitY;
 					vspeed = temp->vspeed;
 				}
 				jumpTime_ = maxJumpTime;

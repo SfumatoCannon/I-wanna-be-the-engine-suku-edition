@@ -130,7 +130,7 @@ namespace suku
 	template<typename Obj>
 	inline Obj* Room::createCenter(Obj _object)
 	{
-		_object.setPlaceAndSave(_object.x - _object.nowState()->centerX, _object.y - _object.nowState()->centerY);
+		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		return create(_object);
 	}
 
@@ -144,7 +144,7 @@ namespace suku
 	template<typename Obj>
 	inline void Room::createCenterFill(Obj _object, float _fillwidth, float _fillheight, float _footx, float _footy)
 	{
-		_object.setPlaceAndSave(_object.x - _object.nowState()->centerX, _object.y - _object.nowState()->centerY);
+		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		createFill(_object, _fillwidth, _fillheight, _footx, _footy);
 	}
 }

@@ -132,7 +132,7 @@ namespace suku
 		float getCenterX()const { return centerX_; }
 		float getCenterY()const { return centerY_; }
 		std::pair<float, float> getCenterPosition()const { return { centerX_, centerY_ }; }
-		SpriteElement* getState(int _frameTick);
+		SpriteElement* getFrameState(int _frameTick);
 	private:
 		UINT width_, height_;
 		float centerX_, centerY_;
