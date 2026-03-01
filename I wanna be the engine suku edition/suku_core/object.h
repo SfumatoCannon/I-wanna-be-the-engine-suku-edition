@@ -65,7 +65,7 @@ namespace suku
 		static void classInitialize() {}
 		virtual void onAppearing() {}
 		virtual void onRestarting();
-		virtual void onDestroy() {}
+		virtual void onRemove() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
 		virtual void reviseState() {}
 		virtual void updateState() {}
@@ -124,11 +124,6 @@ namespace suku
 		Room* inRoom_;
 		size_t kindId_;
 		double reviseStateId_, updateStateId_, recheckStateId_, paintId_;
-		std::list<Object*>::iterator objectIterator_;
-		std::list<Object*>::iterator reviseStateIterator_;
-		std::list<Object*>::iterator updateStateIterator_;
-		std::list<Object*>::iterator recheckStateIterator_;
-		std::list<Object*>::iterator paintIterator_;
 		bool isUpdating_;
 		bool removeTag_;
 		bool destroyTag_;

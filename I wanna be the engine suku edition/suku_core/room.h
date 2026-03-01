@@ -1,6 +1,8 @@
 #pragma once
 #include <suku_draw/paint_layer.h>
 #include <suku_foundation/type_tree.h>
+#include <map>
+#include <memory>
 
 namespace suku
 {
@@ -51,12 +53,11 @@ namespace suku
 		void reset();
 	private:
 		PaintLayer displayLayer_;
-		std::map<Typecode, std::list<Object*>> objectPointerArray_;
-		std::map<Typecode, std::list<std::list<Object*>::iterator>> objectPointerRemoveArray_;
-		std::map<double, std::list<Object*>> reviseStateArray_;
-		std::map<double, std::list<Object*>> updateStateArray_;
-		std::map<double, std::list<Object*>> recheckStateArray_;
-		std::map<double, std::list<Object*>> paintArray_;
+		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> reviseStateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> updateStateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> recheckStateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
 		template<typename Obj> void createObjectList();
 	};
 

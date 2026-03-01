@@ -7,8 +7,7 @@ namespace suku
 	template<typename Obj>
 	inline void Room::createObjectList()
 	{
-		std::list<Object*> newList;
-		objectPointerArray_[typecode(Obj)] = newList;
+		objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
 	}
 
 	template<typename Obj>
@@ -20,9 +19,10 @@ namespace suku
 			std::list<Obj*> resultList;
 			for (auto& [kindId, objList] : objectPointerArray_)
 			{
-				for (auto& object : objList)
+				for (auto& objectPtr : objList)
 				{
-					resultList.push_back(static_cast<Obj*>(object));
+					if (objectPtr->removeTag_ == false)
+						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
 				}
 			}
 			return resultList;
@@ -35,17 +35,11 @@ namespace suku
 			auto resultIter = objectPointerArray_.find(typecode);
 			if (resultIter != objectPointerArray_.end())
 			{
-				std::list<Object*>& targetList = (*resultIter).second;
-				auto& removeList = objectPointerRemoveArray_[typecode];
-				if (!removeList.empty())
+				auto& targetList = (*resultIter).second;
+				for (auto& objectPtr : targetList)
 				{
-					for (auto& i : removeList)
-						targetList.erase(i);
-					removeList.clear();
-				}
-				for (auto& object : targetList)
-				{
-					resultList.push_back(static_cast<Obj*>(object));
+					if (objectPtr->removeTag_ == false)
+						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
 				}
 			}
 		}
@@ -56,40 +50,25 @@ namespace suku
 	template<typename Obj>
 	inline Obj* Room::append(Obj* _objectPointer)
 	{
-		Obj* newObj = _objectPointer;
-		std::list<Obj*> objList = getObjectList<Obj>();
-		bool isFirstObjInClass = false;
-		if (objList.empty())
+		auto [iter, isFirst] = 
+			objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
+
+		if (isFirst)
 		{
-			isFirstObjInClass = true;
-			createObjectList<Obj>();
 			suku::SukuObjectTypeTree::getInstance().append<Obj>();
 		}
-
+		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
+		std::shared_ptr<Object> newObj(_objectPointer);
 		newObj->kindId_ = typecode(Obj);
 		newObj->inRoom_ = this;
+		objList.push_back(newObj);
 
-		newObj->objectIterator_ = objectPointerArray_[typecode(Obj)].insert(
-			objectPointerArray_[typecode(Obj)].end(), static_cast<Object*>(newObj));
-
-		newObj->reviseStateIterator_ = reviseStateArray_[newObj->reviseStateId_].insert(
-			reviseStateArray_[newObj->reviseStateId_].end(), static_cast<Object*>(newObj));
-
-		newObj->updateStateIterator_ = updateStateArray_[newObj->updateStateId_].insert(
-			updateStateArray_[newObj->updateStateId_].end(), static_cast<Object*>(newObj));
-
-		newObj->recheckStateIterator_ = recheckStateArray_[newObj->recheckStateId_].insert(
-			recheckStateArray_[newObj->recheckStateId_].end(), static_cast<Object*>(newObj));
-
-		newObj->paintIterator_ = paintArray_[newObj->paintId_].insert(
-			paintArray_[newObj->paintId_].end(), static_cast<Object*>(newObj));
-
-		if (isFirstObjInClass)
+		if (isFirst)
 		{
 			Obj::classInitialize();
 		}
 
-		return newObj;
+		return newObj.get();
 	}
 
 	template<typename Obj>

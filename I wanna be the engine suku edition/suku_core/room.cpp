@@ -7,10 +7,6 @@ namespace suku
 {
 	Room* nowRoom;
 
-	std::vector<std::pair<Typecode, int>> reviseStateArray_;
-	std::vector<std::pair<Typecode, int>> updateStateArray_;
-	std::vector<std::pair<Typecode, int>> recheckStateArray_;
-
 	void Room::setPlayerStart(float _x, float _y)
 	{
 		playerStartX = _x;
@@ -25,175 +21,165 @@ namespace suku
 
 	void Room::remove(Object* _object)
 	{
-		if (_object->isUpdating_)
-		{
-			_object->removeTag_ = true;
-			return;
-		}
-		else
-		{
-			objectPointerRemoveArray_[_object->kindId_].push_back(_object->objectIterator_);
-			objectPointerArray_[_object->kindId_].erase(_object->objectIterator_);
-			reviseStateArray_[_object->reviseStateId_].erase(_object->reviseStateIterator_);
-			updateStateArray_[_object->updateStateId_].erase(_object->updateStateIterator_);
-			recheckStateArray_[_object->recheckStateId_].erase(_object->recheckStateIterator_);
-			paintArray_[_object->paintId_].erase(_object->paintIterator_);
-		}
+		_object->removeTag_ = true;
 	}
 
 	void Room::modifyObjectRevisePriority(Object* _object, double _newId)
 	{
-		reviseStateArray_[_object->reviseStateId_].erase(_object->reviseStateIterator_);
+		auto& originalArray = reviseStateArray_[_object->reviseStateId_];
+		auto& targetArray = reviseStateArray_[_newId];
+		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
+		{
+			if ((*iter).get() == _object)
+			{
+				targetArray.push_back(std::move(*iter));
+				originalArray.erase(iter);
+				_object->reviseStateId_ = _newId;
+				return;
+			}
+		}
+		// not found in original array
+		targetArray.push_back(std::shared_ptr<Object>(_object));
 		_object->reviseStateId_ = _newId;
-		_object->reviseStateIterator_ =
-			reviseStateArray_[_newId].insert(reviseStateArray_[_newId].end(), _object);
 	}
 
 	void Room::modifyObjectUpdatePriority(Object* _object, double _newId)
 	{
-		updateStateArray_[_object->updateStateId_].erase(_object->updateStateIterator_);
+		auto& originalArray = updateStateArray_[_object->updateStateId_];
+		auto& targetArray = updateStateArray_[_newId];
+		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
+		{
+			if ((*iter).get() == _object)
+			{
+				targetArray.push_back(std::move(*iter));
+				originalArray.erase(iter);		
+				_object->updateStateId_ = _newId;
+				break;
+			}
+		}
+		// not found in original array
+		targetArray.push_back(std::shared_ptr<Object>(_object));
 		_object->updateStateId_ = _newId;
-		_object->updateStateIterator_ =
-			updateStateArray_[_newId].insert(updateStateArray_[_newId].end(), _object);
 	}
 
 	void Room::modifyObjectRecheckPriority(Object* _object, double _newId)
 	{
-		recheckStateArray_[_object->recheckStateId_].erase(_object->recheckStateIterator_);
+		auto& originalArray = recheckStateArray_[_object->recheckStateId_];
+		auto& targetArray = recheckStateArray_[_newId];
+		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
+		{
+			if ((*iter).get() == _object)
+			{
+				targetArray.push_back(std::move(*iter));
+				originalArray.erase(iter);
+				_object->recheckStateId_ = _newId;
+				break;
+			}
+		}
+		// not found in original array
+		targetArray.push_back(std::shared_ptr<Object>(_object));
 		_object->recheckStateId_ = _newId;
-		_object->recheckStateIterator_ =
-			recheckStateArray_[_newId].insert(recheckStateArray_[_newId].end(), _object);
 	}
 
 	void Room::modifyObjectPaintPriority(Object* _object, double _newId)
 	{
-		paintArray_[_object->paintId_].erase(_object->paintIterator_);
+		auto& originalArray = paintArray_[_object->paintId_];
+		auto& targetArray = paintArray_[_newId];
+		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
+		{
+			if ((*iter).get() == _object)
+			{
+				targetArray.push_back(std::move(*iter));
+				originalArray.erase(iter);
+				_object->paintId_ = _newId;
+				break;
+			}
+		}
+		// not found in original array
+		targetArray.push_back(std::shared_ptr<Object>(_object));
 		_object->paintId_ = _newId;
-		_object->paintIterator_ =
-			paintArray_[_newId].insert(paintArray_[_newId].end(), _object);
 	}
 
 	void Room::update()
 	{
 		onUpdateStart();
 
-		Object* previousObj = nullptr;
-
-		for (auto& obj : getObjectList<Object>())
+		auto& allObjectArray = objectPointerArray_[typecode(Object)];
+		for (auto iter = allObjectArray.begin(); iter != allObjectArray.end(); iter++)
 		{
-			if (previousObj && previousObj->removeTag_)
+			Object* obj = (*iter).get();
+			if (obj->removeTag_)
 			{
-				previousObj->removeTag_ = false;
-				previousObj->remove();
-				if (previousObj->destroyTag_)
+				if (obj->destroyTag_)
 				{
-					delete previousObj;
-					previousObj = nullptr;
+					iter = allObjectArray.erase(iter);
 				}
 			}
-			obj->hspeedTemp = obj->vspeedTemp = 0;
-			obj->var["xBefore"] << obj->x;
-			obj->var["yBefore"] << obj->y;
-			obj->isUpdating_ = true;
-			obj->updateFunction();
-			obj->isUpdating_ = false;
-			previousObj = obj;
-		}
-		if (previousObj && previousObj->removeTag_)
-		{
-			previousObj->removeTag_ = false;
-			previousObj->remove();
-			if (previousObj->destroyTag_)
+			else
 			{
-				delete previousObj;
-				previousObj = nullptr;
+				obj->hspeedTemp = obj->vspeedTemp = 0;
+				obj->var["xBefore"] << obj->x;
+				obj->var["yBefore"] << obj->y;
+				obj->isUpdating_ = true;
+				obj->updateFunction();
+				obj->isUpdating_ = false;
 			}
 		}
 
 		for (auto& x : reviseStateArray_)
-			for (auto& obj : x.second)
-			{
-				if (previousObj && previousObj->removeTag_)
-				{
-					previousObj->removeTag_ = false;
-					previousObj->remove();
-					if (previousObj->destroyTag_)
-					{
-						delete previousObj;
-						previousObj = nullptr;
-					}
-				}
-				obj->isUpdating_ = true;
-				obj->reviseState();
-				obj->isUpdating_ = false;
-				previousObj = obj;
-			}
-		if (previousObj && previousObj->removeTag_)
 		{
-			previousObj->removeTag_ = false;
-			previousObj->remove();
-			if (previousObj->destroyTag_)
+			auto& objArray = x.second;
+			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
 			{
-				delete previousObj;
-				previousObj = nullptr;
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
+				{
+					iter = objArray.erase(iter);
+				}
+				else
+				{
+					obj->isUpdating_ = true;
+					obj->reviseState();
+					obj->isUpdating_ = false;
+				}
 			}
 		}
 
 		for (auto& x : updateStateArray_)
-			for (auto& obj : x.second)
-			{
-				if (previousObj && previousObj->removeTag_)
-				{
-					previousObj->removeTag_ = false;
-					previousObj->remove();
-					if (previousObj->destroyTag_)
-					{
-						delete previousObj;
-						previousObj = nullptr;
-					}
-				}
-				obj->isUpdating_ = true;
-				obj->updateState();
-				obj->isUpdating_ = false;
-				previousObj = obj;
-			}
-		if (previousObj && previousObj->removeTag_)
 		{
-			previousObj->removeTag_ = false;
-			previousObj->remove();
-			if (previousObj->destroyTag_)
+			auto& objArray = x.second;
+			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
 			{
-				delete previousObj;
-				previousObj = nullptr;
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
+				{
+					iter = objArray.erase(iter);
+				}
+				else
+				{
+					obj->isUpdating_ = true;
+					obj->updateState();
+					obj->isUpdating_ = false;
+				}
 			}
 		}
 
 		for (auto& x : recheckStateArray_)
-			for (auto& obj : x.second)
-			{
-				if (previousObj && previousObj->removeTag_)
-				{
-					previousObj->removeTag_ = false;
-					previousObj->remove();
-					if (previousObj->destroyTag_)
-					{
-						delete previousObj;
-						previousObj = nullptr;
-					}
-				}
-				obj->isUpdating_ = true;
-				obj->recheckState();
-				obj->isUpdating_ = false;
-				previousObj = obj;
-			}
-		if (previousObj && previousObj->removeTag_)
 		{
-			previousObj->removeTag_ = false;
-			previousObj->remove();
-			if (previousObj->destroyTag_)
+			auto& objArray = x.second;
+			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
 			{
-				delete previousObj;
-				previousObj = nullptr;
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
+				{
+					iter = objArray.erase(iter);
+				}
+				else
+				{
+					obj->isUpdating_ = true;
+					obj->recheckState();
+					obj->isUpdating_ = false;
+				}
 			}
 		}
 

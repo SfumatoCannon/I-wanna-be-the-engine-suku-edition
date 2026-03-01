@@ -191,7 +191,7 @@ namespace suku
 
 	void Object::remove()
 	{
-		onDestroy();
+		onRemove();
 		if (inRoom_)
 		{
 			if (isUpdating_)
