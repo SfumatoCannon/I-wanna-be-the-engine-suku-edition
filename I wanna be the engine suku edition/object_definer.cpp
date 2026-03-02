@@ -127,7 +127,6 @@ namespace suku
 		isOnPlatform_ = false;
 		isOnFloor_ = false;
 		isOnVineLeft_ = isOnVineRight_ = false;
-		paintId_ = 3;
 		isInfinityJump = false;
 		isFrozen = false;
 		maxJumpTime = 2;
@@ -141,6 +140,7 @@ namespace suku
 		setReviseStateId(0);
 		setUpdateStateId(0);
 		setRecheckStateId(0);
+		setPaintId(3);
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
 		sprite_ = &sprStanding;
