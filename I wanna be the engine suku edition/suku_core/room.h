@@ -34,10 +34,10 @@ namespace suku
 
 		void remove(Object* _object);
 
-		void modifyObjectRevisePriority(Object* _object, double _newId);
-		void modifyObjectUpdatePriority(Object* _object, double _newId);
-		void modifyObjectRecheckPriority(Object* _object, double _newId);
-		void modifyObjectPaintPriority(Object* _object, double _newId);
+		void setObjectRevisePriority(Object* _object, double _newId);
+		void setObjectUpdatePriority(Object* _object, double _newId);
+		void setObjectRecheckPriority(Object* _object, double _newId);
+		void setObjectPaintPriority(Object* _object, double _newId);
 
 		virtual void onCreate() { displayLayer_.newLayer(800, 608); }
 		virtual void onJoin() {}

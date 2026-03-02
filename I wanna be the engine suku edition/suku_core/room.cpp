@@ -24,7 +24,7 @@ namespace suku
 		_object->removeTag_ = true;
 	}
 
-	void Room::modifyObjectRevisePriority(Object* _object, double _newId)
+	void Room::setObjectRevisePriority(Object* _object, double _newId)
 	{
 		auto& originalArray = reviseStateArray_[_object->reviseStateId_];
 		auto& targetArray = reviseStateArray_[_newId];
@@ -43,7 +43,7 @@ namespace suku
 		_object->reviseStateId_ = _newId;
 	}
 
-	void Room::modifyObjectUpdatePriority(Object* _object, double _newId)
+	void Room::setObjectUpdatePriority(Object* _object, double _newId)
 	{
 		auto& originalArray = updateStateArray_[_object->updateStateId_];
 		auto& targetArray = updateStateArray_[_newId];
@@ -62,7 +62,7 @@ namespace suku
 		_object->updateStateId_ = _newId;
 	}
 
-	void Room::modifyObjectRecheckPriority(Object* _object, double _newId)
+	void Room::setObjectRecheckPriority(Object* _object, double _newId)
 	{
 		auto& originalArray = recheckStateArray_[_object->recheckStateId_];
 		auto& targetArray = recheckStateArray_[_newId];
@@ -81,7 +81,7 @@ namespace suku
 		_object->recheckStateId_ = _newId;
 	}
 
-	void Room::modifyObjectPaintPriority(Object* _object, double _newId)
+	void Room::setObjectPaintPriority(Object* _object, double _newId)
 	{
 		auto& originalArray = paintArray_[_object->paintId_];
 		auto& targetArray = paintArray_[_newId];

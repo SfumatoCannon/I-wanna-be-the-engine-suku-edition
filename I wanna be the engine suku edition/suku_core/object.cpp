@@ -66,28 +66,28 @@ namespace suku
 	void Object::setReviseStateId(double _id)
 	{
 		if (inRoom_)
-			inRoom_->modifyObjectRevisePriority(this, _id);
+			inRoom_->setObjectRevisePriority(this, _id);
 		else reviseStateId_ = _id;
 	}
 
 	void Object::setUpdateStateId(double _id)
 	{
 		if (inRoom_)
-			inRoom_->modifyObjectUpdatePriority(this, _id);
+			inRoom_->setObjectUpdatePriority(this, _id);
 		else updateStateId_ = _id;
 	}
 
 	void Object::setRecheckStateId(double _id)
 	{
 		if (inRoom_)
-			inRoom_->modifyObjectRecheckPriority(this, _id);
+			inRoom_->setObjectRecheckPriority(this, _id);
 		else recheckStateId_ = _id;
 	}
 
 	void Object::setPaintId(double _id)
 	{
 		if (inRoom_)
-			inRoom_->modifyObjectPaintPriority(this, _id);
+			inRoom_->setObjectPaintPriority(this, _id);
 		else paintId_ = _id;
 	}
 
