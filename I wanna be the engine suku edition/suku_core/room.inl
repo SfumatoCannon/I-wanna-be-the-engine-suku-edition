@@ -15,15 +15,11 @@ namespace suku
 	{
 		if (typecode(Obj) == typecode(Object))
 		{
-			// get all objects in objectPointerArray_
 			std::list<Obj*> resultList;
-			for (auto& [kindId, objList] : objectPointerArray_)
+			for (auto& objectPtr : objectPointerArray_[typecode(Object)])
 			{
-				for (auto& objectPtr : objList)
-				{
-					if (objectPtr->removeTag_ == false)
-						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
-				}
+				if (objectPtr->removeTag_ == false)
+					resultList.push_back(static_cast<Obj*>(objectPtr.get()));
 			}
 			return resultList;
 		}
@@ -50,7 +46,7 @@ namespace suku
 	template<typename Obj>
 	inline Obj* Room::append(Obj* _objectPointer)
 	{
-		auto [iter, isFirst] = 
+		auto [iter, isFirst] =
 			objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
 
 		if (isFirst)
@@ -62,13 +58,19 @@ namespace suku
 		newObj->kindId_ = typecode(Obj);
 		newObj->inRoom_ = this;
 		objList.push_back(newObj);
+		objectPointerArray_[typecode(Object)].push_back(newObj);
+
+		reviseStateArray_[newObj->reviseStateId_].push_back(newObj);
+		updateStateArray_[newObj->updateStateId_].push_back(newObj);
+		recheckStateArray_[newObj->recheckStateId_].push_back(newObj);
+		paintArray_[newObj->paintId_].push_back(newObj);
 
 		if (isFirst)
 		{
 			Obj::classInitialize();
 		}
 
-		return newObj.get();
+		return static_cast<Obj*>(newObj.get());
 	}
 
 	template<typename Obj>

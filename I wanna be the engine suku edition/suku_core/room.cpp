@@ -183,7 +183,7 @@ namespace suku
 			}
 		}
 
-		for (auto& obj : getObjectList<Object>())
+		for (auto& obj : allObjectArray)
 		{
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
