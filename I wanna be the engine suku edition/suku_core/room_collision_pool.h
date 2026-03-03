@@ -1,11 +1,12 @@
 #pragma once
-#include "room.h"
-#include "object.h"
+#include <list>
 #include <map>
 #include <utility>
 
 namespace suku
 {
+	class Object;
+
 	class RoomCollisionPool
 	{
 	public:
@@ -18,8 +19,10 @@ namespace suku
 		void updateObject(Object* _obj);
 		//template<typename T> std::list<T*> getObjectsInSameChunk(Object* _sourceObj);
 		//std::list<Object*> getObjectsInSameChunk(Object* _sourceObj);
-		//template<typename T> std::list<T*> getCrashedObject(Object* _sourceObj);
-		//std::list<Object*> getCrashedObject(Object* _sourceObj);
+		template<typename Obj> Obj* getCrashedObject(Object* _sourceObj);
+		Object* getCrashedObject(Object* _sourceObj);
+		template<typename Obj> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
+		std::list<Object*> getCrashedObjectList(Object* _sourceObj);
 	private:
 		std::map<std::pair<int, int>, std::list<Object*>> chunk_;
 		std::map<Object*, std::pair<int, int>> objectChunk_;
@@ -28,3 +31,4 @@ namespace suku
 		std::list<Object*> oversizedObjectList_;
 	};
 }
+

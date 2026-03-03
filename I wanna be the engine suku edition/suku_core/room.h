@@ -3,11 +3,13 @@
 #include <suku_foundation/type_tree.h>
 #include <map>
 #include <memory>
+#include "room_collision_pool.h"
 
 namespace suku
 {
 	class Object;
 	class Room;
+
 	extern Room* nowRoom;
 
 	class Room
@@ -54,6 +56,7 @@ namespace suku
 	private:
 		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
+		//RoomCollisionPool collisionPool_;
 		std::map<double, std::list<std::shared_ptr<Object>>> reviseStateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> updateStateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> recheckStateArray_;

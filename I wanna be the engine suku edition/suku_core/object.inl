@@ -1,7 +1,7 @@
 #pragma once
 #include "room.h"
 #include "object.h"
-#include "../suku_foundation/includes.h"
+#include "sprite.h"
 
 namespace suku
 {

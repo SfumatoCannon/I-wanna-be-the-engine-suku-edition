@@ -1,4 +1,5 @@
 #include "room_collision_pool.h"
+#include "object.h"
 
 namespace suku
 {
@@ -37,5 +38,34 @@ namespace suku
             objectChunk_[_obj] = newChunk;
             objectIterator_[_obj] = --chunk_[newChunk].end();
 		}
+    }
+
+    Object* RoomCollisionPool::getCrashedObject(Object* _sourceObj)
+    {
+		// temporary implementation, will be optimized later
+		for (auto& [chunk, list] : chunk_)
+        {
+            for (Object* obj : list)
+            {
+                if (obj != _sourceObj && _sourceObj->isCrashed(*obj))
+                    return obj;
+            }
+        }
+        return nullptr;
+    }
+
+    std::list<Object*> RoomCollisionPool::getCrashedObjectList(Object* _sourceObj)
+    {
+        // temporary implementation, will be optimized later
+		std::list<Object*> resultList;
+        for (auto& [chunk, list] : chunk_)
+        {
+            for (Object* obj : list)
+            {
+                if (obj != _sourceObj && _sourceObj->isCrashed(*obj))
+                    resultList.push_back(obj);
+            }
+        }
+		return resultList;
     }
 }
