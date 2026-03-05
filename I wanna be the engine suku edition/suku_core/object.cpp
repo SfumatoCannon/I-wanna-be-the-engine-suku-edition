@@ -95,14 +95,14 @@ namespace suku
 	{
 		if (sprite_ == nullptr)
 			return 0;
-		return sprite_->getWidth() * getSpriteXScale();
+		return sprite_->getWidth() * (float)getSpriteXScale();
 	}
 
 	float Object::getHeight()
 	{
 		if (sprite_ == nullptr)
 			return 0;
-		return sprite_->getHeight() * getSpriteYScale();
+		return sprite_->getHeight() * (float)getSpriteYScale();
 	}
 
 	Vector Object::getSize()
