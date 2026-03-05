@@ -2,6 +2,7 @@
 #include "object.h"
 #include "../suku_draw/effect.h"
 #include "../suku_draw/draw_core.h"
+#include "../suku_foundation/game_window.h"
 
 namespace suku
 {

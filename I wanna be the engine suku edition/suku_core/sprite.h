@@ -1,7 +1,11 @@
 #pragma once
 #include "../framework.h"
-#include "../suku_foundation/includes.h"
-#include "../suku_draw/includes.h"
+#include "../suku_foundation/string.h"
+#include "../suku_draw/shape.h"
+#include "../suku_draw/bitmap.h"
+#include "collision_box.h"
+#include "../suku_draw/color.h"
+#include "../suku_draw/transform.h"
 
 namespace suku
 {

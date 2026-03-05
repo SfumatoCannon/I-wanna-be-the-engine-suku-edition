@@ -1,8 +1,11 @@
 #pragma once
 #include "../framework.h"
-#include "../suku_draw/includes.h"
-#include "../suku_foundation/includes.h"
-#include <suku_foundation/type_tree.h>
+#include "../suku_draw/transform.h"
+#include "../suku_foundation/var.h"
+#include "../suku_foundation/type_tree.h"
+#include "../suku_foundation/maths.h"
+#include <functional>
+#include <list>
 
 namespace suku
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include <suku_draw/paint_layer.h>
-#include <suku_foundation/type_tree.h>
+#include "../suku_draw/paint_layer.h"
+#include "../suku_foundation/type_tree.h"
 #include <map>
 #include <memory>
 #include "room_collision_pool.h"
