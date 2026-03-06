@@ -16,11 +16,15 @@ namespace suku
 	{
 		if (typecode(Obj) == typecode(Object))
 		{
+			// return all objects in the room
 			std::list<Obj*> resultList;
-			for (auto& objectPtr : objectPointerArray_[typecode(Object)])
+			for (auto& [typecode, objectList] : objectPointerArray_)
 			{
-				if (objectPtr->removeTag_ == false)
-					resultList.push_back(static_cast<Obj*>(objectPtr.get()));
+				for (auto& objectPtr : objectList)
+				{
+					if (objectPtr->removeTag_ == false)
+						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
+				}
 			}
 			return resultList;
 		}
@@ -59,7 +63,6 @@ namespace suku
 		newObj->kindId_ = typecode(Obj);
 		newObj->inRoom_ = this;
 		objList.push_back(newObj);
-		objectPointerArray_[typecode(Object)].push_back(newObj);
 
 		reviseStateArray_[newObj->reviseStateId_].push_back(newObj);
 		updateStateArray_[newObj->updateStateId_].push_back(newObj);

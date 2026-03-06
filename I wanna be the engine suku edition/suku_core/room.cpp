@@ -106,32 +106,36 @@ namespace suku
 	{
 		onUpdateStart();
 
-		auto& allObjectArray = objectPointerArray_[typecode(Object)];
-		for (auto iter = allObjectArray.begin(); iter != allObjectArray.end(); iter++)
+		for (auto& [type, objArray] : objectPointerArray_)
 		{
-			Object* obj = (*iter).get();
-			if (obj->removeTag_)
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
-				if (obj->destroyTag_)
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
 				{
-					iter = allObjectArray.erase(iter);
+					collisionPool_->removeObject(obj);
+					if (obj->destroyTag_)
+					{
+						iter = objArray.erase(iter);
+					}
 				}
-			}
-			else
-			{
-				obj->hspeedTemp = obj->vspeedTemp = 0;
-				obj->var["xBefore"] << obj->x;
-				obj->var["yBefore"] << obj->y;
-				obj->isUpdating_ = true;
-				obj->updateFunction();
-				obj->isUpdating_ = false;
+				else
+				{
+					obj->hspeedTemp = obj->vspeedTemp = 0;
+					obj->var["xBefore"] << obj->x;
+					obj->var["yBefore"] << obj->y;
+					obj->isUpdating_ = true;
+					obj->updateFunction();
+					obj->isUpdating_ = false;
+
+					iter++;
+				}
 			}
 		}
 
-		for (auto& x : reviseStateArray_)
+		for (auto& [type, objArray] : reviseStateArray_)
 		{
-			auto& objArray = x.second;
-			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
 				Object* obj = (*iter).get();
 				if (obj->removeTag_)
@@ -143,14 +147,15 @@ namespace suku
 					obj->isUpdating_ = true;
 					obj->reviseState();
 					obj->isUpdating_ = false;
+
+					iter++;
 				}
 			}
 		}
 
-		for (auto& x : updateStateArray_)
+		for (auto& [type, objArray] : updateStateArray_)
 		{
-			auto& objArray = x.second;
-			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
 				Object* obj = (*iter).get();
 				if (obj->removeTag_)
@@ -162,14 +167,15 @@ namespace suku
 					obj->isUpdating_ = true;
 					obj->updateState();
 					obj->isUpdating_ = false;
+
+					iter++;
 				}
 			}
 		}
 
-		for (auto& x : recheckStateArray_)
+		for (auto& [type, objArray] : recheckStateArray_)
 		{
-			auto& objArray = x.second;
-			for (auto iter = objArray.begin(); iter != objArray.end(); iter++)
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
 				Object* obj = (*iter).get();
 				if (obj->removeTag_)
@@ -181,14 +187,19 @@ namespace suku
 					obj->isUpdating_ = true;
 					obj->recheckState();
 					obj->isUpdating_ = false;
+
+					iter++;
 				}
 			}
 		}
 
-		for (auto& obj : allObjectArray)
+		for (auto& [type, objArray] : objectPointerArray_)
 		{
-			obj->x += obj->totalHspeed();
-			obj->y += obj->totalVspeed();
+			for (auto& obj : objArray)
+			{
+				obj->x += obj->totalHspeed();
+				obj->y += obj->totalVspeed();
+			}
 		}
 
 		onUpdateEnd();
@@ -199,12 +210,26 @@ namespace suku
 		displayLayer_.beginDraw();
 		onPaintStart();
 
-		for (auto& x : paintArray_)
-			for (auto& obj : x.second)
+		for (auto& [type, objArray] : paintArray_)
+		{
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
-				if (!obj->onPaint())
-					obj->paintBody();
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
+				{
+					iter = objArray.erase(iter);
+				}
+				else
+				{
+					obj->isUpdating_ = true;
+					if (!obj->onPaint())
+						obj->paintBody();
+					obj->isUpdating_ = false;
+
+					iter++;
+				}
 			}
+		}
 
 		onPaintEnd();
 		auto pic = displayLayer_.endDraw();
