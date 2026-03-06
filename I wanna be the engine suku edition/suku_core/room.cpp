@@ -3,11 +3,12 @@
 #include "../suku_draw/effect.h"
 #include "../suku_draw/draw_core.h"
 #include "../suku_foundation/game_window.h"
+#include "room_collision_pool.h"
 
 namespace suku
 {
 	Room* nowRoom;
-
+	
 	void Room::setPlayerStart(float _x, float _y)
 	{
 		playerStartX = _x;

@@ -3,12 +3,12 @@
 #include "../suku_foundation/type_tree.h"
 #include <map>
 #include <memory>
-#include "room_collision_pool.h"
 
 namespace suku
 {
 	class Object;
 	class Room;
+	class RoomCollisionPool;
 
 	extern Room* nowRoom;
 
@@ -17,7 +17,7 @@ namespace suku
 	public:
 		float playerStartX = 0.0, playerStartY = 0.0;
 		bool hasCreated = false;
-		Room() = default;
+		Room() { collisionPool_ = std::make_unique<RoomCollisionPool>(); }
 		void setPlayerStart(float _x, float _y);
 
 		template<typename Obj> std::list<Obj*> getObjectList();
@@ -41,6 +41,9 @@ namespace suku
 		void setObjectRecheckPriority(Object* _object, double _newId);
 		void setObjectPaintPriority(Object* _object, double _newId);
 
+		template<typename Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
+		template<typename Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
+
 		virtual void onCreate() { displayLayer_.newLayer(800, 608); }
 		virtual void onJoin() {}
 		virtual void onRestart() {}
@@ -56,7 +59,7 @@ namespace suku
 	private:
 		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
-		//RoomCollisionPool collisionPool_;
+		std::unique_ptr<RoomCollisionPool> collisionPool_;
 		std::map<double, std::list<std::shared_ptr<Object>>> reviseStateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> updateStateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> recheckStateArray_;

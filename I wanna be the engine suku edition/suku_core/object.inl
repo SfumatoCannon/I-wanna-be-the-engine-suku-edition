@@ -103,60 +103,64 @@ namespace suku
 	{
 		if (!inRoom_)
 			return nullptr;
-		std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
-		if (!targetList.empty())
-		{
-			if (_isPredict)
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, x, y, objPointer->x, objPointer->y))
-						return objPointer;
-				}
-			}
-			else
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, x, y))
-						return objPointer;
-				}
-			}
-		}
-		return nullptr;
+		return inRoom_->getCrashedObject<Obj>(this);
+		//std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
+		//if (!targetList.empty())
+		//{
+		//	if (_isPredict)
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, x, y, objPointer->x, objPointer->y))
+		//				return objPointer;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, x, y))
+		//				return objPointer;
+		//		}
+		//	}
+		//}
+		//return nullptr;
 	}
 
 	template<suku_object Obj>
 	inline std::list<Obj*> Object::getCrashedObjectList(bool _isPredict)
 	{
-		std::list<Obj*> resultList;
 		if (!inRoom_)
-			return resultList;
-		std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
-		if (!targetList.empty())
-		{
-			if (_isPredict)
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, x, y, objPointer->x, objPointer->y))
-						resultList.push_back(objPointer);
-				}
-			}
-			else
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, x, y))
-						resultList.push_back(objPointer);
-				}
-			}
-		}
-		return resultList;
+			return std::list<Obj*>();
+		return inRoom_->getCrashedObjectList<Obj>(this);
+		//std::list<Obj*> resultList;
+		//if (!inRoom_)
+		//	return resultList;
+		//std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
+		//if (!targetList.empty())
+		//{
+		//	if (_isPredict)
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, x, y, objPointer->x, objPointer->y))
+		//				resultList.push_back(objPointer);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, x, y))
+		//				resultList.push_back(objPointer);
+		//		}
+		//	}
+		//}
+		//return resultList;
 	}
 
 	template<suku_object Obj>
@@ -164,59 +168,75 @@ namespace suku
 	{
 		if (!inRoom_)
 			return nullptr;
-		std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
-		if (!targetList.empty())
-		{
-			if (_isPredict)
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, _x, _y, objPointer->x, objPointer->y))
-						return objPointer;
-				}
-			}
-			else
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, _x, _y))
-						return objPointer;
-				}
-			}
-		}
-		return nullptr;
+		float oldX = x, oldY = y;
+		x = _x;
+		y = _y;
+		Obj* result = inRoom_->getCrashedObject<Obj>(this);
+		x = oldX;
+		y = oldY;
+		return result;
+		//std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
+		//if (!targetList.empty())
+		//{
+		//	if (_isPredict)
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, _x, _y, objPointer->x, objPointer->y))
+		//				return objPointer;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, _x, _y))
+		//				return objPointer;
+		//		}
+		//	}
+		//}
+		//return nullptr;
 	}
 
 	template<suku_object Obj>
 	inline std::list<Obj*> Object::getCrashedObjectList(float _x, float _y, bool _isPredict)
 	{
-		std::list<Obj*> resultList;
 		if (!inRoom_)
-			return resultList;
-		std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
-		if (!targetList.empty())
-		{
-			if (_isPredict)
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, _x, _y, objPointer->x, objPointer->y))
-						resultList.push_back(objPointer);
-				}
-			}
-			else
-			{
-				for (auto objPointer : targetList)
-				{
-					if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
-						&& isCrashed(*objPointer, _x, _y))
-						resultList.push_back(objPointer);
-				}
-			}
-		}
-		return resultList;
+			return std::list<Obj*>();
+		float oldX = x, oldY = y;
+		x = _x;
+		y = _y;
+		std::list<Obj*> result = inRoom_->getCrashedObjectList<Obj>(this);
+		x = oldX;
+		y = oldY;
+		return result;
+		//std::list<Obj*> resultList;
+		//if (!inRoom_)
+		//	return resultList;
+		//std::list<Obj*> targetList = inRoom_->getObjectList<Obj>();
+		//if (!targetList.empty())
+		//{
+		//	if (_isPredict)
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, _x, _y, objPointer->x, objPointer->y))
+		//				resultList.push_back(objPointer);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		for (auto objPointer : targetList)
+		//		{
+		//			if (static_cast<Object*>(objPointer) != static_cast<Object*>(this)
+		//				&& isCrashed(*objPointer, _x, _y))
+		//				resultList.push_back(objPointer);
+		//		}
+		//	}
+		//}
+		//return resultList;
 	}
 }

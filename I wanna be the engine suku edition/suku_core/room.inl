@@ -1,6 +1,7 @@
 #pragma once
 #include "object.h"
 #include "room.h"
+#include "room_collision_pool.h"
 
 namespace suku
 {
@@ -65,6 +66,8 @@ namespace suku
 		recheckStateArray_[newObj->recheckStateId_].push_back(newObj);
 		paintArray_[newObj->paintId_].push_back(newObj);
 
+		collisionPool_->addObject(newObj.get());
+
 		if (isFirst)
 		{
 			Obj::classInitialize();
@@ -127,5 +130,17 @@ namespace suku
 	{
 		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		createFill(_object, _fillwidth, _fillheight, _footx, _footy);
+	}
+
+	template<typename Obj>
+	inline Obj* Room::getCrashedObject(Object* _sourceObj)
+	{
+		return collisionPool_->getCrashedObject<Obj>(_sourceObj);
+	}
+
+	template<typename Obj>
+	inline std::list<Obj*> Room::getCrashedObjectList(Object* _sourceObj)
+	{
+		return collisionPool_->getCrashedObjectList<Obj>(_sourceObj);
 	}
 }
