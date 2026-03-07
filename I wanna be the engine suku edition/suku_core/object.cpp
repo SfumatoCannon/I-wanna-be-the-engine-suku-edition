@@ -62,6 +62,16 @@ namespace suku
 		return sprite_->getFrameStateIndex(clock_);
 	}
 
+	void Object::setInRoom(Room* _room)
+	{
+		_room->append(this);
+		if (inRoom_)
+		{
+			inRoom_->destroyImmediately(this);
+		}
+		inRoom_ = _room;
+	}
+
 	void Object::setReviseStateId(double _id)
 	{
 		if (inRoom_)

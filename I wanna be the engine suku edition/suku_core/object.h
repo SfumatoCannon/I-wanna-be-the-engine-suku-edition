@@ -32,7 +32,9 @@ namespace suku
 		double updateStateId()const { return updateStateId_; }
 		double recheckStateId()const { return recheckStateId_; }
 		double paintId()const { return paintId_; }
-		size_t kind()const { return kindId_; }
+		size_t kindId()const { return kindId_; }
+
+		void setInRoom(Room* _room);
 
 		void setReviseStateId(double _id);
 		void setUpdateStateId(double _id);

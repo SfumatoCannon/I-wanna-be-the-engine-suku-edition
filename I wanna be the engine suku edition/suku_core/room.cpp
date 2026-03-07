@@ -26,6 +26,40 @@ namespace suku
 		_object->removeTag_ = true;
 	}
 
+	void Room::destroy(Object* _object)
+	{
+		_object->removeTag_ = true;
+		_object->destroyTag_ = true;
+	}
+
+	void Room::removeImmediately(Object* _object)
+	{
+		collisionPool_->removeObject(_object);
+		reviseStateArray_[_object->reviseStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		updateStateArray_[_object->updateStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		recheckStateArray_[_object->recheckStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+	}
+
+	void Room::destroyImmediately(Object* _object)
+	{
+		collisionPool_->removeObject(_object);
+		objectPointerArray_[_object->kindId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		reviseStateArray_[_object->reviseStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		updateStateArray_[_object->updateStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		recheckStateArray_[_object->recheckStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+			{ return objPtr.get() == _object; });
+	}
+
 	void Room::setObjectRevisePriority(Object* _object, double _newId)
 	{
 		auto& originalArray = reviseStateArray_[_object->reviseStateId_];

@@ -105,7 +105,7 @@ namespace suku
 		for (int i = 1; i <= size; i++)
 		{
 			obj = _group->findObjWithGroupId(i);
-			if (obj->kind == _kind && _function(obj))
+			if (obj->kindId == _kind && _function(obj))
 				create(obj);
 		}
 		return member_.size();

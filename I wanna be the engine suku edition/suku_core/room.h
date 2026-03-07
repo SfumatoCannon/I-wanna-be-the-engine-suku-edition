@@ -35,6 +35,9 @@ namespace suku
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 
 		void remove(Object* _object);
+		void destroy(Object* _object);
+		void removeImmediately(Object* _object);
+		void destroyImmediately(Object* _object);
 
 		void setObjectRevisePriority(Object* _object, double _newId);
 		void setObjectUpdatePriority(Object* _object, double _newId);
