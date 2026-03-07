@@ -50,7 +50,7 @@ namespace suku
 		virtual void onCreate() { displayLayer_.newLayer(800, 608); }
 		virtual void onJoin() {}
 		virtual void onRestart() {}
-		virtual void onPaintStart() {}
+		virtual void onPaintStart() { displayLayer_.clear(); }
 		virtual void onPaintEnd() {}
 		virtual void onUpdateStart() {}
 		virtual void onUpdateEnd() {}

@@ -7,9 +7,10 @@ class Room1 : public Room
 public:
 	virtual void onCreate()override
 	{
+		Room::onCreate();
 		playerStartX = 0.0;
 		playerStartY = 0.0;
-		create(Player(0, 0))->rotate(50.0f);
+		create(Player(0, 0));
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
