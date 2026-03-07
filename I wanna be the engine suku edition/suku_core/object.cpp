@@ -176,7 +176,6 @@ namespace suku
 		var["yBefore"] = _y;
 		xScale = 1.0;
 		yScale = 1.0;
-		isUpdating_ = false;
 		isClearPainting = true;
 		removeTag_ = false;
 		spawnX = _x;
@@ -193,22 +192,23 @@ namespace suku
 		onRemove();
 		if (inRoom_)
 		{
-			if (isUpdating_)
-				removeTag_ = true;
-			else
-			{
-				inRoom_->remove(this);
-				inRoom_ = nullptr;
-			}
+			inRoom_->remove(this);
+		}
+		else
+		{
+			removeTag_ = true;
 		}
 	}
 
 	void Object::destroy()
 	{
 		remove();
-		if (inRoom_ && isUpdating_)
-			destroyTag_ = true;
-		else delete this;
+		destroyTag_ = true;
+		// inRoom_ != nullptr 时其生命周期由 Room 管理
+		if (!inRoom_)
+		{
+			delete this;
+		}
 	}
 
 	float Object::totalHspeed()const

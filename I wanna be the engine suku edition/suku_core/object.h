@@ -127,7 +127,6 @@ namespace suku
 		Room* inRoom_;
 		size_t kindId_;
 		double reviseStateId_, updateStateId_, recheckStateId_, paintId_;
-		bool isUpdating_;
 		bool removeTag_;
 		bool destroyTag_;
 		Sprite* sprite_;

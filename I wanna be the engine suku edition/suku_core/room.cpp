@@ -124,9 +124,7 @@ namespace suku
 					obj->hspeedTemp = obj->vspeedTemp = 0;
 					obj->var["xBefore"] << obj->x;
 					obj->var["yBefore"] << obj->y;
-					obj->isUpdating_ = true;
 					obj->updateFunction();
-					obj->isUpdating_ = false;
 
 					iter++;
 				}
@@ -144,9 +142,7 @@ namespace suku
 				}
 				else
 				{
-					obj->isUpdating_ = true;
 					obj->reviseState();
-					obj->isUpdating_ = false;
 
 					iter++;
 				}
@@ -164,9 +160,7 @@ namespace suku
 				}
 				else
 				{
-					obj->isUpdating_ = true;
 					obj->updateState();
-					obj->isUpdating_ = false;
 
 					iter++;
 				}
@@ -184,9 +178,7 @@ namespace suku
 				}
 				else
 				{
-					obj->isUpdating_ = true;
 					obj->recheckState();
-					obj->isUpdating_ = false;
 
 					iter++;
 				}
@@ -221,10 +213,8 @@ namespace suku
 				}
 				else
 				{
-					obj->isUpdating_ = true;
 					if (!obj->onPaint())
 						obj->paintBody();
-					obj->isUpdating_ = false;
 
 					iter++;
 				}
