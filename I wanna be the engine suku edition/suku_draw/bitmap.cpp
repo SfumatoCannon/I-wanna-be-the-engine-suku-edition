@@ -99,6 +99,7 @@ namespace suku
 	Bitmap::Bitmap(String _url)
 	{
 		ComPtr<IWICBitmap> tmpWic;
+		_url = "ProjectAssets/" + _url;
 		auto hr = loadWICBitmap(tmpWic, AbsolutePath(_url.content));
 		if (SUCCEEDED(hr))
 		{
@@ -125,6 +126,7 @@ namespace suku
 	Bitmap::Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		ComPtr<IWICBitmap> tmpWic;
+		_url = "ProjectAssets/" + _url;
 		auto hr = loadWICBitmap(tmpWic, AbsolutePath(_url.content), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{

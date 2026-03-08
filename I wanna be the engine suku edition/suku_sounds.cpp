@@ -23,6 +23,7 @@ namespace suku
 	IXAudio2MasteringVoice* g_masterVoice = nullptr;
 
 	Sound::Sound(String _url) {
+		_url = "ProjectAssets/" + _url;
 		std::wstring wFile(AbsolutePath(_url.content));
 
 		ComPtr<IMFSourceReader> reader;
