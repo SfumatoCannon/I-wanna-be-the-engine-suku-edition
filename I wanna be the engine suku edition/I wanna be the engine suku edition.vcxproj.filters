@@ -462,6 +462,9 @@
     <None Include="suku_draw\scale_mode.inl">
       <Filter>头文件</Filter>
     </None>
+    <None Include="suku_foundation\save.inl">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="suku_icon.ico">
