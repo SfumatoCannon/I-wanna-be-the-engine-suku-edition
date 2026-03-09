@@ -1,7 +1,6 @@
 #include "save.h"
 #include "../global_value.h"
 #include <ios>
-#include <fstream>
 
 namespace suku
 {
