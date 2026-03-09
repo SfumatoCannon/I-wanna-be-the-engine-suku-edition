@@ -40,15 +40,21 @@ namespace suku
 		SaveFile(String _path) : name_(L"save0"), path_(_path) {}	
 		SaveFile(String _name, String _path) : name_(_name), path_(_path) {}
 
+		void setName(String _name) { name_ = _name; }
+		String getName()const { return name_; }
+		String getPath()const { return path_; }
+
 		void create()const;
 		void openForWrite();
 		bool tryOpenForWrite();
 		void openForRead();
 		bool tryOpenForRead();
 		void close();
+		void closeWrite();
+		void closeRead();
 
-		void write(char* _ptrData, size_t _size)const;
-		void read(char* _ptrData, size_t _size)const;
+		void write(char* _ptrData, size_t _size);
+		void read(char* _ptrData, size_t _size);
 
 		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
 		void readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);

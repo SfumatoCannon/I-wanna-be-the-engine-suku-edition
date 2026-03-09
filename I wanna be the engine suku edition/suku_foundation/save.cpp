@@ -1,5 +1,6 @@
 #include "save.h"
 #include "../global_value.h"
+#include "message.h"
 #include <ios>
 
 namespace suku
@@ -106,5 +107,110 @@ namespace suku
 			ifs.read(varSaveList[id].first, varSaveList[id].second);
 		}
 		ifs.close();
+	}
+
+	void SaveFile::create() const
+	{
+		std::ofstream ofsForCreating(/*SaveDir + */path_.contentInWString());
+		ofsForCreating.close();
+	}
+
+	void SaveFile::openForWrite()
+	{
+		if (ofs_.is_open())
+			ofs_.close();
+		ofs_.open(path_.contentInWString(), std::ios::binary);
+		if (!ofs_.is_open())
+		{
+			create();
+			ofs_.open(path_.contentInWString(), std::ios::binary);
+		}
+	}
+
+	bool SaveFile::tryOpenForWrite()
+	{
+		if (ofs_.is_open())
+			ofs_.close();
+		ofs_.open(path_.contentInWString(), std::ios::binary);
+		if (!ofs_.is_open())
+			return false;
+		return true;
+	}
+
+	void SaveFile::openForRead()
+	{
+		if (ifs_.is_open())
+			ifs_.close();
+		ifs_.open(path_.contentInWString(), std::ios::binary);
+		if (!ifs_.is_open())
+		{
+			create();
+			ifs_.open(path_.contentInWString(), std::ios::binary);
+		}
+	}
+
+	bool SaveFile::tryOpenForRead()
+	{
+		if (ifs_.is_open())
+			ifs_.close();
+		ifs_.open(path_.contentInWString(), std::ios::binary);
+		if (!ifs_.is_open())
+			return false;
+		return true;
+	}
+
+	void SaveFile::close()
+	{
+		if (ofs_.is_open())
+			ofs_.close();
+		if (ifs_.is_open())
+			ifs_.close();
+	}
+
+	void SaveFile::closeWrite()
+	{
+		if (ofs_.is_open())
+			ofs_.close();
+	}
+
+	void SaveFile::closeRead()
+	{
+		if (ifs_.is_open())
+			ifs_.close();
+	}
+
+	void SaveFile::write(char* _ptrData, size_t _size)
+	{
+		ofs_.write(_ptrData, _size);
+	}
+
+	void SaveFile::read(char* _ptrData, size_t _size)
+	{
+		ifs_.read(_ptrData, _size);
+	}
+
+	void SaveFile::writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	{
+		for (const auto& [id, data] : _dataPtrMap)
+		{
+			ofs_.write(reinterpret_cast<const char*>(&id), sizeof(unsigned long long));
+			ofs_.write(data.first, data.second);
+		}
+	}
+
+	void SaveFile::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	{
+		while (ifs_.good())
+		{
+			unsigned long long id;
+			ifs_.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
+			if (ifs_.eof())
+			{
+				WARNINGWINDOW("Unexpected file end. The save file may be corrupted.");
+				break;
+			}
+			auto& data = _dataPtrMap[id];
+			ifs_.read(data.first, data.second);
+		}
 	}
 }
