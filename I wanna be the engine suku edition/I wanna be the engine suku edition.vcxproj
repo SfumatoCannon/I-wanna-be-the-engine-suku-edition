@@ -321,6 +321,7 @@
   <ItemGroup>
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />
+    <None Include="suku_core\room_collision_pool.inl" />
     <None Include="suku_core\sprite.inl" />
     <None Include="suku_draw\scale_mode.inl" />
     <None Include="suku_foundation\save.inl" />
