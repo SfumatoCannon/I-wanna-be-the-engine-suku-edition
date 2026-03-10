@@ -181,11 +181,15 @@ namespace suku
 
 	void SaveFile::write(char* _ptrData, size_t _size)
 	{
+		if (!ofs_.is_open())
+			openForWrite();
 		ofs_.write(_ptrData, _size);
 	}
 
 	void SaveFile::read(char* _ptrData, size_t _size)
 	{
+		if (!ifs_.is_open())
+			openForRead();
 		ifs_.read(_ptrData, _size);
 	}
 
