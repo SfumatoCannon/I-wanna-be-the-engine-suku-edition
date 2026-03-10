@@ -65,8 +65,9 @@ namespace suku
 		String path_;
 	};
 
-	const wchar_t* AbsolutePath(const wchar_t* _relativePath);
-	const wchar_t* AbsolutePath(const char* _relativePath);
+	String absolutePath(String _relativePath);
+	const wchar_t* absolutePath(const wchar_t* _relativePath);
+	const wchar_t* absolutePath(const char* _relativePath);
 
 	void createPath(const wchar_t* _path);
 	void createPath(String _path);

@@ -24,7 +24,7 @@ namespace suku
 
 	Sound::Sound(String _url) {
 		_url = "ProjectAssets/" + _url;
-		std::wstring wFile(AbsolutePath(_url.content));
+		std::wstring wFile(absolutePath(_url.content));
 
 		ComPtr<IMFSourceReader> reader;
 		MFCreateSourceReaderFromURL(wFile.c_str(), nullptr, &reader);

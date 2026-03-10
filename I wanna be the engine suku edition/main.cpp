@@ -30,6 +30,9 @@ public:
 	{
 		Room::onCreate();
 
+		SaveFile a("save0.sav");
+		a.create();
+
 		playerStartX = 0.0;
 		playerStartY = 0.0;
 

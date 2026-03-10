@@ -12,7 +12,20 @@ namespace suku
 		Path_len = wcslen(exePath);
 	}
 
-	const wchar_t* AbsolutePath(const wchar_t* _relativePath)
+	String absolutePath(String _relativePath)
+	{
+		if (_relativePath.content == nullptr) return String();
+		if (_relativePath.content[1] == ':') // the parameter is already an absolute path
+			return _relativePath;
+		static wchar_t result[MAX_PATH + 1] = { 0 };
+		result[0] = L'\0';
+		auto exePath = SaveAssetGlobal::getInstance().exePath;
+		lstrcatW(result, exePath);
+		lstrcatW(result, _relativePath.content);
+		return String(result);
+	}
+
+	const wchar_t* absolutePath(const wchar_t* _relativePath)
 	{
 		if (!_relativePath) return nullptr;
 		if (_relativePath[1] == L':') // the parameter is already an absolute path
@@ -25,7 +38,7 @@ namespace suku
 		return result;
 	}
 
-	const wchar_t* AbsolutePath(const char* _relativePath)
+	const wchar_t* absolutePath(const char* _relativePath)
 	{
 		if (!_relativePath) return nullptr;
 		if (_relativePath[1] == ':') // the parameter is already an absolute path
@@ -111,7 +124,7 @@ namespace suku
 
 	void SaveFile::create() const
 	{
-		std::ofstream ofsForCreating(/*SaveDir + */path_.contentInWString());
+		std::ofstream ofsForCreating(absolutePath(/*SaveDir + */path_).contentInWString());
 		ofsForCreating.close();
 	}
 
@@ -119,11 +132,11 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(path_.contentInWString(), std::ios::binary);
+		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ofs_.is_open())
 		{
 			create();
-			ofs_.open(path_.contentInWString(), std::ios::binary);
+			ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		}
 	}
 
@@ -131,7 +144,7 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(path_.contentInWString(), std::ios::binary);
+		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ofs_.is_open())
 			return false;
 		return true;
@@ -141,11 +154,11 @@ namespace suku
 	{
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(path_.contentInWString(), std::ios::binary);
+		ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ifs_.is_open())
 		{
 			create();
-			ifs_.open(path_.contentInWString(), std::ios::binary);
+			ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		}
 	}
 
@@ -153,7 +166,7 @@ namespace suku
 	{
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(path_.contentInWString(), std::ios::binary);
+		ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ifs_.is_open())
 			return false;
 		return true;
