@@ -471,6 +471,9 @@
     <None Include="suku_foundation\save.inl">
       <Filter>头文件</Filter>
     </None>
+    <None Include="suku_core\room_collision_pool.inl">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="suku_icon.ico">
