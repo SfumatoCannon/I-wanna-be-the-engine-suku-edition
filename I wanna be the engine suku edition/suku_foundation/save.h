@@ -34,11 +34,11 @@ namespace suku
 		SaveAssetGlobal() { suku_save_init(); }
 	};
 
-	class SaveFile
+	class File
 	{
 	public:
-		SaveFile(String _path) : name_(L"save0"), path_(_path) {}	
-		SaveFile(String _name, String _path) : name_(_name), path_(_path) {}
+		File(String _path) : name_(L"save0"), path_(_path) {}	
+		File(String _name, String _path) : name_(_name), path_(_path) {}
 
 		void setName(String _name) { name_ = _name; }
 		String getName()const { return name_; }
@@ -53,8 +53,10 @@ namespace suku
 		void closeWrite();
 		void closeRead();
 
-		void write(char* _ptrData, size_t _size);
+		void write(const char* _ptrData, size_t _size);
 		void read(char* _ptrData, size_t _size);
+		void write(const std::vector<char>& _data);
+		void read(std::vector<char>& _data, size_t _size);
 
 		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
 		void readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);

@@ -122,13 +122,13 @@ namespace suku
 		ifs.close();
 	}
 
-	void SaveFile::create() const
+	void File::create() const
 	{
 		std::ofstream ofsForCreating(absolutePath(/*SaveDir + */path_).contentInWString());
 		ofsForCreating.close();
 	}
 
-	void SaveFile::openForWrite()
+	void File::openForWrite()
 	{
 		if (ofs_.is_open())
 			ofs_.close();
@@ -140,7 +140,7 @@ namespace suku
 		}
 	}
 
-	bool SaveFile::tryOpenForWrite()
+	bool File::tryOpenForWrite()
 	{
 		if (ofs_.is_open())
 			ofs_.close();
@@ -150,7 +150,7 @@ namespace suku
 		return true;
 	}
 
-	void SaveFile::openForRead()
+	void File::openForRead()
 	{
 		if (ifs_.is_open())
 			ifs_.close();
@@ -162,7 +162,7 @@ namespace suku
 		}
 	}
 
-	bool SaveFile::tryOpenForRead()
+	bool File::tryOpenForRead()
 	{
 		if (ifs_.is_open())
 			ifs_.close();
@@ -172,7 +172,7 @@ namespace suku
 		return true;
 	}
 
-	void SaveFile::close()
+	void File::close()
 	{
 		if (ofs_.is_open())
 			ofs_.close();
@@ -180,33 +180,45 @@ namespace suku
 			ifs_.close();
 	}
 
-	void SaveFile::closeWrite()
+	void File::closeWrite()
 	{
 		if (ofs_.is_open())
 			ofs_.close();
 	}
 
-	void SaveFile::closeRead()
+	void File::closeRead()
 	{
 		if (ifs_.is_open())
 			ifs_.close();
 	}
 
-	void SaveFile::write(char* _ptrData, size_t _size)
+	void File::write(const char* _ptrData, size_t _size)
 	{
 		if (!ofs_.is_open())
 			openForWrite();
 		ofs_.write(_ptrData, _size);
 	}
 
-	void SaveFile::read(char* _ptrData, size_t _size)
+	void File::read(char* _ptrData, size_t _size)
 	{
 		if (!ifs_.is_open())
 			openForRead();
 		ifs_.read(_ptrData, _size);
 	}
 
-	void SaveFile::writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	void File::write(const std::vector<char>& _data)
+	{
+		write(_data.data(), _data.size());
+	}
+
+	void File::read(std::vector<char>& _data, size_t _size)
+	{
+		if (_size == 0) return;
+		if (_data.size() < _size) _data.resize(_size);
+		read(_data.data(), _size);
+	}
+
+	void File::writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
 		for (const auto& [id, data] : _dataPtrMap)
 		{
@@ -215,7 +227,7 @@ namespace suku
 		}
 	}
 
-	void SaveFile::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	void File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
 		while (ifs_.good())
 		{
