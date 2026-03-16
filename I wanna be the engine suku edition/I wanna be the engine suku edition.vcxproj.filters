@@ -129,6 +129,9 @@
     <ClInclude Include="suku_core\room_collision_pool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_foundation\file_encryption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="I wanna be the engine suku edition.cpp">
@@ -435,6 +438,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_core\room_collision_pool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_foundation\file_encryption.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
