@@ -1,4 +1,53 @@
-                                 Apache License
+                      ADDITIONAL TERMS AND COMMERCIAL RESTRICTIONS
+                                  附加条款与商业限制说明
+                          Copyright (c) 2026 SfumatoCannon_
+
+    This project is licensed under the Apache License, Version 2.0 (the "License") with 
+    the following Overriding Restrictions (the "Additional Terms"):
+    本项目在 Apache License 2.0（下称“许可证”）的基础上，受以下优先限制条款（下称“附加条款”）约束：
+
+    1.  Non-Commercial Use: If you are using this software for non-commercial purposes 
+        (personal projects, research, or education), you are granted all rights under 
+        the Apache License 2.0. You may keep your derivative works closed-source if you 
+        wish, provided you include the original copyright notice.
+        非商业用途：如果您出于非商业目的（个人项目、研究或教育）使用本软件，您享有许可证授予的所有
+        权利。您可以根据需要选择不公开您的衍生作品源码，但必须保留原始版权声明。
+
+    2.  Commercial Use: Any Commercial Use (defined as use by a for-profit entity, or 
+        use intended for commercial advantage or monetary compensation) is subject to the 
+        following conditions:
+        商业用途：任何商业使用（定义为营利实体使用，或旨在获得商业利益、金钱补偿的使用）必须遵守
+        以下条件：
+
+        (1)  Open Source Obligation: You must release your entire derivative work 
+            (including any proprietary code integrated with this software) under the same 
+            Apache License 2.0 or a compatible copyleft license (e.g., AGPL-3.0).
+            开源义务： 您必须将您的整个衍生作品（包括与本软件集成的任何私有代码）以相同的
+            Apache License 2.0 或兼容的开源协议（如 AGPL-3.0）公开。
+
+        (2)  Commercial Waiver: If you wish to use this software for commercial purposes 
+            WITHOUT opening your source code, you must obtain a separate Commercial License 
+            or explicit written permission from the original author.
+            商业豁免： 如果您希望在商业场景下使用本软件且不公开您的源代码，您必须从原作者处获得
+            单独的商业授权或明确的书面许可。
+
+    3.  Notice to Contributors: By submitting a Pull Request to this project, you agree 
+        that your contribution will be licensed under the project's current LICENSE.
+        贡献者须知： 通过向本项目提交 PR，即表示您同意您的贡献将受本项目现行许可证约束。
+
+    In the event of any conflict between these Additional Terms and the Apache License 2.0, 
+    these Additional Terms shall prevail.
+    若本附加条款与 Apache License 2.0 标准条款发生冲突，以本附加条款为准。
+
+    Contact for Commercial Licensing / 商业授权联系方式: 
+        Outlook:    sfumatoc@outlook.com
+        QQ:         3075964583@qq.com
+
+
+----------------------------------------------------------------------------
+
+
+                                Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -186,7 +235,7 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright [yyyy] [name of copyright owner]
+   Copyright 2026 SfumatoCannon_
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
