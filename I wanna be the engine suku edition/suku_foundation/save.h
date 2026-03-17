@@ -23,13 +23,8 @@ namespace suku
 		std::map<char*, unsigned long long> varIdList;
 
 		int saveFileId;
-		//extern wchar_t saveFilePath[512];
-		wchar_t exePath[MAX_PATH + 1];
-		size_t Path_len;
-
 	private:
-		void suku_save_init();
-		SaveAssetGlobal() { suku_save_init(); }
+		SaveAssetGlobal();
 	};
 
 	void saveToFile();

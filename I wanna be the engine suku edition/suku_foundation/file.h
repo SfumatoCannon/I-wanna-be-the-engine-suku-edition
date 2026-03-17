@@ -40,6 +40,10 @@ namespace suku
 		String path_;
 	};
 
+	void suku_file_init();
+
+	String getExePath();
+
 	String absolutePath(String _relativePath);
 	const wchar_t* absolutePath(const wchar_t* _relativePath);
 	const wchar_t* absolutePath(const char* _relativePath);

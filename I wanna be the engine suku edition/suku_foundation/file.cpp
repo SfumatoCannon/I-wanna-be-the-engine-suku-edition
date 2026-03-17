@@ -1,17 +1,39 @@
 #include "file.h"
 #include "save.h"
 #include "message.h"
+#include "string.h"
+#include <wchar.h>
 
 namespace suku
 {
+	wchar_t exePath[MAX_PATH + 1];
+	size_t exePathLength = 0;
+
+	void suku_file_init()
+	{
+		if (exePathLength != 0) 
+			return;
+		GetModuleFileNameW(NULL, exePath, MAX_PATH);
+		(wcsrchr(exePath, L'\\'))[1] = 0;
+		exePathLength = wcslen(exePath);
+	}
+
+	String getExePath()
+	{
+		if (exePathLength == 0)
+			suku_file_init();
+		return String(exePath);
+	}
+
 	String absolutePath(String _relativePath)
 	{
+		if (exePathLength == 0)
+			suku_file_init();
 		if (_relativePath.content == nullptr) return String();
 		if (_relativePath.content[1] == ':') // the parameter is already an absolute path
 			return _relativePath;
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
-		auto exePath = SaveAssetGlobal::getInstance().exePath;
 		lstrcatW(result, exePath);
 		lstrcatW(result, _relativePath.content);
 		return String(result);
@@ -19,12 +41,13 @@ namespace suku
 
 	const wchar_t* absolutePath(const wchar_t* _relativePath)
 	{
+		if (exePathLength == 0)
+			suku_file_init();
 		if (!_relativePath) return nullptr;
 		if (_relativePath[1] == L':') // the parameter is already an absolute path
 			return _relativePath;
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
-		auto exePath = SaveAssetGlobal::getInstance().exePath;
 		lstrcatW(result, exePath);
 		lstrcatW(result, _relativePath);
 		return result;
@@ -32,13 +55,14 @@ namespace suku
 
 	const wchar_t* absolutePath(const char* _relativePath)
 	{
+		if (exePathLength == 0)
+			suku_file_init();
 		if (!_relativePath) return nullptr;
 		if (_relativePath[1] == ':') // the parameter is already an absolute path
 			return getWideString(_relativePath);
 		wchar_t* wideCharRelativePath = getWideString(_relativePath);
 		static wchar_t result[MAX_PATH + 1] = { 0 };
 		result[0] = L'\0';
-		auto exePath = SaveAssetGlobal::getInstance().exePath;
 		lstrcatW(result, exePath);
 		lstrcatW(result, wideCharRelativePath);
 		delete[] wideCharRelativePath;

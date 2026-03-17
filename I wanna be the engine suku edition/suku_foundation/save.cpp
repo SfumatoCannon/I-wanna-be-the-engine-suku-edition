@@ -6,11 +6,10 @@
 
 namespace suku
 {
-	void SaveAssetGlobal::suku_save_init()
+	SaveAssetGlobal::SaveAssetGlobal()
 	{
-		GetModuleFileNameW(NULL, exePath, MAX_PATH);
-		(wcsrchr(exePath, L'\\'))[1] = 0;
-		Path_len = wcslen(exePath);
+		saveFileId = 0;
+		suku_file_init();
 	}
 
 	void saveToFile()
