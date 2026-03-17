@@ -211,6 +211,14 @@ namespace suku
 		write(_data.data(), _data.size());
 	}
 
+	void File::read(std::vector<char>& _data)
+	{
+		ifs_.seekg(0, std::ios::end);
+		std::streamsize _fileSize = ifs_.tellg();
+		ifs_.seekg(0, std::ios::beg);
+		read(_data, static_cast<size_t>(_fileSize));
+	}
+
 	void File::read(std::vector<char>& _data, size_t _size)
 	{
 		if (_size == 0) return;

@@ -56,6 +56,7 @@ namespace suku
 		void write(const char* _ptrData, size_t _size);
 		void read(char* _ptrData, size_t _size);
 		void write(const std::vector<char>& _data);
+		void read(std::vector<char>& _data);
 		void read(std::vector<char>& _data, size_t _size);
 
 		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);

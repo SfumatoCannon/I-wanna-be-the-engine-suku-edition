@@ -3,6 +3,7 @@
 #include "color.h"
 #include "draw_core.h"
 #include "transform.h"
+#include <suku_foundation/codec.h>
 #include <suku_foundation/message.h>
 #include <suku_foundation/save.h>
 #include <Windows.h>
@@ -24,8 +25,8 @@ namespace suku
 	template<typename T>
 	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
 
-	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* uri    /*absolute path*/);
-	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _url, /*absolute path*/
+	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* uri    /*absolute path*/);
+	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _url, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
 	HRESULT createWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, UINT _width, UINT _height);
 	HRESULT getD2DBitmap(const ComPtr<IWICBitmap>& _pWicBitmap, ComPtr<ID2D1Bitmap1>& _ppD2dBitmap);
@@ -99,7 +100,7 @@ namespace suku
 	Bitmap::Bitmap(String _url)
 	{
 		ComPtr<IWICBitmap> tmpWic;
-		_url = "ProjectAssets/" + _url;
+		_url = "ProjectAssets\\" + _url;
 		auto hr = loadWICBitmap(tmpWic, absolutePath(_url.content));
 		if (SUCCEEDED(hr))
 		{
@@ -126,7 +127,7 @@ namespace suku
 	Bitmap::Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		ComPtr<IWICBitmap> tmpWic;
-		_url = "ProjectAssets/" + _url;
+		_url = "ProjectAssets\\" + _url;
 		auto hr = loadWICBitmap(tmpWic, absolutePath(_url.content), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
@@ -699,7 +700,7 @@ namespace suku
 		pILock.Reset();
 	}
 
-	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _uri)
+	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path)
 	{
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
 		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
@@ -708,7 +709,7 @@ namespace suku
 
 		auto pWICFactory = WICFactoryGlobal::getWICFactory();
 		HRESULT hr = pWICFactory->CreateDecoderFromFilename(
-			_uri,
+			_path,
 			nullptr,
 			GENERIC_READ,
 			WICDecodeMetadataCacheOnLoad,
@@ -728,38 +729,102 @@ namespace suku
 		if (SUCCEEDED(hr))
 		{
 			hr = pWICFactory->CreateBitmapFromSourceRect(
-				pSource.Get(), 0, 0, (UINT)originalWidth, (UINT)originalHeight, _ppWicBitmap.GetAddressOf());
+				pSource.Get(), 0, 0, (UINT)originalWidth, (UINT)originalHeight, _pWicBitmap.GetAddressOf());
 		}
 
 		return hr;
 	}
 
-	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _ppWicBitmap, const wchar_t* _uri, UINT _x, UINT _y, UINT _width, UINT _height)
+	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
-		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
-
-		auto pWICFactory = WICFactoryGlobal::getWICFactory();
-		HRESULT hr = pWICFactory->CreateDecoderFromFilename(
-			_uri,
-			nullptr,
-			GENERIC_READ,
-			WICDecodeMetadataCacheOnLoad,
-			&pDecoder
-		);
-
-		if (SUCCEEDED(hr))
+		File file(_path);
+		if (file.tryOpenForRead() == true)
 		{
-			hr = pDecoder->GetFrame(0, pSource.GetAddressOf());
-		}
+			// load from resource file
+			std::vector<char> bitmapData;
+			File encodedFile(Codec::getHashedString(String(_path)) + ".dat");
+			if (encodedFile.tryOpenForRead() == false)
+			{
+				ERRORWINDOW_GLOBAL("No file or resource file found: " + String(_path));
+				return E_FAIL;
+			}
+			encodedFile.read(bitmapData);
+			encodedFile.closeRead();
+			Codec::decodeData(bitmapData);
 
-		if (SUCCEEDED(hr))
+			ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
+			ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
+
+			auto pWICFactory = WICFactoryGlobal::getWICFactory();
+			
+			ComPtr<IWICStream> stream;
+			pWICFactory->CreateStream(&stream);
+			stream->InitializeFromMemory(
+				(BYTE*)bitmapData.data(),
+				bitmapData.size()
+			);
+			HRESULT hr = pWICFactory->CreateDecoderFromStream(
+				stream.Get(),
+				nullptr,
+				WICDecodeMetadataCacheOnLoad,
+				&pDecoder
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				hr = pDecoder->GetFrame(0, pSource.GetAddressOf());
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				hr = pWICFactory->CreateBitmapFromSourceRect(
+					pSource.Get(), _x, _y, _width, _height, _pWicBitmap.GetAddressOf());
+			}
+
+			return hr;
+		}
+		else
 		{
-			hr = pWICFactory->CreateBitmapFromSourceRect(
-				pSource.Get(), _x, _y, _width, _height, _ppWicBitmap.GetAddressOf());
-		}
+			std::vector<char> bitmapData;
+			file.read(bitmapData);
+			file.closeRead();
+			Codec::encodeData(bitmapData);
+			File encodedFile(Codec::getHashedString(String(_path)) + ".dat");
+			if (encodedFile.tryOpenForWrite() == false)
+			{
+				WARNINGWINDOW_GLOBAL("Failed to open converted resource file: " + String(_path));
+			}
+			else
+			{
+				encodedFile.write(bitmapData);
+				encodedFile.closeWrite();
+			}
 
-		return hr;
+			ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
+			ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
+
+			auto pWICFactory = WICFactoryGlobal::getWICFactory();
+			HRESULT hr = pWICFactory->CreateDecoderFromFilename(
+				_path,
+				nullptr,
+				GENERIC_READ,
+				WICDecodeMetadataCacheOnLoad,
+				&pDecoder
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				hr = pDecoder->GetFrame(0, pSource.GetAddressOf());
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				hr = pWICFactory->CreateBitmapFromSourceRect(
+					pSource.Get(), _x, _y, _width, _height, _pWicBitmap.GetAddressOf());
+			}
+
+			return hr;
+		}
 	}
 
 	HRESULT createWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, UINT _width, UINT _height)
