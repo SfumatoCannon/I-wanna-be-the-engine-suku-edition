@@ -156,8 +156,6 @@ namespace suku
 				else
 				{
 					obj->hspeedTemp = obj->vspeedTemp = 0;
-					obj->var["xBefore"] << obj->x;
-					obj->var["yBefore"] << obj->y;
 					obj->updateFunction();
 
 					iter++;
@@ -201,6 +199,17 @@ namespace suku
 			}
 		}
 
+		for (auto& [type, objArray] : objectPointerArray_)
+		{
+			for (auto& obj : objArray)
+			{
+				obj->var["xBefore"] << obj->x;
+				obj->var["yBefore"] << obj->y;
+				obj->x += obj->totalHspeed();
+				obj->y += obj->totalVspeed();
+			}
+		}
+
 		for (auto& [type, objArray] : recheckStateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
@@ -216,15 +225,6 @@ namespace suku
 
 					iter++;
 				}
-			}
-		}
-
-		for (auto& [type, objArray] : objectPointerArray_)
-		{
-			for (auto& obj : objArray)
-			{
-				obj->x += obj->totalHspeed();
-				obj->y += obj->totalVspeed();
 			}
 		}
 
