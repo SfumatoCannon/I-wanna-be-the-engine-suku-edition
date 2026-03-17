@@ -131,7 +131,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		rid.usUsage = 0x06;
 		rid.dwFlags = 0;
 		rid.hwndTarget = hWnd;
+		// 输入法设置为英文
+		static HKL hkl = LoadKeyboardLayout(L"00000409", KLF_ACTIVATE);
+		ActivateKeyboardLayout(hkl, KLF_SETFORPROCESS);
+		// reduce input delay
 		RegisterRawInputDevices(&rid, 1, sizeof(rid));
+
 		PostMessage(hWnd, WM_CREATEFINISHED, 0, 0);
 		break;
 	case WM_CREATEFINISHED:

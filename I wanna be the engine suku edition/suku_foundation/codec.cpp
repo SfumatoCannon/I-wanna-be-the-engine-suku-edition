@@ -13,7 +13,7 @@ namespace suku
         for (auto& c : _data)
         {
             key = key * 17 + 33;
-            c = c ^ (key & 255);
+            c = c ^ static_cast<char>(key & 255);
         }
     }
 
@@ -23,7 +23,7 @@ namespace suku
         for (auto& c : _data)
         {
             key = key * 17 + 33;
-            c = c ^ (key & 255);
+            c = c ^ static_cast<char>(key & 255);
         }
     }
 
