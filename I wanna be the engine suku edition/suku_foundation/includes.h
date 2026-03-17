@@ -1,4 +1,6 @@
 #pragma once
+#include "codec.h"
+#include "file.h"
 #include "input.h"
 #include "maths.h"
 #include "array.h"

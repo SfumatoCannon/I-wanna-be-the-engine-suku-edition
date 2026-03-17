@@ -1,4 +1,5 @@
 #include "save.h"
+#include "maths.h"
 
 namespace suku
 {
