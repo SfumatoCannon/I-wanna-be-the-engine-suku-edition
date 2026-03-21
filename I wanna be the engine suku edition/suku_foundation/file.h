@@ -17,6 +17,7 @@ namespace suku
 		String getPath()const { return path_; }
 
 		void create()const;
+		bool isExist();
 		void openForWrite();
 		bool tryOpenForWrite();
 		void openForRead();

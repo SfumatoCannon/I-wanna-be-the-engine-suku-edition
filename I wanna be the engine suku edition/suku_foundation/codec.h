@@ -12,4 +12,11 @@ namespace suku
 		static void decodeData(std::vector<char>& _data);
 		static String getHashedString(const String& _str);
 	};
+
+	class FileCodec
+	{
+	public:
+		static bool writeResource(String _originalFilePath);
+		static bool readResource(std::vector<char>& _byteData, String _originalFilePath);
+	};
 }

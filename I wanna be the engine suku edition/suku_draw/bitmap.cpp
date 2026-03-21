@@ -713,18 +713,10 @@ namespace suku
 		HRESULT hr;
 		std::vector<char> bitmapData;
 
-		if (file.tryOpenForRead() == false)
+		if (file.isExist() == false)
 		{
 			// load from resource data file
-			File encodedFile(absolutePath("GameAssets\\" + Codec::getHashedString(String(_path)) + ".dat"));
-			if (encodedFile.tryOpenForRead() == false)
-			{
-				ERRORWINDOW_GLOBAL("No file or resource file found: " + String(_path));
-				return E_FAIL;
-			}
-			encodedFile.read(bitmapData);
-			encodedFile.closeRead();
-			Codec::decodeData(bitmapData);
+			FileCodec::readResource(bitmapData, _path);
 
 			pWICFactory->CreateStream(&stream);
 			stream->InitializeFromMemory(
@@ -740,19 +732,7 @@ namespace suku
 		}
 		else
 		{
-			file.read(bitmapData);
-			file.closeRead();
-			Codec::encodeData(bitmapData);
-			File encodedFile(absolutePath("GameAssets\\" + Codec::getHashedString(String(_path)) + ".dat"));
-			if (encodedFile.tryOpenForWrite() == false)
-			{
-				WARNINGWINDOW_GLOBAL("Failed to open converted resource file: " + String(_path));
-			}
-			else
-			{
-				encodedFile.write(bitmapData);
-				encodedFile.closeWrite();
-			}
+			FileCodec::writeResource(_path);
 
 			hr = pWICFactory->CreateDecoderFromFilename(
 				_path,

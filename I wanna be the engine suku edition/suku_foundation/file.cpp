@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "file.h"
 #include "save.h"
 #include "message.h"
@@ -94,6 +95,21 @@ namespace suku
 	{
 		std::ofstream ofsForCreating(absolutePath(/*SaveDir + */path_).contentInWString());
 		ofsForCreating.close();
+	}
+
+	bool File::isExist()
+	{
+		if (exePathLength == 0)
+			suku_file_init();
+		String absPath = absolutePath(path_);
+		if (absPath.content == nullptr)
+			return false;
+		DWORD attrs = GetFileAttributesW(absPath.content);
+		if (attrs == INVALID_FILE_ATTRIBUTES)
+			return false;
+		if (attrs & FILE_ATTRIBUTE_DIRECTORY)
+			return false;
+		return true;
 	}
 
 	void File::openForWrite()

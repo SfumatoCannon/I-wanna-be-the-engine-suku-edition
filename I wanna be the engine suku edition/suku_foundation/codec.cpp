@@ -1,7 +1,10 @@
+#include "pch.h"
 #include "codec.h"
 #include "string.h"
 #include <sstream>
 #include <iomanip>
+#include "file.h"
+#include "message.h"
 
 namespace suku
 {
@@ -40,5 +43,46 @@ namespace suku
         std::ostringstream oss;
         oss << std::hex << std::setw(16) << std::setfill('0') << hash;
         return String(oss.str());
+    }
+
+    bool FileCodec::writeResource(String _originalFilePath)
+    {
+        String absoluteFilePath = absolutePath(_originalFilePath);
+        File originalFile(absoluteFilePath);
+        std::vector<char> fileData;
+        if (originalFile.tryOpenForRead() == false)
+        {
+            WARNINGWINDOW_GLOBAL("Failed to open file: " + _originalFilePath);
+            return false;
+        }
+        originalFile.read(fileData);
+        originalFile.closeRead();
+        Codec::encodeData(fileData);
+        File encodedFile(absolutePath("GameAssets\\" + Codec::getHashedString(_originalFilePath) + ".dat"));
+        if (encodedFile.tryOpenForWrite() == false)
+        {
+            WARNINGWINDOW_GLOBAL("Failed to open converted resource file: " + _originalFilePath);
+            return false;
+        }
+        else
+        {
+            encodedFile.write(fileData);
+            encodedFile.closeWrite();
+            return true;
+        }
+    }
+
+    bool FileCodec::readResource(std::vector<char>& _byteData, String _originalFilePath)
+    {
+        File encodedFile(absolutePath("GameAssets\\" + Codec::getHashedString(_originalFilePath) + ".dat"));
+        if (encodedFile.tryOpenForRead() == false)
+        {
+            ERRORWINDOW_GLOBAL("No file or resource file found: " + String(_originalFilePath));
+            return false;
+        }
+        encodedFile.read(_byteData);
+        encodedFile.closeRead();
+        Codec::decodeData(_byteData);
+        return true;
     }
 }
