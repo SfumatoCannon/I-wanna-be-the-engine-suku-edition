@@ -721,7 +721,7 @@ namespace suku
 			pWICFactory->CreateStream(&stream);
 			stream->InitializeFromMemory(
 				(BYTE*)bitmapData.data(),
-				bitmapData.size()
+				(DWORD)bitmapData.size()
 			);
 			hr = pWICFactory->CreateDecoderFromStream(
 				stream.Get(),
@@ -771,7 +771,7 @@ namespace suku
 		auto pWICFactory = WICFactoryGlobal::getWICFactory();
 		std::vector<char> bitmapData;
 		HRESULT hr;
-		if (file.tryOpenForRead() == false)
+		if (file.isExist() == false)
 		{
 			// load from resource data file
 			FileCodec::readResource(bitmapData, _path);
@@ -779,7 +779,7 @@ namespace suku
 			pWICFactory->CreateStream(&stream);
 			stream->InitializeFromMemory(
 				(BYTE*)bitmapData.data(),
-				bitmapData.size()
+				(DWORD)bitmapData.size()
 			);
 			hr = pWICFactory->CreateDecoderFromStream(
 				stream.Get(),
