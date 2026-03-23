@@ -236,9 +236,13 @@ namespace suku
 
 	void Player::die()
 	{
+		if (isDied_)
+			return;
+		static Sound sndDeath("Audio\\sndDeath.wav");
 		setSpeed(0.0f, 0.0f, 0.0f, 0.0f);
 		alpha = 0.0;
 		isDied_ = true;
+		sndDeath.play()->setVolume(0.2f);
 	}
 
 	void Player::bleed()
