@@ -7,28 +7,28 @@ namespace suku
 	inline bool setSavable(T& _x, std::string _name)
 	{
 		unsigned long long id = maths::hash(_name);
-		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
-		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
-		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
-		if (varSaveList.find(id) != varSaveList.end())
+		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
+		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
+		if (byteDataPool.find(id) != byteDataPool.end())
 			return false;
 		T* pointer = new T;
 		*pointer = _x;
 		char* address = reinterpret_cast<char*>(pointer);
 		Var pointerInVar;
 		pointerInVar << pointer;
-		varSaveList[id] = std::make_pair(address, sizeof(_x));
-		varFinderList[id] = pointerInVar;
-		varIdList[reinterpret_cast<char*>(&_x)] = id;
+		byteDataPool[id] = std::make_pair(address, sizeof(_x));
+		savableVarPool[id] = pointerInVar;
+		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
 		return true;
 	}
 
 	template<typename T>
 	inline void saveVar(T& _x)
 	{
-		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
-		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
-		Var pointerInVar = varFinderList[varIdList[reinterpret_cast<char*>(&_x)]];
+		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
+		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _x;
@@ -39,9 +39,9 @@ namespace suku
 	inline void loadVar(T& _x)
 	{
 		loadFromFile();
-		auto& varFinderList = SaveAssetGlobal::getInstance().varFinderList;
-		auto& varIdList = SaveAssetGlobal::getInstance().varIdList;
-		Var pointerInVar = varFinderList[varIdList[reinterpret_cast<char*>(&_x)]];
+		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
+		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;
 		_x = *pointer;

@@ -26,8 +26,8 @@ namespace suku
 			ofsForCreating.close();
 			ofs.open(saveFilePath, std::ios::binary);
 		}
-		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
-		for (const auto& i : varSaveList)
+		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
+		for (const auto& i : byteDataPool)
 		{
 			unsigned long long id = i.first;
 			ofs.write(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
@@ -49,12 +49,12 @@ namespace suku
 			ofsForCreating.close();
 			ifs.open(saveFilePath, std::ios::binary);
 		}
-		auto& varSaveList = SaveAssetGlobal::getInstance().varSaveList;
+		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		while (ifs.good())
 		{
 			unsigned long long id;
 			ifs.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
-			ifs.read(varSaveList[id].first, varSaveList[id].second);
+			ifs.read(byteDataPool[id].first, byteDataPool[id].second);
 		}
 		ifs.close();
 	}
