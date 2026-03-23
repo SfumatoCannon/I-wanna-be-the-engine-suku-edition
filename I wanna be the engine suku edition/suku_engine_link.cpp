@@ -5,6 +5,7 @@
 #pragma comment (lib, "dxguid.lib")
 #pragma comment (lib, "winmm.lib")
 // for sound (XAudio2 & Media Foundation)
+#pragma comment (lib, "Shlwapi.lib")
 #pragma comment (lib, "xaudio2.lib")
 #pragma comment (lib, "mfplat.lib")
 #pragma comment (lib, "mfreadwrite.lib")

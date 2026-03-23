@@ -97,11 +97,11 @@ namespace suku
 		}
 	}
 
-	Bitmap::Bitmap(String _url)
+	Bitmap::Bitmap(String _path)
 	{
 		ComPtr<IWICBitmap> tmpWic;
-		_url = "ProjectAssets\\" + _url;
-		auto hr = loadWICBitmap(tmpWic, absolutePath(_url.content));
+		_path = "ProjectAssets\\" + _path;
+		auto hr = loadWICBitmap(tmpWic, absolutePath(_path.content));
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getBitmapSize(tmpWic);
@@ -124,11 +124,11 @@ namespace suku
 		bytesPerPixel_ = 0;
 	}
 
-	Bitmap::Bitmap(String _url, UINT _x, UINT _y, UINT _width, UINT _height)
+	Bitmap::Bitmap(String _path, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
 		ComPtr<IWICBitmap> tmpWic;
-		_url = "ProjectAssets\\" + _url;
-		auto hr = loadWICBitmap(tmpWic, absolutePath(_url.content), _x, _y, _width, _height);
+		_path = "ProjectAssets\\" + _path;
+		auto hr = loadWICBitmap(tmpWic, absolutePath(_path.content), _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getBitmapSize(tmpWic);

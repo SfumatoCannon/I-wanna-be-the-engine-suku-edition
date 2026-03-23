@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "suku_sounds.h"
+#include "suku_foundation/codec.h"
 #include <wrl/client.h>
 #include "suku_foundation/message.h"
 #include "suku_foundation/file.h"
 
 #include <Digitalv.h>
+#include <Shlwapi.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -22,21 +24,49 @@ namespace suku
 	IXAudio2* g_xaudio2 = nullptr;
 	IXAudio2MasteringVoice* g_masterVoice = nullptr;
 
-	Sound::Sound(String _url) {
-		_url = "ProjectAssets/" + _url;
-		std::wstring wFile(absolutePath(_url.content));
+	Sound::Sound(String _path) {
+		_path = "ProjectAssets\\" + _path;
+		File file(_path);
+		std::vector<char> soundData;
+		ComPtr<IMFSourceReader> reader = nullptr;
+		if (!file.isExist())
+		{
+			// read from resource file
+			FileCodec::readResource(soundData, _path);
 
-		ComPtr<IMFSourceReader> reader;
-		MFCreateSourceReaderFromURL(wFile.c_str(), nullptr, &reader);
-		if (!reader) {
-			ERRORWINDOW("Failed to create source reader for audio file: " + _url);
-			return;
+			IStream* stream = SHCreateMemStream(
+				(BYTE*)soundData.data(),
+				(UINT)soundData.size()
+			);
+			ComPtr<IMFByteStream> byteStream = nullptr;
+			MFCreateMFByteStreamOnStream(stream, &byteStream);
+			MFCreateSourceReaderFromByteStream(
+				byteStream.Get(),
+				nullptr,
+				&reader
+			);
+			if (!reader)
+			{
+				ERRORWINDOW("Failed to create source reader for audio file: " + _path);
+				return;
+			}
 		}
-		
+		else
+		{
+			FileCodec::writeResource(_path);		
+
+			std::wstring pathWString(absolutePath(_path.content));
+			MFCreateSourceReaderFromURL(pathWString.c_str(), nullptr, &reader);
+			if (!reader) {
+				ERRORWINDOW("Failed to create source reader for audio file: " + _path);
+				return;
+			}
+		}
+
 		ComPtr<IMFMediaType> mediaTypeOut;
 		MFCreateMediaType(&mediaTypeOut);
 		if (!mediaTypeOut) {
-			ERRORWINDOW("Failed to create media type for audio file: " + _url);
+			ERRORWINDOW("Failed to create media type for audio file: " + _path);
 			return;
 		}
 		mediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
