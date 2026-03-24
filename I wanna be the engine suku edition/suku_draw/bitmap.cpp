@@ -735,7 +735,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 
 			hr = pWICFactory->CreateDecoderFromFilename(
-				absolutePath(_path),
+				absolutePath(_path).content,
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,
@@ -793,7 +793,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 			
 			hr = pWICFactory->CreateDecoderFromFilename(
-				absolutePath(_path),
+				absolutePath(_path).content,
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,

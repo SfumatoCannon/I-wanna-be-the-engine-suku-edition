@@ -43,11 +43,11 @@ namespace suku
 
 	void suku_file_init();
 
-	String getExePath();
+	std::filesystem::path getExeParentPath();
 
+	std::filesystem::path absolutePath(std::filesystem::path _relativePath);
 	String absolutePath(String _relativePath);
-	const wchar_t* absolutePath(const wchar_t* _relativePath);
-	const wchar_t* absolutePath(const char* _relativePath);
+	String absolutePath(const wchar_t* _relativePath);
 
 	void createPath(const wchar_t* _path);
 	void createPath(String _path);

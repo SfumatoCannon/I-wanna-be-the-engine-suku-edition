@@ -4,70 +4,53 @@
 #include "message.h"
 #include "string.h"
 #include <wchar.h>
+#include <filesystem>
 
 namespace suku
 {
-	wchar_t exePath[MAX_PATH + 1];
-	size_t exePathLength = 0;
+	std::filesystem::path exeParentPath;
 
 	void suku_file_init()
 	{
-		if (exePathLength != 0) 
+		if (!exeParentPath.empty())
 			return;
-		GetModuleFileNameW(NULL, exePath, MAX_PATH);
-		(wcsrchr(exePath, L'\\'))[1] = 0;
-		exePathLength = wcslen(exePath);
+
+		std::wstring buffer;
+		buffer.resize(256);
+		DWORD len = 0;
+		while (true)
+		{
+			len = GetModuleFileNameW(nullptr, buffer.data(), (DWORD)buffer.size());
+			if (len < buffer.size())
+				break;
+			buffer.resize(buffer.size() * 2);
+		}
+		buffer.resize(len);
+		exeParentPath = std::filesystem::path(buffer).parent_path();
 	}
 
-	String getExePath()
+	std::filesystem::path getExeParentPath()
 	{
-		if (exePathLength == 0)
+		if (exeParentPath.empty())
 			suku_file_init();
-		return String(exePath);
+		return exeParentPath;
+	}
+
+	std::filesystem::path absolutePath(std::filesystem::path _relativePath)
+	{
+		return getExeParentPath() / _relativePath;
 	}
 
 	String absolutePath(String _relativePath)
 	{
-		if (exePathLength == 0)
-			suku_file_init();
-		if (_relativePath.content == nullptr) return String();
-		if (_relativePath.content[1] == ':') // the parameter is already an absolute path
-			return _relativePath;
-		static wchar_t result[MAX_PATH + 1] = { 0 };
-		result[0] = L'\0';
-		lstrcatW(result, exePath);
-		lstrcatW(result, _relativePath.content);
-		return String(result);
+		std::filesystem::path path(_relativePath.content);
+		return String(getExeParentPath() / path);
 	}
 
-	const wchar_t* absolutePath(const wchar_t* _relativePath)
+	String absolutePath(const wchar_t* _relativePath)
 	{
-		if (exePathLength == 0)
-			suku_file_init();
-		if (!_relativePath) return nullptr;
-		if (_relativePath[1] == L':') // the parameter is already an absolute path
-			return _relativePath;
-		static wchar_t result[MAX_PATH + 1] = { 0 };
-		result[0] = L'\0';
-		lstrcatW(result, exePath);
-		lstrcatW(result, _relativePath);
-		return result;
-	}
-
-	const wchar_t* absolutePath(const char* _relativePath)
-	{
-		if (exePathLength == 0)
-			suku_file_init();
-		if (!_relativePath) return nullptr;
-		if (_relativePath[1] == ':') // the parameter is already an absolute path
-			return getWideString(_relativePath);
-		wchar_t* wideCharRelativePath = getWideString(_relativePath);
-		static wchar_t result[MAX_PATH + 1] = { 0 };
-		result[0] = L'\0';
-		lstrcatW(result, exePath);
-		lstrcatW(result, wideCharRelativePath);
-		delete[] wideCharRelativePath;
-		return result;
+		std::filesystem::path path(_relativePath);
+		return String(getExeParentPath() / path);
 	}
 
 	void createPath(const wchar_t* _path)
@@ -91,6 +74,7 @@ namespace suku
 	{
 		createPath(_path.content);
 	}
+
 	void File::create() const
 	{
 		std::ofstream ofsForCreating(absolutePath(/*SaveDir + */path_).contentInWString());
@@ -99,8 +83,6 @@ namespace suku
 
 	bool File::isExist()
 	{
-		if (exePathLength == 0)
-			suku_file_init();
 		String absPath = absolutePath(path_);
 		if (absPath.content == nullptr)
 			return false;
