@@ -329,19 +329,27 @@ namespace suku
 				vspeed = 2.0;
 		}
 
+		static Sound sndWallJump("Audio\\sndWallJump.wav");
+
 		if (!isFrozen)
 		{
 			if (isOnVineLeft_)
 			{
 				if (isKeyDown(VK_RIGHT) && isKeyHolding(VK_SHIFT))
+				{
+					sndWallJump.play();
 					vineJumpRight();
+				}
 				else if (isKeyHolding(VK_RIGHT))
 					moveRight();
 			}
 			else if (isOnVineRight_)
 			{
 				if (isKeyDown(VK_LEFT) && isKeyHolding(VK_SHIFT))
+				{
+					sndWallJump.play();
 					vineJumpLeft();
+				}
 				else if (isKeyHolding(VK_LEFT))
 					moveLeft();
 			}
