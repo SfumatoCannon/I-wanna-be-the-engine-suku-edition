@@ -53,21 +53,31 @@ namespace suku
 		return String(getExeParentPath() / path);
 	}
 
+	bool isAbsolutePath(std::filesystem::path _path)
+	{
+		return _path.is_absolute();
+	}
+
+	bool isAbsolutePath(String _path)
+	{
+		return std::filesystem::path(_path.content).is_absolute();
+	}
+
+	void createPath(std::filesystem::path _path)
+	{
+		if (!isAbsolutePath(_path))
+			_path = absolutePath(_path);
+		std::error_code errorCode;
+		std::filesystem::create_directories(_path, errorCode);
+		if (errorCode)
+		{
+			ERRORWINDOW_GLOBAL("Failed to create path: " + errorCode.message());
+		}
+	}
+
 	void createPath(const wchar_t* _path)
 	{
-		size_t length = wcslen(_path);
-		std::wstring str = L"";
-		int varForNoWarning;
-		for (size_t i = 0; i < length; i++)
-		{
-			if (_path[i] == L'\\' || _path[i] == L'/')
-			{
-				if (str != L"")
-					varForNoWarning = _wmkdir(str.c_str());
-			}
-			str += _path[i];
-		}
-		varForNoWarning = _wmkdir(str.c_str());
+		createPath(std::filesystem::path(_path));
 	}
 
 	void createPath(String _path)
