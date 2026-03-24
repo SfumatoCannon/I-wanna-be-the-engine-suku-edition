@@ -101,7 +101,7 @@ namespace suku
 	{
 		ComPtr<IWICBitmap> tmpWic;
 		_path = "ProjectAssets\\" + _path;
-		auto hr = loadWICBitmap(tmpWic, absolutePath(_path.content));
+		auto hr = loadWICBitmap(tmpWic, _path.content);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getBitmapSize(tmpWic);
@@ -128,7 +128,7 @@ namespace suku
 	{
 		ComPtr<IWICBitmap> tmpWic;
 		_path = "ProjectAssets\\" + _path;
-		auto hr = loadWICBitmap(tmpWic, absolutePath(_path.content), _x, _y, _width, _height);
+		auto hr = loadWICBitmap(tmpWic, _path.content, _x, _y, _width, _height);
 		if (SUCCEEDED(hr))
 		{
 			auto [w, h] = getBitmapSize(tmpWic);
@@ -705,7 +705,7 @@ namespace suku
 		UINT            originalWidth = 0;
 		UINT            originalHeight = 0;
 
-		File file(_path);
+		File file(absolutePath(_path));
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
 		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
 		ComPtr<IWICStream> stream;
@@ -735,7 +735,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 
 			hr = pWICFactory->CreateDecoderFromFilename(
-				_path,
+				absolutePath(_path),
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,
@@ -764,7 +764,7 @@ namespace suku
 
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		File file(_path);			
+		File file(absolutePath(_path));			
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
 		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
 		ComPtr<IWICStream> stream;
@@ -793,7 +793,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 			
 			hr = pWICFactory->CreateDecoderFromFilename(
-				_path,
+				absolutePath(_path),
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,
