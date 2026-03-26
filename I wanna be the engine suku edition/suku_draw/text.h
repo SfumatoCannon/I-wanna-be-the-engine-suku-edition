@@ -1,5 +1,7 @@
 #pragma once
 #include <suku_foundation/string.h>
+#include <dwrite.h>
+#include <wrl/client.h>
 
 namespace suku
 {
@@ -8,9 +10,12 @@ namespace suku
 	class Text
 	{
 	public:
-		String content;
+		String textContent;
 		Text(String _fontName, float _size);
+		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush);
 	private:
+		String fontName_;
+		float size_;
 		ComPtr<IDWriteTextFormat> pTextFormat_;
 	};
 

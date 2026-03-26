@@ -57,8 +57,9 @@ public:
 
 	virtual void onPaintStart()override
 	{
-		auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 255));
-		auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 255));
+		auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
+		auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
+		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		Shape A(SquareShape(64));
 		Bitmap B("Image\\bg.jpg");
 		static PaintLayer layer(800, 608);
@@ -67,6 +68,9 @@ public:
 		layer.drawBitmap(B, translation(0, 0), 0.5f);
 		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
 		layer.endDraw().paint();
+		Text a("Consolas", 24);
+		a.textContent = "test message";
+		a.paint(256, 256, brushBlack);
 	}
 }room0;
 
