@@ -185,6 +185,7 @@
     <ClInclude Include="suku_draw\scale_mode.h" />
     <ClInclude Include="suku_draw\shape.h" />
     <ClInclude Include="suku_draw\shape_builder.h" />
+    <ClInclude Include="suku_draw\text.h" />
     <ClInclude Include="suku_draw\transform.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="suku_foundation\file.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="suku_draw\shape.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="suku_draw\text.cpp" />
     <ClCompile Include="suku_draw\transform.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
