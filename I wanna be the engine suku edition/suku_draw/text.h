@@ -1,13 +1,21 @@
 #pragma once
+#include <suku_foundation/string.h>
 
 namespace suku
 {
+	using Microsoft::WRL::ComPtr;
 
+	class Text
+	{
+	public:
+		String content;
+		Text(String _fontName, float _size);
+	private:
+		ComPtr<IDWriteTextFormat> pTextFormat_;
+	};
 
 	namespace graphics
 	{
-		using Microsoft::WRL::ComPtr;
-
 		class TextFactoryGlobal
 		{
 		public:
