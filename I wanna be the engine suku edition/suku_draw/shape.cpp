@@ -217,17 +217,17 @@ namespace suku
 
 	void Shape::paint(float _x, float _y)
 	{
-		paint(_x, _y, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_x, _y, pFillBrush_, pOutlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
 	void Shape::paint(float _x, float _y, Transform _paintingTransform)
 	{
-		paint(_x, _y, _paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_x, _y, _paintingTransform, pFillBrush_, pOutlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
 	void Shape::paint(Transform _paintingTransform)
 	{
-		paint(_paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, outlineStrokeStyle_);
+		paint(_paintingTransform, pFillBrush_, pOutlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
 	bool Shape::isCrashed(Shape& _x)
