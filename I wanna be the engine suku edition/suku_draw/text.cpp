@@ -6,6 +6,7 @@ namespace suku
 {
 	Text::Text(String _fontName, float _size) : fontName_(_fontName), size_(_size), textAlign_(TextAlign::TopLeft), textWrapOption_(TextWrapOption::Wrap)
 	{
+		pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
 			_fontName.content,
 			nullptr,
@@ -69,6 +70,16 @@ namespace suku
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 	}
 
+	void Text::paint(float _x, float _y)
+	{
+		if (pBrush_ == nullptr)
+		{
+			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
+			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
+		}
+		paint(_x, _y, pBrush_);
+	}
+
 	void Text::paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush)
 	{
 		if (textAlign_ == TextAlign::TopFill || textAlign_ == TextAlign::MiddleFill || textAlign_ == TextAlign::BottomFill)
@@ -119,6 +130,16 @@ namespace suku
 		);
 	}
 
+	void Text::paint(float _x, float _y, float _width, float _height)
+	{
+		if (pBrush_ == nullptr)
+		{
+			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
+			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
+		}
+		paint(_x, _y, _width, _height, pBrush_);
+	}
+
 	void Text::paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush)
 	{
 		graphics::pD2DContext->DrawTextW(
@@ -128,6 +149,11 @@ namespace suku
 			D2D1::RectF(_x, _y, _x + _width, _y + _height),
 			_brush.Get()
 		);
+	}
+
+	void Text::setBrush(ComPtr<ID2D1Brush> _brush)
+	{
+		pBrush_ = _brush;
 	}
 
 	namespace graphics

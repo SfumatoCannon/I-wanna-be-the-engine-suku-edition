@@ -41,8 +41,12 @@ namespace suku
 		void setTextWarpOption(TextWrapOption _option);
 		TextWrapOption getTextWarpOption() { return textWrapOption_; }
 
+		void paint(float _x, float _y);
 		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush);
+		void paint(float _x, float _y, float _width, float _height);
 		void paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush);
+
+		void setBrush(ComPtr<ID2D1Brush> _brush);
 	private:
 		String fontName_;
 		float size_;
