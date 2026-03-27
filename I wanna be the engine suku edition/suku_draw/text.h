@@ -17,10 +17,10 @@ namespace suku
 		MiddleCenter,
 		MiddleRight,
 		MiddleFill,
-		DownLeft,
-		DownCenter,
-		DownRight,
-		DownFill
+		BottomLeft,
+		BottomCenter,
+		BottomRight,
+		BottomFill
 	};
 
 	enum TextWrapOption

@@ -69,6 +69,7 @@ public:
 		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
 		layer.endDraw().paint();
 		Text a("Consolas", 24);
+		a.setTextAlign(TextAlign::BottomRight);
 		a.textContent = "test message";
 		a.paint(256, 256, brushBlack);
 	}
