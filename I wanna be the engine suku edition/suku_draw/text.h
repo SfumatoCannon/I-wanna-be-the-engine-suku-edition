@@ -34,11 +34,25 @@ namespace suku
 	{
 	public:
 		String textContent;
-		Text(String _fontName, float _size);
+		Text(String _fontName, float _size, 
+			TextAlign _textAlign = TextAlign::TopLeft, 
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+		Text(String _content, String _fontName, float _size,
+			TextAlign _textAlign = TextAlign::TopLeft,
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+		Text(String _fontName, float _size,
+			DWRITE_FONT_WEIGHT _fontWeight,	DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
+			TextAlign _textAlign = TextAlign::TopLeft,
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+		Text(String _content, String _fontName, float _size,
+			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
+			TextAlign _textAlign = TextAlign::TopLeft,
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+
 
 		void setTextAlign(TextAlign _textAlign);
 		TextAlign getTextAlign() { return textAlign_; }
-		void setTextWarpOption(TextWrapOption _option);
+		void setTextWrapOption(TextWrapOption _option);
 		TextWrapOption getTextWarpOption() { return textWrapOption_; }
 
 		void paint(float _x, float _y);
@@ -54,6 +68,16 @@ namespace suku
 		ComPtr<ID2D1Brush> pBrush_;
 		TextAlign textAlign_;
 		TextWrapOption textWrapOption_;
+	};
+
+	class TextArea
+	{
+	public:
+		TextArea();
+	private:
+		ComPtr<IDWriteTextLayout> pTextLayout_;
+		float maxWidth_;
+		float maxHeight_;
 	};
 
 	namespace graphics

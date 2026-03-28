@@ -68,8 +68,8 @@ public:
 		layer.drawBitmap(B, translation(0, 0), 0.5f);
 		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
 		layer.endDraw().paint();
-		Text a("Consolas", 24);
-		a.setTextAlign(TextAlign::BottomRight);
+		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+			TextAlign::MiddleRight);
 		a.textContent = "test message";
 		a.paint(256, 256, brushBlack);
 	}

@@ -4,7 +4,9 @@
 
 namespace suku
 {
-	Text::Text(String _fontName, float _size) : fontName_(_fontName), size_(_size), textAlign_(TextAlign::TopLeft), textWrapOption_(TextWrapOption::Wrap)
+	Text::Text(String _fontName, float _size,
+		TextAlign _textAlign, TextWrapOption _wrapOption) 
+		: fontName_(_fontName), size_(_size)
 	{
 		pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
@@ -14,9 +16,44 @@ namespace suku
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
 			_size,
-			L"en_us",
+			L"",
 			pTextFormat_.GetAddressOf()
 		);
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	Text::Text(String _content, String _fontName, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
+		:Text(_fontName, _size, _textAlign, _wrapOption)
+	{
+		textContent = _content;
+	}
+
+	Text::Text(String _fontName, float _size, 
+		DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, 
+		TextAlign _textAlign, TextWrapOption _wrapOption)
+	{
+		pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
+		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
+			_fontName.content,
+			nullptr,
+			_fontWeight,
+			_fontStyle,
+			_fontStretch,
+			_size,
+			L"",
+			pTextFormat_.GetAddressOf()
+		);
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	Text::Text(String _content, String _fontName, float _size, 
+		DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, 
+		TextAlign _textAlign, TextWrapOption _wrapOption)
+		:Text(_fontName, _size, _fontWeight, _fontStyle, _fontStretch, _textAlign, _wrapOption)
+	{
+		textContent = _content;
 	}
 
 	void Text::setTextAlign(TextAlign _textAlign)
@@ -59,7 +96,7 @@ namespace suku
 		}
 	}
 
-	void Text::setTextWarpOption(TextWrapOption _option)
+	void Text::setTextWrapOption(TextWrapOption _option)
 	{
 		textWrapOption_ = _option;
 		if (_option == TextWrapOption::NoWrap)
