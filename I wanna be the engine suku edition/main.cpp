@@ -8,8 +8,6 @@ public:
 	virtual void onCreate()override
 	{
 		Room::onCreate();
-		playerStartX = 0.0;
-		playerStartY = 0.0;
 		create(Player(0, 0));
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
@@ -32,9 +30,6 @@ public:
 
 		File a("save0.sav");
 		a.create();
-
-		playerStartX = 0.0;
-		playerStartY = 0.0;
 
 		//MCIDEVICEID a = openAudio("Audio\\musOnDeath.mp3");
 		//playDevice(a, true);

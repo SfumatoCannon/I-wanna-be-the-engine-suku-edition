@@ -15,10 +15,8 @@ namespace suku
 	class Room
 	{
 	public:
-		float playerStartX = 0.0, playerStartY = 0.0;
 		bool hasCreated = false;
 		Room() { collisionPool_ = std::make_unique<RoomCollisionPool>(); }
-		void setPlayerStart(float _x, float _y);
 
 		template<typename Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
@@ -48,7 +46,7 @@ namespace suku
 		template<typename Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
 
 		virtual void onCreate() { displayLayer_.newLayer(800, 608); }
-		virtual void onJoin() {}
+		virtual void onEntering() {}
 		virtual void onRestart() {}
 		virtual void onPaintStart() { displayLayer_.clear(); }
 		virtual void onPaintEnd() {}

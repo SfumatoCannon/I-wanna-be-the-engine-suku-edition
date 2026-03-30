@@ -186,7 +186,7 @@ namespace suku
 
 		Player(float _x = 0, float _y = 0);
 
-		virtual void onAppearing() override;
+		virtual void onRoomEntering() override;
 		virtual void onRestarting() override;
 		virtual void reviseState() override;
 		virtual void updateState() override;

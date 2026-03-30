@@ -8,12 +8,6 @@
 namespace suku
 {
 	Room* nowRoom;
-	
-	void Room::setPlayerStart(float _x, float _y)
-	{
-		playerStartX = _x;
-		playerStartY = _y;
-	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
 	{
@@ -310,12 +304,12 @@ namespace suku
 		if (_room.hasCreated == false)
 		{
 			_room.onCreate();
-			//_room.onJoin()...?
+			//_room.onEntering()...?
 			nowRoom = &_room;
 		}
 		else
 		{
-			_room.onJoin();
+			_room.onEntering();
 			nowRoom = &_room;
 		}
 	}

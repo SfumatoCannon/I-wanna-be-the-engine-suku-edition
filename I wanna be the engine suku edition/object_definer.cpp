@@ -36,7 +36,7 @@ void loadFromJtoolMsg(suku::Room* room, std::string msg)
 					room->create(Spike((float)value[0], (float)value[1], Direction::Down));
 					break;
 				case 20:
-					room->setPlayerStart((float)value[0], (float)value[1]);
+					room->create(Player((float)value[0], (float)value[1]));
 					break;
 				default:
 					break;
@@ -146,10 +146,8 @@ namespace suku
 		sprite_ = &sprStanding;
 	}
 
-	void Player::onAppearing()
+	void Player::onRoomEntering()
 	{
-		x = inRoom()->playerStartX;
-		y = inRoom()->playerStartY;
 		spawnX = x;
 		spawnY = y;
 		saveVar(x);
