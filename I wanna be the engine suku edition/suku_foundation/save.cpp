@@ -1,61 +1,83 @@
 #include "save.h"
 #include "../global_value.h"
+#include "string.h"
 #include "message.h"
 #include "file.h"
 #include <ios>
 
 namespace suku
 {
+	void SaveAssetGlobal::writeData()
+	{
+		if (!saveFile)
+		{
+			ERRORWINDOW("SaveFile is NULL");
+			return;
+		}
+		saveFile->writeData();
+	}
+
+	void SaveAssetGlobal::readData()
+	{
+		if (!saveFile)
+		{
+			ERRORWINDOW("SaveFile is NULL");
+			return;
+		}
+		saveFile->readData();
+	}
+
 	SaveAssetGlobal::SaveAssetGlobal()
 	{
 		saveFileId = 0;
 		suku_file_init();
 	}
 
-	void saveToFile()
+	void SaveFile::writeData()
 	{
-		wchar_t saveFilePath[512];
-		auto saveFileId = SaveAssetGlobal::getInstance().saveFileId;
-		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
-		std::ofstream ofs;
-		ofs.open(saveFilePath, std::ios::binary);
-		if (!ofs.is_open())
+		if (!file_)
 		{
-			createPath(SaveDir);
-			std::ofstream ofsForCreating(saveFilePath);
-			ofsForCreating.close();
-			ofs.open(saveFilePath, std::ios::binary);
+			ERRORWINDOW("SaveFile is NULL");
+			return;
 		}
-		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
-		for (const auto& i : byteDataPool)
-		{
-			unsigned long long id = i.first;
-			ofs.write(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
-			ofs.write(i.second.first, i.second.second);
-		}
-		ofs.close();
+		file_->writeDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
+		file_->closeWrite();
 	}
 
-	void loadFromFile()
+	void SaveFile::readData()
 	{
-		wchar_t saveFilePath[512];
-		auto saveFileId = SaveAssetGlobal::getInstance().saveFileId;
-		swprintf_s(saveFilePath, L"%ls\\save%d", SaveDir, saveFileId);
-		std::ifstream ifs;
-		ifs.open(saveFilePath, std::ios::binary);
-		if (!ifs.is_open())
+		if (!file_)
 		{
-			std::ofstream ofsForCreating(saveFilePath);
-			ofsForCreating.close();
-			ifs.open(saveFilePath, std::ios::binary);
+			ERRORWINDOW("SaveFile is NULL");
+			return;
 		}
-		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
-		while (ifs.good())
+		file_->readDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
+		file_->closeRead();
+	}
+
+	void SaveFile::setFileName(String _fileName)
+	{
+		if (file_)
 		{
-			unsigned long long id;
-			ifs.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
-			ifs.read(byteDataPool[id].first, byteDataPool[id].second);
+			file_->close();
 		}
-		ifs.close();
+		file_ = std::make_unique<File>(_fileName, absolutePath(L"Save\\" + _fileName + ".sav"));
+	}
+
+	String SaveFile::getFileName()
+	{
+		if (!file_)
+			return String();
+		return file_->getName();
+	}
+
+	void setSaveFile(SaveFile* _saveFile)
+	{
+		SaveAssetGlobal::getInstance().saveFile = _saveFile;
+	}
+
+	SaveFile* getSaveFile()
+	{
+		return SaveAssetGlobal::getInstance().saveFile;
 	}
 }

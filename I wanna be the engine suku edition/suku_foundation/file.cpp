@@ -104,6 +104,11 @@ namespace suku
 		return true;
 	}
 
+	bool File::isOpenedForWrite() const
+	{
+		return ofs_.is_open();
+	}
+
 	void File::openForWrite()
 	{
 		if (ofs_.is_open())
@@ -124,6 +129,11 @@ namespace suku
 		if (!ofs_.is_open())
 			return false;
 		return true;
+	}
+
+	bool File::isOpenedForRead() const
+	{
+		return ifs_.is_open();
 	}
 
 	void File::openForRead()
@@ -184,11 +194,15 @@ namespace suku
 
 	void File::write(const std::vector<char>& _data)
 	{
+		if (!ofs_.is_open())
+			openForWrite();
 		write(_data.data(), _data.size());
 	}
 
 	void File::read(std::vector<char>& _data)
 	{
+		if (!ifs_.is_open())
+			openForRead();
 		ifs_.seekg(0, std::ios::end);
 		std::streamsize _fileSize = ifs_.tellg();
 		ifs_.seekg(0, std::ios::beg);
@@ -197,6 +211,8 @@ namespace suku
 
 	void File::read(std::vector<char>& _data, size_t _size)
 	{
+		if (!ifs_.is_open())
+			openForRead();
 		if (_size == 0) return;
 		if (_data.size() < _size) _data.resize(_size);
 		read(_data.data(), _size);
@@ -204,6 +220,8 @@ namespace suku
 
 	void File::writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
+		if (!ofs_.is_open())
+			openForWrite();
 		for (const auto& [id, data] : _dataPtrMap)
 		{
 			ofs_.write(reinterpret_cast<const char*>(&id), sizeof(unsigned long long));
@@ -213,6 +231,8 @@ namespace suku
 
 	void File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
+		if (!ifs_.is_open())
+			openForRead();
 		while (ifs_.good())
 		{
 			unsigned long long id;

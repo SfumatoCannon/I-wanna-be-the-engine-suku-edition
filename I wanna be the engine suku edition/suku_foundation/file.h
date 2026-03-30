@@ -9,7 +9,7 @@ namespace suku
 	class File
 	{
 	public:
-		File(String _path) : name_(L"save0"), path_(_path) {}
+		File(String _path) : name_(L""), path_(_path) {}
 		File(String _name, String _path) : name_(_name), path_(_path) {}
 
 		void setName(String _name) { name_ = _name; }
@@ -18,8 +18,10 @@ namespace suku
 
 		void create()const;
 		bool isExist();
+		bool isOpenedForWrite()const;
 		void openForWrite();
 		bool tryOpenForWrite();
+		bool isOpenedForRead()const;
 		void openForRead();
 		bool tryOpenForRead();
 		void close();

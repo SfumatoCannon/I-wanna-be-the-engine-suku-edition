@@ -32,13 +32,13 @@ namespace suku
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _x;
-		saveToFile();
+		SaveAssetGlobal::getInstance().writeData();
 	}
 
 	template<typename T>
 	inline void loadVar(T& _x)
 	{
-		loadFromFile();
+		SaveAssetGlobal::getInstance().readData();
 		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
 		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];

@@ -7,6 +7,10 @@
 
 namespace suku
 {
+	class String;
+	class SaveFile;
+	class File;
+
 	class SaveAssetGlobal
 	{
 	public:
@@ -23,20 +27,26 @@ namespace suku
 		std::map<char*, unsigned long long> varIdMappingPool;
 
 		int saveFileId;
+		SaveFile* saveFile = nullptr;
+		void writeData();
+		void readData();
 	private:
 		SaveAssetGlobal();
 	};
 
 	class SaveFile
 	{
-		template<typename T> void save(T& _x);
-		void save();
-		template<typename T> void load(T& _x);
-		void load();
+	public:
+		void writeData();
+		void readData();
+		void setFileName(String _fileName);
+		String getFileName();
+	private:
+		std::unique_ptr<File> file_ = nullptr;
 	};
 
-	void saveToFile();
-	void loadFromFile();
+	void setSaveFile(SaveFile* _saveFile);
+	SaveFile* getSaveFile();
 	template<typename T> bool setSavable(T& _x, std::string _name);
 	template<typename T> void saveVar(T& _x);
 	template<typename T> void loadVar(T& _x);
