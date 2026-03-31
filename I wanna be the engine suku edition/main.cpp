@@ -28,8 +28,8 @@ public:
 	{
 		Room::onCreate();
 
-		File a("save0.sav");
-		a.create();
+		SaveFile save0("save123");
+		setSaveFile(&save0);
 
 		//MCIDEVICEID a = openAudio("Audio\\musOnDeath.mp3");
 		//playDevice(a, true);
@@ -47,7 +47,6 @@ public:
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
 		// create(Warp(128, 0, &room1));
-		createPath("a\\b\\c");
 	}
 
 	virtual void onPaintStart()override

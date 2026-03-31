@@ -37,6 +37,9 @@ namespace suku
 	class SaveFile
 	{
 	public:
+		SaveFile() = default;
+		SaveFile(String _fileName);
+
 		void writeData();
 		void readData();
 		void setFileName(String _fileName);

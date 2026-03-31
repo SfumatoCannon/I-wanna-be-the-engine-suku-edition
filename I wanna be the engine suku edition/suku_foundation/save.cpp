@@ -33,6 +33,11 @@ namespace suku
 		suku_file_init();
 	}
 
+	SaveFile::SaveFile(String _fileName)
+	{
+		setFileName(_fileName);
+	}
+
 	void SaveFile::writeData()
 	{
 		if (!file_)
