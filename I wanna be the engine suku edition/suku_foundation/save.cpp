@@ -45,6 +45,16 @@ namespace suku
 			ERRORWINDOW("SaveFile is NULL");
 			return;
 		}
+		if (!file_->isExist())
+		{
+			file_->create();
+			if (!file_->isExist())
+			{
+				ERRORWINDOW("Failed to create save file :" 
+					+ file_->getName() + "(" + file_->getPath() + ")");
+				return;
+			}
+		}
 		file_->writeDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
 		file_->closeWrite();
 	}
@@ -54,6 +64,10 @@ namespace suku
 		if (!file_)
 		{
 			ERRORWINDOW("SaveFile is NULL");
+			return;
+		}
+		if (!file_->isExist())
+		{
 			return;
 		}
 		file_->readDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
@@ -66,6 +80,7 @@ namespace suku
 		{
 			file_->close();
 		}
+		createPath(L"Save");
 		file_ = std::make_unique<File>(_fileName, absolutePath(L"Save\\" + _fileName + ".sav"));
 	}
 

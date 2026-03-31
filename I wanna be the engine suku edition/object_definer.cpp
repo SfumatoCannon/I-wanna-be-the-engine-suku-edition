@@ -132,8 +132,6 @@ namespace suku
 		maxJumpTime = 2;
 		movingSpeed = 3.0;
 		gravity = 0.4f;
-		spawnX = _x;
-		spawnY = _y;
 		side_ = Direction::Right;
 		jumpTime_ = maxJumpTime;
 		nowBloodNum_ = 0;
@@ -145,6 +143,8 @@ namespace suku
 		setSavable(y, "player_y");
 		loadVar(x);
 		loadVar(y);
+		spawnX = x;
+		spawnY = y;
 		sprite_ = &sprStanding;
 	}
 

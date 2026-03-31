@@ -30,18 +30,7 @@ namespace suku
 	{
 		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		//auto iter = varIdMappingPool.find(reinterpret_cast<char*>(&_x));
-		//if (iter == varIdMappingPool.end())
-		//{
-		//	INFOWINDOW_GLOBAL("a");
-		//	return;
-		//}
-		//auto iter2 = savableVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
-		//if (iter2 == savableVarPool.end())
-		//{
-		//	INFOWINDOW_GLOBAL("b");
-		//	return;
-		//}
+		auto iter = varIdMappingPool.find(reinterpret_cast<char*>(&_x));
 		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;

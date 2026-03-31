@@ -49,6 +49,37 @@ namespace suku
 
 
 	template<typename Obj>
+	inline Obj* Room::appendStatic(Obj& _object)
+	{
+		auto [iter, isFirst] =
+			objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
+
+		if (isFirst)
+		{
+			suku::SukuObjectTypeTree::getInstance().append<Obj>();
+		}
+		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
+		std::shared_ptr<Object> newObj = std::make_shared<Obj>(_object);
+		newObj->kindId_ = typecode(Obj);
+		newObj->inRoom_ = this;
+		objList.push_back(newObj);
+
+		reviseStateArray_[newObj->reviseStateId_].push_back(newObj);
+		updateStateArray_[newObj->updateStateId_].push_back(newObj);
+		recheckStateArray_[newObj->recheckStateId_].push_back(newObj);
+		paintArray_[newObj->paintId_].push_back(newObj);
+
+		collisionPool_->addObject(newObj.get());
+
+		if (isFirst)
+		{
+			Obj::classInitialize();
+		}
+
+		return static_cast<Obj*>(newObj.get());
+	}
+
+	template<typename Obj>
 	inline Obj* Room::append(Obj* _objectPointer)
 	{
 		auto [iter, isFirst] =

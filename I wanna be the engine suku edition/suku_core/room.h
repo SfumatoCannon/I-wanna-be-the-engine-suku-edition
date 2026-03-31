@@ -21,6 +21,7 @@ namespace suku
 		template<typename Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
 
+		template<typename Obj> Obj* appendStatic(Obj& _object);
 		template<typename Obj> Obj* append(Obj* _objectPointer);
 		template<typename Obj> Obj* create(Obj& _object);
 		template<typename Obj> Obj* create(Obj&& _object);

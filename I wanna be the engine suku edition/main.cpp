@@ -8,7 +8,8 @@ public:
 	virtual void onCreate()override
 	{
 		Room::onCreate();
-		create(Player(0, 0));
+		static Player player(0, 0);
+		append(&player);
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
@@ -28,7 +29,7 @@ public:
 	{
 		Room::onCreate();
 
-		SaveFile save0("save123");
+		static SaveFile save0("save123");
 		setSaveFile(&save0);
 
 		//MCIDEVICEID a = openAudio("Audio\\musOnDeath.mp3");
@@ -36,7 +37,8 @@ public:
 		//music1.setVolume(0.01);
 		//music1.setSpeed(0.5);
 		//create(Background(Bitmap("Image\\bg.jpg")));
-		create(Player(0, 0));
+		static Player player(0, 0);
+		append(&player);
 		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));

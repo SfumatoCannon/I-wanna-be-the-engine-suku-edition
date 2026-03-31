@@ -233,17 +233,27 @@ namespace suku
 	{
 		if (!ifs_.is_open())
 			openForRead();
-		while (ifs_.good())
+		unsigned long long id;
+		while (true)
 		{
-			unsigned long long id;
-			ifs_.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long));
-			if (ifs_.eof())
+			if (!ifs_.read(reinterpret_cast<char*>(&id), sizeof(id)))
 			{
-				WARNINGWINDOW("Unexpected file end. The save file may be corrupted.");
+				if (ifs_.eof())
+					break;
+				else
+				{
+					WARNINGWINDOW("Failed to read ID. File may be corrupted.");
+					break;
+				}
+			}
+
+			auto& data = _dataPtrMap[id];
+
+			if (!ifs_.read(data.first, data.second))
+			{
+				WARNINGWINDOW("Unexpected file end when reading data. File may be corrupted.");
 				break;
 			}
-			auto& data = _dataPtrMap[id];
-			ifs_.read(data.first, data.second);
 		}
 	}
 }
