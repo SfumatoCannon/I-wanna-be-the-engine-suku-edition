@@ -47,9 +47,8 @@ namespace suku
 		return resultList;
 	}
 
-
 	template<typename Obj>
-	inline Obj* Room::appendStatic(Obj& _object)
+	inline Obj* Room::append(std::shared_ptr<Obj> _objectPointer)
 	{
 		auto [iter, isFirst] =
 			objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
@@ -59,69 +58,39 @@ namespace suku
 			suku::SukuObjectTypeTree::getInstance().append<Obj>();
 		}
 		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
-		std::shared_ptr<Object> newObj = std::make_shared<Obj>(_object);
-		newObj->kindId_ = typecode(Obj);
-		newObj->inRoom_ = this;
-		objList.push_back(newObj);
+		std::shared_ptr<Object> objectParentPointer = _objectPointer;
+		objectParentPointer->kindId_ = typecode(Obj);
+		objectParentPointer->inRoom_ = this;
+		objList.push_back(objectParentPointer);
 
-		reviseStateArray_[newObj->reviseStateId_].push_back(newObj);
-		updateStateArray_[newObj->updateStateId_].push_back(newObj);
-		recheckStateArray_[newObj->recheckStateId_].push_back(newObj);
-		paintArray_[newObj->paintId_].push_back(newObj);
+		reviseStateArray_[objectParentPointer->reviseStateId_].push_back(objectParentPointer);
+		updateStateArray_[objectParentPointer->updateStateId_].push_back(objectParentPointer);
+		recheckStateArray_[objectParentPointer->recheckStateId_].push_back(objectParentPointer);
+		paintArray_[objectParentPointer->paintId_].push_back(objectParentPointer);
 
-		collisionPool_->addObject(newObj.get());
-
-		if (isFirst)
-		{
-			Obj::classInitialize();
-		}
-
-		return static_cast<Obj*>(newObj.get());
-	}
-
-	template<typename Obj>
-	inline Obj* Room::append(Obj* _objectPointer)
-	{
-		auto [iter, isFirst] =
-			objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
-
-		if (isFirst)
-		{
-			suku::SukuObjectTypeTree::getInstance().append<Obj>();
-		}
-		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
-		std::shared_ptr<Object> newObj(_objectPointer);
-		newObj->kindId_ = typecode(Obj);
-		newObj->inRoom_ = this;
-		objList.push_back(newObj);
-
-		reviseStateArray_[newObj->reviseStateId_].push_back(newObj);
-		updateStateArray_[newObj->updateStateId_].push_back(newObj);
-		recheckStateArray_[newObj->recheckStateId_].push_back(newObj);
-		paintArray_[newObj->paintId_].push_back(newObj);
-
-		collisionPool_->addObject(newObj.get());
+		collisionPool_->addObject(objectParentPointer.get());
 
 		if (isFirst)
 		{
 			Obj::classInitialize();
 		}
 
-		return static_cast<Obj*>(newObj.get());
+		return static_cast<Obj*>(objectParentPointer.get());
 	}
 
 	template<typename Obj>
 	inline Obj* Room::create(Obj& _object)
 	{
-		Obj* newObj = new Obj(_object);
-		return append(newObj);
+		//Obj* newObj = new Obj(_object);
+		//return append(newObj);
+		return nullptr;
 	}
 
 	template<typename Obj>
 	inline Obj* Room::create(Obj&& _object)
 	{
-		Obj* newObj = new Obj(std::move(_object));
-		return append(newObj);
+		auto newObjPtr = std::make_shared<Obj>(std::move(_object));
+		return append(newObjPtr);
 	}
 
 	template<typename Obj, typename ...ObjNext>

@@ -31,6 +31,11 @@ namespace suku
 		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
 		auto iter = varIdMappingPool.find(reinterpret_cast<char*>(&_x));
+		if (iter == varIdMappingPool.end())
+		{
+			ERRORWINDOW_GLOBAL("Variable not set as savable");
+			return;
+		}
 		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;

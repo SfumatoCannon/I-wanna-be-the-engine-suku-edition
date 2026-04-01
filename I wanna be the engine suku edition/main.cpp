@@ -9,7 +9,7 @@ public:
 	{
 		Room::onCreate();
 		static Player player(0, 0);
-		append(&player);
+		create(Player(0, 0));
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
@@ -37,8 +37,10 @@ public:
 		//music1.setVolume(0.01);
 		//music1.setSpeed(0.5);
 		//create(Background(Bitmap("Image\\bg.jpg")));
-		static Player player(0, 0);
-		append(&player);
+		
+		//static Player player(0, 0);
+		//append(&player);
+		create(Player(0, 0));
 		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
