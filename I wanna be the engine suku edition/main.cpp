@@ -8,7 +8,6 @@ public:
 	virtual void onCreate()override
 	{
 		Room::onCreate();
-		static Player player(0, 0);
 		create<Player>(0, 0);
 		create(Wall(32, 32))->setDelayAction(100, [](Object* _this) {_this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
@@ -40,16 +39,19 @@ public:
 		
 		//static Player player(0, 0);
 		//append(&player);
+
+		Wall a(100, 100);
+		create(a);
 		create<Player>(0, 0);
 		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
-		//create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
+		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
-		//create(Spike(32, 128), Wall(32, 160));
+		create(Spike(32, 128), Wall(32, 160));
 		// create(Warp(128, 0, &room1));
 	}
 

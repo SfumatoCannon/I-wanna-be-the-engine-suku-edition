@@ -2,6 +2,7 @@
 #include "room.h"
 #include "object.h"
 #include "room_collision_pool.h"
+#include <type_traits>
 
 namespace suku
 {
@@ -81,7 +82,7 @@ namespace suku
 	template<typename Obj>
 	inline Obj* Room::create(Obj&& _object)
 	{
-		auto newObjPtr = std::make_shared<Obj>(std::move(_object));
+		auto newObjPtr = std::make_shared<std::decay_t<Obj>>(std::forward<Obj>(_object));
 		return append(newObjPtr);
 	}
 
@@ -90,6 +91,12 @@ namespace suku
 	{
 		auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
 		return append(newObjPtr);
+	}
+
+	template<typename ...Objs>
+	inline void Room::create(Objs && ..._objects)
+	{
+		(append(std::make_shared<std::decay_t<Objs>>(std::forward<Objs>(_objects))), ...);
 	}
 
 	template<typename Obj>
