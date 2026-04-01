@@ -22,9 +22,7 @@ namespace suku
 		Object* findObj(Typecode _kindId, size_t _pos);
 
 		template<typename Obj> Obj* append(std::shared_ptr<Obj> _objectPointer);
-		template<typename Obj> Obj* create(Obj& _object);
 		template<typename Obj> Obj* create(Obj&& _object);
-		template<typename Obj, typename ... ObjNext> void create(Obj _firstobject, ObjNext...	_objectnext);
 		template<typename Obj> void createFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 		template<typename Obj> Obj* createCenter(Obj _object);

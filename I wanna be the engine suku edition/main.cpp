@@ -40,7 +40,7 @@ public:
 		
 		//static Player player(0, 0);
 		//append(&player);
-		create(Player(0, 0));
+		Player* p = create(Player(0, 0));
 		create(Wall(32, 32))->setDelayAction(100, [&](Object* _this) { _this->movingTo(64, 64, 50); });
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));

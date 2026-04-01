@@ -79,25 +79,10 @@ namespace suku
 	}
 
 	template<typename Obj>
-	inline Obj* Room::create(Obj& _object)
-	{
-		//Obj* newObj = new Obj(_object);
-		//return append(newObj);
-		return nullptr;
-	}
-
-	template<typename Obj>
 	inline Obj* Room::create(Obj&& _object)
 	{
 		auto newObjPtr = std::make_shared<Obj>(std::move(_object));
 		return append(newObjPtr);
-	}
-
-	template<typename Obj, typename ...ObjNext>
-	inline void Room::create(Obj _firstobject, ObjNext ..._objectnext)
-	{
-		create(_firstobject);
-		create(_objectnext...);
 	}
 
 	template<typename Obj>
