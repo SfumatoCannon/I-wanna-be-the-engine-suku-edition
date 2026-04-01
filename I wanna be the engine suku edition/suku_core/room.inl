@@ -1,6 +1,6 @@
 #pragma once
-#include "object.h"
 #include "room.h"
+#include "object.h"
 #include "room_collision_pool.h"
 
 namespace suku
@@ -82,6 +82,13 @@ namespace suku
 	inline Obj* Room::create(Obj&& _object)
 	{
 		auto newObjPtr = std::make_shared<Obj>(std::move(_object));
+		return append(newObjPtr);
+	}
+
+	template<typename Obj, typename ...Args>
+	inline Obj* Room::create(Args && ...args)
+	{
+		auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
 		return append(newObjPtr);
 	}
 

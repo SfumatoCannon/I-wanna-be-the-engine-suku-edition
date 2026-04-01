@@ -23,6 +23,8 @@ namespace suku
 
 		template<typename Obj> Obj* append(std::shared_ptr<Obj> _objectPointer);
 		template<typename Obj> Obj* create(Obj&& _object);
+		template<typename Obj, typename ... Args> Obj* create(Args&&... args);
+		//template<typename ... Objs> void create()
 		template<typename Obj> void createFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 		template<typename Obj> Obj* createCenter(Obj _object);
