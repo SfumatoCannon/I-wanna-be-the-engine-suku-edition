@@ -44,9 +44,14 @@ public:
 		create<Player>(0.f, 0.f);
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
+		setSavable<int>("test", 0);
+		int x = loadVar<int>("test");
+		x++;
+		saveVar("test", x);
+
 		create(Wall(32, 32))->addTimelineAction({ 100, 200 },
 			{
-				[](Object* _this)->bool { _this->movingTo(64, 64, 50); return false; },
+				[=](Object* _this)->bool { _this->movingTo(64 + x * 32, 64 + x * 32, 50); return false; },
 				[](Object* _this)->bool { _this->movingTo(32, 32, 50); return false; }
 			});
 		create(Wall(96, 32));

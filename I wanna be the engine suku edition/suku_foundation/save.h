@@ -51,9 +51,14 @@ namespace suku
 
 	void setSaveFile(SaveFile* _saveFile);
 	SaveFile* getSaveFile();
-	template<typename T> bool setSavable(T& _x, std::string _name);
+	template<typename T> bool setSavable(const std::string _name);
+	template<typename T> bool setSavable(const std::string _name, T _initialVal);
+	template<typename T> bool setSavable(T& _x, const std::string _name);
+	template<typename T> void saveVar(const std::string _name, T _val);
 	template<typename T> void saveVar(const T& _x);
 	template<typename T> void loadVar(T& _x);
+	template<typename T> T loadVar(const std::string _name);
+	bool isSavable(const std::string _name);
 }
 
 #include "save.inl"
