@@ -88,7 +88,10 @@ namespace suku
 		void rotateTo(float _angle, int _time);
 		void rotateTo(float _angle, double _rotatingCenterX, double _rotatingCenterY, int _time, bool _isRotatingItself = true);
 		void addAction(std::function<bool(Object*)> _actionFunc);
-		void addDelayAction(int _time, std::function<void(Object*)> _actionFunc);
+		void addDelayAction(int _time, std::function<bool(Object*)> _actionFunc);
+		void addTimelineAction(std::vector<std::pair<int, std::function<bool(Object*)>>> _actionVec);
+		void addTimelineAction(std::vector<int> _timeVec, std::vector<std::function<bool(Object*)>> _actionVec);
+		void addTimelineAction(std::function<bool(Object*, int)> _actionFuncWithTime);
 		void clearActions();
 
 		void paintBody();
