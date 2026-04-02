@@ -284,14 +284,14 @@ namespace suku
 			});
 	}
 
-	void Object::setAction(std::function<bool(Object*)> _actionFunc)
+	void Object::addAction(std::function<bool(Object*)> _actionFunc)
 	{
 		actionList_.push_back([&]() {
 			return _actionFunc(this);
 			});
 	}
 
-	void Object::setDelayAction(int _time, std::function<void(Object*)> _actionFunc)
+	void Object::addDelayAction(int _time, std::function<void(Object*)> _actionFunc)
 	{
 		actionList_.push_back([=, count = 0]() mutable {
 			if (count == _time)
@@ -302,6 +302,11 @@ namespace suku
 			count++;
 			return true;
 			});
+	}
+
+	void Object::clearActions()
+	{
+		actionList_.clear();
 	}
 
 	void Object::movingTo(float _xTo, float _yTo, int _time)
