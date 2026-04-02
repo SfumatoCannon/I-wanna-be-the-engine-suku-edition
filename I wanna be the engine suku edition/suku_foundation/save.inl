@@ -20,25 +20,6 @@ namespace suku
 		pointerInVar << pointer;
 		byteDataPool[id] = std::make_pair(address, sizeof(T));
 		dataPointerVarPool[id] = pointerInVar;
-		SaveAssetGlobal::getInstance().writeData();
-		return true;
-	}
-
-	template<typename T>
-	inline bool setSavable(std::string _name, T _initialVal)
-	{
-		unsigned long long id = maths::hash(_name);
-		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
-		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
-		if (byteDataPool.find(id) != byteDataPool.end())
-			return false;
-		T* pointer = new T(_initialVal);
-		char* address = reinterpret_cast<char*>(pointer);
-		Var pointerInVar;
-		pointerInVar << pointer;
-		byteDataPool[id] = std::make_pair(address, sizeof(T));
-		dataPointerVarPool[id] = pointerInVar;
-		SaveAssetGlobal::getInstance().writeData();
 		return true;
 	}
 
@@ -59,7 +40,6 @@ namespace suku
 		byteDataPool[id] = std::make_pair(address, sizeof(_x));
 		dataPointerVarPool[id] = pointerInVar;
 		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
-		SaveAssetGlobal::getInstance().writeData();
 		return true;
 	}
 
@@ -71,7 +51,7 @@ namespace suku
 		if (dataPointerVarPool.find(id) == dataPointerVarPool.end())
 		{
 			WARNINGWINDOW_GLOBAL("Variable name \"" + _name + "\" not set as savable.Attempting to set it as savable.");
-			setSavable<T>(_name, _val);
+			setSavable<T>(_name);
 		}
 		Var pointerInVar = dataPointerVarPool[id];
 		T* pointer;
@@ -81,16 +61,16 @@ namespace suku
 	}
 
 	template<typename T>
-	inline void saveVar(const T& _x)
+	inline void saveVar(T& _x)
 	{
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		if (varIdMappingPool.find(reinterpret_cast<const char*>(&_x)) == varIdMappingPool.end())
+		if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
 		{
 			ERRORWINDOW_GLOBAL("Variable not set as savable");
 			return;
 		}
-		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<const char*>(&_x)]);
+		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
 		if (iter == dataPointerVarPool.end())
 		{
 			ERRORWINDOW_GLOBAL("Variable not set as savable. (Var name mapping exists but failed to get data pointer var)");

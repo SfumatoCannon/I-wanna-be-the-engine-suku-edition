@@ -229,11 +229,12 @@ namespace suku
 		}
 	}
 
-	void File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	std::map<unsigned long long, bool> File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
 		if (!ifs_.is_open())
 			openForRead();
-		unsigned long long id;
+		std::map<unsigned long long, bool> existenceMap;
+		unsigned long long id = 0LL;
 		while (true)
 		{
 			if (!ifs_.read(reinterpret_cast<char*>(&id), sizeof(id)))
@@ -247,6 +248,13 @@ namespace suku
 				}
 			}
 
+			existenceMap[id] = true;
+
+			if (_dataPtrMap.find(id) == _dataPtrMap.end())
+			{
+				continue;
+			}
+
 			auto& data = _dataPtrMap[id];
 
 			if (!ifs_.read(data.first, data.second))
@@ -255,5 +263,6 @@ namespace suku
 				break;
 			}
 		}
+		return existenceMap;
 	}
 }

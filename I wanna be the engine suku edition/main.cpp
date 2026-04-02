@@ -41,11 +41,18 @@ public:
 
 		Wall a(100, 100);
 		create(a);
-		create<Player>(0.f, 0.f);
+		//create<Player>(0.f, 0.f);
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
-		setSavable<int>("test", 0);
-		int x = loadVar<int>("test");
+
+		int x;
+		setSavable<int>("test");
+		if (!hasValueInFile("test"))
+		{
+			x = 0;
+		}
+		else 
+			x = loadVar<int>("test");
 		x++;
 		saveVar("test", x);
 
@@ -53,7 +60,8 @@ public:
 			{
 				[=](Object* _this)->bool { _this->movingTo(64 + x * 32, 64 + x * 32, 50); return false; },
 				[](Object* _this)->bool { _this->movingTo(32, 32, 50); return false; }
-			});
+			}
+		);
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));

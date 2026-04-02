@@ -35,7 +35,7 @@ namespace suku
 		void read(std::vector<char>& _data, size_t _size);
 
 		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
-		void readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
+		std::map<unsigned long long, bool> readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
 	private:
 		std::ofstream ofs_;
 		std::ifstream ifs_;

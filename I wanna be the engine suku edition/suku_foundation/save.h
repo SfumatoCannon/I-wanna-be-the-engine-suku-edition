@@ -26,12 +26,20 @@ namespace suku
 		std::map<unsigned long long, Var> dataPointerVarPool;
 		// mapping from variable address to savable_var id
 		std::map<const char*, unsigned long long> varIdMappingPool;
+		// shows the current var status in the file (after do a loading)
+		std::map<unsigned long long, bool> dataExistInFilePool;
 
 		int saveFileId;
-		SaveFile* saveFile = nullptr;
+
+		void setSaveFile(SaveFile* _saveFile);
+		SaveFile* getSaveFile() { return saveFile_; }
+
 		void writeData();
 		void readData();
+		void refreshLoadTag() { loadTag_ = false; }
 	private:
+		bool loadTag_ = false;
+		SaveFile* saveFile_ = nullptr;
 		SaveAssetGlobal();
 	};
 
@@ -42,7 +50,7 @@ namespace suku
 		SaveFile(String _fileName);
 
 		void writeData();
-		void readData();
+		std::map<unsigned long long, bool> readData();
 		void setFileName(String _fileName);
 		String getFileName();
 	private:
@@ -52,13 +60,13 @@ namespace suku
 	void setSaveFile(SaveFile* _saveFile);
 	SaveFile* getSaveFile();
 	template<typename T> bool setSavable(const std::string _name);
-	template<typename T> bool setSavable(const std::string _name, T _initialVal);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
 	template<typename T> void saveVar(const std::string _name, T _val);
-	template<typename T> void saveVar(const T& _x);
+	template<typename T> void saveVar(T& _x);
 	template<typename T> void loadVar(T& _x);
 	template<typename T> T loadVar(const std::string _name);
 	bool isSavable(const std::string _name);
+	bool hasValueInFile(const std::string _name);
 }
 
 #include "save.inl"
