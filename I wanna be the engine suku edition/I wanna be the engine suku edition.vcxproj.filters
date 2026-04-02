@@ -135,6 +135,12 @@
     <ClInclude Include="suku_foundation\codec.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_draw\text.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_core\action.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="I wanna be the engine suku edition.cpp">
@@ -447,6 +453,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_foundation\file.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_draw\text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_core\action.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
