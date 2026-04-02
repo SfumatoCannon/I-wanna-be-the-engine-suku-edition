@@ -61,9 +61,9 @@ namespace suku
 		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
 		std::unique_ptr<RoomCollisionPool> collisionPool_;
-		std::map<double, std::list<std::shared_ptr<Object>>> reviseStateArray_;
-		std::map<double, std::list<std::shared_ptr<Object>>> updateStateArray_;
-		std::map<double, std::list<std::shared_ptr<Object>>> recheckStateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> preUpdateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> updateArray_;
+		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
 		template<typename Obj> void createObjectList();
 	};

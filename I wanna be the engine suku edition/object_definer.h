@@ -72,9 +72,9 @@ namespace suku
 		Wall(float _x = 0, float _y = 0) : Object(_x, _y)
 		{
 			sprite_ = &spr;
-			setReviseStateId(-1);
-			setUpdateStateId(-1);
-			setRecheckStateId(-1);
+			setPreUpdateId(-1);
+			setUpdateId(-1);
+			setPostUpdateId(-1);
 			setPaintId(2);
 		}
 	};
@@ -165,8 +165,8 @@ namespace suku
 		float gravity;
 		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
 
-		virtual void reviseState() override;
-		virtual void updateState() override;
+		virtual void preUpdate() override;
+		virtual void update() override;
 	};
 
 	class Player :public Object
@@ -188,9 +188,9 @@ namespace suku
 
 		virtual void onRoomEntering() override;
 		virtual void onRestarting() override;
-		virtual void reviseState() override;
-		virtual void updateState() override;
-		virtual void recheckState() override;
+		virtual void preUpdate() override;
+		virtual void update() override;
+		virtual void postUpdate() override;
 
 		void moveLeft();
 		void moveRight();

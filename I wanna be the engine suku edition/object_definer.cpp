@@ -89,7 +89,7 @@ namespace suku
 		gravity = 0.2f;
 	}
 
-	void Blood::reviseState()
+	void Blood::preUpdate()
 	{
 		if (input::isKeyDown(VK_R))
 			destroy();
@@ -98,7 +98,7 @@ namespace suku
 		vspeed += gravity;
 	}
 
-	void Blood::updateState()
+	void Blood::update()
 	{
 		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
 
@@ -135,9 +135,9 @@ namespace suku
 		side_ = Direction::Right;
 		jumpTime_ = maxJumpTime;
 		nowBloodNum_ = 0;
-		setReviseStateId(0);
-		setUpdateStateId(0);
-		setRecheckStateId(0);
+		setPreUpdateId(0);
+		setUpdateId(0);
+		setPostUpdateId(0);
 		setPaintId(3);
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
@@ -268,7 +268,7 @@ namespace suku
 		}
 	}
 
-	void Player::reviseState()
+	void Player::preUpdate()
 	{
 		using namespace suku::input;
 		if (isKeyDown(VK_R))
@@ -397,7 +397,7 @@ namespace suku
 			vspeed = 9.4f;
 	}
 
-	void Player::updateState()
+	void Player::update()
 	{
 		if (!isAlive())
 			return;
@@ -429,7 +429,7 @@ namespace suku
 		}*/
 	}
 
-	void Player::recheckState()
+	void Player::postUpdate()
 	{
 		if (getCrashedObject<Spike>() || getCrashedObject<Cherry>())
 		{

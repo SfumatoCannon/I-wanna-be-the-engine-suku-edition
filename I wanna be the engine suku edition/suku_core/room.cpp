@@ -29,11 +29,11 @@ namespace suku
 	void Room::removeImmediately(Object* _object)
 	{
 		collisionPool_->removeObject(_object);
-		reviseStateArray_[_object->reviseStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		preUpdateArray_[_object->preUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		updateStateArray_[_object->updateStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		updateArray_[_object->updateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		recheckStateArray_[_object->recheckStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		postUpdateArray_[_object->postUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
 		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
@@ -44,11 +44,11 @@ namespace suku
 		collisionPool_->removeObject(_object);
 		objectPointerArray_[_object->kindId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		reviseStateArray_[_object->reviseStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		preUpdateArray_[_object->preUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		updateStateArray_[_object->updateStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		updateArray_[_object->updateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		recheckStateArray_[_object->recheckStateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		postUpdateArray_[_object->postUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
 		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
@@ -56,59 +56,59 @@ namespace suku
 
 	void Room::setObjectRevisePriority(Object* _object, double _newId)
 	{
-		auto& originalArray = reviseStateArray_[_object->reviseStateId_];
-		auto& targetArray = reviseStateArray_[_newId];
+		auto& originalArray = preUpdateArray_[_object->preUpdateId_];
+		auto& targetArray = preUpdateArray_[_newId];
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->reviseStateId_ = _newId;
+				_object->preUpdateId_ = _newId;
 				return;
 			}
 		}
 		// not found in original array
 		targetArray.push_back(std::shared_ptr<Object>(_object));
-		_object->reviseStateId_ = _newId;
+		_object->preUpdateId_ = _newId;
 	}
 
 	void Room::setObjectUpdatePriority(Object* _object, double _newId)
 	{
-		auto& originalArray = updateStateArray_[_object->updateStateId_];
-		auto& targetArray = updateStateArray_[_newId];
+		auto& originalArray = updateArray_[_object->updateId_];
+		auto& targetArray = updateArray_[_newId];
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);		
-				_object->updateStateId_ = _newId;
+				_object->updateId_ = _newId;
 				break;
 			}
 		}
 		// not found in original array
 		targetArray.push_back(std::shared_ptr<Object>(_object));
-		_object->updateStateId_ = _newId;
+		_object->updateId_ = _newId;
 	}
 
 	void Room::setObjectRecheckPriority(Object* _object, double _newId)
 	{
-		auto& originalArray = recheckStateArray_[_object->recheckStateId_];
-		auto& targetArray = recheckStateArray_[_newId];
+		auto& originalArray = postUpdateArray_[_object->postUpdateId_];
+		auto& targetArray = postUpdateArray_[_newId];
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->recheckStateId_ = _newId;
+				_object->postUpdateId_ = _newId;
 				break;
 			}
 		}
 		// not found in original array
 		targetArray.push_back(std::shared_ptr<Object>(_object));
-		_object->recheckStateId_ = _newId;
+		_object->postUpdateId_ = _newId;
 	}
 
 	void Room::setObjectPaintPriority(Object* _object, double _newId)
@@ -157,7 +157,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : reviseStateArray_)
+		for (auto& [type, objArray] : preUpdateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -168,14 +168,14 @@ namespace suku
 				}
 				else
 				{
-					obj->reviseState();
+					obj->preUpdate();
 
 					iter++;
 				}
 			}
 		}
 
-		for (auto& [type, objArray] : updateStateArray_)
+		for (auto& [type, objArray] : updateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -186,7 +186,7 @@ namespace suku
 				}
 				else
 				{
-					obj->updateState();
+					obj->update();
 
 					iter++;
 				}
@@ -204,7 +204,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : recheckStateArray_)
+		for (auto& [type, objArray] : postUpdateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -215,7 +215,7 @@ namespace suku
 				}
 				else
 				{
-					obj->recheckState();
+					obj->postUpdate();
 
 					iter++;
 				}

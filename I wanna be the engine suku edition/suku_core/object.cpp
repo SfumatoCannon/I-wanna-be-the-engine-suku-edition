@@ -34,11 +34,11 @@ namespace suku
 	void Object::updateFunction()
 	{
 		clock_++;
-		for (auto it = functionList_.begin(); it != functionList_.end();)
+		for (auto iter = actionList_.begin(); iter != actionList_.end();)
 		{
-			if ((*it)() == false)
-				it = functionList_.erase(it++);
-			else it++;
+			if ((*iter)() == false)
+				iter = actionList_.erase(iter);
+			else iter++;
 		}
 	}
 
@@ -72,25 +72,25 @@ namespace suku
 		//inRoom_ = _room;
 	}
 
-	void Object::setReviseStateId(double _id)
+	void Object::setPreUpdateId(double _id)
 	{
 		if (inRoom_)
 			inRoom_->setObjectRevisePriority(this, _id);
-		else reviseStateId_ = _id;
+		else preUpdateId_ = _id;
 	}
 
-	void Object::setUpdateStateId(double _id)
+	void Object::setUpdateId(double _id)
 	{
 		if (inRoom_)
 			inRoom_->setObjectUpdatePriority(this, _id);
-		else updateStateId_ = _id;
+		else updateId_ = _id;
 	}
 
-	void Object::setRecheckStateId(double _id)
+	void Object::setPostUpdateId(double _id)
 	{
 		if (inRoom_)
 			inRoom_->setObjectRecheckPriority(this, _id);
-		else recheckStateId_ = _id;
+		else postUpdateId_ = _id;
 	}
 
 	void Object::setPaintId(double _id)
@@ -172,9 +172,9 @@ namespace suku
 	Object::Object(float _x, float _y)
 	{
 		var.clear();
-		reviseStateId_ = 0;
-		updateStateId_ = 0;
-		recheckStateId_ = 0;
+		preUpdateId_ = 0;
+		updateId_ = 0;
+		postUpdateId_ = 0;
 		destroyTag_ = false;
 		paintId_ = 0;
 		sprite_ = nullptr;
@@ -262,7 +262,7 @@ namespace suku
 
 	void Object::rotateTo(float _angle, int _time)
 	{
-		functionList_.push_back([=]() {
+		actionList_.push_back([=]() {
 			static int nowtime = _time;
 			static float rotate_speed = _angle / _time;
 			rotate(rotate_speed);
@@ -274,7 +274,7 @@ namespace suku
 
 	void Object::rotateTo(float _angle, double _rotatingCenterX, double _rotatingCenterY, int _time, bool _isRotatingItself)
 	{
-		functionList_.push_back([=]() {
+		actionList_.push_back([=]() {
 			static int nowtime = _time;
 			static float rotate_speed = _angle / _time;
 			rotate(rotate_speed, _rotatingCenterX, _rotatingCenterY, _isRotatingItself);
@@ -284,41 +284,49 @@ namespace suku
 			});
 	}
 
-	void Object::setAction(std::function<bool(Object*)> _function)
+	void Object::setAction(std::function<bool(Object*)> _actionFunc)
 	{
-		functionList_.push_back([=]() {
-			return _function(this);
+		actionList_.push_back([&]() {
+			return _actionFunc(this);
 			});
 	}
 
-	void Object::setDelayAction(int _time, std::function<void(Object*)> _function)
+	void Object::setDelayAction(int _time, std::function<void(Object*)> _actionFunc)
 	{
-		var["setDelayAction_nowtime"] << _time;
-		functionList_.push_back([=]() {
-			if (var["setDelayAction_nowtime"] == (int)0)
+		actionList_.push_back([=, count = 0]() mutable {
+			if (count == _time)
 			{
-				_function(this);
+				_actionFunc(this);
 				return false;
 			}
-			var["setDelayAction_nowtime"] << (var["setDelayAction_nowtime"].getValue(int()) - 1);
+			count++;
 			return true;
 			});
 	}
 
 	void Object::movingTo(float _xTo, float _yTo, int _time)
 	{
-		var["movingTo_nowtime"] << _time;
-		var["movingTo_hspeed"] << ((_xTo - x) / (float)_time);
-		var["movingTo_vspeed"] << ((_yTo - y) / (float)_time);
-		functionList_.push_back([=]() {
-			hspeedTemp = var["movingTo_hspeed"].getValue<float>();
-			vspeedTemp = var["movingTo_vspeed"].getValue<float>();
-			var["movingTo_nowtime"] -= 1;
-			if (var["movingTo_nowtime"] == 0) return false;
-			else return true;
+		float hspeed = ((_xTo - x) / (float)_time);
+		float vspeed = ((_yTo - y) / (float)_time);
+		actionList_.push_back([=, count = 0]() mutable {
+			if (count == _time)
+			{
+				hspeedTemp = 0;
+				vspeedTemp = 0;
+				x = _xTo;
+				y = _yTo;
+				return false;
+			}
+			else
+			{
+				hspeedTemp = hspeed;
+				vspeedTemp = vspeed;
+				count++;
+				return true;
+			}
 			});
 	}
-	
+
 	void Object::moveContactOld(const Object& _obj, bool _isPredict)
 	{
 		if (!isCrashed(_obj, x + totalHspeed(), y))

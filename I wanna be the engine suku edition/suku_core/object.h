@@ -28,17 +28,17 @@ namespace suku
 		float vspeedTemp, hspeedTemp;
 		bool isClearPainting;
 		Room* inRoom()const { return inRoom_; }
-		double reviseStateId()const { return reviseStateId_; }
-		double updateStateId()const { return updateStateId_; }
-		double recheckStateId()const { return recheckStateId_; }
+		double preUpdateId()const { return preUpdateId_; }
+		double updateId()const { return updateId_; }
+		double postUpdateId()const { return postUpdateId_; }
 		double paintId()const { return paintId_; }
 		size_t kindId()const { return kindId_; }
 
 		void setInRoom(Room* _room);
 
-		void setReviseStateId(double _id);
-		void setUpdateStateId(double _id);
-		void setRecheckStateId(double _id);
+		void setPreUpdateId(double _id);
+		void setUpdateId(double _id);
+		void setPostUpdateId(double _id);
 		void setPaintId(double _id);
 
 		Transform spriteTransform;
@@ -72,9 +72,9 @@ namespace suku
 		virtual void onRestarting();
 		virtual void onRemove() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
-		virtual void reviseState() {}
-		virtual void updateState() {}
-		virtual void recheckState() {}
+		virtual void preUpdate() {}
+		virtual void update() {}
+		virtual void postUpdate() {}
 
 		float totalHspeed()const;
 		float totalVspeed()const;
@@ -87,8 +87,8 @@ namespace suku
 		void rotate(float _angle, double _rotatingCenterX, double _rotatingCenterY, bool _isRotatingItself = true);
 		void rotateTo(float _angle, int _time);
 		void rotateTo(float _angle, double _rotatingCenterX, double _rotatingCenterY, int _time, bool _isRotatingItself = true);
-		void setAction(std::function<bool(Object*)> _function);
-		void setDelayAction(int _time, std::function<void(Object*)> _function);
+		void setAction(std::function<bool(Object*)> _actionFunc);
+		void setDelayAction(int _time, std::function<void(Object*)> _actionFunc);
 
 		void paintBody();
 		void paintBody(float _x, float _y);
@@ -128,12 +128,12 @@ namespace suku
 
 		Room* inRoom_;
 		size_t kindId_;
-		double reviseStateId_, updateStateId_, recheckStateId_, paintId_;
+		double preUpdateId_, updateId_, postUpdateId_, paintId_;
 		bool removeTag_;
 		bool destroyTag_;
 		Sprite* sprite_;
 		int clock_;
-		std::list<std::function<bool()> > functionList_;
+		std::list<std::function<bool()> > actionList_;
 	};
 }
 

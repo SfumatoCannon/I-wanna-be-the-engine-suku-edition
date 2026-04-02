@@ -64,9 +64,9 @@ namespace suku
 		objectParentPointer->inRoom_ = this;
 		objList.push_back(objectParentPointer);
 
-		reviseStateArray_[objectParentPointer->reviseStateId_].push_back(objectParentPointer);
-		updateStateArray_[objectParentPointer->updateStateId_].push_back(objectParentPointer);
-		recheckStateArray_[objectParentPointer->recheckStateId_].push_back(objectParentPointer);
+		preUpdateArray_[objectParentPointer->preUpdateId_].push_back(objectParentPointer);
+		updateArray_[objectParentPointer->updateId_].push_back(objectParentPointer);
+		postUpdateArray_[objectParentPointer->postUpdateId_].push_back(objectParentPointer);
 		paintArray_[objectParentPointer->paintId_].push_back(objectParentPointer);
 
 		collisionPool_->addObject(objectParentPointer.get());
