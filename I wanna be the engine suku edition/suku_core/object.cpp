@@ -286,7 +286,7 @@ namespace suku
 
 	void Object::addAction(std::function<bool(Object*)> _actionFunc)
 	{
-		actionList_.push_back([&]() {
+		actionList_.push_back([=]() {
 			return _actionFunc(this);
 			});
 	}
@@ -318,7 +318,18 @@ namespace suku
 			WARNINGWINDOW("Time vector and action vector don't match.");
 			return;
 		}
+		for (int i = 0; i < _actionVec.size(); i++)
+		{
+			addDelayAction(_timeVec[i], _actionVec[i]);
+		}
+	}
 
+	void Object::addTimelineAction(std::function<bool(Object*, int)> _actionFuncWithTime)
+	{
+		actionList_.push_back([=, count = 0]() mutable {
+			count++;
+			return _actionFuncWithTime(this, count);
+			});
 	}
 
 	void Object::clearActions()
