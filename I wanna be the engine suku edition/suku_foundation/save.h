@@ -23,8 +23,9 @@ namespace suku
 		}
 
 		std::map<unsigned long long, std::pair<char*, size_t>> byteDataPool;
-		std::map<unsigned long long, Var> savableVarPool;
-		std::map<char*, unsigned long long> varIdMappingPool;
+		std::map<unsigned long long, Var> dataPointerVarPool;
+		// mapping from variable address to savable_var id
+		std::map<const char*, unsigned long long> varIdMappingPool;
 
 		int saveFileId;
 		SaveFile* saveFile = nullptr;
@@ -51,7 +52,7 @@ namespace suku
 	void setSaveFile(SaveFile* _saveFile);
 	SaveFile* getSaveFile();
 	template<typename T> bool setSavable(T& _x, std::string _name);
-	template<typename T> void saveVar(T& _x);
+	template<typename T> void saveVar(const T& _x);
 	template<typename T> void loadVar(T& _x);
 }
 

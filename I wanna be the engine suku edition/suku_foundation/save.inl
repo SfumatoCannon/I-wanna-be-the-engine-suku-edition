@@ -10,7 +10,7 @@ namespace suku
 	{
 		unsigned long long id = maths::hash(_name);
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
-		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
 		if (byteDataPool.find(id) != byteDataPool.end())
 			return false;
@@ -20,23 +20,23 @@ namespace suku
 		Var pointerInVar;
 		pointerInVar << pointer;
 		byteDataPool[id] = std::make_pair(address, sizeof(_x));
-		savableVarPool[id] = pointerInVar;
+		dataPointerVarPool[id] = pointerInVar;
 		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
 		return true;
 	}
 
 	template<typename T>
-	inline void saveVar(T& _x)
+	inline void saveVar(const T& _x)
 	{
-		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		auto iter = varIdMappingPool.find(reinterpret_cast<char*>(&_x));
+		auto iter = varIdMappingPool.find(reinterpret_cast<const char*>(&_x));
 		if (iter == varIdMappingPool.end())
 		{
 			ERRORWINDOW_GLOBAL("Variable not set as savable");
 			return;
 		}
-		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
+		Var pointerInVar = dataPointerVarPool[varIdMappingPool[reinterpret_cast<const char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _x;
@@ -47,9 +47,9 @@ namespace suku
 	inline void loadVar(T& _x)
 	{
 		SaveAssetGlobal::getInstance().readData();
-		auto& savableVarPool = SaveAssetGlobal::getInstance().savableVarPool;
+		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		Var pointerInVar = savableVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
+		Var pointerInVar = dataPointerVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
 		T* pointer;
 		pointerInVar >> pointer;
 		_x = *pointer;

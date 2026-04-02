@@ -2,5 +2,8 @@
 
 namespace suku
 {
+	class Action
+	{
 
+	};
 }
