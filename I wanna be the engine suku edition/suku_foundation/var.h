@@ -8,7 +8,7 @@ namespace suku
 	{
 	private:
 		std::any value_;
-		const type_info* pTypeInfo_;
+		const type_info* pTypeInfo_ = nullptr;
 	public:
 		Var() {};
 		template<typename T> Var(T _x);

@@ -7,73 +7,183 @@ namespace suku
 	template<typename T>
 	inline bool Var::operator==(T _x)
 	{
-		return std::any_cast<T>(value_) == _x;
+		try
+		{
+			return std::any_cast<T>(value_) == _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline Var& Var::operator+=(T _x)
 	{
-		value_ = std::any_cast<T>(value_) + _x;
-		return (*this);
+		try
+		{
+			value_ = std::any_cast<T>(value_) + _x;
+			return (*this);
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline Var& Var::operator-=(T _x)
 	{
-		value_ = std::any_cast<T>(value_) - _x;
-		return (*this);
+		try
+		{
+			value_ = std::any_cast<T>(value_) - _x;
+			return (*this);
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline Var& Var::operator*=(T _x)
 	{
-		value_ = std::any_cast<T>(value_) * _x;
-		return (*this);
+		try
+		{
+			value_ = std::any_cast<T>(value_) * _x;
+			return (*this);
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline Var& Var::operator/=(T _x)
 	{
-		value_ = std::any_cast<T>(value_) / _x;
-		return (*this);
+		try
+		{
+			value_ = std::any_cast<T>(value_) / _x;
+			return (*this);
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline bool Var::operator!=(T _x)
 	{
-		return std::any_cast<T>(value_) != _x;
+		try
+		{
+			return std::any_cast<T>(value_) != _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline bool Var::operator<(T _x)
 	{
-		return std::any_cast<T>(value_) < _x;
+		try
+		{
+			return std::any_cast<T>(value_) < _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline bool Var::operator>(T _x)
 	{
-		return std::any_cast<T>(value_) > _x;
+		try
+		{
+			return std::any_cast<T>(value_) > _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline bool Var::operator<=(T _x)
 	{
-		return std::any_cast<T>(value_) <= _x;
+		try
+		{
+			return std::any_cast<T>(value_) <= _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline bool Var::operator>=(T _x)
 	{
-		return std::any_cast<T>(value_) >= _x;
+		try
+		{
+			return std::any_cast<T>(value_) >= _x;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
 	inline Var Var::operator+(T _x)
 	{
-		Var res;
-		res.value_ = std::any_cast<T>(value_) + _x;
-		return res;
+		try
+		{
+			Var res;
+			res.assign<T>(std::any_cast<T>(value_) + _x);
+			return res;
+		}
+		catch (std::bad_any_cast& e)
+		{
+			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
+				+ "request type: " + typeid(T).name() + "\n"
+				+ "storage type: " + pTypeInfo_->name());
+			return _x;
+		}
 	}
 
 	template<typename T>
