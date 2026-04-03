@@ -8,7 +8,6 @@ public:
 	virtual void onCreate()override
 	{
 		Room::onCreate();
-		create<Player>(0.f, 0.f);
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));

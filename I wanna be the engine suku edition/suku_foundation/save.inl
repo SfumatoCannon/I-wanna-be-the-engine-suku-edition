@@ -20,7 +20,7 @@ namespace suku
 		pointerInVar << pointer;
 		byteDataPool[id] = std::make_pair(address, sizeof(T));
 		dataPointerVarPool[id] = pointerInVar;
-		SaveAssetGlobal::refreshLoadTag();
+		SaveAssetGlobal::getInstance().refreshLoadTag();
 		return true;
 	}
 
@@ -41,7 +41,7 @@ namespace suku
 		byteDataPool[id] = std::make_pair(address, sizeof(_x));
 		dataPointerVarPool[id] = pointerInVar;
 		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
-		SaveAssetGlobal::refreshLoadTag();
+		SaveAssetGlobal::getInstance().refreshLoadTag();
 		return true;
 	}
 
