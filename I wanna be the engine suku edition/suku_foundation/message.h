@@ -1,5 +1,8 @@
 #pragma once
 
+#include "string.h"
+#include <Windows.h>
+
 #ifdef _DEBUG
 #define INFOWINDOW(message) {static bool flag = true; if (flag) flag = false, MessageBoxExW(NULL, \
 	String(String("Information sent\n") + \

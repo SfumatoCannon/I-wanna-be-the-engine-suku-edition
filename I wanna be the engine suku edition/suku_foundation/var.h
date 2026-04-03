@@ -1,5 +1,6 @@
 #pragma once
 #include <any>
+#include <memory>
 
 namespace suku
 {
@@ -7,6 +8,7 @@ namespace suku
 	{
 	private:
 		std::any value_;
+		const type_info* pTypeInfo_;
 	public:
 		Var() {};
 		template<typename T> Var(T _x);
