@@ -78,7 +78,7 @@ namespace suku
 			ERRORWINDOW_GLOBAL("Variable not set as savable. (Var name mapping exists but failed to get data pointer var)");
 			return;
 		}
-		Var pointerInVar = (*iter);
+		Var pointerInVar = (*iter).second;
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _x;

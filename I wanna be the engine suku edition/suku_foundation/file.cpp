@@ -113,11 +113,11 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
 		if (!ofs_.is_open())
 		{
 			create();
-			ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+			ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
 		}
 	}
 
@@ -222,9 +222,11 @@ namespace suku
 	{
 		if (!ofs_.is_open())
 			openForWrite();
+		
 		for (const auto& [id, data] : _dataPtrMap)
 		{
 			ofs_.write(reinterpret_cast<const char*>(&id), sizeof(unsigned long long));
+			ofs_.write(reinterpret_cast<const char*>(&data.second), sizeof(size_t));
 			ofs_.write(data.first, data.second);
 		}
 	}
@@ -237,7 +239,7 @@ namespace suku
 		unsigned long long id = 0LL;
 		while (true)
 		{
-			if (!ifs_.read(reinterpret_cast<char*>(&id), sizeof(id)))
+			if (!ifs_.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long)))
 			{
 				if (ifs_.eof())
 					break;
@@ -248,10 +250,18 @@ namespace suku
 				}
 			}
 
+			size_t dataSize = 0;
+			if (!ifs_.read(reinterpret_cast<char*>(&dataSize), sizeof(size_t)))
+			{
+				WARNINGWINDOW("Failed to read data size. File may be corrupted.");
+				break;
+			}
+
 			existenceMap[id] = true;
 
 			if (_dataPtrMap.find(id) == _dataPtrMap.end())
 			{
+				ifs_.seekg(dataSize, std::ios::cur);
 				continue;
 			}
 

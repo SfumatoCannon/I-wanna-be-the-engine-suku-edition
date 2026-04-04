@@ -44,13 +44,13 @@ public:
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
 
-		int x;
+		int x = 0;
 		setSavable<int>("test");
 		if (!hasValueInFile("test"))
 		{
 			x = 0;
 		}
-		else 
+		else
 			x = loadVar<int>("test");
 		x++;
 		saveVar("test", x);

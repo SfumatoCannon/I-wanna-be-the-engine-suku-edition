@@ -223,8 +223,8 @@ namespace suku
 			return;
 		spawnX = x;
 		spawnY = y;
-		saveVar(x);
 		saveVar(y);
+		saveVar(x);
 	}
 
 	bool Player::isAlive()
