@@ -53,6 +53,7 @@ void updateWork()
 	if (threadLock.try_lock())
 	{
 		suku::input::frameStateUpdate();
+		suku::input::Mouse::frameStateUpdate();
 
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
@@ -70,6 +71,7 @@ void updateWork()
 		}
 
 		suku::input::resetKeyState();
+		suku::input::Mouse::resetButtonState();
 
 		threadLock.unlock();
 	}
@@ -168,10 +170,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		suku::input::Mouse::refreshPosition(lParam);
 		break;
 	case WM_LBUTTONDOWN:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_DOWN, MOUSE_VK_LEFT);
 		SetCapture(hWnd);
 		break;
 	case WM_LBUTTONUP:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_UP, MOUSE_VK_LEFT);
 		ReleaseCapture();
+		break;
+	case WM_LBUTTONDBLCLK:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_DOUBLECLICK, MOUSE_VK_LEFT);
+		break;
+	case WM_RBUTTONDOWN:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_DOWN, MOUSE_VK_RIGHT);
+		break;
+	case WM_RBUTTONUP:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_UP, MOUSE_VK_RIGHT);
+		break;
+	case WM_MBUTTONDOWN:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_DOWN, MOUSE_VK_MIDDLE);
+		break;
+	case WM_MBUTTONUP:
+		suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_UP, MOUSE_VK_MIDDLE);
+		break;
+	case WM_MOUSEWHEEL:
+		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+			suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_SCROLLUP, 0);
+		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+			suku::input::Mouse::pushMouseMessage(MOUSE_INPUT_SCROLLDOWN, 0);
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -185,7 +210,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;

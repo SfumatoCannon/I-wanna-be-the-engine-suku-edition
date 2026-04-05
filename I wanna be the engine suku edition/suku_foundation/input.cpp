@@ -2,10 +2,10 @@
 
 namespace suku::input
 {
-	bool isKeyDownArray[256] = { false };
-	bool isKeyHoldingArray[256] = { false };
-	bool isKeyUpArray[256] = { false };
-	std::queue<std::pair<UINT, WPARAM> > keyMsg;
+	static bool isKeyDownArray[256] = { false };
+	static bool isKeyHoldingArray[256] = { false };
+	static bool isKeyUpArray[256] = { false };
+	static std::queue<std::pair<UINT, USHORT> > keyMsg;
 
 	bool isKeyDown(UINT8 _keyVCode)
 	{
@@ -45,31 +45,31 @@ namespace suku::input
 		}
 	}
 
-	void pushKeyMessage(UINT _message, WPARAM _wParam)
+	void pushKeyMessage(UINT _message, USHORT _keyVCode)
 	{
-		keyMsg.push(std::make_pair(_message, _wParam));
+		keyMsg.push(std::make_pair(_message, _keyVCode));
 	}
 
 	void frameStateUpdate()
 	{
-		UINT _message;
-		WPARAM _wParam;
+		UINT message;
+		USHORT keyCode;
 		while (!keyMsg.empty())
 		{
-			_message = keyMsg.front().first;
-			_wParam = keyMsg.front().second;
+			message = keyMsg.front().first;
+			keyCode = keyMsg.front().second;
 			keyMsg.pop();
-			switch (_message)
+			switch (message)
 			{
 			case INPUT_KEYDOWN:
-				if (!isKeyHoldingArray[_wParam])
-					isKeyDownArray[_wParam] = true;
-				isKeyHoldingArray[_wParam] = true;
-				isKeyUpArray[_wParam] = false;
+				if (!isKeyHoldingArray[keyCode])
+					isKeyDownArray[keyCode] = true;
+				isKeyHoldingArray[keyCode] = true;
+				isKeyUpArray[keyCode] = false;
 				break;
 			case INPUT_KEYUP:
-				isKeyHoldingArray[_wParam] = false;
-				isKeyUpArray[_wParam] = true;
+				isKeyHoldingArray[keyCode] = false;
+				isKeyUpArray[keyCode] = true;
 				break;
 			default:
 				break;
