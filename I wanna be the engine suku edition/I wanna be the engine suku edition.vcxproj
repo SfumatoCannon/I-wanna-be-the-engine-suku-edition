@@ -196,6 +196,7 @@
     <ClInclude Include="suku_foundation\maths.h" />
     <ClInclude Include="suku_foundation\array.h" />
     <ClInclude Include="suku_foundation\message.h" />
+    <ClInclude Include="suku_foundation\mouse.h" />
     <ClInclude Include="suku_foundation\save.h" />
     <ClInclude Include="suku_foundation\string.h" />
     <ClInclude Include="suku_foundation\type_tree.h" />
@@ -314,6 +315,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_foundation\mouse.cpp" />
     <ClCompile Include="suku_foundation\save.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
