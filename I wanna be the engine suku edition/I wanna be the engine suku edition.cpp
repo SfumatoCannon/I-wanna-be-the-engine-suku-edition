@@ -52,7 +52,7 @@ void updateWork()
 	using namespace suku;
 	if (threadLock.try_lock())
 	{
-		suku::input::keyCheck();
+		suku::input::frameStateUpdate();
 
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
@@ -69,7 +69,7 @@ void updateWork()
 				nowRoom->update();
 		}
 
-		suku::input::resetKey();
+		suku::input::resetKeyState();
 
 		threadLock.unlock();
 	}
@@ -165,7 +165,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		suku::GameWindow::RefreshSizeInfo();
 		break;
 	case WM_MOUSEMOVE:
-		Mouse::refreshPosition(lParam);
+		suku::input::Mouse::refreshPosition(lParam);
+		break;
+	case WM_LBUTTONDOWN:
+		SetCapture(hWnd);
+		break;
+	case WM_LBUTTONUP:
+		ReleaseCapture();
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

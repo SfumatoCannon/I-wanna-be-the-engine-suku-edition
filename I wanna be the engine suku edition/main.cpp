@@ -61,7 +61,7 @@ public:
 				[](Object* _this)->bool { _this->movingTo(32, 32, 50); return false; }
 			}
 		);
-		create(Wall(96, 32))->addAction([=](Object* _this) { _this->x = Mouse::getX(); _this->y = Mouse::getY(); return true; });
+		create(Wall(96, 32))->addAction([=](Object* _this) { _this->x = input::Mouse::getX(); _this->y = input::Mouse::getY(); return true; });
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));

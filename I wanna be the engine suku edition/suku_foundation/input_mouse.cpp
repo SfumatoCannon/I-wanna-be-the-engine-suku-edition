@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "mouse.h"
+#include "input_mouse.h"
 #include "game_window.h"
 #include <windowsx.h>
 
-namespace suku
+namespace suku::input
 {
 	int Mouse::getPixelX()
 	{
@@ -29,5 +29,10 @@ namespace suku
 	{
 		pixelX_ = GET_X_LPARAM(_msgLParam);
 		pixelY_ = GET_Y_LPARAM(_msgLParam);
+	}
+
+	void Mouse::frameStateUpdate()
+	{
+
 	}
 }

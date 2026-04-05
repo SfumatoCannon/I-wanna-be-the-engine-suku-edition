@@ -50,7 +50,7 @@ namespace suku::input
 		keyMsg.push(std::make_pair(_message, _wParam));
 	}
 
-	void keyCheck()
+	void frameStateUpdate()
 	{
 		UINT _message;
 		WPARAM _wParam;
@@ -77,7 +77,7 @@ namespace suku::input
 		}
 	}
 
-	void resetKey()
+	void resetKeyState()
 	{
 		memset(isKeyDownArray, false, sizeof(isKeyDownArray));
 		memset(isKeyUpArray, false, sizeof(isKeyUpArray));

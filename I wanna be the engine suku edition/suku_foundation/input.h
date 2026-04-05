@@ -49,6 +49,6 @@ namespace suku::input
 	bool isKeyHolding(UINT8 _keyVCode);
 	void onWindowInput(LPARAM _lParam);
 	void pushKeyMessage(UINT _message, WPARAM _wParam);
-	void keyCheck();
-	void resetKey();
+	void frameStateUpdate();
+	void resetKeyState();
 }
