@@ -5,6 +5,7 @@
 #include "maths.h"
 #include "array.h"
 #include "message.h"
+#include "mouse.h"
 #include "save.h"
 #include "string.h"
 #include "type_tree.h"
