@@ -81,9 +81,9 @@ double getMonitoredFPS(bool _isUpdate = false)
 {
 	static LARGE_INTEGER prevCounter = { 0 };
 	static LARGE_INTEGER frequency = { 0 };
-	static int s_frameCount = 0;
-	static double s_accumSeconds = 0.0;
-	static double s_lastReportedFPS = 0.0;
+	static int frameCount = 0;
+	static double accumSeconds = 0.0;
+	static double lastReportedFPS = 0.0;
 	static auto initializeFuction = []()->bool
 		{
 			QueryPerformanceFrequency(&frequency);
@@ -92,7 +92,7 @@ double getMonitoredFPS(bool _isUpdate = false)
 		}();
 
 	if (_isUpdate == false)
-		return s_lastReportedFPS;
+		return lastReportedFPS;
 
 	LARGE_INTEGER now;
 	QueryPerformanceCounter(&now);
@@ -101,16 +101,16 @@ double getMonitoredFPS(bool _isUpdate = false)
 		delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
 	prevCounter = now;
 
-	s_frameCount++;
-	s_accumSeconds += delta;
-	if (s_accumSeconds >= 1.0)
+	frameCount++;
+	accumSeconds += delta;
+	if (accumSeconds >= 1.0)
 	{
-		s_lastReportedFPS = double(s_frameCount) / s_accumSeconds;
-		s_frameCount = 0;
-		s_accumSeconds = 0.0;
+		lastReportedFPS = double(frameCount) / accumSeconds;
+		frameCount = 0;
+		accumSeconds = 0.0;
 	}
 
-	return s_lastReportedFPS;
+	return lastReportedFPS;
 }
 
 void paintWork()
