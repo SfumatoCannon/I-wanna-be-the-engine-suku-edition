@@ -1,4 +1,5 @@
 #pragma once
+#include "type_tree.h"
 
 #define MOUSE_VK_LEFT 0x01
 #define MOUSE_VK_RIGHT 0x02
@@ -22,6 +23,7 @@ namespace suku::input
 		static int getPixelY();
 		static float getX(); // Logical coordinate
 		static float getY(); // Logical coordinate
+		static Vector getPosition();
 		static void refreshPosition(LPARAM _msgLParam);
 		static void resetButtonState();
 		static void frameStateUpdate();

@@ -28,12 +28,17 @@ namespace suku::input
 
 	float Mouse::getX()
 	{
-		return (float)pixelX_ * GameWindow::getLogicalWidth() / (float)GameWindow::getWidth();
+		return getPosition().x;
 	}
 
 	float Mouse::getY()
 	{
-		return (float)pixelY_ * GameWindow::getLogicalHeight() / (float)GameWindow::getHeight();
+		return getPosition().y;
+	}
+
+	Vector Mouse::getPosition()
+	{
+		return GameWindow::getPixelMappingTransform().invertTransform().transformPoint(pixelX_, pixelY_);
 	}
 
 	void Mouse::refreshPosition(LPARAM _msgLParam)
