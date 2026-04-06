@@ -94,7 +94,7 @@ public:
 		layer.endDraw().paint();
 		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 			TextAlign::MiddleRight);
-		a.textContent = "test message";
+		a.textContent = "test message\npress s to save";
 		a.paint(256, 256, brushBlack);
 	}
 }room0;

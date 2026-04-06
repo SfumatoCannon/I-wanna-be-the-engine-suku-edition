@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "global_value.h"
 #include "I wanna be the engine suku edition.h"
-#include <future>
-#include <mutex>
+#include <chrono>
+#include <thread>
 
 #define MAX_LOADSTRING 100
 #define WM_CREATEFINISHED (WM_USER + 1)
@@ -23,35 +23,35 @@ double fps = 50.0;
 
 void Sender()
 {
-	//double updateInterval = 20;	//  1000 / 50
-	//double paintInterval = 1000.0 / 50.0;
-	//double updateTick = 0;
-	//double paintTick = 0;
-	auto updateAndPaintWork = []() {updateWork(), paintWork(); };
+	const double targetFrameTime = 1000.0 / fps;
+	auto period = std::chrono::duration<double, std::milli>(targetFrameTime);
 
-	std::future<void> task = std::async(updateAndPaintWork);
+	auto next = std::chrono::steady_clock::now();
 
-	while (1)
+	while (!gameEndFlag)
 	{
-		Sleep((DWORD)(1000.0 / fps));
-		task.get();
-		if (gameEndFlag == true)
+		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(period);
+
+		updateWork();
+		paintWork();
+
+		if (gameEndFlag)
 		{
 			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 			break;
 		}
-		else
-			task = std::async(updateAndPaintWork);
+
+		std::this_thread::sleep_until(next);
 	}
 }
 
-std::mutex threadLock;
+//std::mutex threadLock;
 
 void updateWork()
 {
 	using namespace suku;
-	if (threadLock.try_lock())
-	{
+	//if (threadLock.try_lock())
+	//{
 		suku::input::frameStateUpdate();
 		suku::input::Mouse::frameStateUpdate();
 
@@ -73,23 +73,66 @@ void updateWork()
 		suku::input::resetKeyState();
 		suku::input::Mouse::resetButtonState();
 
-		threadLock.unlock();
+	//	threadLock.unlock();
+	//}
+}
+
+double getMonitoredFPS(bool _isUpdate = false)
+{
+	static LARGE_INTEGER prevCounter = { 0 };
+	static LARGE_INTEGER frequency = { 0 };
+	static int s_frameCount = 0;
+	static double s_accumSeconds = 0.0;
+	static double s_lastReportedFPS = 0.0;
+	static auto initializeFuction = []()->bool
+		{
+			QueryPerformanceFrequency(&frequency);
+			QueryPerformanceCounter(&prevCounter);
+			return true;
+		}();
+
+	if (_isUpdate == false)
+		return s_lastReportedFPS;
+
+	LARGE_INTEGER now;
+	QueryPerformanceCounter(&now);
+	double delta = 0.0;
+	if (frequency.QuadPart != 0)
+		delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
+	prevCounter = now;
+
+	s_frameCount++;
+	s_accumSeconds += delta;
+	if (s_accumSeconds >= 1.0)
+	{
+		s_lastReportedFPS = double(s_frameCount) / s_accumSeconds;
+		s_frameCount = 0;
+		s_accumSeconds = 0.0;
 	}
+
+	return s_lastReportedFPS;
 }
 
 void paintWork()
 {
-	using namespace suku;
-	if (threadLock.try_lock())
-	{
-		if (!gameEndFlag)
+    double renderFPS = 0.0f;
+	//if (threadLock.try_lock())
+	//{
+        if (!gameEndFlag)
 		{
-			graphics::beginDrawGlobal();
-			nowRoom->paint();
-			graphics::endDrawGlobal();
+			renderFPS = getMonitoredFPS(true);
+
+			suku::graphics::beginDrawGlobal();
+			suku::nowRoom->paint();
+
+			suku::Text a("Consolas", 16);
+			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+			a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+			a.paint(10, 10);
+			suku::graphics::endDrawGlobal();
 		}
-		threadLock.unlock();
-	}
+	//	threadLock.unlock();
+	//}
 }
 
 BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
