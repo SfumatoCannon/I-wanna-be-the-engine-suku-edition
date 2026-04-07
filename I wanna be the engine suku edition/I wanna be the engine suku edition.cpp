@@ -52,26 +52,17 @@ void updateWork()
 	using namespace suku;
 	//if (threadLock.try_lock())
 	//{
-		suku::input::frameStateUpdate();
-		suku::input::Mouse::frameStateUpdate();
+	suku::input::frameStateUpdate();
+	suku::input::Mouse::frameStateUpdate();
 
-		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
-			endGame();
-		if (suku::input::isKeyDown(VK_F1))
-		{
-			static bool fullscreenTag = false;
-			fullscreenTag = !fullscreenTag;
-			suku::GameWindow::setFullscreen(fullscreenTag);
-		}
+	if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
+		endGame();
 
-		else
-		{
-			if (nowRoom)
-				nowRoom->update();
-		}
+	if (nowRoom)
+		nowRoom->update();
 
-		suku::input::resetKeyState();
-		suku::input::Mouse::resetButtonState();
+	suku::input::resetKeyState();
+	suku::input::Mouse::resetButtonState();
 
 	//	threadLock.unlock();
 	//}
@@ -115,22 +106,22 @@ double getMonitoredFPS(bool _isUpdate = false)
 
 void paintWork()
 {
-    double renderFPS = 0.0f;
+	double renderFPS = 0.0f;
 	//if (threadLock.try_lock())
 	//{
-        if (!gameEndFlag)
-		{
-			renderFPS = getMonitoredFPS(true);
+	if (!gameEndFlag)
+	{
+		renderFPS = getMonitoredFPS(true);
 
-			suku::graphics::beginDrawGlobal();
-			suku::nowRoom->paint();
+		suku::graphics::beginDrawGlobal();
+		suku::nowRoom->paint();
 
-			suku::Text a("Consolas", 16);
-			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-			a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-			a.paint(10, 10);
-			suku::graphics::endDrawGlobal();
-		}
+		suku::Text a("Consolas", 16);
+		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+		a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+		a.paint(10, 10);
+		suku::graphics::endDrawGlobal();
+	}
 	//	threadLock.unlock();
 	//}
 }
@@ -169,6 +160,7 @@ RAWINPUTDEVICE rid;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
+	std::pair<UINT, USHORT> inputResult;
 	switch (message)
 	{
 	case WM_CREATE:
@@ -195,7 +187,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		startSender();
 		break;
 	case WM_INPUT:
-		suku::input::onWindowInput(lParam);
+		inputResult = suku::input::onWindowInput(lParam);
+		if (inputResult.first == INPUT_KEYDOWN && inputResult.second == VK_F1)
+		{
+			static bool fullscreenTag = false;
+			fullscreenTag = !fullscreenTag;
+			suku::GameWindow::setFullscreen(fullscreenTag);
+		}
 		break;
 	case WM_ERASEBKGND:
 		return true;
@@ -283,9 +281,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	if (scale < 1.0f)
 		scale = 1.0f;
 
-	RECT rc = { 0, 0, 
-		static_cast<LONG>(suku::WindowWidth * scale), 
-		static_cast<LONG>(suku::WindowHeight * scale)};
+	RECT rc = { 0, 0,
+		static_cast<LONG>(suku::WindowWidth * scale),
+		static_cast<LONG>(suku::WindowHeight * scale) };
 
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 

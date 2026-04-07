@@ -22,7 +22,7 @@ namespace suku::input
 		return isKeyHoldingArray[_keyVCode];
 	}
 
-	void onWindowInput(LPARAM _lParam)
+	std::pair<UINT,USHORT> onWindowInput(LPARAM _lParam)
 	{
 		UINT dwSize = 0;
 		GetRawInputData((HRAWINPUT)_lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
@@ -38,11 +38,18 @@ namespace suku::input
 				bool isKeyUpArray = (kb.Flags & RI_KEY_BREAK) || (kb.Message == WM_KEYUP || kb.Message == WM_SYSKEYUP);
 				bool isKeyDown = !isKeyUpArray;
 				if (isKeyDown)
+				{
 					pushKeyMessage(INPUT_KEYDOWN, vKey);
+					return { INPUT_KEYDOWN, vKey };
+				}
 				else // isKeyUpArray
+				{
 					pushKeyMessage(INPUT_KEYUP, vKey);
+					return { INPUT_KEYUP, vKey };
+				}
 			}
 		}
+		return { 0, 0 };
 	}
 
 	void pushKeyMessage(UINT _message, USHORT _keyVCode)

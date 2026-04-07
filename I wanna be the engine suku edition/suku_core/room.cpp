@@ -257,15 +257,15 @@ namespace suku
 		scaleEffect.paint();
 	}
 
-	void Room::additionalFramePaint(float _offset)
+	void Room::additionalFramePaint(float _offsetRate)
 	{
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
 				float deltaX = obj->x - obj->var["xBefore"].getValue<float>();
 				float deltaY = obj->y - obj->var["yBefore"].getValue<float>();
-				obj->paintBody(obj->var["xBefore"].getValue<float>() + deltaX * _offset,
-					obj->var["yBefore"].getValue<float>() + deltaY * _offset);
+				obj->paintBody(obj->var["xBefore"].getValue<float>() + deltaX * _offsetRate,
+					obj->var["yBefore"].getValue<float>() + deltaY * _offsetRate);
 			}
 	}
 
