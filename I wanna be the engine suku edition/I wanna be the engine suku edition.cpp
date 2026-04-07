@@ -174,7 +174,7 @@ void paintWork(double _additionalFrameRate)
 		if (_additionalFrameRate == 0.0)
 			suku::nowRoom->paint();
 		else
-			suku::nowRoom->additionalFramePaint(_additionalFrameRate);
+			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
 		suku::Text a("Consolas", 16);
 		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
@@ -211,7 +211,7 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 
 void startSender()
 {
-	std::thread thread(SenderVsync);
+	std::thread thread(Sender);
 	thread.detach();
 }
 
