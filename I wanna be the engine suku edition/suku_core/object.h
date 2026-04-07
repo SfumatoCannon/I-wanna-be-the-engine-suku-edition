@@ -26,7 +26,6 @@ namespace suku
 		float xScale, yScale;
 		float vspeed, hspeed;
 		float vspeedTemp, hspeedTemp;
-		bool isClearPainting;
 		Room* inRoom()const { return inRoom_; }
 		double preUpdateId()const { return preUpdateId_; }
 		double updateId()const { return updateId_; }
@@ -94,8 +93,9 @@ namespace suku
 		void addTimelineAction(std::function<bool(Object*, int)> _actionFuncWithTime);
 		void clearActions();
 
-		void paintBody();
-		void paintBody(float _x, float _y);
+		void paintBody()const;
+		void paintBody(bool _isSmoothMode)const;
+		void paintBody(float _x, float _y, bool _isSmoothMode = false)const;
 
 		template<suku_object Obj> bool isCrashed(const Obj& _obj)const;
 		template<suku_object Obj> bool isCrashed(const Obj& _obj, float _x, float _y)const;

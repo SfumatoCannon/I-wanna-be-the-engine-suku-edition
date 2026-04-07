@@ -7,26 +7,36 @@ using namespace suku::maths;
 
 namespace suku
 {
-	void Object::paintBody()
+	void Object::paintBody()const
 	{
 		if (!sprite_)
 			return;
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		if (isClearPainting)
+		spr->paint(bRound(x), bRound(y), spriteTransform, alpha);
+	}
+
+	void Object::paintBody(bool _isSmoothMode)const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		if (_isSmoothMode)
 			spr->paint(bRound(x), bRound(y), spriteTransform, alpha);
 		else spr->paint(x, y, spriteTransform, alpha);
 	}
 
-	void Object::paintBody(float _x, float _y)
+	void Object::paintBody(float _x, float _y, bool _isSmoothMode)const
 	{
 		if (!sprite_)
 			return;
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		if (isClearPainting)
+		if (_isSmoothMode)
 			spr->paint(bRound(_x), bRound(_y), spriteTransform, alpha);
 		else spr->paint(_x, _y, spriteTransform, alpha);
 	}
@@ -186,7 +196,6 @@ namespace suku
 		var["yBefore"] = _y;
 		xScale = 1.0;
 		yScale = 1.0;
-		isClearPainting = true;
 		removeTag_ = false;
 		spawnX = _x;
 		spawnY = _y;
