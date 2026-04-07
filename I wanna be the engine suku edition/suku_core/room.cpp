@@ -268,8 +268,8 @@ namespace suku
 				float deltaX = obj->x - obj->var["xBefore"].getValue<float>();
 				float deltaY = obj->y - obj->var["yBefore"].getValue<float>();
 				obj->paintBody(
-					obj->x + deltaX * _offsetRate,
-					obj->y + deltaY * _offsetRate, 
+					obj->var["xBefore"].getValue<float>() + deltaX * (1 - _offsetRate),
+					obj->var["yBefore"].getValue<float>() + deltaY * (1 - _offsetRate),
 					false);
 			}
 

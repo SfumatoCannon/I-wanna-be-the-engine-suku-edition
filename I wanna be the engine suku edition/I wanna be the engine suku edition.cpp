@@ -22,6 +22,26 @@ void endGame() { gameEndFlag = true; }
 constexpr double updateFPS = 50.0;
 double renderFPS = 50.0;
 
+void SenderVsync()
+{
+	const double frameTime = 1000.0 / updateFPS;
+	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
+
+	auto next = std::chrono::steady_clock::now();
+	while (!gameEndFlag)
+	{
+		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		std::this_thread::sleep_until(next);
+		updateWork();
+		paintWork();
+		if (gameEndFlag)
+		{
+			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+			break;
+		}
+	}
+}
+
 void Sender()
 {
 	const double updateFrameTime = 1000.0 / updateFPS;
@@ -49,7 +69,7 @@ void Sender()
 		{
 			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(renderCooldownTimer);
 			std::this_thread::sleep_until(next);
-			paintWork();
+			paintWork(updateCooldownTimer.count() / updateFrameTime);
 			updateCooldownTimer -= renderCooldownTimer;
 			renderCooldownTimer = renderPeriod;
 		}
@@ -60,7 +80,7 @@ void Sender()
 			break;
 		}
 
-		
+
 	}
 }
 
@@ -123,6 +143,24 @@ double getMonitoredFPS(bool _isUpdate = false)
 	return lastReportedFPS;
 }
 
+void paintWork()
+{
+	double renderFPS = 0.0f;
+	if (!gameEndFlag)
+	{
+		renderFPS = getMonitoredFPS(true);
+
+		suku::graphics::beginDrawGlobal();
+		suku::nowRoom->paint();
+
+		suku::Text a("Consolas", 16);
+		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+		a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+		a.paint(10, 10);
+		suku::graphics::endDrawGlobal();
+	}
+}
+
 void paintWork(double _additionalFrameRate)
 {
 	double renderFPS = 0.0f;
@@ -173,7 +211,7 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 
 void startSender()
 {
-	std::thread thread(Sender);
+	std::thread thread(SenderVsync);
 	thread.detach();
 }
 
