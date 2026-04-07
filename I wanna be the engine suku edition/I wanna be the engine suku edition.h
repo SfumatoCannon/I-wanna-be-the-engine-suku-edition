@@ -10,4 +10,4 @@
 void init();
 void Sender();
 void updateWork();
-void paintWork();
+void paintWork(double _additionalFrameRate = 0.0);

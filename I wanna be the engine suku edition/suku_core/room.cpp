@@ -259,14 +259,26 @@ namespace suku
 
 	void Room::additionalFramePaint(float _offsetRate)
 	{
+		displayLayer_.beginDraw();
+		onPaintStart();
+
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
 				float deltaX = obj->x - obj->var["xBefore"].getValue<float>();
 				float deltaY = obj->y - obj->var["yBefore"].getValue<float>();
-				obj->paintBody(obj->var["xBefore"].getValue<float>() + deltaX * _offsetRate,
-					obj->var["yBefore"].getValue<float>() + deltaY * _offsetRate);
+				obj->paintBody(
+					obj->x + deltaX * _offsetRate,
+					obj->y + deltaY * _offsetRate, 
+					false);
 			}
+
+		onPaintEnd();
+		auto pic = displayLayer_.endDraw();
+		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
+		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
+		scaleEffect.setInput(pic);
+		scaleEffect.paint();
 	}
 
 	void Room::reset()

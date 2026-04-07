@@ -19,21 +19,40 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 bool gameEndFlag = false;
 void endGame() { gameEndFlag = true; }
 
-double fps = 50.0;
+constexpr double updateFPS = 50.0;
+double renderFPS = 50.0;
 
 void Sender()
 {
-	const double targetFrameTime = 1000.0 / fps;
-	auto period = std::chrono::duration<double, std::milli>(targetFrameTime);
+	const double updateFrameTime = 1000.0 / updateFPS;
+	const double renderFrameTime = 1000.0 / renderFPS;
+
+	auto updatePeriod = std::chrono::duration<double, std::milli>(updateFrameTime);
+	auto renderPeriod = std::chrono::duration<double, std::milli>(renderFrameTime);
+	auto updateCooldownTimer = std::chrono::duration<double, std::milli>(0.0);
+	auto renderCooldownTimer = std::chrono::duration<double, std::milli>(0.0);
 
 	auto next = std::chrono::steady_clock::now();
 
 	while (!gameEndFlag)
 	{
-		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(period);
 
-		updateWork();
-		paintWork();
+		if (updateCooldownTimer.count() <= renderCooldownTimer.count())
+		{
+			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(updateCooldownTimer);
+			std::this_thread::sleep_until(next);
+			updateWork();
+			renderCooldownTimer -= updateCooldownTimer;
+			updateCooldownTimer = updatePeriod;
+		}
+		else
+		{
+			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(renderCooldownTimer);
+			std::this_thread::sleep_until(next);
+			paintWork();
+			updateCooldownTimer -= renderCooldownTimer;
+			renderCooldownTimer = renderPeriod;
+		}
 
 		if (gameEndFlag)
 		{
@@ -41,7 +60,7 @@ void Sender()
 			break;
 		}
 
-		std::this_thread::sleep_until(next);
+		
 	}
 }
 
@@ -104,7 +123,7 @@ double getMonitoredFPS(bool _isUpdate = false)
 	return lastReportedFPS;
 }
 
-void paintWork()
+void paintWork(double _additionalFrameRate)
 {
 	double renderFPS = 0.0f;
 	//if (threadLock.try_lock())
@@ -114,7 +133,10 @@ void paintWork()
 		renderFPS = getMonitoredFPS(true);
 
 		suku::graphics::beginDrawGlobal();
-		suku::nowRoom->paint();
+		if (_additionalFrameRate == 0.0)
+			suku::nowRoom->paint();
+		else
+			suku::nowRoom->additionalFramePaint(_additionalFrameRate);
 
 		suku::Text a("Consolas", 16);
 		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
@@ -134,10 +156,10 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 	DEVMODE devmode;
 	devmode.dmSize = sizeof(DEVMODE);
 	EnumDisplaySettings(mi.szDevice, ENUM_CURRENT_SETTINGS, &devmode);
-	if (devmode.dmDisplayFrequency != fps)
+	if (devmode.dmDisplayFrequency != updateFPS)
 	{
 		devmode.dmDisplayFlags &= !DM_INTERLACED;
-		devmode.dmDisplayFrequency = (DWORD)fps;
+		devmode.dmDisplayFrequency = (DWORD)updateFPS;
 		LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
 	}
 	return true;
