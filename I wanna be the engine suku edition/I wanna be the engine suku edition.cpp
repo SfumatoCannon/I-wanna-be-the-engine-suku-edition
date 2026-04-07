@@ -20,7 +20,7 @@ bool gameEndFlag = false;
 void endGame() { gameEndFlag = true; }
 
 constexpr double updateFPS = 50.0;
-double renderFPS = 50.0;
+double renderFPS = 90.0;
 
 void SenderVsync()
 {

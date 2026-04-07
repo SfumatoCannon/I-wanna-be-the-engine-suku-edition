@@ -82,7 +82,7 @@ namespace suku
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
-				originalArray.erase(iter);		
+				originalArray.erase(iter);
 				_object->updateId_ = _newId;
 				break;
 			}
@@ -265,7 +265,12 @@ namespace suku
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
-				obj->additionalFramePaint(_offsetRate);
+				float objXBefore = obj->var["xBefore"].getValue<float>();
+				float objYBefore = obj->var["yBefore"].getValue<float>();
+				obj->paintBody(
+					objXBefore * _offsetRate + obj->x * (1 - _offsetRate),
+					objYBefore * _offsetRate + obj->y * (1 - _offsetRate)
+				);
 			}
 
 		onPaintEnd();

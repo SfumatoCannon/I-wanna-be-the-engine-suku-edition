@@ -71,7 +71,6 @@ namespace suku
 		virtual void onRestarting();
 		virtual void onRemove() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
-		virtual void additionalFramePaint(float _offsetRate) { paintBody(); }
 		virtual void preUpdate() {}
 		virtual void update() {}
 		virtual void postUpdate() {}

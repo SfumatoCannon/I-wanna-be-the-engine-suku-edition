@@ -389,7 +389,6 @@ namespace suku
 				sprite_ = &sprStanding;
 		}
 
-		//xScale = (side_ == 0 ? 1.0 : -1.0);
 		spriteTransform = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
@@ -413,20 +412,6 @@ namespace suku
 		}
 		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
 			hspeed = hspeedTemp = 0;
-
-		/*if (temp = touchObject(ID_PLATFORM))
-		{
-			if (y + getSpriteFrame()->getCenterY - totalVspeed() / 2 <= temp->y)
-			{
-				if (temp->vspeed >= 0)
-				{
-					y = temp->y + temp->getSpriteFrame()->hitY - getSpriteFrame()->hitHeight - getSpriteFrame()->hitY;
-					vspeed = temp->vspeed;
-				}
-				jumpTime_ = maxJumpTime;
-			}
-			isOnPlatform_ = true;
-		}*/
 	}
 
 	void Player::postUpdate()
