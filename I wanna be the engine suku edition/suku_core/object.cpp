@@ -41,6 +41,70 @@ namespace suku
 		else spr->paint(_x, _y, spriteTransform, alpha);
 	}
 
+	void Object::paintBody(Transform _spriteTransform) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(_spriteTransform, alpha);
+	}
+
+	void Object::paintBody(float _x, float _y, Transform _spriteTransform) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(_x, _y, _spriteTransform, alpha);
+	}
+
+	void Object::paintBody(float _alpha, bool _isSmoothMode) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		if (_isSmoothMode)
+			spr->paint(bRound(x), bRound(y), spriteTransform, _alpha);
+		else spr->paint(x, y, spriteTransform, _alpha);
+	}
+
+	void Object::paintBody(float _x, float _y, float _alpha, bool _isSmoothMode) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		if (_isSmoothMode)
+			spr->paint(bRound(_x), bRound(_y), spriteTransform, _alpha);
+		else spr->paint(_x, _y, spriteTransform, _alpha);
+	}
+
+	void Object::paintBody(Transform _spriteTransform, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(_spriteTransform, _alpha);
+	}
+
+	void Object::paintBody(float _x, float _y, Transform _spriteTransform, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(_x, _y, _spriteTransform, _alpha);
+	}
+
 	void Object::updateFunction()
 	{
 		clock_++;
@@ -192,8 +256,8 @@ namespace suku
 		clock_ = 0;
 		x = _x;
 		y = _y;
-		var["xBefore"] = _x;
-		var["yBefore"] = _y;
+		var["xLastFrame"] = _x;
+		var["yLastFrame"] = _y;
 		xScale = 1.0;
 		yScale = 1.0;
 		removeTag_ = false;
@@ -202,6 +266,7 @@ namespace suku
 		alpha = 1.0;
 		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
 		spriteTransform = Transform();
+		var["spriteTransformLastFrame"] = spriteTransform;
 		paintId_ = 0;
 		kindId_ = typecode(Object);
 	}

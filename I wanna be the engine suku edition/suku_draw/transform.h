@@ -26,4 +26,6 @@ namespace suku
 	Transform rotation(float _rotateCenterX, float _rotateCenterY, float _angle);
 	Transform scale(float _centerX, float _centerY, float _scaleX, float _scaleY);
 	Transform skew(float _centerX, float _centerY, float _angleX, float _angleY);
+
+	Transform linearInterpolate(Transform _from, Transform _to, float _t);
 }

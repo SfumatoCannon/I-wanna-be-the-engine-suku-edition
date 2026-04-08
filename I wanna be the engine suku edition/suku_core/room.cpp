@@ -168,8 +168,8 @@ namespace suku
 				}
 				else
 				{
+					obj->var["spriteTransformLastFrame"] << obj->spriteTransform;
 					obj->preUpdate();
-
 					iter++;
 				}
 			}
@@ -197,8 +197,8 @@ namespace suku
 		{
 			for (auto& obj : objArray)
 			{
-				obj->var["xBefore"] << obj->x;
-				obj->var["yBefore"] << obj->y;
+				obj->var["xLastFrame"] << obj->x;
+				obj->var["yLastFrame"] << obj->y;
 				obj->x += obj->totalHspeed();
 				obj->y += obj->totalVspeed();
 			}
@@ -265,11 +265,13 @@ namespace suku
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
-				float objXBefore = obj->var["xBefore"].getValue<float>();
-				float objYBefore = obj->var["yBefore"].getValue<float>();
+				float objXLastFrame = obj->var["xLastFrame"].getValue<float>();
+				float objYLastFrame = obj->var["yLastFrame"].getValue<float>();
+				Transform objSpriteTransformLastFrame = obj->var["spriteTransformLastFrame"].getValue<Transform>();
 				obj->paintBody(
-					objXBefore * _offsetRate + obj->x * (1 - _offsetRate),
-					objYBefore * _offsetRate + obj->y * (1 - _offsetRate)
+					objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate),
+					objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate),
+					linearInterpolate(objSpriteTransformLastFrame, obj->spriteTransform, _offsetRate)
 				);
 			}
 

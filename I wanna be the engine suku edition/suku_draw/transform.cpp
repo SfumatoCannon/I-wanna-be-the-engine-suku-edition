@@ -85,4 +85,18 @@ namespace suku
 			D2D1::Point2F(_centerX, _centerY)
 		));
 	}
+
+	Transform linearInterpolate(Transform _from, Transform _to, float _t)
+	{
+		D2D1::Matrix3x2F fromMatrix = _from.matrix;
+		D2D1::Matrix3x2F toMatrix = _to.matrix;
+		return Transform(D2D1::Matrix3x2F(
+			fromMatrix._11 + (toMatrix._11 - fromMatrix._11) * _t,
+			fromMatrix._12 + (toMatrix._12 - fromMatrix._12) * _t,
+			fromMatrix._21 + (toMatrix._21 - fromMatrix._21) * _t,
+			fromMatrix._22 + (toMatrix._22 - fromMatrix._22) * _t,
+			fromMatrix._31 + (toMatrix._31 - fromMatrix._31) * _t,
+			fromMatrix._32 + (toMatrix._32 - fromMatrix._32) * _t
+		));
+	}
 }

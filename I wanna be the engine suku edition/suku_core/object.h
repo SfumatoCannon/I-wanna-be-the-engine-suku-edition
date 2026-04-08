@@ -96,6 +96,12 @@ namespace suku
 		void paintBody()const;
 		void paintBody(bool _isSmoothMode)const;
 		void paintBody(float _x, float _y, bool _isSmoothMode = false)const;
+		void paintBody(Transform _spriteTransform)const;
+		void paintBody(float _x, float _y, Transform _spriteTransform)const;
+		void paintBody(float _alpha, bool _isSmoothMode = false)const;
+		void paintBody(float _x, float _y, float _alpha, bool _isSmoothMode = false)const;
+		void paintBody(Transform _spriteTransform, float _alpha)const;
+		void paintBody(float _x, float _y, Transform _spriteTransform, float _alpha)const;
 
 		template<suku_object Obj> bool isCrashed(const Obj& _obj)const;
 		template<suku_object Obj> bool isCrashed(const Obj& _obj, float _x, float _y)const;
