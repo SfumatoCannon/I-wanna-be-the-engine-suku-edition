@@ -148,17 +148,6 @@ namespace suku
 			*_b = _y1 - (*_k) * _x1;
 		}
 
-		int getRelationOfLines(double _k1, double _b1, double _k2, double _b2)
-		{
-			if (_k1 == _k2)
-			{
-				if (_b1 == _b2)
-					return COINCIDENT_LINES;
-				else return PARALLEL_LINES;
-			}
-			else return INTERSECTING_LINES;
-		}
-
 		void getIntersectionOfLines(double _k1, double _b1, double _k2, double _b2, double* _x, double* _y)
 		{
 			if (_k1 == _k2) return;

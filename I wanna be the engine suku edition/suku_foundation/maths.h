@@ -4,10 +4,6 @@
 #include <vector>
 #include <stdarg.h>
 
-#define COINCIDENT_LINES 1
-#define PARALLEL_LINES 2
-#define	INTERSECTING_LINES 3
-
 #define PI 3.14159265358979323846
 namespace suku
 {
@@ -42,7 +38,7 @@ namespace suku
 		double getDistance(double _x1, double _y1, double _x2, double _y2);
 
 		void dotToLine(double _x1, double _y1, double _x2, double _y2, double* _k, double* _b);
-		int getRelationOfLines(double _k1, double _b1, double _k2, double _b2);
+		// int getRelationOfLines(double _k1, double _b1, double _k2, double _b2);
 		void getIntersectionOfLines(double _k1, double _b1, double _k2, double _b2,
 			double* _x, double* _y);
 		bool isSegmentsIntersect(double _x11, double _y11, double _x12, double _y12,
