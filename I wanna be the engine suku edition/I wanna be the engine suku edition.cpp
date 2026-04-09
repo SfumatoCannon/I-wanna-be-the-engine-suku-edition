@@ -220,6 +220,7 @@ RAWINPUTDEVICE rid;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
+	using namespace suku::input;
 	std::pair<UINT, USHORT> inputResult;
 	switch (message)
 	{

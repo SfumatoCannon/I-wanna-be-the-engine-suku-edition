@@ -1,19 +1,6 @@
 #pragma once
 #include "type_tree.h"
 
-#define MOUSE_VK_LEFT 0x01
-#define MOUSE_VK_RIGHT 0x02
-#define MOUSE_VK_MIDDLE 0x03
-
-#define MOUSE_INPUT_DOWN 0x01
-#define MOUSE_INPUT_UP 0x02
-#define MOUSE_INPUT_DOUBLECLICK 0x03
-#define MOUSE_INPUT_SCROLLUP 0x04
-#define MOUSE_INPUT_SCROLLDOWN 0x05
-//Pending
-//#define MOUSE_INPUT_SCROLLLEFT 0x06
-//#define MOUSE_INPUT_SCROLLRIGHT 0x07
-
 namespace suku::input
 {
 	class Mouse
@@ -49,4 +36,17 @@ namespace suku::input
 		inline static int pixelX_ = 0;
 		inline static int pixelY_ = 0;
 	};
+
+	constexpr USHORT MOUSE_VK_LEFT = 0x01;
+	constexpr USHORT MOUSE_VK_RIGHT = 0x02;
+	constexpr USHORT MOUSE_VK_MIDDLE = 0x03;
+
+	constexpr UINT MOUSE_INPUT_DOWN = 0x01;
+	constexpr UINT MOUSE_INPUT_UP = 0x02;
+	constexpr UINT MOUSE_INPUT_DOUBLECLICK = 0x03;
+	constexpr UINT MOUSE_INPUT_SCROLLUP = 0x04;
+	constexpr UINT MOUSE_INPUT_SCROLLDOWN = 0x05;
+	//Pending
+	//#define MOUSE_INPUT_SCROLLLEFT 0x06
+	//#define MOUSE_INPUT_SCROLLRIGHT 0x07
 }

@@ -2,45 +2,6 @@
 #include <queue>
 #include <windows.h>
 
-#define VK_0 0x30
-#define VK_1 0x31
-#define VK_2 0x32
-#define VK_3 0x33
-#define VK_4 0x34
-#define VK_5 0x35
-#define VK_6 0x36
-#define VK_7 0x37
-#define VK_8 0x38
-#define VK_9 0x39
-#define VK_A 0x41
-#define VK_B 0x42
-#define VK_C 0x43
-#define VK_D 0x44
-#define VK_E 0x45
-#define VK_F 0x46
-#define VK_G 0x47
-#define VK_H 0x48
-#define VK_I 0x49
-#define VK_J 0x4A
-#define VK_K 0x4B
-#define VK_L 0x4C
-#define VK_M 0x4D
-#define VK_N 0x4E
-#define VK_O 0x4F
-#define VK_P 0x50
-#define VK_Q 0x51
-#define VK_R 0x52
-#define VK_S 0x53
-#define VK_T 0x54
-#define VK_U 0x55
-#define VK_V 0x56
-#define VK_W 0x57
-#define VK_X 0x58
-#define VK_Y 0x59
-#define VK_Z 0x5A
-
-#define INPUT_KEYDOWN 0x01
-#define INPUT_KEYUP 0x02
 
 namespace suku::input
 {
@@ -51,4 +12,44 @@ namespace suku::input
 	void pushKeyMessage(UINT _message, USHORT _keyVCode);
 	void frameStateUpdate();
 	void resetKeyState();
+
+	constexpr USHORT VK_0 = 0x30;
+	constexpr USHORT VK_1 = 0x31;
+	constexpr USHORT VK_2 = 0x32;
+	constexpr USHORT VK_3 = 0x33;
+	constexpr USHORT VK_4 = 0x34;
+	constexpr USHORT VK_5 = 0x35;
+	constexpr USHORT VK_6 = 0x36;
+	constexpr USHORT VK_7 = 0x37;
+	constexpr USHORT VK_8 = 0x38;
+	constexpr USHORT VK_9 = 0x39;
+	constexpr USHORT VK_A = 0x41;
+	constexpr USHORT VK_B = 0x42;
+	constexpr USHORT VK_C = 0x43;
+	constexpr USHORT VK_D = 0x44;
+	constexpr USHORT VK_E = 0x45;
+	constexpr USHORT VK_F = 0x46;
+	constexpr USHORT VK_G = 0x47;
+	constexpr USHORT VK_H = 0x48;
+	constexpr USHORT VK_I = 0x49;
+	constexpr USHORT VK_J = 0x4A;
+	constexpr USHORT VK_K = 0x4B;
+	constexpr USHORT VK_L = 0x4C;
+	constexpr USHORT VK_M = 0x4D;
+	constexpr USHORT VK_N = 0x4E;
+	constexpr USHORT VK_O = 0x4F;
+	constexpr USHORT VK_P = 0x50;
+	constexpr USHORT VK_Q = 0x51;
+	constexpr USHORT VK_R = 0x52;
+	constexpr USHORT VK_S = 0x53;
+	constexpr USHORT VK_T = 0x54;
+	constexpr USHORT VK_U = 0x55;
+	constexpr USHORT VK_V = 0x56;
+	constexpr USHORT VK_W = 0x57;
+	constexpr USHORT VK_X = 0x58;
+	constexpr USHORT VK_Y = 0x59;
+	constexpr USHORT VK_Z = 0x5A;
+
+	constexpr UINT INPUT_KEYDOWN = 0x01;
+	constexpr UINT INPUT_KEYUP = 0x02;
 }

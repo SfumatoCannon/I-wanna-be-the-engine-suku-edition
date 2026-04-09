@@ -71,11 +71,11 @@ public:
 			}
 		);
 		create(Wall(256, 256))->addAction([=](Object* _this) {
-				if (input::isKeyHolding(VK_A))
+				if (input::isKeyHolding(input::VK_A))
 				{
 					_this->rotate(14);
 				}
-				if (input::isKeyHolding(VK_D))
+				if (input::isKeyHolding(input::VK_D))
 				{
 					_this->rotate(-14);
 				}
