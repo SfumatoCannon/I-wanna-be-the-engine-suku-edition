@@ -705,7 +705,7 @@ namespace suku
 		UINT            originalWidth = 0;
 		UINT            originalHeight = 0;
 
-		File file(absolutePath(_path));
+		File file(filesystem::absolutePath(_path));
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
 		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
 		ComPtr<IWICStream> stream;
@@ -735,7 +735,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 
 			hr = pWICFactory->CreateDecoderFromFilename(
-				absolutePath(_path).content,
+				filesystem::absolutePath(_path).content,
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,
@@ -764,7 +764,7 @@ namespace suku
 
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, UINT _x, UINT _y, UINT _width, UINT _height)
 	{
-		File file(absolutePath(_path));			
+		File file(filesystem::absolutePath(_path));
 		ComPtr<IWICBitmapDecoder> pDecoder = nullptr;
 		ComPtr<IWICBitmapFrameDecode> pSource = nullptr;
 		ComPtr<IWICStream> stream;
@@ -793,7 +793,7 @@ namespace suku
 			FileCodec::writeResource(_path);
 			
 			hr = pWICFactory->CreateDecoderFromFilename(
-				absolutePath(_path).content,
+				filesystem::absolutePath(_path).content,
 				nullptr,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,

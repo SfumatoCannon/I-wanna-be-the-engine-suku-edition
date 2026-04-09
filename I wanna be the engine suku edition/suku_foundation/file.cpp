@@ -8,92 +8,95 @@
 
 namespace suku
 {
-	std::filesystem::path exeParentPath;
-
-	void suku_file_init()
+	namespace filesystem
 	{
-		if (!exeParentPath.empty())
-			return;
+		std::filesystem::path exeParentPath;
 
-		std::wstring buffer;
-		buffer.resize(256);
-		DWORD len = 0;
-		while (true)
+		void suku_file_init()
 		{
-			len = GetModuleFileNameW(nullptr, buffer.data(), (DWORD)buffer.size());
-			if (len < buffer.size())
-				break;
-			buffer.resize(buffer.size() * 2);
+			if (!exeParentPath.empty())
+				return;
+
+			std::wstring buffer;
+			buffer.resize(256);
+			DWORD len = 0;
+			while (true)
+			{
+				len = GetModuleFileNameW(nullptr, buffer.data(), (DWORD)buffer.size());
+				if (len < buffer.size())
+					break;
+				buffer.resize(buffer.size() * 2);
+			}
+			buffer.resize(len);
+			exeParentPath = std::filesystem::path(buffer).parent_path();
 		}
-		buffer.resize(len);
-		exeParentPath = std::filesystem::path(buffer).parent_path();
-	}
 
-	std::filesystem::path getExeParentPath()
-	{
-		if (exeParentPath.empty())
-			suku_file_init();
-		return exeParentPath;
-	}
-
-	std::filesystem::path absolutePath(std::filesystem::path _relativePath)
-	{
-		return getExeParentPath() / _relativePath;
-	}
-
-	String absolutePath(String _relativePath)
-	{
-		std::filesystem::path path(_relativePath.content);
-		return String(getExeParentPath() / path);
-	}
-
-	String absolutePath(const wchar_t* _relativePath)
-	{
-		std::filesystem::path path(_relativePath);
-		return String(getExeParentPath() / path);
-	}
-
-	bool isAbsolutePath(std::filesystem::path _path)
-	{
-		return _path.is_absolute();
-	}
-
-	bool isAbsolutePath(String _path)
-	{
-		return std::filesystem::path(_path.content).is_absolute();
-	}
-
-	void createPath(std::filesystem::path _path)
-	{
-		if (!isAbsolutePath(_path))
-			_path = absolutePath(_path);
-		std::error_code errorCode;
-		std::filesystem::create_directories(_path, errorCode);
-		if (errorCode)
+		std::filesystem::path getExeParentPath()
 		{
-			ERRORWINDOW_GLOBAL("Failed to create path: " + errorCode.message());
+			if (exeParentPath.empty())
+				suku_file_init();
+			return exeParentPath;
 		}
-	}
 
-	void createPath(const wchar_t* _path)
-	{
-		createPath(std::filesystem::path(_path));
-	}
+		std::filesystem::path absolutePath(std::filesystem::path _relativePath)
+		{
+			return getExeParentPath() / _relativePath;
+		}
 
-	void createPath(String _path)
-	{
-		createPath(_path.content);
+		String absolutePath(String _relativePath)
+		{
+			std::filesystem::path path(_relativePath.content);
+			return String(getExeParentPath() / path);
+		}
+
+		String absolutePath(const wchar_t* _relativePath)
+		{
+			std::filesystem::path path(_relativePath);
+			return String(getExeParentPath() / path);
+		}
+
+		bool isAbsolutePath(std::filesystem::path _path)
+		{
+			return _path.is_absolute();
+		}
+
+		bool isAbsolutePath(String _path)
+		{
+			return std::filesystem::path(_path.content).is_absolute();
+		}
+
+		void createPath(std::filesystem::path _path)
+		{
+			if (!isAbsolutePath(_path))
+				_path = absolutePath(_path);
+			std::error_code errorCode;
+			std::filesystem::create_directories(_path, errorCode);
+			if (errorCode)
+			{
+				ERRORWINDOW_GLOBAL("Failed to create path: " + errorCode.message());
+			}
+		}
+
+		void createPath(const wchar_t* _path)
+		{
+			createPath(std::filesystem::path(_path));
+		}
+
+		void createPath(String _path)
+		{
+			createPath(_path.content);
+		}
 	}
 
 	void File::create() const
 	{
-		std::ofstream ofsForCreating(absolutePath(/*SaveDir + */path_).contentInWString());
+		std::ofstream ofsForCreating(filesystem::absolutePath(/*SaveDir + */path_).contentInWString());
 		ofsForCreating.close();
 	}
 
 	bool File::isExist()
 	{
-		String absPath = absolutePath(path_);
+		String absPath = filesystem::absolutePath(path_);
 		if (absPath.content == nullptr)
 			return false;
 		DWORD attrs = GetFileAttributesW(absPath.content);
@@ -113,11 +116,11 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
+		ofs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
 		if (!ofs_.is_open())
 		{
 			create();
-			ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
+			ofs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary | std::ios::trunc);
 		}
 	}
 
@@ -125,7 +128,7 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+		ofs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ofs_.is_open())
 			return false;
 		return true;
@@ -140,11 +143,11 @@ namespace suku
 	{
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+		ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ifs_.is_open())
 		{
 			create();
-			ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+			ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
 		}
 	}
 
@@ -152,7 +155,7 @@ namespace suku
 	{
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(absolutePath(path_).contentInWString(), std::ios::binary);
+		ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
 		if (!ifs_.is_open())
 			return false;
 		return true;

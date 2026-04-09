@@ -40,7 +40,7 @@ namespace suku
 	SaveAssetGlobal::SaveAssetGlobal()
 	{
 		saveFileId = 0;
-		suku_file_init();
+		filesystem::suku_file_init();
 	}
 
 	SaveFile::SaveFile(String _fileName)
@@ -92,8 +92,8 @@ namespace suku
 		{
 			file_->close();
 		}
-		createPath(L"Save");
-		file_ = std::make_unique<File>(_fileName, absolutePath(L"Save\\" + _fileName + ".sav"));
+		filesystem::createPath(L"Save");
+		file_ = std::make_unique<File>(_fileName, filesystem::absolutePath(L"Save\\" + _fileName + ".sav"));
 	}
 
 	String SaveFile::getFileName()

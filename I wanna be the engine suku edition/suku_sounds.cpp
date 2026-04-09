@@ -55,7 +55,7 @@ namespace suku
 		{
 			FileCodec::writeResource(_path);		
 
-			String path = absolutePath(_path);
+			String path = filesystem::absolutePath(_path);
 			MFCreateSourceReaderFromURL(path.content, nullptr, &reader);
 			if (!reader) {
 				ERRORWINDOW("Failed to create source reader for audio file: " + _path);

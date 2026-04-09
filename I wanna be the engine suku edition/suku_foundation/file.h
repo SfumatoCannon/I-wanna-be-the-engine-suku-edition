@@ -43,18 +43,21 @@ namespace suku
 		String path_;
 	};
 
-	void suku_file_init();
+	namespace filesystem
+	{
+		void suku_file_init();
 
-	std::filesystem::path getExeParentPath();
+		std::filesystem::path getExeParentPath();
 
-	std::filesystem::path absolutePath(std::filesystem::path _relativePath);
-	String absolutePath(String _relativePath);
-	String absolutePath(const wchar_t* _relativePath);
+		std::filesystem::path absolutePath(std::filesystem::path _relativePath);
+		String absolutePath(String _relativePath);
+		String absolutePath(const wchar_t* _relativePath);
 
-	bool isAbsolutePath(std::filesystem::path _path);
-	bool isAbsolutePath(String _path);
+		bool isAbsolutePath(std::filesystem::path _path);
+		bool isAbsolutePath(String _path);
 
-	void createPath(std::filesystem::path _path);
-	void createPath(const wchar_t* _path);
-	void createPath(String _path);
+		void createPath(std::filesystem::path _path);
+		void createPath(const wchar_t* _path);
+		void createPath(String _path);
+	};
 }
