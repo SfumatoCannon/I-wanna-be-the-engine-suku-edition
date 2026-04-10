@@ -94,6 +94,26 @@ namespace suku
 		return String(contentInWString() + _other.contentInWString());
 	}
 
+	String String::operator+(const char* _string)
+	{
+		return String(contentInWString() + getWideString(_string));
+	}
+
+	String String::operator+(const wchar_t* _wstring)
+	{
+		return String(contentInWString() + std::wstring(_wstring));
+	}
+
+	String String::operator+(std::string _string)
+	{
+		return String(contentInWString() + getWideString(_string.c_str()));
+	}
+
+	String String::operator+(std::wstring _wstring)
+	{
+		return String(contentInWString() + _wstring);
+	}
+
 	String::~String()
 	{
 		if (content != nullptr)
@@ -125,6 +145,12 @@ namespace suku
 		String result(_string1);
 		result = result + _string2;
 		return result;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const String& str)
+	{
+		os << str.contentInWString().c_str();
+		return os;
 	}
 
 	String getFileTypeFromURL(const String& _url)
