@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "game_window.h"
-#include "message.h"
+#include "../suku_foundation/message.h"
 #include "../suku_draw/draw_core.h"
 
 namespace suku

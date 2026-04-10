@@ -10,4 +10,3 @@
 #include "string.h"
 #include "type_tree.h"
 #include "var.h"
-#include "game_window.h"

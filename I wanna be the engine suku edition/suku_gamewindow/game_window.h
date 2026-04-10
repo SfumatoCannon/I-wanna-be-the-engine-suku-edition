@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include "string.h"
+#include "../suku_foundation/string.h"
 #include "../global_value.h"
 #include "../suku_draw/transform.h"
 

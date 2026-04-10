@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "input_mouse.h"
 #include "input.h"
-#include "game_window.h"
+#include "../suku_gamewindow/game_window.h"
 #include <windowsx.h>
 
 namespace suku::input
