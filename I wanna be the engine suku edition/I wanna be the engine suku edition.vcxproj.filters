@@ -105,9 +105,6 @@
     <ClInclude Include="suku_draw\shape_builder.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_foundation\game_window.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -141,11 +138,26 @@
     <ClInclude Include="suku_core\action.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_foundation\input_mouse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_gamewindow\game_loop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_gamewindow\game_window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_gamewindow\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_gamewindow\win32_message_handler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_gamewindow\win32_window_creator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="I wanna be the engine suku edition.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="object_definer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -440,9 +452,6 @@
     <ClCompile Include="suku_draw\d3d_draw_core.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="suku_foundation\game_window.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="suku_draw\effect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -459,6 +468,24 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_core\action.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_foundation\input_mouse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_foundation\message.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_gamewindow\game_window.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_gamewindow\win32_window_creator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_gamewindow\win32_message_handler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_gamewindow\game_loop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

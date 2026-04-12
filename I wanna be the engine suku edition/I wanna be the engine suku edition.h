@@ -7,9 +7,3 @@
 #include "suku_foundation/includes.h"
 #include "suku_gamewindow/includes.h"
 #include "suku_sounds.h"
-
-void init();
-void Sender();
-void updateWork();
-void paintWork();
-void paintWork(double _additionalFrameRate);

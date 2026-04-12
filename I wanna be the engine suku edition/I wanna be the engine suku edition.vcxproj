@@ -201,8 +201,11 @@
     <ClInclude Include="suku_foundation\type_tree.h" />
     <ClInclude Include="suku_foundation\var.h" />
     <ClInclude Include="suku_foundation\codec.h" />
+    <ClInclude Include="suku_gamewindow\game_loop.h" />
     <ClInclude Include="suku_gamewindow\game_window.h" />
     <ClInclude Include="suku_gamewindow\includes.h" />
+    <ClInclude Include="suku_gamewindow\win32_message_handler.h" />
+    <ClInclude Include="suku_gamewindow\win32_window_creator.h" />
     <ClInclude Include="suku_sounds.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -255,7 +258,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="I wanna be the engine suku edition.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -335,7 +337,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_gamewindow\game_loop.cpp" />
     <ClCompile Include="suku_gamewindow\game_window.cpp" />
+    <ClCompile Include="suku_gamewindow\win32_message_handler.cpp" />
+    <ClCompile Include="suku_gamewindow\win32_window_creator.cpp" />
     <ClCompile Include="suku_sounds.cpp" />
   </ItemGroup>
   <ItemGroup>
