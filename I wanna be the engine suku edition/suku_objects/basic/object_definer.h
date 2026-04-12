@@ -5,8 +5,6 @@
 
 void loadFromJtoolMsg(suku::Room* _room, std::string _msg);
 
-// .......................................................................................
-// basic objects
 namespace suku
 {
 	class Background;
@@ -214,8 +212,4 @@ namespace suku
 		void die();
 		void bleed();
 	};
-
-	// .......................................................................................
-	// extensive objects
-
 }

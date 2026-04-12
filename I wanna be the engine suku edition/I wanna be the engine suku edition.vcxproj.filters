@@ -30,7 +30,7 @@
     <ClInclude Include="global_value.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="object_definer.h">
+    <ClInclude Include="suku_objects\basic\object_definer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_sounds.h">
@@ -156,9 +156,12 @@
     <ClInclude Include="suku_gamewindow\win32_window_creator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_objects\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="object_definer.cpp">
+    <ClCompile Include="suku_objects\basic\object_definer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

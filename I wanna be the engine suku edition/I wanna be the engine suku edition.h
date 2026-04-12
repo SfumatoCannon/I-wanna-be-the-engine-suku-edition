@@ -2,7 +2,7 @@
 
 #include "resource.h"
 #include "suku_core/includes.h"
-#include "object_definer.h"
+#include "suku_objects/includes.h"
 #include "suku_draw/includes.h"
 #include "suku_foundation/includes.h"
 #include "suku_gamewindow/includes.h"
