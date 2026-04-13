@@ -343,4 +343,41 @@ namespace suku
 		vspeed = -9.0f;
 		hspeedTemp = movingSpeed * 5.0f;
 	}
+
+	Sprite Blood::spr(BitmapSpriteElement("Image\\blood.png", SquareShape(2)));
+	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
+	{
+		setPaintId(4);
+		hspeed = _wspeed;
+		vspeed = _hspeed;
+		sprite_ = &spr;
+		gravity = 0.2f;
+	}
+
+	void Blood::preUpdate()
+	{
+		if (input::isKeyDown(input::VK_R))
+			destroy();
+		if (vspeed == 0 && hspeed == 0)
+			return;
+		vspeed += gravity;
+	}
+
+	void Blood::update()
+	{
+		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
+
+		float vspeedBefore = totalVspeed();
+
+		for (auto& wall : tempList)
+			moveContactOld(*wall);
+
+		if (vspeedBefore != totalVspeed())
+		{
+			vspeedTemp = totalVspeed();
+			vspeed = 0;
+		}
+		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
+			hspeed = hspeedTemp = 0;
+	}
 }

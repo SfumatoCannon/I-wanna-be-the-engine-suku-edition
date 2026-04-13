@@ -18,8 +18,6 @@ namespace suku
 	class Trigger;
 	class Water;
 	class WaterExtraJump;
-	class Blood;
-	class Player;
 
 	class Background :public Object
 	{
@@ -153,16 +151,5 @@ namespace suku
 			sprite_ = &spr;
 			setPaintId(4);
 		}
-	};
-
-	class Blood :public Object
-	{
-	public:
-		static Sprite spr;
-		float gravity;
-		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
-
-		virtual void preUpdate() override;
-		virtual void update() override;
 	};
 }

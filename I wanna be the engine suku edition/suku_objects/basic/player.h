@@ -4,6 +4,9 @@
 
 namespace suku
 {
+	class Player;
+	class Blood;
+
 	class Player :public Object
 	{
 	public:
@@ -48,5 +51,16 @@ namespace suku
 
 		void die();
 		void bleed();
+	};
+
+	class Blood :public Object
+	{
+	public:
+		static Sprite spr;
+		float gravity;
+		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
+
+		virtual void preUpdate() override;
+		virtual void update() override;
 	};
 }
