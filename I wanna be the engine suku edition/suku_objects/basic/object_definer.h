@@ -2,6 +2,7 @@
 #include "suku_foundation/includes.h"
 #include "suku_core/includes.h"
 #include "suku_foundation/type_tree.h"
+#include <global_value.h>
 
 namespace suku
 {
@@ -83,7 +84,7 @@ namespace suku
 		static Sprite sprDown;
 		static Sprite sprLeft;
 		static Sprite sprRight;
-		Spike(float _x = 0, float _y = 0, short _dir = 0);
+		Spike(float _x = 0, float _y = 0, Direction _dir = Direction::Up);
 	};
 
 	class Cherry :public Object

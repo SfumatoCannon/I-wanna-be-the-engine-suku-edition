@@ -1,6 +1,5 @@
 #include "object_definer.h"
 #include "suku_sounds.h"
-#include "global_value.h"
 
 using namespace suku::maths;
 
@@ -11,7 +10,7 @@ namespace suku
 	Sprite Spike::sprDown(BitmapSpriteElement("Image\\spike_d.png", 16, 16));
 	Sprite Spike::sprLeft(BitmapSpriteElement("Image\\spike_l.png", 16, 16));
 	Sprite Spike::sprRight(BitmapSpriteElement("Image\\spike_r.png", 16, 16));
-	Spike::Spike(float _x, float _y, short _dir) :Object(_x, _y)
+	Spike::Spike(float _x, float _y, Direction _dir) :Object(_x, _y)
 	{
 		setPaintId(3);
 		switch (_dir)
