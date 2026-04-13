@@ -206,7 +206,9 @@
     <ClInclude Include="suku_gamewindow\includes.h" />
     <ClInclude Include="suku_gamewindow\win32_message_handler.h" />
     <ClInclude Include="suku_gamewindow\win32_window_creator.h" />
+    <ClInclude Include="suku_objects\basic\player.h" />
     <ClInclude Include="suku_objects\includes.h" />
+    <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_sounds.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -342,6 +344,18 @@
     <ClCompile Include="suku_gamewindow\game_window.cpp" />
     <ClCompile Include="suku_gamewindow\win32_message_handler.cpp" />
     <ClCompile Include="suku_gamewindow\win32_window_creator.cpp" />
+    <ClCompile Include="suku_objects\basic\player.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="suku_objects\map_loader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="suku_sounds.cpp" />
   </ItemGroup>
   <ItemGroup>
