@@ -7,6 +7,6 @@
 #include "array.h"
 #include "message.h"
 #include "save.h"
-#include "string.h"
+#include "suku_string.h"
 #include "type_tree.h"
 #include "var.h"

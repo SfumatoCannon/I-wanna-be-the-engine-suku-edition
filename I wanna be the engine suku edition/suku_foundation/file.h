@@ -1,5 +1,5 @@
 #pragma once
-#include "string.h"
+#include "suku_string.h"
 #include <vector>
 #include <fstream>
 #include <map>

@@ -1,23 +1,24 @@
 #pragma once
 
-#include "string.h"
+#include "suku_string.h"
 #include <sstream>
 #include <stacktrace>
+#include <string>
 #include <Windows.h>
 
-#ifdef _DEBUG
+std::string getStackTrace();
+
+#ifdef _123DEBUG
 
 #define IN_SHORT_PATH(str) \
     (strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str)
 
-std::string getStackTrace();
-
 #define INFOWINDOW(message) { \
 	static bool flag = true; if (flag) { flag = false; \
 	std::ostringstream oss; \
-oss << "Information sent" << std::endl \
+	oss << "Information sent" << std::endl \
 << "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
@@ -30,7 +31,7 @@ MessageBoxExW(NULL, \
 	std::ostringstream oss; \
 	oss << "Information sent" << std::endl \ 
 << "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
@@ -43,7 +44,7 @@ MessageBoxExW(NULL, \
 	std::ostringstream oss; \
 	oss << "WARNING" << std::endl \
 << "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
@@ -56,7 +57,7 @@ MessageBoxExW(NULL, \
 	std::ostringstream oss; \
 	oss << "WARNING" << std::endl \
 << "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
@@ -69,7 +70,7 @@ MessageBoxExW(NULL, \
 	std::ostringstream oss; \
 	oss << "An ERROR occurred!" << std::endl \
 << "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
@@ -82,15 +83,16 @@ MessageBoxExW(NULL, \
 	std::ostringstream oss; \
 	oss << "An ERROR occurred!" << std::endl \
 << "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< message \
+<< String(message).contentInString() \
 << std::endl << std::endl << getStackTrace(); \
 MessageBoxExW(NULL, \
 	String(oss.str()).content, \
-	L"Warning", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
+	L"Warning", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); 
 } \
 }
 
 #else
+#define IN_SHORT_PATH(str) (str)
 #define INFOWINDOW(message)
 #define INFOWINDOW_GLOBAL(message)
 #define WARNINGWINDOW(message)

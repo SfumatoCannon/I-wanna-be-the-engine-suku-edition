@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "codec.h"
-#include "string.h"
+#include "suku_string.h"
 #include <sstream>
 #include <iomanip>
 #include "file.h"

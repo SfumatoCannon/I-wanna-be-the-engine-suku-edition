@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "win32_window_creator.h"
 #include "win32_message_handler.h"
 #include "game_window.h"
@@ -6,9 +6,9 @@
 
 #define MAX_LOADSTRING 100
 
-HINSTANCE hInst;                                // 当前实例
-WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
-WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
+HINSTANCE hInst;
+WCHAR szTitle[MAX_LOADSTRING];
+WCHAR szWindowClass[MAX_LOADSTRING];
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {

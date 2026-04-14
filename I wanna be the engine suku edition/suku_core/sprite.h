@@ -1,6 +1,6 @@
 #pragma once
 #include "../framework.h"
-#include "../suku_foundation/string.h"
+#include "../suku_foundation/suku_string.h"
 #include "../suku_draw/shape.h"
 #include "../suku_draw/bitmap.h"
 #include "collision_box.h"

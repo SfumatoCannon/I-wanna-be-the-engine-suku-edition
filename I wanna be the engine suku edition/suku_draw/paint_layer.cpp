@@ -3,7 +3,7 @@
 #include <utility>
 #include "draw_core.h"
 #include "shape.h"
-#include "suku_foundation/string.h"
+#include "suku_foundation/suku_string.h"
 #include "suku_foundation/message.h"
 #include "bitmap.h"
 

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "message.h"
 
 std::string getStackTrace()

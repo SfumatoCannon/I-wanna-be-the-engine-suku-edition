@@ -197,7 +197,7 @@
     <ClInclude Include="suku_foundation\message.h" />
     <ClInclude Include="suku_foundation\input_mouse.h" />
     <ClInclude Include="suku_foundation\save.h" />
-    <ClInclude Include="suku_foundation\string.h" />
+    <ClInclude Include="suku_foundation\suku_string.h" />
     <ClInclude Include="suku_foundation\type_tree.h" />
     <ClInclude Include="suku_foundation\var.h" />
     <ClInclude Include="suku_foundation\codec.h" />
@@ -321,14 +321,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="suku_foundation\input_mouse.cpp" />
-    <ClCompile Include="suku_foundation\message.cpp" />
+    <ClCompile Include="suku_foundation\message.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="suku_foundation\save.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="suku_foundation\string.cpp">
+    <ClCompile Include="suku_foundation\suku_string.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

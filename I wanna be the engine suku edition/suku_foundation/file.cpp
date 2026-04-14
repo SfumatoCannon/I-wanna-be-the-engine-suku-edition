@@ -2,7 +2,7 @@
 #include "file.h"
 #include "save.h"
 #include "message.h"
-#include "string.h"
+#include "suku_string.h"
 #include <wchar.h>
 #include <filesystem>
 

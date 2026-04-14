@@ -1,6 +1,6 @@
 #include "save.h"
 #include "../global_value.h"
-#include "string.h"
+#include "suku_string.h"
 #include "message.h"
 #include "file.h"
 #include <ios>

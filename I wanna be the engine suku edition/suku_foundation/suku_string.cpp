@@ -1,6 +1,7 @@
-#include "string.h"
+#include "suku_string.h"
 #include <tchar.h>
 #include "windows.h"
+#include <string>
 
 namespace suku
 {
@@ -145,12 +146,6 @@ namespace suku
 		String result(_string1);
 		result = result + _string2;
 		return result;
-	}
-
-	std::ostream& operator<<(std::ostream& os, const String& str)
-	{
-		os << str.contentInWString().c_str();
-		return os;
 	}
 
 	String getFileTypeFromURL(const String& _url)

@@ -1,5 +1,5 @@
 #pragma once
-#include "suku_foundation/string.h"
+#include "suku_foundation/suku_string.h"
 #include <Windows.h>
 #include <vector>
 #include <xaudio2.h>

@@ -1,6 +1,6 @@
 #include "save.h"
 #include "maths.h"
-#include "string.h"
+#include "suku_string.h"
 #include "message.h"
 
 namespace suku

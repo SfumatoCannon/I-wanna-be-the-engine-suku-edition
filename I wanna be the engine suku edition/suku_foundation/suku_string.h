@@ -24,13 +24,11 @@ namespace suku
 		String operator+(std::string _string);
 		String operator+(std::wstring _wstring);
 		~String();
-		friend std::ostream& operator<<(std::ostream& os, const String& str);
 	};
 	String operator+(const char* _string1, const String& _string2);
 	String operator+(const wchar_t* _string1, const String& _string2);
 	String operator+(std::string _string1, const String& _string2);
 	String operator+(std::wstring _string1, const String& _string2);
-	std::ostream& operator<<(std::ostream& os, const String& str);
 
 	String getFileTypeFromURL(const String& _url);
 
