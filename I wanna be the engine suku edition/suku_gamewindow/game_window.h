@@ -19,10 +19,15 @@ namespace suku
 		static UINT getLogicalWidth() { return logicalWidth_; }
 		static UINT getLogicalHeight() { return logicalHeight_; }
 		static bool isFullscreen() { return isFullscreen_; }
+		static bool isFocused() { return isFocused_; }
+		static bool isMinimized();
 
 		static void setLogicalSize(UINT _width, UINT _height);
 		static void setFullscreen(bool _isFullscreen);
 		static void RefreshSizeInfo();
+
+		static void onMinimize();
+		static void onFocusChanged(bool _isFocused);
 
 		static Transform getPixelMappingTransform();
 
@@ -36,6 +41,7 @@ namespace suku
 		inline static bool sizeUpdateTag_ = true;
 		inline static bool pixelMappingTransformUpdateTag_ = true;
 		inline static bool isFullscreen_ = false;
+		inline static bool isFocused_ = false;
 		inline static WINDOWPLACEMENT previousWindowPlacement_ = { sizeof(WINDOWPLACEMENT) };
 	};
 }

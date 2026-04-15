@@ -59,7 +59,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_SIZE:
-		suku::GameWindow::RefreshSizeInfo();
+		if (wParam == SIZE_MINIMIZED)
+			suku::GameWindow::onMinimize();
+		else
+			suku::GameWindow::RefreshSizeInfo();
+		break;
+	case WM_ACTIVATE:
+		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			suku::GameWindow::onFocusChanged(true);
+		else
+			suku::GameWindow::onFocusChanged(false);
 		break;
 	case WM_MOUSEMOVE:
 		suku::input::Mouse::refreshPosition(lParam);

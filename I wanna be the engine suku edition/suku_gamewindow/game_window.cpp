@@ -32,6 +32,11 @@ namespace suku
         }
     }
 
+    bool GameWindow::isMinimized()
+    {
+		return IsIconic(hWnd) != 0;
+    }
+
     void GameWindow::setLogicalSize(UINT _width, UINT _height)
     {
         logicalWidth_ = _width;
@@ -73,6 +78,22 @@ namespace suku
     void GameWindow::RefreshSizeInfo()
     {
 		sizeUpdateTag_ = true;
+    }
+
+    void GameWindow::onMinimize()
+    {
+    }
+
+    void GameWindow::onFocusChanged(bool _isFocused)
+    {
+        if (_isFocused == true)
+        {
+			isFocused_ = true;
+        }
+        else
+        {
+            isFocused_ = false;
+        }
     }
 
     Transform GameWindow::getPixelMappingTransform()
