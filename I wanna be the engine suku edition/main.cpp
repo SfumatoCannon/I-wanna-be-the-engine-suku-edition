@@ -89,7 +89,7 @@ public:
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
-		WARNINGWINDOW_GLOBAL("test");
+		message::showInfoMessage(CALLER_INFO_CLASS, "Room0 created");
 		// create(Warp(128, 0, &room1));
 	}
 

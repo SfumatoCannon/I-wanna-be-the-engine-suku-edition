@@ -6,98 +6,24 @@
 #include <string>
 #include <Windows.h>
 
-std::string getStackTrace();
+#define IN_SHORT_PATH(str) (strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str)
+#define CALLER_INFO_CLASS (suku::String(typeid(this).name()) + "." + __func__ + " (" + IN_SHORT_PATH(__FILE__) + ": " + std::to_string(__LINE__) + ")")
+#define CALLER_INFO_GLOBAL (__func__ + std::string(" (") + IN_SHORT_PATH(__FILE__) + ": " + std::to_string(__LINE__) + ")")
 
-#ifdef _123DEBUG
+#define INFOWINDOW(msg)				suku::message::showInfoMessage(CALLER_INFO_CLASS, msg)
+#define INFOWINDOW_GLOBAL(msg)		suku::message::showInfoMessage(CALLER_INFO_GLOBAL, msg)
+#define WARNINGWINDOW(msg)			suku::message::showWarningMessage(CALLER_INFO_CLASS, msg)
+#define WARNINGWINDOW_GLOBAL(msg)	suku::message::showWarningMessage(CALLER_INFO_GLOBAL, msg)
+#define ERRORWINDOW(msg)			suku::message::showErrorMessage(CALLER_INFO_CLASS, msg)
+#define ERRORWINDOW_GLOBAL(msg)		suku::message::showErrorMessage(CALLER_INFO_GLOBAL, msg)
 
-#define IN_SHORT_PATH(str) \
-    (strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str)
-
-#define INFOWINDOW(message) { \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "Information sent" << std::endl \
-<< "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Info", MB_OK | MB_ICONINFORMATION, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
-} \
+namespace suku
+{
+	namespace message
+	{
+		std::string getStackTrace();
+		void showInfoMessage(const String& _callerInfo, const String& _message);
+		void showWarningMessage(const String& _callerInfo, const String& _message);
+		void showErrorMessage(const String& _callerInfo, const String& _message);
+	}
 }
-
-#define INFOWINDOW_GLOBAL(message) { \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "Information sent" << std::endl \ 
-<< "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Info", MB_OK | MB_ICONINFORMATION, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
-} \
-}
-
-#define WARNINGWINDOW(message) { \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "WARNING" << std::endl \
-<< "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Warning", MB_OK | MB_ICONWARNING, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
-} \
-}
-
-#define WARNINGWINDOW_GLOBAL(message) { \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "WARNING" << std::endl \
-<< "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Warning", MB_OK | MB_ICONWARNING, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
-} \
-}
-
-#define ERRORWINDOW(message) { \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "An ERROR occurred!" << std::endl \
-<< "In function: " << typeid(this).name() << "." << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Warning", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); \
-} \
-}
-
-#define ERRORWINDOW_GLOBAL(message){ \
-	static bool flag = true; if (flag) { flag = false; \
-	std::ostringstream oss; \
-	oss << "An ERROR occurred!" << std::endl \
-<< "In function: " << __func__ << " (" << IN_SHORT_PATH(__FILE__) << ": " << __LINE__ << ")" << std::endl \
-<< String(message).contentInString() \
-<< std::endl << std::endl << getStackTrace(); \
-MessageBoxExW(NULL, \
-	String(oss.str()).content, \
-	L"Warning", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)); 
-} \
-}
-
-#else
-#define IN_SHORT_PATH(str) (str)
-#define INFOWINDOW(message)
-#define INFOWINDOW_GLOBAL(message)
-#define WARNINGWINDOW(message)
-#define WARNINGWINDOW_GLOBAL(message)
-#define ERRORWINDOW(message)
-#define ERRORWINDOW_GLOBAL(message)
-
-#endif
