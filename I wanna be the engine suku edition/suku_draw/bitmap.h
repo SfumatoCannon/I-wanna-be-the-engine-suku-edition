@@ -42,6 +42,9 @@ namespace suku
 		void paint(float _x, float _y, float _alpha = 1.0f);
 		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f);
 		void paint(Transform _transform, float _alpha = 1.0f);
+		void paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha = 1.0f);
+		void paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
+		void paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
 		UINT getWidth()const;
 		UINT getHeight()const;
 		std::pair<UINT, UINT> getSize()const;
@@ -101,6 +104,9 @@ namespace suku
 		void paint(float _x, float _y, float _alpha = 1.0f) const;
 		void paint(float _x, float _y, Transform _transform, float _alpha = 1.0f) const;
 		void paint(Transform _transform, float _alpha = 1.0f) const;
+		void paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha = 1.0f);
+		void paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
+		void paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
 
 		friend class PaintLayer;
 	private:

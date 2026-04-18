@@ -352,6 +352,51 @@ namespace suku
 		graphics::drawBitmap(d2dBitmap_, _alpha);
 	}
 
+	void Bitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
+	{
+		refreshD2DBitmap();
+		graphics::setPaintingTransform(translation(_x, _y));
+		graphics::drawBitmap(d2dBitmap_, 
+			D2D1_RECT_F{
+				_partX, 
+				_partY, 
+				_partX + _partWidth, 
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void Bitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		refreshD2DBitmap();
+		graphics::setPaintingTransform(translation(_x, _y) + _transform);
+		graphics::drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void Bitmap::paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		refreshD2DBitmap();
+		graphics::setPaintingTransform(_transform);
+		graphics::drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
 	UINT Bitmap::getWidth()const
 	{
 		return width_;
@@ -1003,5 +1048,47 @@ namespace suku
 	{
 		setPaintingTransform(_transform);
 		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
+	{
+		setPaintingTransform(translation(_x, _y));
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		setPaintingTransform(translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void RenderBitmap::paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		setPaintingTransform(_transform);
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
 	}
 }
