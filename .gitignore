@@ -30,3 +30,4 @@ build/
 out/*
 !out/ProjectAssets/
 !out/ProjectAssets/**
+/BuildPerfCpp_trace_20260419_191245.etl
