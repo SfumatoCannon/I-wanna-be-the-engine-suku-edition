@@ -31,6 +31,9 @@ namespace suku
 		void drawBitmap(Bitmap& _bitmap, float _x, float _y, float _alpha = 1.0f);
 		void drawBitmap(Bitmap& _bitmap, float _x, float _y, Transform _transform, float _alpha = 1.0f);
 		void drawBitmap(Bitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
+		void drawBitmap(Bitmap& _bitmap, float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha = 1.0f);
+		void drawBitmap(Bitmap& _bitmap, float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
+		void drawBitmap(Bitmap& _bitmap, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha = 1.0f);
 		void drawBitmap(RenderBitmap& _bitmap, float _x, float _y, float _alpha = 1.0f);
 		void drawBitmap(RenderBitmap& _bitmap, float _x, float _y, Transform _transform, float _alpha = 1.0f);
 		void drawBitmap(RenderBitmap& _bitmap, Transform _transform, float _alpha = 1.0f);
@@ -40,7 +43,7 @@ namespace suku
 	private:
 		static std::stack<ComPtr<ID2D1Bitmap1>> currentLayerStateStack_;
 		ComPtr<ID2D1Bitmap1> pLayerBitmap_;
-		UINT width_;
-		UINT height_;
+		UINT width_ = 0;
+		UINT height_ = 0;
 	};
 }

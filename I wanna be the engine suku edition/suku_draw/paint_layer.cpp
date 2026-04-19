@@ -96,6 +96,27 @@ namespace suku
 		endDraw();
 	}
 
+	void PaintLayer::drawBitmap(Bitmap& _bitmap, float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
+	{
+		beginDraw();
+		_bitmap.paint(_x, _y, _partX, _partY, _partWidth, _partHeight, _alpha);
+		endDraw();
+	}
+
+	void PaintLayer::drawBitmap(Bitmap& _bitmap, float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		beginDraw();
+		_bitmap.paint(_x, _y, _partX, _partY, _partWidth, _partHeight, _transform, _alpha);
+		endDraw();
+	}
+
+	void PaintLayer::drawBitmap(Bitmap& _bitmap, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		beginDraw();
+		_bitmap.paint(_partX, _partY, _partWidth, _partHeight, _transform, _alpha);
+		endDraw();
+	}
+
 	void PaintLayer::drawBitmap(RenderBitmap& _bitmap, float _x, float _y, float _alpha)
 	{
 		beginDraw();
