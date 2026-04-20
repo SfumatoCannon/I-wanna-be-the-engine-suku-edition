@@ -10,9 +10,9 @@ bool gameEndFlag = false;
 void endGame() { gameEndFlag = true; }
 
 constexpr double updateFPS = 50.0;
-double renderFPS = 60.0;
+double renderFPS = 240.0;
 
-void SenderVsync()
+void vsyncLoopSender()
 {
 	const double frameTime = 1000.0 / updateFPS;
 	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
@@ -32,46 +32,68 @@ void SenderVsync()
 	}
 }
 
-void Sender()
-{
-	const double updateFrameTime = 1000.0 / updateFPS;
-	const double renderFrameTime = 1000.0 / renderFPS;
+// WIP
+std::thread threadVsyncUpdate;
+std::thread threadUpdate;
+std::thread threadRender;
 
-	auto updatePeriod = std::chrono::duration<double, std::milli>(updateFrameTime);
-	auto renderPeriod = std::chrono::duration<double, std::milli>(renderFrameTime);
-	auto updateCooldownTimer = std::chrono::duration<double, std::milli>(0.0);
-	auto renderCooldownTimer = std::chrono::duration<double, std::milli>(0.0);
+std::chrono::steady_clock::time_point lastUpdateTime;
+
+void updateSender()
+{
+	const double frameTime = 1000.0 / updateFPS;
+	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
 
 	auto next = std::chrono::steady_clock::now();
-
 	while (!gameEndFlag)
 	{
-
-		if (updateCooldownTimer.count() <= renderCooldownTimer.count())
-		{
-			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(updateCooldownTimer);
-			std::this_thread::sleep_until(next);
-			updateWork();
-			renderCooldownTimer -= updateCooldownTimer;
-			updateCooldownTimer = updatePeriod;
-		}
-		else
-		{
-			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(renderCooldownTimer);
-			std::this_thread::sleep_until(next);
-			paintWork(updateCooldownTimer.count() / updateFrameTime);
-			updateCooldownTimer -= renderCooldownTimer;
-			renderCooldownTimer = renderPeriod;
-		}
-
+		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		std::this_thread::sleep_until(next);
+		lastUpdateTime = std::chrono::steady_clock::now();
+		updateWork();
 		if (gameEndFlag)
 		{
 			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 			break;
 		}
-
-
 	}
+}
+
+void renderSender()
+{
+	const double updateFrameTime = 1000.0 / updateFPS;
+	const double frameTime = 1000.0 / renderFPS;
+	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
+
+	auto next = std::chrono::steady_clock::now();
+	while (!gameEndFlag)
+	{
+		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		std::this_thread::sleep_until(next);
+		auto nowTime = std::chrono::steady_clock::now();
+		double additionalFrameRate 
+			= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime).count() / updateFrameTime;
+		paintWork(additionalFrameRate);
+		if (gameEndFlag)
+		{
+			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+			break;
+		}
+	}
+}
+
+void startSender()
+{
+	std::thread threadUpdate(updateSender);
+	threadUpdate.detach();
+	std::thread threadRender(renderSender);
+	threadRender.detach();
+}
+
+void startSenderVsync()
+{
+	std::thread thread(vsyncLoopSender);
+	thread.detach();
 }
 
 //std::mutex threadLock;
@@ -186,7 +208,7 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 	EnumDisplaySettings(mi.szDevice, ENUM_CURRENT_SETTINGS, &devmode);
 	if (devmode.dmDisplayFrequency != updateFPS)
 	{
-		devmode.dmDisplayFlags &= !DM_INTERLACED;
+		devmode.dmDisplayFlags &= DM_INTERLACED;
 		devmode.dmDisplayFrequency = (DWORD)updateFPS;
 		LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
 	}
@@ -198,9 +220,3 @@ BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPAR
 //	fps = _fps;
 //	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
 //}
-
-void startSender()
-{
-	std::thread thread(Sender);
-	thread.detach();
-}
