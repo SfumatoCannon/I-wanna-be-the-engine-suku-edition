@@ -93,9 +93,6 @@
     <ClInclude Include="suku_foundation\save.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_foundation\string.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="suku_foundation\type_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -157,6 +154,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_objects\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_foundation\suku_string.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_objects\basic\player.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_objects\map_loader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_config\config_file.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -440,9 +449,6 @@
     <ClCompile Include="suku_foundation\save.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="suku_foundation\string.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="suku_foundation\var.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -489,6 +495,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_gamewindow\game_loop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_foundation\suku_string.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\basic\player.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\map_loader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
