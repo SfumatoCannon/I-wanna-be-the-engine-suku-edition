@@ -86,24 +86,40 @@ namespace suku
 	}
 
 	template<typename T>
-	inline void loadVar(T& _x)
+	inline void loadVar(T& _x, T _defaultValue)
 	{
 		SaveAssetGlobal::getInstance().readData();
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		Var pointerInVar = dataPointerVarPool[varIdMappingPool[reinterpret_cast<char*>(&_x)]];
+		if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
+		{
+			ERRORWINDOW_GLOBAL("Variable not set as savable");
+			return;
+		}
+		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
+		if (iter == dataPointerVarPool.end())
+		{
+			_x = _defaultValue;
+			return;
+		}
+		Var pointerInVar = (*iter).second;
 		T* pointer;
 		pointerInVar >> pointer;
 		_x = *pointer;
 	}
 
 	template<typename T>
-	T loadVar(const std::string _name)
+	T loadVar(const std::string _name, T _defaultValue)
 	{
 		SaveAssetGlobal::getInstance().readData();
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		unsigned long long id = maths::hash(_name);
-		Var pointerInVar = dataPointerVarPool[id];
+		auto iter = dataPointerVarPool.find(id);
+		if (iter == dataPointerVarPool.end())
+		{
+			return _defaultValue;
+		}
+		Var pointerInVar = (*iter).second;
 		T* pointer;
 		pointerInVar >> pointer;
 		return (*pointer);

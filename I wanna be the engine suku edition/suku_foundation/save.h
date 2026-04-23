@@ -63,8 +63,8 @@ namespace suku
 	template<typename T> bool setSavable(T& _x, const std::string _name);
 	template<typename T> void saveVar(const std::string _name, T _val);
 	template<typename T> void saveVar(T& _x);
-	template<typename T> void loadVar(T& _x);
-	template<typename T> T loadVar(const std::string _name);
+	template<typename T> void loadVar(T& _x, T _defaultValue = T());
+	template<typename T> T loadVar(const std::string _name, T _defaultValue = T());
 	bool isSavable(const std::string _name);
 	bool hasValueInFile(const std::string _name);
 }
