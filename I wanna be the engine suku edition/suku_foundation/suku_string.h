@@ -9,7 +9,7 @@ namespace suku
 		wchar_t* content;
 		std::wstring contentInWString()const;
 		std::string contentInString()const;
-		String() : content(nullptr) {}
+		String() : content(new wchar_t[1]{L'\0'}) {}
 		String(const char* _string);
 		String(std::string _string);
 		String(const wchar_t* _wstring);

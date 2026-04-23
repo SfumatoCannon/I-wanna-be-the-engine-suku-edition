@@ -165,6 +165,7 @@
     <ClInclude Include="global_value.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="suku_config\config_file.h" />
+    <ClInclude Include="suku_config\includes.h" />
     <ClInclude Include="suku_core\action.h" />
     <ClInclude Include="suku_core\collision_box.h" />
     <ClInclude Include="suku_core\group.h" />
@@ -365,6 +366,7 @@
     <ResourceCompile Include="I wanna be the engine suku edition.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="suku_config\config_file.inl" />
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />
     <None Include="suku_core\room_collision_pool.inl" />
