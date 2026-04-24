@@ -164,6 +164,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="global_value.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="suku_config\config_element.h" />
     <ClInclude Include="suku_config\config_element_pool.h" />
     <ClInclude Include="suku_config\config_file.h" />
     <ClInclude Include="suku_config\includes.h" />
@@ -367,7 +368,7 @@
     <ResourceCompile Include="I wanna be the engine suku edition.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="suku_config\config_element_pool.inl" />
+    <None Include="suku_config\config_element.inl" />
     <None Include="suku_config\config_file.inl" />
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />

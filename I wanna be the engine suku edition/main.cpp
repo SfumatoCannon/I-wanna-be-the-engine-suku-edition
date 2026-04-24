@@ -89,17 +89,9 @@ public:
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
-		ConfigFile::saveVar("test", 123);
-		ConfigFile::saveVar("test2", 123.456);
-		ConfigFile::saveVar("test3", true);
-		ConfigFile::saveVar("test4", String("hello world (str4)"));
-		ConfigFile::saveVar("test5", std::string("hello world (str5)"));
-		int test = ConfigFile::loadVar<int>("test");
-		double test2 = ConfigFile::loadVar<double>("test2");
-		bool test3 = ConfigFile::loadVar<bool>("test3");
-		String test4 = ConfigFile::loadVar<String>("test4");
-		std::string test5 = ConfigFile::loadVar<std::string>("test5");
 
+		int renderfps = ConfigElementPool::renderFPS.value();
+		ConfigElementPool::renderFPS.setValue(30);
 		// create(Warp(128, 0, &room1));
 	}
 
