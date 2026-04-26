@@ -45,16 +45,33 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	if (scale < 1.0f)
 		scale = 1.0f;
 
-	RECT rc = { 0, 0,
-		static_cast<LONG>(suku::GameWindow::getLogicalWidth() * scale),
-		static_cast<LONG>(suku::GameWindow::getLogicalHeight() * scale) };
+	suku::GameWindow::defaultDisplayWidth = static_cast<UINT>(suku::GameWindow::getLogicalWidth() * scale);
+	suku::GameWindow::defaultDisplayHeight = static_cast<UINT>(suku::GameWindow::getLogicalHeight() * scale);
 
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+	int windowWidth, windowHeight;
+	if (suku::ConfigElementPool::windowWidth.value() == -1 || suku::ConfigElementPool::windowHeight.value() == -1)
+	{
+		RECT rc = { 0, 0,
+			static_cast<LONG>(suku::GameWindow::defaultDisplayWidth),
+			static_cast<LONG>(suku::GameWindow::defaultDisplayHeight) 
+		};
+		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+		windowWidth = rc.right - rc.left;
+		windowHeight = rc.bottom - rc.top;
+	}
+	else
+	{
+		RECT rc = { 0, 0,
+			static_cast<LONG>(suku::ConfigElementPool::windowWidth.value()),
+			static_cast<LONG>(suku::ConfigElementPool::windowHeight.value()) 
+		};
+		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+		windowWidth = rc.right - rc.left;
+		windowHeight = rc.bottom - rc.top;
+	}
 
-	int windowWidth = rc.right - rc.left;
-	int windowHeight = rc.bottom - rc.top;
+
 	int windowX, windowY;
-
 	if (suku::ConfigElementPool::windowPosX.value() == -1 && suku::ConfigElementPool::windowPosY.value() == -1)
 	{
 		int screenW = GetSystemMetrics(SM_CXSCREEN);
@@ -69,7 +86,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		windowY = suku::ConfigElementPool::windowPosY.value();
 	}
 
-	
+
 
 	suku::GameWindow::hWnd = CreateWindowW(
 		szWindowClass,

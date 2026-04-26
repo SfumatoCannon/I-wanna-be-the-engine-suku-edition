@@ -43,7 +43,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_INPUT:
 		inputResult = suku::input::onWindowInput(lParam);
-		if (inputResult.first == INPUT_KEYDOWN && inputResult.second == VK_F1)
+		if (inputResult.first == INPUT_KEYDOWN && inputResult.second == VK_F3)
+		{
+			suku::GameWindow::resetDisplaySizeToDefault();
+		}
+		if (inputResult.first == INPUT_KEYDOWN && inputResult.second == VK_F4)
 		{
 			static bool fullscreenTag = false;
 			fullscreenTag = !fullscreenTag;

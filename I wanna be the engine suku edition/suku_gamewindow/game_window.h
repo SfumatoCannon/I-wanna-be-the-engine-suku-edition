@@ -3,6 +3,7 @@
 #include "../suku_foundation/suku_string.h"
 #include "../global_value.h"
 #include "../suku_draw/transform.h"
+#include <utility>
 
 namespace suku
 {
@@ -12,6 +13,9 @@ namespace suku
 		GameWindow() = delete;
 		inline static HWND hWnd;
 		static String GetTitle() { return title_; }
+		static std::pair<int, int> getPosition();
+		static int getX() { return getPosition().first; }
+		static int getY() { return getPosition().second; }
 		static std::pair<UINT, UINT> getSize();
 		static UINT getWidth() { return getSize().first; }
 		static UINT getHeight() { return getSize().second; }
@@ -23,8 +27,11 @@ namespace suku
 		static bool isMinimized();
 
 		static void setLogicalSize(UINT _width, UINT _height);
+
+		static void resetDisplaySizeToDefault();
 		static void setFullscreen(bool _isFullscreen);
 		static void refreshSizeInfo();
+		static void refreshPositionInfo();
 		static void refreshPositionInfo(int _posX, int _posY);
 
 		static void onMinimize();
@@ -32,14 +39,19 @@ namespace suku
 
 		static Transform getPixelMappingTransform();
 
+		inline static UINT defaultDisplayWidth = WindowWidth;
+		inline static UINT defaultDisplayHeight = WindowHeight;
 	private:
 		inline static String title_ = L"I wanna be the engine suku edition";
 		inline static UINT width_ = 0;
 		inline static UINT height_ = 0;
+		inline static UINT x_ = 0;
+		inline static UINT y_ = 0;
 		inline static UINT logicalWidth_ = WindowWidth;
 		inline static UINT logicalHeight_ = WindowHeight;
 		inline static Transform pixelMappingTransform_;
 		inline static bool sizeUpdateTag_ = true;
+		inline static bool positionUpdateTag_ = true;
 		inline static bool pixelMappingTransformUpdateTag_ = true;
 		inline static bool isFullscreen_ = false;
 		inline static bool isFocused_ = false;
