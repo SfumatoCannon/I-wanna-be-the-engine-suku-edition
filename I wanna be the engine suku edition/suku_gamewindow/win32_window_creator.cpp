@@ -96,6 +96,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		windowWidth, windowHeight,
 		nullptr, nullptr, hInstance, nullptr
 	);
+
 #endif
 
 	if (!suku::GameWindow::hWnd)
@@ -103,7 +104,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	ShowWindow(suku::GameWindow::hWnd, nCmdShow);
+	if (suku::ConfigElementPool::isMaximized.value() == true)
+	{
+		ShowWindow(suku::GameWindow::hWnd, SW_SHOWMAXIMIZED);
+	}
+	else
+	{
+		ShowWindow(suku::GameWindow::hWnd, nCmdShow);
+	}
 	UpdateWindow(suku::GameWindow::hWnd);
 
 	return TRUE;

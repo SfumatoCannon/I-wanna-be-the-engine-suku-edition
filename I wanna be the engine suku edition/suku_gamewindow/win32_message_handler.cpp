@@ -16,6 +16,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	using namespace suku;
 	using namespace suku::input;
 	std::pair<UINT, USHORT> inputResult;
+	static bool wasWindowMaximized = false;
+
 	switch (message)
 	{
 	case WM_CREATE:
@@ -66,8 +68,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		if (wParam == SIZE_MINIMIZED)
 			suku::GameWindow::onMinimize();
-		else
+		else if (wParam == SIZE_MAXIMIZED)
+		{
+			wasWindowMaximized = true;
+			suku::GameWindow::onMaximize(true);
 			suku::GameWindow::refreshSizeInfo();
+		}
+		else
+		{
+			if (wasWindowMaximized)
+			{
+				wasWindowMaximized = false;
+				suku::GameWindow::onMaximize(false);
+			}
+			suku::GameWindow::refreshSizeInfo();
+		}
 		break;
 	case WM_MOVE:
 		suku::GameWindow::refreshPositionInfo(

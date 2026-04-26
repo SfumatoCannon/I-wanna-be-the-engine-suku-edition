@@ -49,6 +49,11 @@ namespace suku
 		}
 	}
 
+	bool GameWindow::isMaximized()
+	{
+		return IsZoomed(hWnd) != 0;
+	}
+
 	bool GameWindow::isMinimized()
 	{
 		return IsIconic(hWnd) != 0;
@@ -74,6 +79,7 @@ namespace suku
 		int windowX = (screenW - windowWidth) / 2;
 		int windowY = (screenH - windowHeight) / 2;
 
+		SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
 		MoveWindow(hWnd, windowX, windowY,
 			windowWidth, windowHeight,
 			TRUE);
@@ -123,8 +129,11 @@ namespace suku
 
 	void GameWindow::refreshPositionInfo(int _posX, int _posY)
 	{
-		suku::ConfigElementPool::windowPosX.setValue(_posX);
-		suku::ConfigElementPool::windowPosY.setValue(_posY);
+		if (!isMaximized())
+		{
+			suku::ConfigElementPool::windowPosX = _posX;
+			suku::ConfigElementPool::windowPosY = _posY;
+		}
 		x_ = _posX;
 		y_ = _posY;
 		positionUpdateTag_ = false;
@@ -132,6 +141,14 @@ namespace suku
 
 	void GameWindow::onMinimize()
 	{
+	}
+
+	void GameWindow::onMaximize(bool _isMaximized)
+	{
+		if (_isMaximized)
+			suku::ConfigElementPool::isMaximized = true;
+		else
+			suku::ConfigElementPool::isMaximized = false;
 	}
 
 	void GameWindow::onFocusChanged(bool _isFocused)
@@ -153,8 +170,11 @@ namespace suku
 			// refresh to make {width_, height_} is right
 			getSize();
 
-			ConfigElementPool::windowWidth = width_;
-			ConfigElementPool::windowHeight = height_;
+			if (!isMaximized())
+			{
+				ConfigElementPool::windowWidth = width_;
+				ConfigElementPool::windowHeight = height_;
+			}
 
 			pixelMappingTransformUpdateTag_ = true;
 		}

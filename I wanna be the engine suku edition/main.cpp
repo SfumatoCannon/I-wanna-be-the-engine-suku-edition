@@ -105,7 +105,7 @@ public:
 		Shape A(SquareShape(64));
 		Bitmap B("Image\\bg.jpg");
 		Bitmap C("Image\\wall.png");
-		static PaintLayer layer(800, 608);
+		static PaintLayer layer(1000, 608);
 		layer.beginDraw();
 		layer.clear(Color::GREEN());
 		layer.drawBitmap(B, translation(0, 0), 0.5f);

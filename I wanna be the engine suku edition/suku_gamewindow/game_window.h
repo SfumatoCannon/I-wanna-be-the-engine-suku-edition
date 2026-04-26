@@ -24,6 +24,7 @@ namespace suku
 		static UINT getLogicalHeight() { return logicalHeight_; }
 		static bool isFullscreen() { return isFullscreen_; }
 		static bool isFocused() { return isFocused_; }
+		static bool isMaximized();
 		static bool isMinimized();
 
 		static void setLogicalSize(UINT _width, UINT _height);
@@ -35,6 +36,7 @@ namespace suku
 		static void refreshPositionInfo(int _posX, int _posY);
 
 		static void onMinimize();
+		static void onMaximize(bool _isMaximized);
 		static void onFocusChanged(bool _isFocused);
 
 		static Transform getPixelMappingTransform();
