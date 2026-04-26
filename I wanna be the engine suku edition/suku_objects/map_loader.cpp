@@ -1,7 +1,7 @@
 #include "map_loader.h"
 #include <suku_core/includes.h>
 #include "includes.h"
-#include <global_value.h>
+#include <suku_constants.h>
 
 namespace suku
 {

@@ -162,7 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="global_value.h" />
+    <ClInclude Include="suku_constants.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="suku_config\config_element.h" />
     <ClInclude Include="suku_config\config_element_pool.h" />

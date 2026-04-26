@@ -2,7 +2,7 @@
 #include "suku_foundation/includes.h"
 #include "suku_core/includes.h"
 #include "suku_foundation/type_tree.h"
-#include <global_value.h>
+#include <suku_constants.h>
 
 namespace suku
 {

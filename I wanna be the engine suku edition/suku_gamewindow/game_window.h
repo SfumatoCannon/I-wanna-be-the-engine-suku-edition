@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 #include "../suku_foundation/suku_string.h"
-#include "../global_value.h"
+#include "../suku_constants.h"
 #include "../suku_draw/transform.h"
 #include <utility>
 
@@ -39,16 +39,16 @@ namespace suku
 
 		static Transform getPixelMappingTransform();
 
-		inline static UINT defaultDisplayWidth = WindowWidth;
-		inline static UINT defaultDisplayHeight = WindowHeight;
+		inline static UINT defaultDisplayWidth = windowWidthLogical;
+		inline static UINT defaultDisplayHeight = windowHeightLogical;
 	private:
 		inline static String title_ = L"I wanna be the engine suku edition";
 		inline static UINT width_ = 0;
 		inline static UINT height_ = 0;
 		inline static UINT x_ = 0;
 		inline static UINT y_ = 0;
-		inline static UINT logicalWidth_ = WindowWidth;
-		inline static UINT logicalHeight_ = WindowHeight;
+		inline static UINT logicalWidth_ = windowWidthLogical;
+		inline static UINT logicalHeight_ = windowHeightLogical;
 		inline static Transform pixelMappingTransform_;
 		inline static bool sizeUpdateTag_ = true;
 		inline static bool positionUpdateTag_ = true;

@@ -2,8 +2,8 @@
 
 namespace suku
 {
-	constexpr UINT WindowWidth = 800;
-	constexpr UINT WindowHeight = 608;
+	constexpr UINT windowWidthLogical = 800;
+	constexpr UINT windowHeightLogical = 608; 
 
 	enum Direction
 	{

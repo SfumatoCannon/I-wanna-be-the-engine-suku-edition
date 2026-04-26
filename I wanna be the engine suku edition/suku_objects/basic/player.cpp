@@ -1,7 +1,7 @@
 #include "player.h"
 #include <suku_core/includes.h>
 #include <suku_foundation/includes.h>
-#include <global_value.h>
+#include <suku_constants.h>
 #include <suku_sounds.h>
 #include "object_definer.h"
 

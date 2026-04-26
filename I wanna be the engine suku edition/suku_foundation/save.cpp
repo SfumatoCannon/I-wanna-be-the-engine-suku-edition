@@ -1,5 +1,5 @@
 #include "save.h"
-#include "../global_value.h"
+#include "../suku_constants.h"
 #include "suku_string.h"
 #include "message.h"
 #include "file.h"
