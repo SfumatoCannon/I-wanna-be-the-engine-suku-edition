@@ -39,16 +39,16 @@ namespace suku
 
 		static Transform getPixelMappingTransform();
 
-		inline static UINT defaultDisplayWidth = windowWidthLogical;
-		inline static UINT defaultDisplayHeight = windowHeightLogical;
+		inline static UINT defaultDisplayWidth = constants::window::widthLogical;
+		inline static UINT defaultDisplayHeight = constants::window::heightLogical;
 	private:
 		inline static String title_ = L"I wanna be the engine suku edition";
 		inline static UINT width_ = 0;
 		inline static UINT height_ = 0;
 		inline static UINT x_ = 0;
 		inline static UINT y_ = 0;
-		inline static UINT logicalWidth_ = windowWidthLogical;
-		inline static UINT logicalHeight_ = windowHeightLogical;
+		inline static UINT logicalWidth_ = constants::window::widthLogical;
+		inline static UINT logicalHeight_ = constants::window::heightLogical;
 		inline static Transform pixelMappingTransform_;
 		inline static bool sizeUpdateTag_ = true;
 		inline static bool positionUpdateTag_ = true;
