@@ -2,6 +2,7 @@
 #include "win32_window_creator.h"
 #include "win32_message_handler.h"
 #include "game_window.h"
+#include "../suku_config/includes.h"
 #include "../Resource.h"
 
 #define MAX_LOADSTRING 100
@@ -45,26 +46,37 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		scale = 1.0f;
 
 	RECT rc = { 0, 0,
-		static_cast<LONG>(suku::WindowWidth * scale),
-		static_cast<LONG>(suku::WindowHeight * scale) };
+		static_cast<LONG>(suku::GameWindow::getLogicalWidth() * scale),
+		static_cast<LONG>(suku::GameWindow::getLogicalHeight() * scale) };
 
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-	int winW = rc.right - rc.left;
-	int winH = rc.bottom - rc.top;
+	int windowWidth = rc.right - rc.left;
+	int windowHeight = rc.bottom - rc.top;
+	int windowX, windowY;
 
-	int screenW = GetSystemMetrics(SM_CXSCREEN);
-	int screenH = GetSystemMetrics(SM_CYSCREEN);
+	if (suku::ConfigElementPool::windowPosX.value() == -1 && suku::ConfigElementPool::windowPosY.value() == -1)
+	{
+		int screenW = GetSystemMetrics(SM_CXSCREEN);
+		int screenH = GetSystemMetrics(SM_CYSCREEN);
 
-	int x = (screenW - winW) / 2;
-	int y = (screenH - winH) / 2;
+		windowX = (screenW - windowWidth) / 2;
+		windowY = (screenH - windowHeight) / 2;
+	}
+	else
+	{
+		windowX = suku::ConfigElementPool::windowPosX.value();
+		windowY = suku::ConfigElementPool::windowPosY.value();
+	}
+
+	
 
 	suku::GameWindow::hWnd = CreateWindowW(
 		szWindowClass,
 		szTitle,
 		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX,
-		x, y,
-		winW, winH,
+		windowX, windowY,
+		windowWidth, windowHeight,
 		nullptr, nullptr, hInstance, nullptr
 	);
 #endif

@@ -7,5 +7,11 @@ namespace suku
 	{
 	public:
 		inline static ConfigElement<int> renderFPS = { "renderFPS", 50 };
+		inline static ConfigElement<bool> isFullScreen = { "isFullScreen", false };
+		inline static ConfigElement<bool> isVSyncOn = { "isVSyncOn", true };
+		inline static ConfigElement<int> windowWidth = { "windowWidth", 800 };
+		inline static ConfigElement<int> windowHeight = { "windowHeight", 608 };
+		inline static ConfigElement<int> windowPosX = { "windowPosX", -1 };
+		inline static ConfigElement<int> windowPosY = { "windowPosY", -1 };
 	};
 }

@@ -24,7 +24,8 @@ namespace suku
 
 		static void setLogicalSize(UINT _width, UINT _height);
 		static void setFullscreen(bool _isFullscreen);
-		static void RefreshSizeInfo();
+		static void refreshSizeInfo();
+		static void refreshPositionInfo(int _posX, int _posY);
 
 		static void onMinimize();
 		static void onFocusChanged(bool _isFocused);

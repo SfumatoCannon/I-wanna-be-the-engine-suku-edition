@@ -2,6 +2,7 @@
 #include "game_window.h"
 #include "../suku_foundation/message.h"
 #include "../suku_draw/draw_core.h"
+#include "../suku_config/includes.h"
 
 namespace suku
 {
@@ -46,6 +47,7 @@ namespace suku
 
     void GameWindow::setFullscreen(bool _isFullscreen)
     {
+		ConfigElementPool::isFullScreen = _isFullscreen;
         if (isFullscreen_ == _isFullscreen)
             return;
         DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
@@ -75,9 +77,15 @@ namespace suku
         }
     }
 
-    void GameWindow::RefreshSizeInfo()
+    void GameWindow::refreshSizeInfo()
     {
 		sizeUpdateTag_ = true;
+    }
+
+    void GameWindow::refreshPositionInfo(int _posX, int _posY)
+    {
+        suku::ConfigElementPool::windowPosX.setValue(_posX);
+        suku::ConfigElementPool::windowPosY.setValue(_posY);
     }
 
     void GameWindow::onMinimize()
@@ -102,6 +110,10 @@ namespace suku
         {
 			// refresh to make {width_, height_} is right
             getSize();
+
+			ConfigElementPool::windowWidth = width_;
+			ConfigElementPool::windowHeight = height_;
+
             pixelMappingTransformUpdateTag_ = true;
         }
         if (pixelMappingTransformUpdateTag_)

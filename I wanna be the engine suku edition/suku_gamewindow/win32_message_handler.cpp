@@ -4,6 +4,7 @@
 #include "../suku_draw/includes.h"
 #include "../suku_foundation/includes.h"
 #include "../suku_sounds.h"
+#include "../suku_config/includes.h"
 #include "game_loop.h"
 
 #define WM_CREATEFINISHED (WM_USER + 1)
@@ -62,7 +63,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == SIZE_MINIMIZED)
 			suku::GameWindow::onMinimize();
 		else
-			suku::GameWindow::RefreshSizeInfo();
+			suku::GameWindow::refreshSizeInfo();
+		break;
+	case WM_MOVE:
+		suku::GameWindow::refreshPositionInfo(
+			(int)(lParam & 0xFFFF), 
+			(int)((lParam >> 16) & 0xFFFF)
+		);
 		break;
 	case WM_ACTIVATE:
 		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
