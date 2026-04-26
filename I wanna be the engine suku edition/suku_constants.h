@@ -6,7 +6,7 @@ namespace suku
 	{
 		namespace window
 		{
-			constexpr UINT widthLogical = 800;
+			constexpr UINT widthLogical = 1000;
 			constexpr UINT heightLogical = 608;
 		}
 	}

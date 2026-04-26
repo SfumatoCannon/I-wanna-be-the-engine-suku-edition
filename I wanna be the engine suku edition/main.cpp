@@ -85,6 +85,7 @@ public:
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
+		create(Wall(800, 32));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
@@ -97,6 +98,7 @@ public:
 
 	virtual void onPaintStart()override
 	{
+		Room::onPaintStart();
 		auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
 		auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));

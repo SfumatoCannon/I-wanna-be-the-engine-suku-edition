@@ -1,5 +1,6 @@
 #pragma once
 #include "room.h"
+#include "../suku_constants.h"
 
 
 namespace suku
@@ -11,7 +12,7 @@ namespace suku
 		Room& targetRoom_;
 		float x_ = 0.0f;
 		float y_ = 0.0f;
-		float width_ = 800.0f;
-		float height_ = 608.0f;
+		float width_ = constants::window::widthLogical;
+		float height_ = constants::window::heightLogical;
 	};
 }
