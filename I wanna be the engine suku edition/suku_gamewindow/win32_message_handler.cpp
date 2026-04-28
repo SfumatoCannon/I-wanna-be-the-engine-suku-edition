@@ -41,7 +41,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		graphics::suku_drawing_postinit(hWnd);
 		soundInit();
 		init();
-		startSender();
+		if (ConfigElementPool::isVSyncOn.value())
+			startSenderVsync();
+		else
+			startSender();
 		break;
 	case WM_INPUT:
 		inputResult = suku::input::onWindowInput(lParam);

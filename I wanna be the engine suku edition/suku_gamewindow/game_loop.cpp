@@ -4,7 +4,7 @@
 #include "../suku_foundation/includes.h"
 #include "../suku_core/includes.h"
 #include "../suku_draw/includes.h"
-
+#include "../suku_config/includes.h"
 
 bool gameEndFlag = false;
 void endGame() { gameEndFlag = true; }
@@ -62,7 +62,7 @@ void updateSender()
 void renderSender()
 {
 	const double updateFrameTime = 1000.0 / updateFPS;
-	const double frameTime = 1000.0 / renderFPS;
+	double frameTime = 1000.0 / (double)suku::ConfigElementPool::renderFPS.value();
 	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
 
 	auto next = std::chrono::steady_clock::now();
