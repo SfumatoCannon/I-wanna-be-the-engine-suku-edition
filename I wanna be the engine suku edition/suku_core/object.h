@@ -40,16 +40,17 @@ namespace suku
 		void setPostUpdateId(double _id);
 		void setPaintId(double _id);
 
-		Transform spriteTransform;
+		Transform transform;
 		float getWidth();
 		float getHeight();
 		Vector getSize();
 		float getCenterX();
 		float getCenterY();
-		Vector getCenterPosition();
-		double getSpriteAngle();
-		double getSpriteXScale();
-		double getSpriteYScale();
+		Vector getCenter();
+		double getAngle();
+		double getScaleX();
+		double getScaleY();
+		Vector getScale();
 
 		float alpha;
 		std::map<std::string, Var> var;

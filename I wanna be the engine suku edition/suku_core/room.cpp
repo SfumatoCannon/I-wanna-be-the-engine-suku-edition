@@ -168,7 +168,7 @@ namespace suku
 				}
 				else
 				{
-					obj->var["spriteTransformLastFrame"] << obj->spriteTransform;
+					obj->var["spriteTransformLastFrame"] << obj->transform;
 					obj->preUpdate();
 					iter++;
 				}
@@ -271,7 +271,7 @@ namespace suku
 				obj->paintBody(
 					objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate),
 					objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate),
-					linearInterpolate(objSpriteTransformLastFrame, obj->spriteTransform, _offsetRate)
+					linearInterpolate(objSpriteTransformLastFrame, obj->transform, _offsetRate)
 				);
 			}
 

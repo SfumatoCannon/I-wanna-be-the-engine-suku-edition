@@ -14,7 +14,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x), bRound(y), spriteTransform, alpha);
+		spr->paint(bRound(x), bRound(y), transform, alpha);
 	}
 
 	void Object::paintBody(bool _isSmoothMode)const
@@ -25,8 +25,8 @@ namespace suku
 		if (!spr)
 			return;
 		if (_isSmoothMode)
-			spr->paint(bRound(x), bRound(y), spriteTransform, alpha);
-		else spr->paint(x, y, spriteTransform, alpha);
+			spr->paint(bRound(x), bRound(y), transform, alpha);
+		else spr->paint(x, y, transform, alpha);
 	}
 
 	void Object::paintBody(float _x, float _y, bool _isSmoothMode)const
@@ -37,8 +37,8 @@ namespace suku
 		if (!spr)
 			return;
 		if (_isSmoothMode)
-			spr->paint(bRound(_x), bRound(_y), spriteTransform, alpha);
-		else spr->paint(_x, _y, spriteTransform, alpha);
+			spr->paint(bRound(_x), bRound(_y), transform, alpha);
+		else spr->paint(_x, _y, transform, alpha);
 	}
 
 	void Object::paintBody(Transform _spriteTransform) const
@@ -69,8 +69,8 @@ namespace suku
 		if (!spr)
 			return;
 		if (_isSmoothMode)
-			spr->paint(bRound(x), bRound(y), spriteTransform, _alpha);
-		else spr->paint(x, y, spriteTransform, _alpha);
+			spr->paint(bRound(x), bRound(y), transform, _alpha);
+		else spr->paint(x, y, transform, _alpha);
 	}
 
 	void Object::paintBody(float _x, float _y, float _alpha, bool _isSmoothMode) const
@@ -81,8 +81,8 @@ namespace suku
 		if (!spr)
 			return;
 		if (_isSmoothMode)
-			spr->paint(bRound(_x), bRound(_y), spriteTransform, _alpha);
-		else spr->paint(_x, _y, spriteTransform, _alpha);
+			spr->paint(bRound(_x), bRound(_y), transform, _alpha);
+		else spr->paint(_x, _y, transform, _alpha);
 	}
 
 	void Object::paintBody(Transform _spriteTransform, float _alpha) const
@@ -178,28 +178,28 @@ namespace suku
 	{
 		if (sprite_ == nullptr)
 			return 0;
-		return sprite_->getWidth() * (float)getSpriteXScale();
+		return sprite_->getWidth() * (float)getScaleX();
 	}
 
 	float Object::getHeight()
 	{
 		if (sprite_ == nullptr)
 			return 0;
-		return sprite_->getHeight() * (float)getSpriteYScale();
+		return sprite_->getHeight() * (float)getScaleY();
 	}
 
 	Vector Object::getSize()
 	{
 		if (sprite_ == nullptr)
 			return Vector(0.0f, 0.0f);
-		return Vector(sprite_->getWidth() * getSpriteXScale(), sprite_->getHeight() * getSpriteYScale());
+		return Vector(sprite_->getWidth() * getScaleX(), sprite_->getHeight() * getScaleY());
 	}
 
 	float Object::getCenterX()
 	{
 		float cx = sprite_->getCenterX();
 		float cy = sprite_->getCenterY();
-		spriteTransform.transformPoint(&cx, &cy);
+		transform.transformPoint(&cx, &cy);
 		return x + cx;
 	}
 
@@ -207,40 +207,48 @@ namespace suku
 	{
 		float cx = sprite_->getCenterX();
 		float cy = sprite_->getCenterY();
-		spriteTransform.transformPoint(&cx, &cy);
+		transform.transformPoint(&cx, &cy);
 		return y + cy;
 	}
 
-	Vector Object::getCenterPosition()
+	Vector Object::getCenter()
 	{
-		auto result = spriteTransform.transformPoint(sprite_->getCenterX(), sprite_->getCenterY());
+		auto result = transform.transformPoint(sprite_->getCenterX(), sprite_->getCenterY());
 		result.x += x;
 		result.y += y;
 		return result;
 	}
 
-	double Object::getSpriteAngle()
+	double Object::getAngle()
 	{
 		float width = (float)sprite_->getWidth();
 		float height = (float)sprite_->getHeight();
-		auto [x, y] = spriteTransform.transformPoint(width, height);
+		auto [x, y] = transform.transformPoint(width, height);
 		return atan((double)(width / height)) - atan((double)(x / y)) / PI * 180.0;
 	}
 
-	double Object::getSpriteXScale()
+	double Object::getScaleX()
 	{
 		float width = (float)sprite_->getWidth();
 		float height = (float)sprite_->getHeight();
-		auto [x, y] = spriteTransform.transformPoint(width, height);
+		auto [x, y] = transform.transformPoint(width, height);
 		return (double)x / (double)width;
 	}
 
-	double Object::getSpriteYScale()
+	double Object::getScaleY()
 	{
 		float width = (float)sprite_->getWidth();
 		float height = (float)sprite_->getHeight();
-		auto [x, y] = spriteTransform.transformPoint(width, height);
+		auto [x, y] = transform.transformPoint(width, height);
 		return (double)y / (double)height;
+	}
+
+	Vector Object::getScale()
+	{
+		float width = (float)sprite_->getWidth();
+		float height = (float)sprite_->getHeight();
+		auto [x, y] = transform.transformPoint(width, height);
+		return { (double)x / (double)width, (double)y / (double)height };
 	}
 
 	Object::Object(float _x, float _y)
@@ -265,8 +273,8 @@ namespace suku
 		spawnY = _y;
 		alpha = 1.0;
 		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
-		spriteTransform = Transform();
-		var["spriteTransformLastFrame"] = spriteTransform;
+		transform = Transform();
+		var["spriteTransformLastFrame"] = transform;
 		paintId_ = 0;
 		kindId_ = typecode(Object);
 	}
@@ -321,7 +329,7 @@ namespace suku
 
 	void Object::rotate(float _angle)
 	{
-		spriteTransform = spriteTransform + rotation(sprite_->getCenterX(), sprite_->getCenterY(), _angle);
+		transform = transform + rotation(sprite_->getCenterX(), sprite_->getCenterY(), _angle);
 	}
 
 	void Object::rotate(float _angle, double _rotatingCenterX, double _rotatingCenterY, bool _isRotatingItself)
