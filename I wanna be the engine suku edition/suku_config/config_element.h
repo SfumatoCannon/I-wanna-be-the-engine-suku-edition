@@ -10,6 +10,8 @@ namespace suku
 	public:
 		ConfigElement(std::string _name, T _defaultValue);
 		ConfigElement(std::wstring _name, T _defaultValue);
+		ConfigElement(std::string _category, std::string _name, T _defaultValue);
+		ConfigElement(std::wstring _category, std::wstring _name, T _defaultValue);
 		void setValue(T _value);
 		T value();
 		void operator =(const ConfigElement& _other) = delete;
@@ -17,6 +19,7 @@ namespace suku
 		void operator =(T _value) { setValue(_value); }
 	private:
 		std::wstring name_;
+		std::wstring category_;
 		Var value_;
 	};
 }
