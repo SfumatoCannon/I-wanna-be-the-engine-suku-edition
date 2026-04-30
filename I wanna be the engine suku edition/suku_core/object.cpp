@@ -253,7 +253,7 @@ namespace suku
 
 	Object::Object(float _x, float _y)
 	{
-		var.clear();
+		var_.clear();
 		preUpdateId_ = 0;
 		updateId_ = 0;
 		postUpdateId_ = 0;
@@ -264,8 +264,8 @@ namespace suku
 		clock_ = 0;
 		x = _x;
 		y = _y;
-		var["xLastFrame"] = _x;
-		var["yLastFrame"] = _y;
+		var_["xLastFrame"] = _x;
+		var_["yLastFrame"] = _y;
 		xScale = 1.0;
 		yScale = 1.0;
 		removeTag_ = false;
@@ -274,7 +274,7 @@ namespace suku
 		alpha = 1.0;
 		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
 		transform = Transform();
-		var["spriteTransformLastFrame"] = transform;
+		var_["spriteTransformLastFrame"] = transform;
 		paintId_ = 0;
 		kindId_ = typecode(Object);
 	}

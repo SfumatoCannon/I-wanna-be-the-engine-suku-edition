@@ -53,9 +53,9 @@ namespace suku
 		Vector getScale();
 
 		float alpha;
-		std::map<std::string, Var> var;
 
-		Var& operator[](std::string _str) { return var[_str]; }
+		Var& operator[](const std::string& _str) { return var_[_str]; }
+
 		Object(float _x = 0, float _y = 0);
 		
 		Sprite* getSprite()const { return sprite_; }
@@ -136,6 +136,8 @@ namespace suku
 		void spawn();
 	protected:
 		friend class Room;
+
+		std::map<std::string, Var> var_;
 
 		Room* inRoom_;
 		size_t kindId_;

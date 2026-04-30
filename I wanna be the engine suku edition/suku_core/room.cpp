@@ -168,7 +168,7 @@ namespace suku
 				}
 				else
 				{
-					obj->var["spriteTransformLastFrame"] << obj->transform;
+					obj->var_["spriteTransformLastFrame"] << obj->transform;
 					obj->preUpdate();
 					iter++;
 				}
@@ -197,8 +197,8 @@ namespace suku
 		{
 			for (auto& obj : objArray)
 			{
-				obj->var["xLastFrame"] << obj->x;
-				obj->var["yLastFrame"] << obj->y;
+				obj->var_["xLastFrame"] << obj->x;
+				obj->var_["yLastFrame"] << obj->y;
 				obj->x += obj->totalHspeed();
 				obj->y += obj->totalVspeed();
 			}
@@ -265,9 +265,9 @@ namespace suku
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
-				float objXLastFrame = obj->var["xLastFrame"].getValue<float>();
-				float objYLastFrame = obj->var["yLastFrame"].getValue<float>();
-				Transform objSpriteTransformLastFrame = obj->var["spriteTransformLastFrame"].getValue<Transform>();
+				float objXLastFrame = obj->var_["xLastFrame"].getValue<float>();
+				float objYLastFrame = obj->var_["yLastFrame"].getValue<float>();
+				Transform objSpriteTransformLastFrame = obj->var_["spriteTransformLastFrame"].getValue<Transform>();
 				obj->paintBody(
 					objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate),
 					objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate),
