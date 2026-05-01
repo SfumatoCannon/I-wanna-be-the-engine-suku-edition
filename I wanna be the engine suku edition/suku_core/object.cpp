@@ -264,8 +264,8 @@ namespace suku
 		clock_ = 0;
 		x = _x;
 		y = _y;
-		var_["xLastFrame"] = _x;
-		var_["yLastFrame"] = _y;
+		xLastFrame_ = x;
+		yLastFrame_ = y;
 		xScale = 1.0;
 		yScale = 1.0;
 		removeTag_ = false;
@@ -274,7 +274,7 @@ namespace suku
 		alpha = 1.0;
 		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
 		transform = Transform();
-		var_["spriteTransformLastFrame"] = transform;
+		spriteTransformLastFrame_ = transform;
 		paintId_ = 0;
 		kindId_ = typecode(Object);
 	}

@@ -147,6 +147,10 @@ namespace suku
 		Sprite* sprite_;
 		int clock_;
 		std::list<std::function<bool()> > actionList_;
+
+		float xLastFrame_;
+		float yLastFrame_;
+		Transform spriteTransformLastFrame_;
 	};
 }
 
