@@ -261,7 +261,6 @@ namespace suku
 		paintId_ = 0;
 		sprite_ = nullptr;
 		inRoom_ = nullptr;
-		clock_ = 0;
 		x = _x;
 		y = _y;
 		xLastFrame_ = x;
@@ -273,7 +272,6 @@ namespace suku
 		spawnY = _y;
 		alpha = 1.0;
 		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
-		transform = Transform();
 		spriteTransformLastFrame_ = transform;
 		paintId_ = 0;
 		kindId_ = typecode(Object);

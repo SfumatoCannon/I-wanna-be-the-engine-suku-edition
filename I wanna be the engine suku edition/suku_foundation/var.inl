@@ -218,23 +218,7 @@ namespace suku
 	}
 
 	template<typename T>
-	inline T Var::getValue(T _x)
-	{
-		try
-		{
-			return _x = std::any_cast<T>(value_);
-		}
-		catch (std::bad_any_cast& e)
-		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
-			return _x;
-		}
-	}
-
-	template<typename T>
-	inline T Var::getValue()
+	inline T Var::getValue()const
 	{
 		try
 		{

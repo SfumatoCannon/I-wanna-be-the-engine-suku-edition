@@ -139,18 +139,23 @@ namespace suku
 
 		std::map<std::string, Var> var_;
 
-		Room* inRoom_;
+		Room* inRoom_												= nullptr;
 		size_t kindId_;
-		double preUpdateId_, updateId_, postUpdateId_, paintId_;
-		bool removeTag_;
-		bool destroyTag_;
-		Sprite* sprite_;
-		int clock_;
+		double	preUpdateId_, 
+				updateId_, 
+				postUpdateId_, 
+				paintId_;
+		bool removeTag_												= false;
+		bool destroyTag_											= false;
+		Sprite* sprite_												= nullptr;
+		int clock_ = 0;
 		std::list<std::function<bool()> > actionList_;
 
 		float xLastFrame_;
 		float yLastFrame_;
-		Transform spriteTransformLastFrame_;
+		Transform spriteTransformLastFrame_							= Transform();
+		bool isPositionTransitionalFrame_							= false;
+		bool isSpriteTransformTransitionalFrame_					= false;
 	};
 }
 
