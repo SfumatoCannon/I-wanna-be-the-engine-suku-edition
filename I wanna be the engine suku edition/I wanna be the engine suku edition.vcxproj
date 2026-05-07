@@ -178,6 +178,7 @@
     <ClInclude Include="suku_core\sprite.h" />
     <ClInclude Include="I wanna be the engine suku edition.h" />
     <ClInclude Include="suku_core\suku_property.h" />
+    <ClInclude Include="suku_core\transition.h" />
     <ClInclude Include="suku_objects\basic\object_definer.h" />
     <ClInclude Include="suku_core\view.h" />
     <ClInclude Include="suku_draw\bitmap.h" />
