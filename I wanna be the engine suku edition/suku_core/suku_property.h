@@ -22,10 +22,10 @@ namespace suku
 		void operator/=(const T& _value) { value_ /= _value; }
 		auto operator<=>(const T& _value) const { return value_ <=> _value; }
 
-		void updateFrame(double _ticks = 1.0);
+		void addTick(double _ticks = 1.0);
 	private:
 		T value_;
-		double clock_ = 0.0f;
+		double tickCount_ = 0.0f;
 	};
 }
 

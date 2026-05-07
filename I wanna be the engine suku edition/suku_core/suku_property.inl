@@ -4,8 +4,8 @@ namespace suku
 {
 
 	template<typename T>
-	inline void Property<T>::updateFrame(double _ticks)
+	inline void Property<T>::addTick(double _ticks)
 	{
-		clock_ += _ticks;
+		tickCount_ += _ticks;
 	}
 }
