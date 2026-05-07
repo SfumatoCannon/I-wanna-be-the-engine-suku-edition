@@ -248,11 +248,15 @@ namespace suku
 			{
 				if (isKeyHolding(VK_RIGHT))
 				{
+					if (side_ == Direction::Left)
+						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Right;
 					moveRight();
 				}
 				else if (isKeyHolding(VK_LEFT))
 				{
+					if (side_ == Direction::Right)
+						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Left;
 					moveLeft();
 				}

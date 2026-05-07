@@ -154,8 +154,8 @@ namespace suku
 		float xLastFrame_;
 		float yLastFrame_;
 		Transform spriteTransformLastFrame_							= Transform();
-		bool isPositionTransitionalFrame_							= false;
-		bool isSpriteTransformTransitionalFrame_					= false;
+		bool isPositionTransitionalFrame_							= true;
+		bool isSpriteTransformTransitionalFrame_					= true;
 	};
 }
 

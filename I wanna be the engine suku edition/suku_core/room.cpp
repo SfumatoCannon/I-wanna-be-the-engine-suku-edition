@@ -149,6 +149,8 @@ namespace suku
 				}
 				else
 				{
+					obj->isPositionTransitionalFrame_ = true;
+					obj->isSpriteTransformTransitionalFrame_ = true;
 					obj->hspeedTemp = obj->vspeedTemp = 0;
 					obj->updateFunction();
 
@@ -265,14 +267,31 @@ namespace suku
 		for (auto& x : paintArray_)
 			for (auto& obj : x.second)
 			{
-				float objXLastFrame = obj->xLastFrame_;
-				float objYLastFrame = obj->yLastFrame_;
-				Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
-				obj->paintBody(
-					objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate),
-					objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate),
-					linearInterpolate(objSpriteTransformLastFrame, obj->transform, _offsetRate)
-				);
+				float posX, posY;
+				Transform transform;
+				if (obj->isPositionTransitionalFrame_)
+				{
+					float objXLastFrame = obj->xLastFrame_;
+					float objYLastFrame = obj->yLastFrame_;
+					posX = objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate);
+					posY = objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate);
+				}
+				else
+				{
+					posX = obj->x;
+					posY = obj->y;
+				}
+				if (obj->isSpriteTransformTransitionalFrame_)
+				{
+					Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
+					transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform, _offsetRate);
+				}
+				else
+				{
+					transform = obj->transform;
+				}
+
+				obj->paintBody(posX, posY, transform);
 			}
 
 		onPaintEnd();
