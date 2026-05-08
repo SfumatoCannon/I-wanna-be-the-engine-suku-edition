@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <cmath>
+#include <memory>
 
 namespace suku
 {
@@ -26,6 +27,13 @@ namespace suku
 
 	class Transition
 	{
-		
+	public:
+		Transition(double _duration, const TransitionFunction& _function = linear);
+		Transition(double _duration, TransitionFunction&& _function);
+		Transition(double _duration, const std::function<double(double)>& _function);
+		double getValue(double beginValue, double endValue, double elapsedTime) const;
+	private:
+		double duration_;
+		std::shared_ptr<TransitionFunction> basicFunction_;
 	};
 }
