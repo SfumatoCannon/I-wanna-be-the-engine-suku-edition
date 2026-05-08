@@ -10,6 +10,9 @@ namespace suku
 	public:
 		TransitionFunction() = default;
 		TransitionFunction(const std::function<double(double)>& _function) : function_(_function) {}
+		
+		double operator()(double t) const { return function_(t); }
+		double getValue(double t) const { return function_(t); }
 	private:
 		std::function<double(double)> function_;
 	};
@@ -34,6 +37,6 @@ namespace suku
 		double getValue(double beginValue, double endValue, double elapsedTime) const;
 	private:
 		double duration_;
-		std::shared_ptr<TransitionFunction> basicFunction_;
+		const TransitionFunction& basicFunction_;
 	};
 }
