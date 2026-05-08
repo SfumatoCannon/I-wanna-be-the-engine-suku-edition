@@ -3,6 +3,17 @@
 
 namespace suku
 {
+	const TransitionCurve TransitionCurve::linear([](double t) { return t; });
+	const TransitionCurve TransitionCurve::easeInQuad([](double t) { return t * t; });
+	const TransitionCurve TransitionCurve::easeOutQuad([](double t) { return t * (2 - t); });
+	const TransitionCurve TransitionCurve::easeInOutQuad([](double t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; });
+	const TransitionCurve TransitionCurve::easeInCubic([](double t) { return t * t * t; });
+	const TransitionCurve TransitionCurve::easeOutCubic([](double t) { return (--t) * t * t + 1; });
+	const TransitionCurve TransitionCurve::easeInOutCubic([](double t) { return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1; });
+	const TransitionCurve TransitionCurve::easeInExpo([](double t) { return t == 0 ? 0 : pow(2, 10 * (t - 1)); });
+	const TransitionCurve TransitionCurve::easeOutExpo([](double t) { return t == 1 ? 1 : 1 - pow(2, -10 * t); });
+	const TransitionCurve TransitionCurve::easeInOutExpo([](double t) { return t == 0 ? 0 : t == 1 ? 1 : t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2; });
+	
 	Transition::Transition(double _duration, const TransitionCurve& _function)
 		: duration_(_duration), curve_(_function)
 	{
