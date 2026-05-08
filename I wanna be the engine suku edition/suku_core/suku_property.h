@@ -1,4 +1,6 @@
 #pragma once
+#include "transition.h"
+
 namespace suku
 {
 	template<typename T>
@@ -24,6 +26,7 @@ namespace suku
 
 		void addTick(double _ticks = 1.0);
 	private:
+		const TransitionCurve& defaultTransitionCurve_ = linear;
 		T value_;
 		double tickCount_ = 0.0f;
 	};
