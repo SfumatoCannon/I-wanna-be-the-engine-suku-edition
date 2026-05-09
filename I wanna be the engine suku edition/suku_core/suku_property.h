@@ -12,23 +12,28 @@ namespace suku
 		Property(T&& _value) : value_(std::move(_value)) {}
 		T& operator()() { return value_; }
 		const T& operator()() const { return value_; }
-		void operator=(const T& _value) { value_ = _value; }
-		void operator=(T&& _value) { value_ = std::move(_value); }
+		void operator=(const T& _value);
 		T operator+(const T& _value) const { return value_ + _value; }
-		void operator+=(const T& _value) { value_ += _value; }
+		void operator+=(const T& _value);
 		T operator-(const T& _value) const { return value_ - _value; }
-		void operator-=(const T& _value) { value_ -= _value; }
+		void operator-=(const T& _value);
 		T operator*(const T& _value) const { return value_ * _value; }
-		void operator*=(const T& _value) { value_ *= _value; }
+		void operator*=(const T& _value);
 		T operator/(const T& _value) const { return value_ / _value; }
-		void operator/=(const T& _value) { value_ /= _value; }
+		void operator/=(const T& _value);
 		auto operator<=>(const T& _value) const { return value_ <=> _value; }
 
+		T getValue() const;
 		void addTick(double _ticks = 1.0);
 	private:
-		const TransitionCurve& defaultTransitionCurve_ = linear;
+		const TransitionCurve& defaultTransitionCurve_ = TransitionCurve::linear;
+		Transition currentTransition_ = Transition(0.0, defaultTransitionCurve_);
+		bool isTranslating_ = false;
+		T translateValueBegin_;
+		T translateValueEnd_;
+		double translateDuration_ = 0.0;
+		double translateElapsedTime_ = 0.0;
 		T value_;
-		double tickCount_ = 0.0f;
 	};
 }
 
