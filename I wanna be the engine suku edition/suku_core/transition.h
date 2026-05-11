@@ -40,4 +40,15 @@ namespace suku
 		double duration_;
 		const TransitionCurve& curve_;
 	};
+
+	enum class TransitionStartValueStrategy
+	{
+		fromNow,
+		fromExpected
+	};
+	enum class TransitionEndValueStrategy
+	{
+		toNow,
+		toExpected
+	};
 }
