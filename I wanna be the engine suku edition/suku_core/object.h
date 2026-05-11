@@ -1,4 +1,5 @@
 #pragma once
+#include "suku_property.h"
 #include "../framework.h"
 #include "../suku_draw/transform.h"
 #include "../suku_foundation/var.h"
@@ -9,6 +10,7 @@
 
 namespace suku
 {
+	template<typename T> class Property;
 	class Sprite;
 	class SpriteElement;
 	class Room;
@@ -57,7 +59,7 @@ namespace suku
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 
 		Object(float _x = 0, float _y = 0);
-		
+
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
 		UINT getSpriteFrameIndex()const;
@@ -135,27 +137,28 @@ namespace suku
 		void save();
 		void spawn();
 	protected:
+		template<typename T> friend class Property;
 		friend class Room;
 
 		std::map<std::string, Var> var_;
 
-		Room* inRoom_												= nullptr;
+		long double clock_ = 0.0;
+		Room* inRoom_ = nullptr;
 		size_t kindId_;
-		double	preUpdateId_, 
-				updateId_, 
-				postUpdateId_, 
-				paintId_;
-		bool removeTag_												= false;
-		bool destroyTag_											= false;
-		Sprite* sprite_												= nullptr;
-		int clock_ = 0;
+		double	preUpdateId_,
+			updateId_,
+			postUpdateId_,
+			paintId_;
+		bool removeTag_ = false;
+		bool destroyTag_ = false;
+		Sprite* sprite_ = nullptr;
 		std::list<std::function<bool()> > actionList_;
 
 		float xLastFrame_;
 		float yLastFrame_;
-		Transform spriteTransformLastFrame_							= Transform();
-		bool isPositionTransitionalFrame_							= true;
-		bool isSpriteTransformTransitionalFrame_					= true;
+		Transform spriteTransformLastFrame_ = Transform();
+		bool isPositionTransitionalFrame_ = true;
+		bool isSpriteTransformTransitionalFrame_ = true;
 	};
 }
 
