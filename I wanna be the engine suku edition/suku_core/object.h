@@ -4,12 +4,13 @@
 #include "../suku_foundation/var.h"
 #include "../suku_foundation/type_tree.h"
 #include "../suku_foundation/maths.h"
+#include "suku_property.h"
 #include <functional>
 #include <list>
 
 namespace suku
 {
-	template<typename T> class Property;
+	template<suku_property_type T> class Property;
 	class Sprite;
 	class SpriteElement;
 	class Room;
@@ -136,7 +137,7 @@ namespace suku
 		void save();
 		void spawn();
 	protected:
-		template<typename T> friend class Property;
+		template<suku_property_type T> friend class Property;
 		friend class Room;
 
 		std::map<std::string, Var> var_;

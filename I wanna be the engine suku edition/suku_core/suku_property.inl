@@ -1,23 +1,21 @@
 #include "suku_property.h"
-#include "object.h"
 
 namespace suku
 {
-	template<typename T>
-	inline void Property<T>::bind(Object* _parent)
+	template<suku_property_type T>
+	inline void Property<T>::bindClock(const unsigned long long& _clock)
 	{
-		parent_ = _parent;
-		parentClock_ = &_parent->clock_;
+		parentClock_ = &_clock;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator=(const T& _value)
 	{
 		isTranslating_ = false;
 		value_ = _value;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator=(std::pair<const T&, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
@@ -28,14 +26,14 @@ namespace suku
 		translateStartTime_ = *parentClock_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator+=(const T& _value)
 	{
 		isTranslating_ = false;
 		value_ = getExpectedValue() + _value;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator+=(std::pair<const T&, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
@@ -46,14 +44,14 @@ namespace suku
 		translateStartTime_ = *parentClock_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator-=(const T& _value)
 	{
 		isTranslating_ = false;
 		value_ = getExpectedValue() - _value;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator-=(std::pair<const T&, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
@@ -64,14 +62,14 @@ namespace suku
 		translateStartTime_ = *parentClock_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator*=(const T& _value)
 	{
 		isTranslating_ = false;
 		value_ = getExpectedValue() * _value;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator*=(std::pair<const T&, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
@@ -82,14 +80,14 @@ namespace suku
 		translateStartTime_ = *parentClock_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator/=(const T& _value)
 	{
 		isTranslating_ = false;
 		value_ = getExpectedValue() / _value;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::operator/=(std::pair<const T&, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
@@ -100,7 +98,7 @@ namespace suku
 		translateStartTime_ = *parentClock_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline T Property<T>::getValue() const
 	{
 		if (!isTranslating_)
@@ -124,7 +122,7 @@ namespace suku
 		}
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline T Property<T>::getExpectedValue() const
 	{
 		if (!isTranslating_)
@@ -133,7 +131,7 @@ namespace suku
 			return translateValueEnd_;
 	}
 
-	template<typename T>
+	template<suku_property_type T>
 	inline void Property<T>::addTick(double _ticks)
 	{
 		if (isTranslating_)

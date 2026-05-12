@@ -15,7 +15,7 @@ namespace suku
 		Property() = default;
 		Property(const T& _value) : value_(_value) {}
 		Property(T&& _value) : value_(std::move(_value)) {}
-		void bind(Object* _parent);
+		void bindClock(const unsigned long long& _clock);
 
 		T& operator()() { return value_; }
 		const T& operator()() const { return value_; }
@@ -39,7 +39,6 @@ namespace suku
 		T getExpectedValue() const;
 		void addTick(double _ticks = 1.0);
 	private:
-		Object* parent_ = nullptr;
 		const long double* parentClock_ = nullptr;
 		Transition currentTransition_ = Transition(0.0, TransitionCurve::linear);
 		bool isTranslating_ = false;
