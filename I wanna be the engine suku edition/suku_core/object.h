@@ -1,5 +1,4 @@
 #pragma once
-#include "suku_property.h"
 #include "../framework.h"
 #include "../suku_draw/transform.h"
 #include "../suku_foundation/var.h"

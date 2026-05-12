@@ -36,6 +36,7 @@ namespace suku
 		Transition(double _duration, TransitionCurve&& _curve);
 		Transition(double _duration, const std::function<double(double)>& _curveFunction);
 		double getValue(double beginValue, double endValue, double elapsedTime) const;
+		double getDuration() const { return duration_; }
 	private:
 		double duration_;
 		const TransitionCurve& curve_;
