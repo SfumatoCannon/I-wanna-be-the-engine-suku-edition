@@ -72,7 +72,7 @@ void renderSender()
 		std::this_thread::sleep_until(next);
 		auto nowTime = std::chrono::steady_clock::now();
 		double additionalFrameRate 
-			= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime).count() / updateFrameTime;
+			= 1.0 - std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime).count() / updateFrameTime;
 		paintWork(additionalFrameRate);
 		if (gameEndFlag)
 		{
@@ -165,10 +165,10 @@ void paintWork()
 		suku::graphics::beginDrawGlobal();
 		suku::nowRoom->paint();
 
-		suku::Text a("Consolas", 16);
-		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-		a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-		a.paint(10, 10);
+		//suku::Text a("Consolas", 16);
+		//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+		//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+		//a.paint(10, 10);
 		suku::graphics::endDrawGlobal();
 	}
 }
@@ -188,10 +188,10 @@ void paintWork(double _additionalFrameRate)
 		else
 			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
-		suku::Text a("Consolas", 16);
-		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-		a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-		a.paint(10, 10);
+		//suku::Text a("Consolas", 16);
+		//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+		//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+		//a.paint(10, 10);
 		suku::graphics::endDrawGlobal();
 	}
 	//	threadLock.unlock();

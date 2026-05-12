@@ -96,23 +96,23 @@ public:
 	virtual void onPaintStart()override
 	{
 		Room::onPaintStart();
-		auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
-		auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
-		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
-		Shape A(SquareShape(64));
-		Bitmap B("Image\\bg.jpg");
-		Bitmap C("Image\\wall.png");
-		static PaintLayer layer(1000, 608);
-		layer.beginDraw();
-		layer.clear(Color::GREEN());
-		layer.drawBitmap(B, translation(0, 0), 0.5f);
-		layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
-		layer.drawBitmap(C, 128, 256, 0, 0, 16, 16);
-		layer.endDraw().paint();
-		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-			TextAlign::MiddleRight);
-		a.textContent = "test message\npress s to save";
-		a.paint(256, 256, brushBlack);
+		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
+		//auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
+		//auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
+		//Shape A(SquareShape(64));
+		//Bitmap B("Image\\bg.jpg");
+		//Bitmap C("Image\\wall.png");
+		//static PaintLayer layer(1000, 608);
+		//layer.beginDraw();
+		//layer.clear(Color::GREEN());
+		//layer.drawBitmap(B, translation(0, 0), 0.5f);
+		//layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
+		//layer.drawBitmap(C, 128, 256, 0, 0, 16, 16);
+		//layer.endDraw().paint();
+		//Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+		//	TextAlign::MiddleRight);
+		//a.textContent = "test message\npress s to save";
+		//a.paint(256, 256, brushBlack);
 	}
 }room0;
 
