@@ -37,7 +37,7 @@ std::thread threadVsyncUpdate;
 std::thread threadUpdate;
 std::thread threadRender;
 
-std::chrono::steady_clock::time_point lastUpdateTime;
+std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
 
 void updateSender()
 {
@@ -49,7 +49,7 @@ void updateSender()
 	{
 		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
 		std::this_thread::sleep_until(next);
-		lastUpdateTime = std::chrono::steady_clock::now();
+		lastUpdateTime.store(std::chrono::steady_clock::now());
 		updateWork();
 		if (gameEndFlag)
 		{
@@ -71,8 +71,8 @@ void renderSender()
 		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
 		std::this_thread::sleep_until(next);
 		auto nowTime = std::chrono::steady_clock::now();
-		double additionalFrameRate 
-			= 1.0 - std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime).count() / updateFrameTime;
+		double additionalFrameRate
+			= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
 		paintWork(additionalFrameRate);
 		if (gameEndFlag)
 		{
@@ -183,15 +183,16 @@ void paintWork(double _additionalFrameRate)
 		renderFPS = getMonitoredFPS(true);
 
 		suku::graphics::beginDrawGlobal();
-		if (_additionalFrameRate == 0.0)
-			suku::nowRoom->paint();
-		else
-			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
+		suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
-		//suku::Text a("Consolas", 16);
-		//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-		//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-		//a.paint(10, 10);
+		suku::Text a("Consolas", 16);
+		if (_additionalFrameRate > 1.0)
+			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
+		else
+			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
+		a.textContent = L"FPS: " + std::to_wstring(renderFPS)
+			+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
+		a.paint(10, 10);
 		suku::graphics::endDrawGlobal();
 	}
 	//	threadLock.unlock();

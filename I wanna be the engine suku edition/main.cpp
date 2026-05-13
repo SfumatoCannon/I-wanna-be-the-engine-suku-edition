@@ -21,7 +21,7 @@ public:
 class Room0 : public Room
 {
 public:
-
+	Player* p;
 	virtual void onCreate()override
 	{
 		Room::onCreate();
@@ -40,7 +40,7 @@ public:
 
 		Wall a(100, 100);
 		create(a);
-		create<Player>(0.f, 0.f);
+		p = create<Player>(0.f, 0.f);
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
 
@@ -86,6 +86,8 @@ public:
 		create(VineRight(96, 32));
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
 		create(Wall(800, 32));
+		for (int i = 0; i < 608; i += 32)
+			create(Wall(300, i));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
@@ -98,7 +100,7 @@ public:
 		Room::onPaintStart();
 		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
 		//auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
-		//auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
+		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		//Shape A(SquareShape(64));
 		//Bitmap B("Image\\bg.jpg");
 		//Bitmap C("Image\\wall.png");
@@ -109,10 +111,11 @@ public:
 		//layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
 		//layer.drawBitmap(C, 128, 256, 0, 0, 16, 16);
 		//layer.endDraw().paint();
-		//Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-		//	TextAlign::MiddleRight);
+		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+			TextAlign::MiddleRight);
+		a.textContent = std::to_wstring(p->y);
 		//a.textContent = "test message\npress s to save";
-		//a.paint(256, 256, brushBlack);
+		a.paint(256, 256, brushBlack);
 	}
 }room0;
 

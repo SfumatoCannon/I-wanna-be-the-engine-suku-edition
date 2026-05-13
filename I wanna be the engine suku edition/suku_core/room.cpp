@@ -273,8 +273,8 @@ namespace suku
 				{
 					float objXLastFrame = obj->xLastFrame_;
 					float objYLastFrame = obj->yLastFrame_;
-					posX = objXLastFrame * _offsetRate + obj->x * (1 - _offsetRate);
-					posY = objYLastFrame * _offsetRate + obj->y * (1 - _offsetRate);
+					posX = objXLastFrame * (1 - _offsetRate) + obj->x * _offsetRate;
+					posY = objYLastFrame * (1 - _offsetRate) + obj->y * _offsetRate;
 				}
 				else
 				{

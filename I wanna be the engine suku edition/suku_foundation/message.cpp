@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "message.h"
 
 namespace suku
