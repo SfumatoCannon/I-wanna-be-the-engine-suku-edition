@@ -23,7 +23,7 @@ namespace suku
 	{
 
 	public:
-		float x, y;
+		Property<float> x, y;
 		float spawnX, spawnY;
 		float xScale, yScale;
 		float vspeed, hspeed;

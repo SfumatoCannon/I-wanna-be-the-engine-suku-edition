@@ -46,6 +46,13 @@ namespace suku
 	}
 
 	template<typename T>
+	bool setSavable(Property<T>& _x, const std::string _name)
+	{
+		//return setSavable(_x.value_, _name);
+		return false;
+	}
+
+	template<typename T>
 	inline void saveVar(const std::string _name, T _val)
 	{
 		unsigned long long id = maths::hash(_name);
@@ -60,6 +67,12 @@ namespace suku
 		pointerInVar >> pointer;
 		*pointer = _val;
 		SaveAssetGlobal::getInstance().writeData();
+	}
+
+	template<typename T>
+	void saveVar(const std::string _name, Property<T>& _val)
+	{
+		//saveVar(_name, _val.value_);
 	}
 
 	template<typename T>
@@ -86,6 +99,12 @@ namespace suku
 	}
 
 	template<typename T>
+	void saveVar(Property<T>& _x)
+	{
+		//saveVar(_x.value_);
+	}
+
+	template<typename T>
 	inline void loadVar(T& _x, T _defaultValue)
 	{
 		SaveAssetGlobal::getInstance().readData();
@@ -109,6 +128,12 @@ namespace suku
 	}
 
 	template<typename T>
+	void loadVar(Property<T>& _x, T _defaultValue)
+	{
+		//loadVar(_x.value_, _defaultValue);
+	}
+
+	template<typename T>
 	T loadVar(const std::string _name, T _defaultValue)
 	{
 		SaveAssetGlobal::getInstance().readData();
@@ -123,5 +148,12 @@ namespace suku
 		T* pointer;
 		pointerInVar >> pointer;
 		return (*pointer);
+	}
+
+	template<typename T>
+	T loadVar(const std::string _name, Property<T>& _defaultValue)
+	{
+		//return loadVar(_name, _defaultValue.value_);
+		return T();
 	}
 }

@@ -13,12 +13,12 @@ namespace suku
 	{
 	public:
 		Property() = default;
-		Property(const T& _value) : value_(_value) {}
-		Property(T&& _value) : value_(std::move(_value)) {}
+		Property(const T& _value) : value_(_value), frameState_(_value), lastFrameState_(_value) {}
+		Property(T&& _value) : value_(std::move(_value)), frameState_(value_), lastFrameState_(value_) {}
 		void bindClock(const unsigned long long& _clock);
 
-		T& operator()() { return value_; }
-		const T& operator()() const { return value_; }
+		operator T() const { return value_; }
+
 		void operator=(const T& _value);
 		void operator=(std::pair<const T&, const Transition&> _valueWithTransition);
 		void operator+=(const T& _value);
@@ -29,14 +29,14 @@ namespace suku
 		void operator*=(std::pair<const T&, const Transition&> _valueWithTransition);
 		void operator/=(const T& _value);
 		void operator/=(std::pair<const T&, const Transition&> _valueWithTransition);
-		T operator+(const T& _value) const { return getValue() + _value; }
-		T operator-(const T& _value) const { return getValue() - _value; }
-		T operator*(const T& _value) const { return getValue() * _value; }
-		T operator/(const T& _value) const { return getValue() / _value; }
+		T operator++(int);
+		T operator--(int);
 		auto operator<=>(const T& _value) const { return getValue() <=> _value; }
 
 		T getValue() const;
 		T getExpectedValue() const;
+		T getFrameState() const { return frameState_; }
+		T getLastFrameState() const { return lastFrameState_; }
 		void addTick(double _ticks = 1.0);
 	private:
 		const long double* parentClock_ = nullptr;
@@ -48,6 +48,8 @@ namespace suku
 		double translateElapsedTime_ = 0.0; //?
 		long double translateStartTime_ = 0;
 		T value_;
+		T frameState_;
+		T lastFrameState_;
 	};
 }
 

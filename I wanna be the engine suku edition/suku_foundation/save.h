@@ -4,6 +4,7 @@
 #include <utility>
 #include <windows.h>
 #include <fstream>
+#include "../suku_core/suku_property.h"
 
 namespace suku
 {
@@ -61,10 +62,15 @@ namespace suku
 	SaveFile* getSaveFile();
 	template<typename T> bool setSavable(const std::string _name);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
+	template<typename T> bool setSavable(Property<T>& _x, const std::string _name);
 	template<typename T> void saveVar(const std::string _name, T _val);
+	template<typename T> void saveVar(const std::string _name, Property<T>& _val);
 	template<typename T> void saveVar(T& _x);
+	template<typename T> void saveVar(Property<T>& _x);
 	template<typename T> void loadVar(T& _x, T _defaultValue = T());
+	template<typename T> void loadVar(Property<T>& _x, T _defaultValue = T());
 	template<typename T> T loadVar(const std::string _name, T _defaultValue = T());
+	template<typename T> T loadVar(const std::string _name, Property<T>& _defaultValue);
 	bool isSavable(const std::string _name);
 	bool hasValueInFile(const std::string _name);
 }

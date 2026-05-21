@@ -29,8 +29,8 @@ namespace suku
 	template<suku_property_type T>
 	inline void Property<T>::operator+=(const T& _value)
 	{
-		isTranslating_ = false;
 		value_ = getExpectedValue() + _value;
+		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
@@ -47,8 +47,8 @@ namespace suku
 	template<suku_property_type T>
 	inline void Property<T>::operator-=(const T& _value)
 	{
-		isTranslating_ = false;
 		value_ = getExpectedValue() - _value;
+		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
@@ -65,8 +65,8 @@ namespace suku
 	template<suku_property_type T>
 	inline void Property<T>::operator*=(const T& _value)
 	{
-		isTranslating_ = false;
 		value_ = getExpectedValue() * _value;
+		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
@@ -83,8 +83,8 @@ namespace suku
 	template<suku_property_type T>
 	inline void Property<T>::operator/=(const T& _value)
 	{
-		isTranslating_ = false;
 		value_ = getExpectedValue() / _value;
+		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
@@ -99,26 +99,32 @@ namespace suku
 	}
 
 	template<suku_property_type T>
+	inline T Property<T>::operator++(int)
+	{
+		T old = value_;
+		value_ = getExpectedValue() + 1;
+		isTranslating_ = false;
+		return old;
+	}
+
+	template<suku_property_type T>
+	inline T Property<T>::operator--(int)
+	{
+		T old = value_;
+		value_ = getExpectedValue() - 1;
+		isTranslating_ = false;
+		return old;
+	}
+
+	template<suku_property_type T>
 	inline T Property<T>::getValue() const
 	{
 		if (!isTranslating_)
 			return value_;
 		else
 		{
-			if (parentClock_ == nullptr)
-				return value_;
-			translateElapsedTime_ = (double)(*parentClock_ - translateStartTime_);
-			if (translateElapsedTime_ >= translateDuration_)
-			{
-				isTranslating_ = false;
-				value_ = translateValueEnd_;
-				return value_;
-			}
-			else
-			{
-				double t = currentTransition_.getValue(0.0, 1.0, translateElapsedTime_);
-				return translateValueBegin_ + (translateValueEnd_ - translateValueBegin_) * t;
-			}
+			double t = currentTransition_.getValue(0.0, 1.0, translateElapsedTime_);
+			return translateValueBegin_ + (translateValueEnd_ - translateValueBegin_) * t;
 		}
 	}
 
@@ -136,5 +142,12 @@ namespace suku
 	{
 		if (isTranslating_)
 			translateElapsedTime_ += _ticks;
+		if (translateElapsedTime_ >= translateDuration_)
+		{
+			isTranslating_ = false;
+			value_ = translateValueEnd_;
+		}
+		lastFrameState_ = frameState_;
+		frameState_ = getValue();
 	}
 }

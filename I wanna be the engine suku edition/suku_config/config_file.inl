@@ -5,19 +5,19 @@
 
 namespace suku
 {
-	template<typename T>
+	template<config_var_type T>
 	inline T ConfigFile::loadVar(std::wstring _name, T _defaultValue)
 	{
 		return loadVar(_name, L"Config", _defaultValue);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline T ConfigFile::loadVar(std::wstring _name, std::wstring _category, T _defaultValue)
 	{
 		std::wstring defaultValueStr;
 		if constexpr (std::is_same_v<T, bool>)
 		{
-			defaultValueStr = _defaultValue ? L"true" : L"false";
+			defaultValueStr = _defaultValue ? L"true" : L"false"; 
 		}
 		else if constexpr (std::is_same_v<T, std::string>)
 		{
@@ -37,7 +37,7 @@ namespace suku
 		}
 		else
 		{
-			static_assert(std::_Always_false<T>::value, "Unsupported var type for loadVar");
+			static_assert(sizeof(T) == 0, "Unsupported var type for loadVar");
 		}
 
 		wchar_t buffer[256];
@@ -70,13 +70,13 @@ namespace suku
 		}
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline void ConfigFile::saveVar(std::wstring _name, T _value)
 	{
 		saveVar(_name, L"Config", _value);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline void ConfigFile::saveVar(std::wstring _name, std::wstring _category, T _value)
 	{
 		std::wstring valueStr;
@@ -102,32 +102,32 @@ namespace suku
 		}
 		else
 		{
-			static_assert(std::_Always_false<T>::value, "Unsupported var type for saveVar");
+			static_assert(sizeof(T) == 0, "Unsupported var type for saveVar");
 		}
 
 		WritePrivateProfileStringW(_category.c_str(), _name.c_str(), valueStr.c_str(),
 			filesystem::absolutePath(fileName.c_str()).content);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline T ConfigFile::loadVar(String _name, T _defaultValue)
 	{
 		return loadVar(_name.contentInWString(), _defaultValue);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline T ConfigFile::loadVar(String _name, String _category, T _defaultValue)
 	{
 		return loadVar(_name.contentInWString(), _category.contentInWString(), _defaultValue);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline void ConfigFile::saveVar(String _name, T _value)
 	{
 		saveVar(_name.contentInWString(), _value);
 	}
 
-	template<typename T>
+	template<config_var_type T>
 	inline void ConfigFile::saveVar(String _name, String _category, T _value)
 	{
 		saveVar(_name.contentInWString(), _category.contentInWString(), _value);
