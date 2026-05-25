@@ -2,8 +2,6 @@
 
 namespace suku
 {
-	std::list<Property<T>&>
-
 	template<suku_property_type T>
 	inline void Property<T>::bindClock(const unsigned long long& _clock)
 	{
@@ -126,7 +124,7 @@ namespace suku
 		else
 		{
 			double t = currentTransition_.getValue(0.0, 1.0, transitionElapsedTime_);
-			return transitionValueBegin_ + (transitionValueEnd_ - transitionValueBegin_) * t;
+			return static_cast<T>(transitionValueBegin_ + (transitionValueEnd_ - transitionValueBegin_) * t);
 		}
 	}
 
