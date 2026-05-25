@@ -138,6 +138,13 @@ namespace suku
 	}
 
 	template<suku_property_type T>
+	inline void Property<T>::updateFrameState()
+	{
+		lastFrameState_ = frameState_;
+		frameState_ = getValue();
+	}
+
+	template<suku_property_type T>
 	inline void Property<T>::addTick(double _ticks)
 	{
 		if (isTranslating_)
@@ -147,7 +154,6 @@ namespace suku
 			isTranslating_ = false;
 			value_ = translateValueEnd_;
 		}
-		lastFrameState_ = frameState_;
-		frameState_ = getValue();
+		updateFrameState();
 	}
 }
