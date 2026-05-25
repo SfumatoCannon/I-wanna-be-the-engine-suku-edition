@@ -261,6 +261,8 @@ namespace suku
 		paintId_ = 0;
 		sprite_ = nullptr;
 		inRoom_ = nullptr;
+		x.bindClock(clock_);
+		y.bindClock(clock_);
 		x = _x;
 		y = _y;
 		xLastFrame_ = x;
