@@ -2,6 +2,8 @@
 
 namespace suku
 {
+	std::list<Property<T>&>
+
 	template<suku_property_type T>
 	inline void Property<T>::bindClock(const unsigned long long& _clock)
 	{
@@ -20,10 +22,10 @@ namespace suku
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
-		translateDuration_ = transition.getDuration();
-		translateValueBegin_ = value_;
-		translateValueEnd_ = value;
-		translateStartTime_ = *parentClock_;
+		transitionDuration_ = transition.getDuration();
+		transitionValueBegin_ = value_;
+		transitionValueEnd_ = value;
+		transitionStartTime_ = *parentClock_;
 	}
 
 	template<suku_property_type T>
@@ -38,10 +40,10 @@ namespace suku
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
-		translateDuration_ = transition.getDuration();
-		translateValueBegin_ = getExpectedValue();
-		translateValueEnd_ = translateValueBegin_ + value;
-		translateStartTime_ = *parentClock_;
+		transitionDuration_ = transition.getDuration();
+		transitionValueBegin_ = getExpectedValue();
+		transitionValueEnd_ = transitionValueBegin_ + value;
+		transitionStartTime_ = *parentClock_;
 	}
 
 	template<suku_property_type T>
@@ -56,10 +58,10 @@ namespace suku
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
-		translateDuration_ = transition.getDuration();
-		translateValueBegin_ = getExpectedValue();
-		translateValueEnd_ = translateValueBegin_ - value;
-		translateStartTime_ = *parentClock_;
+		transitionDuration_ = transition.getDuration();
+		transitionValueBegin_ = getExpectedValue();
+		transitionValueEnd_ = transitionValueBegin_ - value;
+		transitionStartTime_ = *parentClock_;
 	}
 
 	template<suku_property_type T>
@@ -74,10 +76,10 @@ namespace suku
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
-		translateDuration_ = transition.getDuration();
-		translateValueBegin_ = getExpectedValue();
-		translateValueEnd_ = translateValueBegin_ * value;
-		translateStartTime_ = *parentClock_;
+		transitionDuration_ = transition.getDuration();
+		transitionValueBegin_ = getExpectedValue();
+		transitionValueEnd_ = transitionValueBegin_ * value;
+		transitionStartTime_ = *parentClock_;
 	}
 
 	template<suku_property_type T>
@@ -92,10 +94,10 @@ namespace suku
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
-		translateDuration_ = transition.getDuration();
-		translateValueBegin_ = getExpectedValue();
-		translateValueEnd_ = translateValueBegin_ / value;
-		translateStartTime_ = *parentClock_;
+		transitionDuration_ = transition.getDuration();
+		transitionValueBegin_ = getExpectedValue();
+		transitionValueEnd_ = transitionValueBegin_ / value;
+		transitionStartTime_ = *parentClock_;
 	}
 
 	template<suku_property_type T>
@@ -123,8 +125,8 @@ namespace suku
 			return value_;
 		else
 		{
-			double t = currentTransition_.getValue(0.0, 1.0, translateElapsedTime_);
-			return translateValueBegin_ + (translateValueEnd_ - translateValueBegin_) * t;
+			double t = currentTransition_.getValue(0.0, 1.0, transitionElapsedTime_);
+			return transitionValueBegin_ + (transitionValueEnd_ - transitionValueBegin_) * t;
 		}
 	}
 
@@ -134,7 +136,7 @@ namespace suku
 		if (!isTranslating_)
 			return value_;
 		else
-			return translateValueEnd_;
+			return transitionValueEnd_;
 	}
 
 	template<suku_property_type T>
@@ -148,11 +150,11 @@ namespace suku
 	inline void Property<T>::addTick(double _ticks)
 	{
 		if (isTranslating_)
-			translateElapsedTime_ += _ticks;
-		if (translateElapsedTime_ >= translateDuration_)
+			transitionElapsedTime_ += _ticks;
+		if (transitionElapsedTime_ >= transitionDuration_)
 		{
 			isTranslating_ = false;
-			value_ = translateValueEnd_;
+			value_ = transitionValueEnd_;
 		}
 		updateFrameState();
 	}

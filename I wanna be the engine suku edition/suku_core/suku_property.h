@@ -43,11 +43,11 @@ namespace suku
 		const long double* parentClock_ = nullptr;
 		Transition currentTransition_ = Transition(0.0, TransitionCurve::linear);
 		bool isTranslating_ = false;
-		T translateValueBegin_;
-		T translateValueEnd_;
-		double translateDuration_ = 0.0;
-		double translateElapsedTime_ = 0.0; //?
-		long double translateStartTime_ = 0;
+		T transitionValueBegin_;
+		T transitionValueEnd_;
+		double transitionDuration_ = 0.0;
+		double transitionElapsedTime_ = 0.0; //?
+		long double transitionStartTime_ = 0;
 		T value_;
 		T frameState_;
 		T lastFrameState_;
