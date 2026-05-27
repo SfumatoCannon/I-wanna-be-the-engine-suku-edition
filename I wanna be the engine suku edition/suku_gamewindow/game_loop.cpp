@@ -15,7 +15,7 @@ double renderFPS = 240.0;
 void vsyncLoopSender()
 {
 	const double frameTime = 1000.0 / updateFPS;
-	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime) / 2.0;
+	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
 
 	auto next = std::chrono::steady_clock::now();
 	while (!gameEndFlag)
@@ -32,7 +32,7 @@ void vsyncLoopSender()
 	}
 }
 
-void vsyncLoopSender(int _frameRate)
+void vsyncLoopSenderExtraFrames(int _frameRate)
 {
 	const double frameTime = 1000.0 / updateFPS;
 	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate;
