@@ -218,7 +218,8 @@ namespace suku
 				else
 				{
 					obj->postUpdate();
-
+					obj->x.addTick();
+					obj->y.addTick();
 					iter++;
 				}
 			}
@@ -271,15 +272,15 @@ namespace suku
 				Transform transform;
 				if (obj->isPositionTransitionalFrame_)
 				{
-					float objXLastFrame = obj->xLastFrame_;
-					float objYLastFrame = obj->yLastFrame_;
-					posX = objXLastFrame * (1 - _offsetRate) + obj->x * _offsetRate;
-					posY = objYLastFrame * (1 - _offsetRate) + obj->y * _offsetRate;
+					float objXLastFrame = obj->x.getLastFrameState();
+					float objYLastFrame = obj->y.getLastFrameState();
+					posX = objXLastFrame * (1 - _offsetRate) + obj->x.getFrameState() * _offsetRate;
+					posY = objYLastFrame * (1 - _offsetRate) + obj->y.getFrameState() * _offsetRate;
 				}
 				else
 				{
-					posX = obj->x;
-					posY = obj->y;
+					posX = obj->x.getFrameState();
+					posY = obj->y.getFrameState();
 				}
 				if (obj->isSpriteTransformTransitionalFrame_)
 				{

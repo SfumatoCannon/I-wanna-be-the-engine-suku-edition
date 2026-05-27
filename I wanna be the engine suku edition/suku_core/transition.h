@@ -32,6 +32,7 @@ namespace suku
 	class Transition
 	{
 	public:
+		Transition(const Transition& _other);
 		Transition(double _duration, const TransitionCurve& _curve = TransitionCurve::linear);
 		Transition(double _duration, TransitionCurve&& _curve);
 		Transition(double _duration, const std::function<double(double)>& _curveFunction);
@@ -39,7 +40,7 @@ namespace suku
 		double getDuration() const { return duration_; }
 	private:
 		double duration_;
-		const TransitionCurve& curve_;
+		TransitionCurve curve_;
 	};
 
 	enum class TransitionStartValueStrategy

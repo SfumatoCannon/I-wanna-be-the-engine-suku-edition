@@ -82,6 +82,7 @@ public:
 				return true;
 			}
 		);
+		auto pair = std::make_pair<double, Transition>(400, Transition(500.0, TransitionCurve::linear));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));

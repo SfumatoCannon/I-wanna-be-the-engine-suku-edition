@@ -15,20 +15,20 @@ namespace suku
 		Property() = default;
 		Property(const T& _value) : value_(_value), frameState_(_value), lastFrameState_(_value) {}
 		Property(T&& _value) : value_(std::move(_value)), frameState_(value_), lastFrameState_(value_) {}
-		void bindClock(const unsigned long long& _clock);
+		void bindClock(const long double& _clock);
 
 		operator T() const { return value_; }
 
-		void operator=(const T& _value);
-		void operator=(std::pair<const T&, const Transition&> _valueWithTransition);
-		void operator+=(const T& _value);
-		void operator+=(std::pair<const T&, const Transition&> _valueWithTransition);
-		void operator-=(const T& _value);
-		void operator-=(std::pair<const T&, const Transition&> _valueWithTransition);
-		void operator*=(const T& _value);
-		void operator*=(std::pair<const T&, const Transition&> _valueWithTransition);
-		void operator/=(const T& _value);
-		void operator/=(std::pair<const T&, const Transition&> _valueWithTransition);
+		void operator=(T _value);
+		void operator=(std::pair<T, const Transition&> _valueWithTransition);
+		void operator+=(T _value);
+		void operator+=(std::pair<T, const Transition&> _valueWithTransition);
+		void operator-=(T _value);
+		void operator-=(std::pair<T, const Transition&> _valueWithTransition);
+		void operator*=(T _value);
+		void operator*=(std::pair<T, const Transition&> _valueWithTransition);
+		void operator/=(T _value);
+		void operator/=(std::pair<T, const Transition&> _valueWithTransition);
 		T operator++(int);
 		T operator--(int);
 		auto operator<=>(const T& _value) const { return getValue() <=> _value; }

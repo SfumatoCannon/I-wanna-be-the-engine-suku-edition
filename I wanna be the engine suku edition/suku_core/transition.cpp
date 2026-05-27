@@ -14,6 +14,11 @@ namespace suku
 	const TransitionCurve TransitionCurve::easeOutExpo([](double t) { return t == 1 ? 1 : 1 - pow(2, -10 * t); });
 	const TransitionCurve TransitionCurve::easeInOutExpo([](double t) { return t == 0 ? 0 : t == 1 ? 1 : t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2; });
 	
+	Transition::Transition(const Transition& _other)
+		:duration_(_other.duration_), curve_(_other.curve_)
+	{
+	}
+
 	Transition::Transition(double _duration, const TransitionCurve& _function)
 		: duration_(_duration), curve_(_function)
 	{

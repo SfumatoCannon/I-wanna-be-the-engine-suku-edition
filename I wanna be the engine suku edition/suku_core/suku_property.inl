@@ -3,99 +3,104 @@
 namespace suku
 {
 	template<suku_property_type T>
-	inline void Property<T>::bindClock(const unsigned long long& _clock)
+	inline void Property<T>::bindClock(const long double& _clock)
 	{
 		parentClock_ = &_clock;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator=(const T& _value)
+	inline void Property<T>::operator=(T _value)
 	{
-		isTranslating_ = false;
 		value_ = _value;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator=(std::pair<const T&, const Transition&> _valueWithTransition)
+	inline void Property<T>::operator=(std::pair<T, const Transition&> _valueWithTransition)
 	{
-		auto [value, transition] = _valueWithTransition;
+		auto& [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
+		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = value_;
 		transitionValueEnd_ = value;
 		transitionStartTime_ = *parentClock_;
+		transitionElapsedTime_ = 0.0;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator+=(const T& _value)
+	inline void Property<T>::operator+=(T _value)
 	{
 		value_ = getExpectedValue() + _value;
-		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator+=(std::pair<const T&, const Transition&> _valueWithTransition)
+	inline void Property<T>::operator+=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
+		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ + value;
-		transitionStartTime_ = *parentClock_;
+		transitionStartTime_ = *parentClock_;		
+		transitionElapsedTime_ = 0.0;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator-=(const T& _value)
+	inline void Property<T>::operator-=(T _value)
 	{
 		value_ = getExpectedValue() - _value;
-		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator-=(std::pair<const T&, const Transition&> _valueWithTransition)
+	inline void Property<T>::operator-=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
+		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ - value;
 		transitionStartTime_ = *parentClock_;
+		transitionElapsedTime_ = 0.0;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator*=(const T& _value)
+	inline void Property<T>::operator*=(T _value)
 	{
 		value_ = getExpectedValue() * _value;
-		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator*=(std::pair<const T&, const Transition&> _valueWithTransition)
+	inline void Property<T>::operator*=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
+		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ * value;
 		transitionStartTime_ = *parentClock_;
+		transitionElapsedTime_ = 0.0;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator/=(const T& _value)
+	inline void Property<T>::operator/=(T _value)
 	{
 		value_ = getExpectedValue() / _value;
-		isTranslating_ = false;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator/=(std::pair<const T&, const Transition&> _valueWithTransition)
+	inline void Property<T>::operator/=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
 		isTranslating_ = true;
+		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ / value;
 		transitionStartTime_ = *parentClock_;
+		transitionElapsedTime_ = 0.0;
 	}
 
 	template<suku_property_type T>
@@ -103,7 +108,6 @@ namespace suku
 	{
 		T old = value_;
 		value_ = getExpectedValue() + 1;
-		isTranslating_ = false;
 		return old;
 	}
 
@@ -112,7 +116,6 @@ namespace suku
 	{
 		T old = value_;
 		value_ = getExpectedValue() - 1;
-		isTranslating_ = false;
 		return old;
 	}
 
@@ -123,8 +126,7 @@ namespace suku
 			return value_;
 		else
 		{
-			double t = currentTransition_.getValue(0.0, 1.0, transitionElapsedTime_);
-			return static_cast<T>(transitionValueBegin_ + (transitionValueEnd_ - transitionValueBegin_) * t);
+			return static_cast<T>(currentTransition_.getValue(transitionValueBegin_, transitionValueEnd_, transitionElapsedTime_));
 		}
 	}
 
@@ -148,11 +150,13 @@ namespace suku
 	inline void Property<T>::addTick(double _ticks)
 	{
 		if (isTranslating_)
-			transitionElapsedTime_ += _ticks;
-		if (transitionElapsedTime_ >= transitionDuration_)
 		{
-			isTranslating_ = false;
-			value_ = transitionValueEnd_;
+			transitionElapsedTime_ += _ticks;
+			if (transitionElapsedTime_ >= transitionDuration_)
+			{
+				isTranslating_ = false;
+				value_ = transitionValueEnd_;
+			}
 		}
 		updateFrameState();
 	}
