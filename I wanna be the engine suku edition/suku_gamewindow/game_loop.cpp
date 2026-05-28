@@ -15,12 +15,13 @@ double renderFPS = 240.0;
 void vsyncLoopSender()
 {
 	const double frameTime = 1000.0 / updateFPS;
-	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
+	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+		(std::chrono::duration<double, std::milli>(frameTime));
 
 	auto next = std::chrono::steady_clock::now();
 	while (!gameEndFlag)
 	{
-		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		next += frameDuration;
 		std::this_thread::sleep_until(next);
 		updateWork();
 		paintWork();
@@ -35,18 +36,19 @@ void vsyncLoopSender()
 void vsyncLoopSenderExtraFrames(int _frameRate)
 {
 	const double frameTime = 1000.0 / updateFPS;
-	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate;
+	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+		(std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate);
 
 	auto next = std::chrono::steady_clock::now();
 	while (!gameEndFlag)
 	{
-		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		next += frameDuration;
 		std::this_thread::sleep_until(next);
 		updateWork();
 		for (int i = 1; i < _frameRate; i++)
 		{
 			paintWork(1.0 / (double)_frameRate * i);
-			next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+			next += frameDuration;
 			std::this_thread::sleep_until(next);
 		}
 		paintWork(1.0);
@@ -68,12 +70,13 @@ std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
 void updateSender()
 {
 	const double frameTime = 1000.0 / updateFPS;
-	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
+	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+		(std::chrono::duration<double, std::milli>(frameTime));
 
 	auto next = std::chrono::steady_clock::now();
 	while (!gameEndFlag)
 	{
-		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		next += frameDuration;
 		std::this_thread::sleep_until(next);
 		lastUpdateTime.store(std::chrono::steady_clock::now());
 		updateWork();
@@ -89,12 +92,13 @@ void renderSender()
 {
 	const double updateFrameTime = 1000.0 / updateFPS;
 	double frameTime = 1000.0 / (double)suku::ConfigElementPool::renderFPS.value();
-	auto framePeriod = std::chrono::duration<double, std::milli>(frameTime);
+	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+		(std::chrono::duration<double, std::milli>(frameTime));
 
 	auto next = std::chrono::steady_clock::now();
 	while (!gameEndFlag)
 	{
-		next += std::chrono::duration_cast<std::chrono::steady_clock::duration>(framePeriod);
+		next += frameDuration;
 		std::this_thread::sleep_until(next);
 		auto nowTime = std::chrono::steady_clock::now();
 		double additionalFrameRate
@@ -118,7 +122,7 @@ void startSender()
 
 void startSenderVsync()
 {
-	std::thread thread(vsyncLoopSender);
+	std::thread thread(vsyncLoopSenderExtraFrames, 2);
 	thread.detach();
 }
 
