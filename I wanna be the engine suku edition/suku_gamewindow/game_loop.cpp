@@ -78,8 +78,8 @@ void updateSender()
 	{
 		next += frameDuration;
 		std::this_thread::sleep_until(next);
-		lastUpdateTime.store(std::chrono::steady_clock::now());
 		updateWork();
+		lastUpdateTime.store(std::chrono::steady_clock::now());
 		if (gameEndFlag)
 		{
 			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
