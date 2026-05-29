@@ -42,9 +42,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		soundInit();
 		init();
 		if (ConfigElementPool::isVSyncOn.value())
-			startSenderVsync();
+			game_loop::startWithVsync();
 		else
-			startSender();
+			game_loop::start();
 		break;
 	case WM_INPUT:
 		inputResult = suku::input::onWindowInput(lParam);
