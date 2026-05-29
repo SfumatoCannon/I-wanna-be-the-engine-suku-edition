@@ -6,248 +6,251 @@
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
 
-bool gameEndFlag = false;
-void endGame() { gameEndFlag = true; }
-
-constexpr double updateFPS = 50.0;
-double renderFPS = 240.0;
-
-void vsyncLoopSender()
+namespace suku
 {
-	const double frameTime = 1000.0 / updateFPS;
-	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-		(std::chrono::duration<double, std::milli>(frameTime));
+	bool gameEndFlag = false;
+	void endGame() { gameEndFlag = true; }
 
-	auto next = std::chrono::steady_clock::now();
-	while (!gameEndFlag)
+	constexpr double updateFPS = 50.0;
+	double renderFPS = 240.0;
+
+	void vsyncLoopSender()
 	{
-		next += frameDuration;
-		std::this_thread::sleep_until(next);
-		updateWork();
-		paintWork();
-		if (gameEndFlag)
-		{
-			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-			break;
-		}
-	}
-}
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
 
-void vsyncLoopSenderExtraFrames(int _frameRate)
-{
-	const double frameTime = 1000.0 / updateFPS;
-	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-		(std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate);
-
-	auto next = std::chrono::steady_clock::now();
-	while (!gameEndFlag)
-	{
-		next += frameDuration;
-		std::this_thread::sleep_until(next);
-		updateWork();
-		for (int i = 1; i < _frameRate; i++)
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
 		{
-			paintWork(1.0 / (double)_frameRate * i);
 			next += frameDuration;
 			std::this_thread::sleep_until(next);
-		}
-		paintWork(1.0);
-		if (gameEndFlag)
-		{
-			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-			break;
+			updateWork();
+			paintWork();
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
 		}
 	}
-}
 
-// WIP
-std::thread threadVsyncUpdate;
-std::thread threadUpdate;
-std::thread threadRender;
-
-std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
-
-void updateSender()
-{
-	const double frameTime = 1000.0 / updateFPS;
-	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-		(std::chrono::duration<double, std::milli>(frameTime));
-
-	auto next = std::chrono::steady_clock::now();
-	while (!gameEndFlag)
+	void vsyncLoopSenderExtraFrames(int _frameRate)
 	{
-		next += frameDuration;
-		std::this_thread::sleep_until(next);
-		updateWork();
-		lastUpdateTime.store(std::chrono::steady_clock::now());
-		if (gameEndFlag)
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate);
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
 		{
-			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-			break;
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			updateWork();
+			for (int i = 1; i < _frameRate; i++)
+			{
+				paintWork(1.0 / (double)_frameRate * i);
+				next += frameDuration;
+				std::this_thread::sleep_until(next);
+			}
+			paintWork(1.0);
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
 		}
 	}
-}
 
-void renderSender()
-{
-	const double updateFrameTime = 1000.0 / updateFPS;
-	double frameTime = 1000.0 / (double)suku::ConfigElementPool::renderFPS.value();
-	auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-		(std::chrono::duration<double, std::milli>(frameTime));
+	// WIP
+	std::thread threadVsyncUpdate;
+	std::thread threadUpdate;
+	std::thread threadRender;
 
-	auto next = std::chrono::steady_clock::now();
-	while (!gameEndFlag)
+	std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
+
+	void updateSender()
 	{
-		next += frameDuration;
-		std::this_thread::sleep_until(next);
-		auto nowTime = std::chrono::steady_clock::now();
-		double additionalFrameRate
-			= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
-		paintWork(additionalFrameRate);
-		if (gameEndFlag)
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
 		{
-			PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-			break;
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			updateWork();
+			lastUpdateTime.store(std::chrono::steady_clock::now());
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
 		}
 	}
-}
 
-void startSender()
-{
-	std::thread threadUpdate(updateSender);
-	threadUpdate.detach();
-	std::thread threadRender(renderSender);
-	threadRender.detach();
-}
+	void renderSender()
+	{
+		const double updateFrameTime = 1000.0 / updateFPS;
+		double frameTime = 1000.0 / (double)suku::ConfigElementPool::renderFPS.value();
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
 
-void startSenderVsync()
-{
-	std::thread thread(vsyncLoopSenderExtraFrames, 2);
-	thread.detach();
-}
-
-//std::mutex threadLock;
-
-void updateWork()
-{
-	using namespace suku;
-	//if (threadLock.try_lock())
-	//{
-	suku::input::frameStateUpdate();
-	suku::input::Mouse::frameStateUpdate();
-
-	if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
-		endGame();
-
-	if (nowRoom)
-		nowRoom->update();
-
-	suku::input::resetKeyState();
-	suku::input::Mouse::resetButtonState();
-
-	//	threadLock.unlock();
-	//}
-}
-
-double getMonitoredFPS(bool _isUpdate = false)
-{
-	static LARGE_INTEGER prevCounter = { 0 };
-	static LARGE_INTEGER frequency = { 0 };
-	static int frameCount = 0;
-	static double accumSeconds = 0.0;
-	static double lastReportedFPS = 0.0;
-	static auto initializeFuction = []()->bool
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
 		{
-			QueryPerformanceFrequency(&frequency);
-			QueryPerformanceCounter(&prevCounter);
-			return true;
-		}();
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			auto nowTime = std::chrono::steady_clock::now();
+			double additionalFrameRate
+				= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
+			paintWork(additionalFrameRate);
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+		}
+	}
 
-	if (_isUpdate == false)
+	void startSender()
+	{
+		std::thread threadUpdate(updateSender);
+		threadUpdate.detach();
+		std::thread threadRender(renderSender);
+		threadRender.detach();
+	}
+
+	void startSenderVsync()
+	{
+		std::thread thread(vsyncLoopSenderExtraFrames, 2);
+		thread.detach();
+	}
+
+	//std::mutex threadLock;
+
+	void updateWork()
+	{
+		using namespace suku;
+		//if (threadLock.try_lock())
+		//{
+		suku::input::frameStateUpdate();
+		suku::input::Mouse::frameStateUpdate();
+
+		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
+			endGame();
+
+		if (nowRoom)
+			nowRoom->update();
+
+		suku::input::resetKeyState();
+		suku::input::Mouse::resetButtonState();
+
+		//	threadLock.unlock();
+		//}
+	}
+
+	double getMonitoredFPS(bool _isUpdate = false)
+	{
+		static LARGE_INTEGER prevCounter = { 0 };
+		static LARGE_INTEGER frequency = { 0 };
+		static int frameCount = 0;
+		static double accumSeconds = 0.0;
+		static double lastReportedFPS = 0.0;
+		static auto initializeFuction = []()->bool
+			{
+				QueryPerformanceFrequency(&frequency);
+				QueryPerformanceCounter(&prevCounter);
+				return true;
+			}();
+
+		if (_isUpdate == false)
+			return lastReportedFPS;
+
+		LARGE_INTEGER now;
+		QueryPerformanceCounter(&now);
+		double delta = 0.0;
+		if (frequency.QuadPart != 0)
+			delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
+		prevCounter = now;
+
+		frameCount++;
+		accumSeconds += delta;
+		if (accumSeconds >= 1.0)
+		{
+			lastReportedFPS = double(frameCount) / accumSeconds;
+			frameCount = 0;
+			accumSeconds = 0.0;
+		}
+
 		return lastReportedFPS;
-
-	LARGE_INTEGER now;
-	QueryPerformanceCounter(&now);
-	double delta = 0.0;
-	if (frequency.QuadPart != 0)
-		delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
-	prevCounter = now;
-
-	frameCount++;
-	accumSeconds += delta;
-	if (accumSeconds >= 1.0)
-	{
-		lastReportedFPS = double(frameCount) / accumSeconds;
-		frameCount = 0;
-		accumSeconds = 0.0;
 	}
 
-	return lastReportedFPS;
-}
-
-void paintWork()
-{
-	double renderFPS = 0.0f;
-	if (!gameEndFlag)
+	void paintWork()
 	{
-		renderFPS = getMonitoredFPS(true);
+		double renderFPS = 0.0f;
+		if (!gameEndFlag)
+		{
+			renderFPS = getMonitoredFPS(true);
 
-		suku::graphics::beginDrawGlobal();
-		suku::nowRoom->paint();
+			suku::graphics::beginDrawGlobal();
+			suku::nowRoom->paint();
 
-		//suku::Text a("Consolas", 16);
-		//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-		//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-		//a.paint(10, 10);
-		suku::graphics::endDrawGlobal();
+			//suku::Text a("Consolas", 16);
+			//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+			//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+			//a.paint(10, 10);
+			suku::graphics::endDrawGlobal();
+		}
 	}
-}
 
-void paintWork(double _additionalFrameRate)
-{
-	double renderFPS = 0.0f;
-	//if (threadLock.try_lock())
+	void paintWork(double _additionalFrameRate)
+	{
+		double renderFPS = 0.0f;
+		//if (threadLock.try_lock())
+		//{
+		if (!gameEndFlag)
+		{
+			renderFPS = getMonitoredFPS(true);
+
+			suku::graphics::beginDrawGlobal();
+			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
+
+			suku::Text a("Consolas", 16);
+			if (_additionalFrameRate > 1.0)
+				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
+			else
+				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
+			a.textContent = L"FPS: " + std::to_wstring(renderFPS)
+				+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
+			a.paint(10, 10);
+			suku::graphics::endDrawGlobal();
+		}
+		//	threadLock.unlock();
+		//}
+	}
+
+	BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
+	{
+		MONITORINFOEX mi;
+		mi.cbSize = sizeof(MONITORINFOEX);
+		GetMonitorInfo(hMonitor, &mi);
+		DEVMODE devmode;
+		devmode.dmSize = sizeof(DEVMODE);
+		EnumDisplaySettings(mi.szDevice, ENUM_CURRENT_SETTINGS, &devmode);
+		if (devmode.dmDisplayFrequency != updateFPS)
+		{
+			devmode.dmDisplayFlags &= DM_INTERLACED;
+			devmode.dmDisplayFrequency = (DWORD)updateFPS;
+			LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
+		}
+		return true;
+	}
+
+	//void setFPS(int _fps)
 	//{
-	if (!gameEndFlag)
-	{
-		renderFPS = getMonitoredFPS(true);
-
-		suku::graphics::beginDrawGlobal();
-		suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
-
-		suku::Text a("Consolas", 16);
-		if (_additionalFrameRate > 1.0)
-			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
-		else
-			a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-		a.textContent = L"FPS: " + std::to_wstring(renderFPS)
-			+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
-		a.paint(10, 10);
-		suku::graphics::endDrawGlobal();
-	}
-	//	threadLock.unlock();
+	//	fps = _fps;
+	//	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
 	//}
 }
-
-BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
-{
-	MONITORINFOEX mi;
-	mi.cbSize = sizeof(MONITORINFOEX);
-	GetMonitorInfo(hMonitor, &mi);
-	DEVMODE devmode;
-	devmode.dmSize = sizeof(DEVMODE);
-	EnumDisplaySettings(mi.szDevice, ENUM_CURRENT_SETTINGS, &devmode);
-	if (devmode.dmDisplayFrequency != updateFPS)
-	{
-		devmode.dmDisplayFlags &= DM_INTERLACED;
-		devmode.dmDisplayFrequency = (DWORD)updateFPS;
-		LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
-	}
-	return true;
-}
-
-//void setFPS(int _fps)
-//{
-//	fps = _fps;
-//	EnumDisplayMonitors(nullptr, nullptr, monitorEnumProc, NULL);
-//}
