@@ -6,9 +6,13 @@
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
 
-namespace suku
+namespace 
 {
 	bool gameEndFlag = false;
+}
+
+namespace suku
+{
 	void endGame() { gameEndFlag = true; }
 
 	constexpr double updateFPS = 50.0;

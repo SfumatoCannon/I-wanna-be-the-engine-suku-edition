@@ -2,10 +2,13 @@
 
 namespace suku::input
 {
-	static bool isKeyDownArray[256] = { false };
-	static bool isKeyHoldingArray[256] = { false };
-	static bool isKeyUpArray[256] = { false };
-	static std::queue<std::pair<UINT, USHORT> > keyMsg;
+	namespace
+	{
+		bool isKeyDownArray[256] = { false };
+		bool isKeyHoldingArray[256] = { false };
+		bool isKeyUpArray[256] = { false };
+		std::queue<std::pair<UINT, USHORT> > keyMsg;
+	}
 
 	bool isKeyDown(UINT8 _keyVCode)
 	{

@@ -7,14 +7,17 @@
 namespace suku::input
 {
 	constexpr float mouseButtonClickTimeThreshold = 0.4f; // seconds
-	static bool isMouseButtonDownArray[4] = { false };
-	static bool isMouseButtonUpArray[4] = { false };
-	static bool isMouseButtonHoldingArray[4] = { false };
-	static bool isMouseButtonDoubleClick = false;
-	static bool isMouseScrollUp = false;
-	static bool isMouseScrollDown = false;
-	static int mouseButtonClickTimerArray[4] = { 0 };
-	static std::queue<std::pair<UINT, USHORT> > mouseButtonMsg;
+	namespace
+	{
+		bool isMouseButtonDownArray[4] = { false };
+		bool isMouseButtonUpArray[4] = { false };
+		bool isMouseButtonHoldingArray[4] = { false };
+		bool isMouseButtonDoubleClick = false;
+		bool isMouseScrollUp = false;
+		bool isMouseScrollDown = false;
+		int mouseButtonClickTimerArray[4] = { 0 };
+		std::queue<std::pair<UINT, USHORT> > mouseButtonMsg;
+	}
 
 	int Mouse::getPixelX()
 	{
