@@ -3,20 +3,6 @@
 
 namespace suku
 {
-	// Private functions declaration
-	// ----------------------------------------------------------------------------
-	template<typename T>
-	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
-	template<typename T>
-	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
-	template<typename T>
-	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
-	template<typename T>
-	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
-
-	// ----------------------------------------------------------------------------
-	// End of private functions declaration
-
 	bool SpriteElement::isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const
 	{
 		if (!hitArea || !(_other.hitArea))
@@ -70,9 +56,6 @@ namespace suku
 
 	ShapeSpriteElement::~ShapeSpriteElement()
 	{
-		release_safe(fillBrush);
-		release_safe(outlineBrush);
-		release_safe(outlineStrokeStyle);
 	}
 
 	void ShapeSpriteElement::setShapeTransform(Transform _transform)
@@ -99,15 +82,11 @@ namespace suku
 
 	void ShapeSpriteElement::setFillColor(const Color& _color)
 	{
-		if (fillBrush != nullptr)
-			release_safe(fillBrush);
 		fillBrush = graphics::createSolidColorBrush(_color);
 	}
 
 	void ShapeSpriteElement::setOutlineColor(const Color& _color)
 	{
-		if (outlineBrush != nullptr)
-			release_safe(outlineBrush);
 		outlineBrush = graphics::createSolidColorBrush(_color);
 	}
 
@@ -172,22 +151,17 @@ namespace suku
 	{
 		pBitmap_->paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
 			_alpha);
-		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha,
-		//	translation(_x, _y) + scale(getCenterX, getCenterY, _xScale, _yScale) + rotation(getCenterX, getCenterY, _angle));
 	}
 
 	void BitmapSpriteElement::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		pBitmap_->paint(translation(_x, _y) + _transform,
 			_alpha);
-		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha,
-		//	translation(_x, _y) + _transform);
 	}
 
 	void BitmapSpriteElement::paint(Transform _transform, float _alpha)
 	{
 		pBitmap_->paint(_transform, _alpha);
-		//drawBitmap(d2dBitmap_, (float)width, (float)height, _alpha, _transform);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement()

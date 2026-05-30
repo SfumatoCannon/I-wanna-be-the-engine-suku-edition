@@ -6,10 +6,18 @@
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
 
+// Private functions declaration
+// ----------------------------------------------------------------------------
 namespace 
 {
 	bool gameEndFlag = false;
+	void updateWork();
+	void paintWork();
+	void paintWork(double _additionalFrameRate);
+	double getMonitoredFPS(bool _isUpdate);
 }
+// ----------------------------------------------------------------------------
+// End of private functions declaration
 
 namespace suku
 {
@@ -132,125 +140,143 @@ namespace suku
 			std::thread thread(vsyncLoopSenderExtraFrames, 2);
 			thread.detach();
 		}
-
-		//std::mutex threadLock;
-
-		void updateWork()
-		{
-			using namespace suku;
-			//if (threadLock.try_lock())
-			//{
-			suku::input::frameStateUpdate();
-			suku::input::Mouse::frameStateUpdate();
-
-			if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
-				endGame();
-
-			if (nowRoom)
-				nowRoom->update();
-
-			suku::input::resetKeyState();
-			suku::input::Mouse::resetButtonState();
-
-			//	threadLock.unlock();
-			//}
-		}
-
-		double getMonitoredFPS(bool _isUpdate = false)
-		{
-			static LARGE_INTEGER prevCounter = { 0 };
-			static LARGE_INTEGER frequency = { 0 };
-			static int frameCount = 0;
-			static double accumSeconds = 0.0;
-			static double lastReportedFPS = 0.0;
-			static auto initializeFuction = []()->bool
-				{
-					QueryPerformanceFrequency(&frequency);
-					QueryPerformanceCounter(&prevCounter);
-					return true;
-				}();
-
-			if (_isUpdate == false)
-				return lastReportedFPS;
-
-			LARGE_INTEGER now;
-			QueryPerformanceCounter(&now);
-			double delta = 0.0;
-			if (frequency.QuadPart != 0)
-				delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
-			prevCounter = now;
-
-			frameCount++;
-			accumSeconds += delta;
-			if (accumSeconds >= 1.0)
-			{
-				lastReportedFPS = double(frameCount) / accumSeconds;
-				frameCount = 0;
-				accumSeconds = 0.0;
-			}
-
-			return lastReportedFPS;
-		}
-
-		void paintWork()
-		{
-			double renderFPS = 0.0f;
-			if (!gameEndFlag)
-			{
-				renderFPS = getMonitoredFPS(true);
-
-				suku::graphics::beginDrawGlobal();
-				suku::nowRoom->paint();
-
-				//suku::Text a("Consolas", 16);
-				//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-				//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-				//a.paint(10, 10);
-				suku::graphics::endDrawGlobal();
-			}
-		}
-
-		void paintWork(double _additionalFrameRate)
-		{
-			double renderFPS = 0.0f;
-			//if (threadLock.try_lock())
-			//{
-			if (!gameEndFlag)
-			{
-				renderFPS = getMonitoredFPS(true);
-
-				suku::graphics::beginDrawGlobal();
-				suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
-
-				suku::Text a("Consolas", 16);
-				if (_additionalFrameRate > 1.0)
-					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
-				else
-					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-				a.textContent = L"FPS: " + std::to_wstring(renderFPS)
-					+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
-				a.paint(10, 10);
-				suku::graphics::endDrawGlobal();
-			}
-			//	threadLock.unlock();
-			//}
-		}
-
-		BOOL monitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
-		{
-			MONITORINFOEX mi;
-			mi.cbSize = sizeof(MONITORINFOEX);
-			GetMonitorInfo(hMonitor, &mi);
-			DEVMODE devmode;
-			devmode.dmSize = sizeof(DEVMODE);
-			EnumDisplaySettings(mi.szDevice, ENUM_CURRENT_SETTINGS, &devmode);
-			if (devmode.dmDisplayFrequency != updateFPS)
-			{
-				devmode.dmDisplayFlags &= DM_INTERLACED;
-				devmode.dmDisplayFrequency = (DWORD)updateFPS;
-				LONG res = ChangeDisplaySettingsEx(mi.szDevice, &devmode, nullptr, 0, nullptr);
-			}
-			return true;
-		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Private functions implementation
+// ----------------------------------------------------------------------------
+namespace
+{
+	void updateWork()
+	{
+		using namespace suku;
+		//if (threadLock.try_lock())
+		//{
+		suku::input::frameStateUpdate();
+		suku::input::Mouse::frameStateUpdate();
+
+		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
+			endGame();
+
+		if (nowRoom)
+			nowRoom->update();
+
+		suku::input::resetKeyState();
+		suku::input::Mouse::resetButtonState();
+
+		//	threadLock.unlock();
+		//}
+	}
+
+	double getMonitoredFPS(bool _isUpdate = false)
+	{
+		static LARGE_INTEGER prevCounter = { 0 };
+		static LARGE_INTEGER frequency = { 0 };
+		static int frameCount = 0;
+		static double accumSeconds = 0.0;
+		static double lastReportedFPS = 0.0;
+		static auto initializeFuction = []()->bool
+			{
+				QueryPerformanceFrequency(&frequency);
+				QueryPerformanceCounter(&prevCounter);
+				return true;
+			}();
+
+		if (_isUpdate == false)
+			return lastReportedFPS;
+
+		LARGE_INTEGER now;
+		QueryPerformanceCounter(&now);
+		double delta = 0.0;
+		if (frequency.QuadPart != 0)
+			delta = double(now.QuadPart - prevCounter.QuadPart) / double(frequency.QuadPart);
+		prevCounter = now;
+
+		frameCount++;
+		accumSeconds += delta;
+		if (accumSeconds >= 1.0)
+		{
+			lastReportedFPS = double(frameCount) / accumSeconds;
+			frameCount = 0;
+			accumSeconds = 0.0;
+		}
+
+		return lastReportedFPS;
+	}
+
+	void paintWork()
+	{
+		double renderFPS = 0.0f;
+		if (!gameEndFlag)
+		{
+			renderFPS = getMonitoredFPS(true);
+
+			suku::graphics::beginDrawGlobal();
+			suku::nowRoom->paint();
+
+			//suku::Text a("Consolas", 16);
+			//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+			//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+			//a.paint(10, 10);
+			suku::graphics::endDrawGlobal();
+		}
+	}
+
+	void paintWork(double _additionalFrameRate)
+	{
+		double renderFPS = 0.0f;
+		//if (threadLock.try_lock())
+		//{
+		if (!gameEndFlag)
+		{
+			renderFPS = getMonitoredFPS(true);
+
+			suku::graphics::beginDrawGlobal();
+			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
+
+			suku::Text a("Consolas", 16);
+			if (_additionalFrameRate > 1.0)
+				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
+			else
+				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
+			a.textContent = L"FPS: " + std::to_wstring(renderFPS)
+				+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
+			a.paint(10, 10);
+			suku::graphics::endDrawGlobal();
+		}
+		//	threadLock.unlock();
+		//}
+	}
+}
+// ----------------------------------------------------------------------------
+// End of private functions implementation

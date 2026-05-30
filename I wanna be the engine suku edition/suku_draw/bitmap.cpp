@@ -8,14 +8,12 @@
 #include <suku_foundation/file.h>
 #include <Windows.h>
 
-namespace suku
+// Private functions declaration
+// ----------------------------------------------------------------------------
+namespace
 {
 	using Microsoft::WRL::ComPtr;
-	using memory::Array2D;
 	using namespace suku::graphics;
-
-	// Private functions declaration
-	// ----------------------------------------------------------------------------
 	template<typename T>
 	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
 	template<typename T>
@@ -24,7 +22,6 @@ namespace suku
 	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
 	template<typename T>
 	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
-
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path  /*absolute path*/);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
@@ -33,10 +30,15 @@ namespace suku
 	HRESULT getWICBitmap(const ComPtr<ID2D1Bitmap1>& _pD2dBitmap, ComPtr<IWICBitmap>& _ppWicBitmap);
 	std::pair<UINT, UINT> getBitmapSize(const ComPtr<IWICBitmap>& _pBitmap);
 	std::pair<UINT, UINT> getBitmapSize(const ComPtr<ID2D1Bitmap1>& _pBitmap);
+}
+// ----------------------------------------------------------------------------
+// End of private functions declaration
 
-	// ----------------------------------------------------------------------------
-	// End of private functions declaration
-
+namespace suku
+{
+	using Microsoft::WRL::ComPtr;
+	using memory::Array2D;
+	using namespace suku::graphics;
 
 	void Bitmap::refreshD2DBitmap()
 	{
@@ -44,7 +46,7 @@ namespace suku
 		{
 			release_safe(d2dBitmap_);
 			ComPtr<ID2D1Bitmap1> pD2d = nullptr;
-			suku::getD2DBitmap(wicBitmap_.Get(), pD2d);
+			::getD2DBitmap(wicBitmap_.Get(), pD2d);
 			d2dBitmap_.Attach(pD2d.Detach());
 			d2dBitmapUpdateTag_ = false;
 		}
@@ -188,7 +190,7 @@ namespace suku
 		width_ = w;
 		height_ = h;
 
-		HRESULT hr = suku::getWICBitmap(d2dBitmap_, wicBitmap_);
+		HRESULT hr = ::getWICBitmap(d2dBitmap_, wicBitmap_);
 		if (SUCCEEDED(hr))
 		{
 			refreshPixelByte();
@@ -356,11 +358,11 @@ namespace suku
 	{
 		refreshD2DBitmap();
 		graphics::setPaintingTransform(translation(_x, _y));
-		graphics::drawBitmap(d2dBitmap_, 
+		graphics::drawBitmap(d2dBitmap_,
 			D2D1_RECT_F{
-				_partX, 
-				_partY, 
-				_partX + _partWidth, 
+				_partX,
+				_partY,
+				_partX + _partWidth,
 				_partY + _partHeight
 			},
 			_alpha
@@ -745,6 +747,168 @@ namespace suku
 		pILock.Reset();
 	}
 
+	void getHitAreaFromBitmap(memory::Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold)
+	{
+		auto [w, h] = _hitArea.getSize(); // rows -> width, cols -> height
+		if (w != _bitmap.getWidth() || h != _bitmap.getHeight())
+		{
+			WARNINGWINDOW_GLOBAL("The size of hit area does not match the bitmap size.");
+			return;
+		}
+		_bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
+			{
+				if (_color.alpha <= _alphaThreshold)
+					_hitArea(_x, _y) = 0;
+				else _hitArea(_x, _y) = 1;
+			});
+	}
+
+	UINT RenderBitmap::getWidth() const
+	{
+		if (d2dBitmap_ == nullptr)
+			return 0;
+		return d2dBitmap_->GetPixelSize().width;
+	}
+
+	UINT RenderBitmap::getHeight() const
+	{
+		if (d2dBitmap_ == nullptr)
+			return 0;
+		return d2dBitmap_->GetPixelSize().height;
+	}
+
+	void RenderBitmap::paint(float _alpha) const
+	{
+		setPaintingTransform(translation(0, 0));
+		drawBitmap(d2dBitmap_);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _alpha) const
+	{
+		setPaintingTransform(translation(_x, _y));
+		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, Transform _transform, float _alpha) const
+	{
+		setPaintingTransform(translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(Transform _transform, float _alpha) const
+	{
+		setPaintingTransform(_transform);
+		drawBitmap(d2dBitmap_, _alpha);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
+	{
+		setPaintingTransform(translation(_x, _y));
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		setPaintingTransform(translation(_x, _y) + _transform);
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+
+	void RenderBitmap::paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
+	{
+		setPaintingTransform(_transform);
+		drawBitmap(d2dBitmap_,
+			D2D1_RECT_F{
+				_partX,
+				_partY,
+				_partX + _partWidth,
+				_partY + _partHeight
+			},
+			_alpha
+		);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Private functions implementation
+// ----------------------------------------------------------------------------
+namespace
+{
+	using namespace suku;
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path)
 	{
 		UINT            originalWidth = 0;
@@ -836,7 +1000,7 @@ namespace suku
 		else
 		{
 			FileCodec::writeResource(_path);
-			
+
 			hr = pWICFactory->CreateDecoderFromFilename(
 				filesystem::absolutePath(_path).content,
 				nullptr,
@@ -965,8 +1129,8 @@ namespace suku
 		}
 
 		return hr;
-	}
-
+	}	
+	
 	std::pair<UINT, UINT> getBitmapSize(const ComPtr<IWICBitmap>& _wicBitmap)
 	{
 		if (!_wicBitmap)
@@ -995,100 +1159,6 @@ namespace suku
 		D2D1_SIZE_U size = _d2dBitmap->GetPixelSize();
 		return { size.width, size.height };
 	}
-
-	void getHitAreaFromBitmap(memory::Array2D<bool>& _hitArea, const Bitmap& _bitmap, float _alphaThreshold)
-	{
-		auto [w, h] = _hitArea.getSize(); // rows -> width, cols -> height
-		if (w != _bitmap.getWidth() || h != _bitmap.getHeight())
-		{
-			WARNINGWINDOW_GLOBAL("The size of hit area does not match the bitmap size.");
-			return;
-		}
-		_bitmap.viewPixelDetail([&](const UINT _x, const UINT _y, const Color& _color)
-			{
-				if (_color.alpha <= _alphaThreshold)
-					_hitArea(_x, _y) = 0;
-				else _hitArea(_x, _y) = 1;
-			});
-	}
-
-	UINT RenderBitmap::getWidth() const
-	{
-		if (d2dBitmap_ == nullptr)
-			return 0;
-		return d2dBitmap_->GetPixelSize().width;
-	}
-
-	UINT RenderBitmap::getHeight() const
-	{
-		if (d2dBitmap_ == nullptr)
-			return 0;
-		return d2dBitmap_->GetPixelSize().height;
-	}
-
-	void RenderBitmap::paint(float _alpha) const
-	{
-		setPaintingTransform(translation(0, 0));
-		drawBitmap(d2dBitmap_);
-	}
-
-	void RenderBitmap::paint(float _x, float _y, float _alpha) const
-	{
-		setPaintingTransform(translation(_x, _y));
-		drawBitmap(d2dBitmap_, _alpha);
-	}
-
-	void RenderBitmap::paint(float _x, float _y, Transform _transform, float _alpha) const
-	{
-		setPaintingTransform(translation(_x, _y) + _transform);
-		drawBitmap(d2dBitmap_, _alpha);
-	}
-
-	void RenderBitmap::paint(Transform _transform, float _alpha) const
-	{
-		setPaintingTransform(_transform);
-		drawBitmap(d2dBitmap_, _alpha);
-	}
-
-	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
-	{
-		setPaintingTransform(translation(_x, _y));
-		drawBitmap(d2dBitmap_,
-			D2D1_RECT_F{
-				_partX,
-				_partY,
-				_partX + _partWidth,
-				_partY + _partHeight
-			},
-			_alpha
-		);
-	}
-
-	void RenderBitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
-	{
-		setPaintingTransform(translation(_x, _y) + _transform);
-		drawBitmap(d2dBitmap_,
-			D2D1_RECT_F{
-				_partX,
-				_partY,
-				_partX + _partWidth,
-				_partY + _partHeight
-			},
-			_alpha
-		);
-	}
-
-	void RenderBitmap::paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
-	{
-		setPaintingTransform(_transform);
-		drawBitmap(d2dBitmap_,
-			D2D1_RECT_F{
-				_partX,
-				_partY,
-				_partX + _partWidth,
-				_partY + _partHeight
-			},
-			_alpha
-		);
-	}
 }
+// ----------------------------------------------------------------------------
+// End of private functions implementation

@@ -5,13 +5,11 @@
 #include "draw_core.h"
 #include "suku_foundation/message.h"
 
-namespace suku
+// Private functions declaration
+// ----------------------------------------------------------------------------
+namespace
 {
 	using Microsoft::WRL::ComPtr;
-	using namespace suku::graphics;
-
-	// Private functions declaration
-	// ----------------------------------------------------------------------------
 	template<typename T>
 	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
 	template<typename T>
@@ -20,10 +18,14 @@ namespace suku
 	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
 	template<typename T>
 	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
+}
+// ----------------------------------------------------------------------------
+// End of private functions declaration
 
-	// ----------------------------------------------------------------------------
-	// End of private functions declaration
-	
+namespace suku
+{
+	using Microsoft::WRL::ComPtr;
+	using namespace suku::graphics;
 
 	Shape::Shape()
 	{
