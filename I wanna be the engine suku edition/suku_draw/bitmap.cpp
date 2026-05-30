@@ -14,14 +14,6 @@ namespace
 {
 	using Microsoft::WRL::ComPtr;
 	using namespace suku::graphics;
-	template<typename T>
-	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
-	template<typename T>
-	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
-	template<typename T>
-	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
-	template<typename T>
-	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path  /*absolute path*/);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
@@ -44,7 +36,7 @@ namespace suku
 	{
 		if (d2dBitmapUpdateTag_)
 		{
-			release_safe(d2dBitmap_);
+			d2dBitmap_.Reset();
 			ComPtr<ID2D1Bitmap1> pD2d = nullptr;
 			::getD2DBitmap(wicBitmap_.Get(), pD2d);
 			d2dBitmap_.Attach(pD2d.Detach());
@@ -69,7 +61,7 @@ namespace suku
 		ComPtr<IWICPixelFormatInfo2> pixelFormatInfo = nullptr;
 		if (SUCCEEDED(hr))
 			hr = componentInfo->QueryInterface(IID_PPV_ARGS(&pixelFormatInfo));
-		release_safe(componentInfo);
+		if (componentInfo) componentInfo.Reset();
 		if (SUCCEEDED(hr))
 			pixelFormatInfo->GetBitsPerPixel(&bytesPerPixel_);
 		bytesPerPixel_ /= 8;
@@ -257,8 +249,8 @@ namespace suku
 
 	Bitmap::~Bitmap()
 	{
-		release_safe(wicBitmap_);
-		release_safe(d2dBitmap_);
+		wicBitmap_.Reset();
+		d2dBitmap_.Reset();
 	}
 
 	bool Bitmap::isValid() const
@@ -295,8 +287,8 @@ namespace suku
 			return *this;
 		}
 
-		release_safe(wicBitmap_);
-		release_safe(d2dBitmap_);
+		wicBitmap_.Reset();
+		d2dBitmap_.Reset();
 
 		width_ = _bitmap.width_;
 		height_ = _bitmap.height_;
@@ -317,8 +309,8 @@ namespace suku
 		if (&_bitmap == this)
 			return *this;
 
-		release_safe(wicBitmap_);
-		release_safe(d2dBitmap_);
+		wicBitmap_.Reset();
+		d2dBitmap_.Reset();
 
 		width_ = _bitmap.width_;
 		height_ = _bitmap.height_;
