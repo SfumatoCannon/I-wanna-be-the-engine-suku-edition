@@ -5,23 +5,6 @@
 #include "draw_core.h"
 #include "suku_foundation/message.h"
 
-// Private functions declaration
-// ----------------------------------------------------------------------------
-namespace
-{
-	using Microsoft::WRL::ComPtr;
-	template<typename T>
-	void addRef_safe(T* pCom) { if (pCom) pCom->AddRef(); }
-	template<typename T>
-	void release_safe(T* pCom) { if (pCom) { pCom->Release(); pCom = nullptr; } }		// overloads for ComPtr
-	template<typename T>
-	void release_safe(ComPtr<T>& pCom) { if (pCom) pCom.Reset(); }
-	template<typename T>
-	void addRef_safe(ComPtr<T>& pCom) { if (pCom) pCom->AddRef(); }
-}
-// ----------------------------------------------------------------------------
-// End of private functions declaration
-
 namespace suku
 {
 	using Microsoft::WRL::ComPtr;
@@ -40,11 +23,9 @@ namespace suku
 		if (_x.originalGeometry)
 		{
 			originalGeometry = _x.originalGeometry;
-			originalGeometry->AddRef();
 			if (_x.currentGeometry)
 			{
 				currentGeometry = _x.currentGeometry;
-				currentGeometry->AddRef();
 			}
 			else
 			{
@@ -76,26 +57,19 @@ namespace suku
 		setOriginalGeometry(_geometry);
 	}
 
-	void Shape::join()
-	{
-		addRef_safe(originalGeometry);
-		addRef_safe(currentGeometry);
-	}
-
 	Shape::~Shape()
 	{
-		release_safe(originalGeometry);
-		release_safe(currentGeometry);
+		originalGeometry.Reset();
+		currentGeometry.Reset();
 	}
 
 	void Shape::setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry)
 	{
-		release_safe(originalGeometry);
-		release_safe(currentGeometry);
+		originalGeometry.Reset();
+		currentGeometry.Reset();
 		if (_geometry)
 		{
 			originalGeometry = _geometry;
-			originalGeometry->AddRef();
 			auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 			pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 		}
@@ -106,7 +80,7 @@ namespace suku
 	void Shape::setTransform(Transform _transform)
 	{
 		transform = _transform;
-		release_safe(currentGeometry);
+		currentGeometry.Reset();
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
 		pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
 	}
@@ -244,16 +218,14 @@ namespace suku
 	Shape& Shape::operator=(const Shape& _x)
 	{
 		transform = _x.transform;
-		release_safe(originalGeometry);
-		release_safe(currentGeometry);
+		originalGeometry.Reset();
+		currentGeometry.Reset();
 		if (_x.originalGeometry)
 		{
 			originalGeometry = _x.originalGeometry;
-			originalGeometry->AddRef();
 			if (_x.currentGeometry)
 			{
 				currentGeometry = _x.currentGeometry;
-				currentGeometry->AddRef();
 			}
 			else
 			{
@@ -272,8 +244,8 @@ namespace suku
 	Shape& Shape::operator=(Shape&& _x) noexcept
 	{
 		transform = _x.transform;
-		release_safe(originalGeometry);
-		release_safe(currentGeometry);
+		originalGeometry.Reset();
+		currentGeometry.Reset();
 		originalGeometry = std::move(_x.originalGeometry);
 		currentGeometry = std::move(_x.currentGeometry);
 		_x.originalGeometry.Reset();
@@ -303,7 +275,7 @@ namespace suku
 		{
 			hr = resGeometrySink->Close();
 		}
-		release_safe(resGeometrySink);
+		if (resGeometrySink) resGeometrySink.Reset();
 
 		return Shape(resGeometry.Get());
 	}
@@ -330,7 +302,7 @@ namespace suku
 		{
 			hr = resGeometrySink->Close();
 		}
-		release_safe(resGeometrySink);
+		if (resGeometrySink) resGeometrySink.Reset();
 
 		return Shape(resGeometry.Get());
 	}
@@ -357,7 +329,7 @@ namespace suku
 		{
 			hr = resGeometrySink->Close();
 		}
-		release_safe(resGeometrySink);
+		if (resGeometrySink) resGeometrySink.Reset();
 
 		return Shape(resGeometry.Get());
 	}
@@ -384,7 +356,7 @@ namespace suku
 		{
 			hr = resGeometrySink->Close();
 		}
-		release_safe(resGeometrySink);
+		if (resGeometrySink) resGeometrySink.Reset();
 
 		return Shape(resGeometry.Get());
 	}

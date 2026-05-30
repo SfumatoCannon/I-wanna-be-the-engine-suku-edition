@@ -20,7 +20,6 @@ namespace suku
 		Shape(const Shape& _x);
 		Shape(Shape&& _x)noexcept;
 		Shape(const ComPtr<ID2D1Geometry>& _geometry, Transform _transform = Transform());
-		void join();
 		~Shape();
 
 		void setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry);
