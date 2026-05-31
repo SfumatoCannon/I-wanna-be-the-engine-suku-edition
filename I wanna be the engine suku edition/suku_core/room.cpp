@@ -167,13 +167,11 @@ namespace suku
 				if (obj->removeTag_)
 				{
 					iter = objArray.erase(iter);
+					continue;
 				}
-				else
-				{
-					obj->spriteTransformLastFrame_ = obj->transform;
-					obj->preUpdate();
-					iter++;
-				}
+				obj->spriteTransformLastFrame_ = obj->transform;
+				obj->preUpdate();
+				iter++;
 			}
 		}
 
@@ -185,13 +183,10 @@ namespace suku
 				if (obj->removeTag_)
 				{
 					iter = objArray.erase(iter);
+					continue;
 				}
-				else
-				{
-					obj->update();
-
-					iter++;
-				}
+				obj->update();
+				iter++;
 			}
 		}
 
@@ -214,14 +209,12 @@ namespace suku
 				if (obj->removeTag_)
 				{
 					iter = objArray.erase(iter);
+					continue;
 				}
-				else
-				{
-					obj->postUpdate();
-					obj->x.addTick();
-					obj->y.addTick();
-					iter++;
-				}
+				obj->postUpdate();
+				obj->x.addTick();
+				obj->y.addTick();
+				iter++;
 			}
 		}
 
@@ -241,14 +234,12 @@ namespace suku
 				if (obj->removeTag_)
 				{
 					iter = objArray.erase(iter);
+					continue;
 				}
-				else
-				{
-					if (!obj->onPaint())
-						obj->paintBody();
+				if (!obj->onPaint())
+					obj->paintBody();
 
-					iter++;
-				}
+				iter++;
 			}
 		}
 
@@ -265,9 +256,17 @@ namespace suku
 		displayLayer_.beginDraw();
 		onPaintStart();
 
-		for (auto& x : paintArray_)
-			for (auto& obj : x.second)
+		for (auto& [type, objArray] : paintArray_)
+		{
+			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
+				Object* obj = (*iter).get();
+				if (obj->removeTag_)
+				{
+					iter = objArray.erase(iter);
+					continue;
+				}
+
 				float posX, posY;
 				Transform transform;
 				if (obj->isPositionTransitionalFrame_)
@@ -293,8 +292,10 @@ namespace suku
 				}
 
 				obj->paintBody(posX, posY, transform);
-			}
 
+				iter++;
+			}
+		}
 		onPaintEnd();
 		auto pic = displayLayer_.endDraw();
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
