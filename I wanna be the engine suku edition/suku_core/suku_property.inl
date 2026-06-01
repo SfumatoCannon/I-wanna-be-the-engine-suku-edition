@@ -3,12 +3,6 @@
 namespace suku
 {
 	template<suku_property_type T>
-	inline void Property<T>::bindClock(const long double& _clock)
-	{
-		parentClock_ = &_clock;
-	}
-
-	template<suku_property_type T>
 	inline void Property<T>::operator=(T _value)
 	{
 		value_ = _value;
@@ -18,12 +12,17 @@ namespace suku
 	inline void Property<T>::operator=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto& [value, transition] = _valueWithTransition;
+		if (transition.getDuration() <= 0.0)
+		{
+			isTranslating_ = false;
+			value_ = value;
+			return;
+		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = value_;
 		transitionValueEnd_ = value;
-		transitionStartTime_ = *parentClock_;
 		transitionElapsedTime_ = 0.0;
 	}
 
@@ -37,12 +36,17 @@ namespace suku
 	inline void Property<T>::operator+=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
+		if (transition.getDuration() <= 0.0)
+		{
+			value_ = getExpectedValue() + value;
+			isTranslating_ = false;
+			return;
+		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ + value;
-		transitionStartTime_ = *parentClock_;		
 		transitionElapsedTime_ = 0.0;
 	}
 
@@ -56,12 +60,17 @@ namespace suku
 	inline void Property<T>::operator-=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
+		if (transition.getDuration() <= 0.0)
+		{
+			value_ = getExpectedValue() - value;
+			isTranslating_ = false;
+			return;
+		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ - value;
-		transitionStartTime_ = *parentClock_;
 		transitionElapsedTime_ = 0.0;
 	}
 
@@ -75,12 +84,17 @@ namespace suku
 	inline void Property<T>::operator*=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
+		if (transition.getDuration() <= 0.0)
+		{
+			value_ = getExpectedValue() * value;
+			isTranslating_ = false;
+			return;
+		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ * value;
-		transitionStartTime_ = *parentClock_;
 		transitionElapsedTime_ = 0.0;
 	}
 
@@ -94,12 +108,17 @@ namespace suku
 	inline void Property<T>::operator/=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto [value, transition] = _valueWithTransition;
+		if (transition.getDuration() <= 0.0)
+		{
+			value_ = getExpectedValue() / value;
+			isTranslating_ = false;
+			return;
+		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
 		transitionDuration_ = transition.getDuration();
 		transitionValueBegin_ = getExpectedValue();
 		transitionValueEnd_ = transitionValueBegin_ / value;
-		transitionStartTime_ = *parentClock_;
 		transitionElapsedTime_ = 0.0;
 	}
 

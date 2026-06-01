@@ -15,7 +15,6 @@ namespace suku
 		Property() = default;
 		Property(const T& _value) : value_(_value), frameState_(_value), lastFrameState_(_value) {}
 		Property(T&& _value) : value_(std::move(_value)), frameState_(value_), lastFrameState_(value_) {}
-		void bindClock(const long double& _clock);
 
 		operator T() const { return value_; }
 
@@ -40,7 +39,6 @@ namespace suku
 		void updateFrameState();
 		void addTick(double _ticks = 1.0);
 	private:
-		const long double* parentClock_ = nullptr;
 		Transition currentTransition_ = Transition(0.0, TransitionCurve::linear);
 		bool isTranslating_ = false;
 		T transitionValueBegin_;
