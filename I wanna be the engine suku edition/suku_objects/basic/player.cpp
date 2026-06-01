@@ -48,8 +48,8 @@ namespace suku
 
 	void Player::onRestarting()
 	{
-		x = spawnX;
-		y = spawnY;
+		x = { spawnX, Transition(0) };
+		y = { spawnY, Transition(0) };
 	}
 
 	void Player::startJump()
@@ -96,8 +96,8 @@ namespace suku
 
 	void Player::spawn()
 	{
-		x = spawnX;
-		y = spawnY;
+		x = { spawnX, Transition(0) };
+		y = { spawnY, Transition(0) };
 		hspeed = 0;
 		vspeed = 0;
 		alpha = 1.0;

@@ -16,6 +16,7 @@ namespace suku
 		{
 			isTranslating_ = false;
 			value_ = value;
+			lastFrameState_ = frameState_ = value_;
 			return;
 		}
 		isTranslating_ = true;
@@ -39,6 +40,7 @@ namespace suku
 		if (transition.getDuration() <= 0.0)
 		{
 			value_ = getExpectedValue() + value;
+			lastFrameState_ = frameState_ = value_;
 			isTranslating_ = false;
 			return;
 		}
@@ -63,6 +65,7 @@ namespace suku
 		if (transition.getDuration() <= 0.0)
 		{
 			value_ = getExpectedValue() - value;
+			lastFrameState_ = frameState_ = value_;
 			isTranslating_ = false;
 			return;
 		}
@@ -87,6 +90,7 @@ namespace suku
 		if (transition.getDuration() <= 0.0)
 		{
 			value_ = getExpectedValue() * value;
+			lastFrameState_ = frameState_ = value_;
 			isTranslating_ = false;
 			return;
 		}
@@ -111,6 +115,7 @@ namespace suku
 		if (transition.getDuration() <= 0.0)
 		{
 			value_ = getExpectedValue() / value;
+			lastFrameState_ = frameState_ = value_;
 			isTranslating_ = false;
 			return;
 		}
