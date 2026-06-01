@@ -32,6 +32,7 @@ namespace suku
 		T operator--(int);
 		auto operator<=>(const T& _value) const { return getValue() <=> _value; }
 
+		void setValueForce(T _value);
 		T getValue() const;
 		T getExpectedValue() const;
 		T getFrameState() const { return frameState_; }
@@ -49,6 +50,8 @@ namespace suku
 		T value_;
 		T frameState_;
 		T lastFrameState_;
+		bool forceUpdateTag_ = false;
+		T forceUpdateValue_;
 	};
 }
 

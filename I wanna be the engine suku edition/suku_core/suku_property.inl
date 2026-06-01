@@ -14,9 +14,7 @@ namespace suku
 		auto& [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
-			isTranslating_ = false;
-			value_ = value;
-			lastFrameState_ = frameState_ = value_;
+			setValueForce(value);
 			return;
 		}
 		isTranslating_ = true;
@@ -39,9 +37,7 @@ namespace suku
 		auto [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
-			value_ = getExpectedValue() + value;
-			lastFrameState_ = frameState_ = value_;
-			isTranslating_ = false;
+			setValueForce(getExpectedValue() + value);
 			return;
 		}
 		isTranslating_ = true;
@@ -64,9 +60,7 @@ namespace suku
 		auto [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
-			value_ = getExpectedValue() - value;
-			lastFrameState_ = frameState_ = value_;
-			isTranslating_ = false;
+			setValueForce(getExpectedValue() - value);
 			return;
 		}
 		isTranslating_ = true;
@@ -89,9 +83,7 @@ namespace suku
 		auto [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
-			value_ = getExpectedValue() * value;
-			lastFrameState_ = frameState_ = value_;
-			isTranslating_ = false;
+			setValueForce(getExpectedValue() * value);
 			return;
 		}
 		isTranslating_ = true;
@@ -114,9 +106,7 @@ namespace suku
 		auto [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
-			value_ = getExpectedValue() / value;
-			lastFrameState_ = frameState_ = value_;
-			isTranslating_ = false;
+			setValueForce(getExpectedValue() / value);
 			return;
 		}
 		isTranslating_ = true;
@@ -144,6 +134,15 @@ namespace suku
 	}
 
 	template<suku_property_type T>
+	inline void Property<T>::setValueForce(T _value)
+	{
+		isTranslating_ = false;
+		value_ = _value;
+		forceUpdateTag_ = true;
+		forceUpdateValue_ = _value;
+	}
+
+	template<suku_property_type T>
 	inline T Property<T>::getValue() const
 	{
 		if (!isTranslating_)
@@ -166,8 +165,16 @@ namespace suku
 	template<suku_property_type T>
 	inline void Property<T>::updateFrameState()
 	{
-		lastFrameState_ = frameState_;
-		frameState_ = getValue();
+		if (!isTranslating_ && forceUpdateTag_)
+		{
+			lastFrameState_ = frameState_ = forceUpdateValue_;
+		}
+		else
+		{
+			lastFrameState_ = frameState_;
+			frameState_ = getValue();
+		}
+		forceUpdateTag_ = false;
 	}
 
 	template<suku_property_type T>
