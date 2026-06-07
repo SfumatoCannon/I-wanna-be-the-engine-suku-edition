@@ -15,6 +15,7 @@ namespace
 	void updateWork();
 	void paintWork();
 	void paintWork(double _additionalFrameRate);
+	void displayDebugMessage();
 	double getMonitoredFPS(bool _isUpdate);
 }
 // ----------------------------------------------------------------------------
@@ -250,20 +251,16 @@ namespace
 
 	void paintWork()
 	{
-		double renderFPS = 0.0f;
 		if (!gameEndFlag)
 		{
-			renderFPS = getMonitoredFPS(true);
+			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
 			suku::nowRoom->paint();
 
 			if (debugMessage)
 			{
-				static suku::Text a("Consolas", 16);
-				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-				a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-				a.paint(10, 10);
+				displayDebugMessage();
 			}
 
 			suku::graphics::endDrawGlobal();
@@ -272,28 +269,31 @@ namespace
 
 	void paintWork(double _additionalFrameRate)
 	{
-		double renderFPS = 0.0f;
 		if (!gameEndFlag)
 		{
-			renderFPS = getMonitoredFPS(true);
+			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
 			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
 			if (debugMessage)
 			{
-				static suku::Text a("Consolas", 16);
-				if (_additionalFrameRate > 1.0)
-					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
-				else
-					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-				a.textContent = L"FPS: " + std::to_wstring(renderFPS)
-					+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
-				a.paint(10, 10);
+				displayDebugMessage();
 			}
 
 			suku::graphics::endDrawGlobal();
 		}
+	}
+
+	void displayDebugMessage()
+	{
+		double monitoredFPS = getMonitoredFPS(false);
+		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
+		static suku::Text a("Consolas", 16);
+		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
+		a.textContent = L"FPS: " + std::to_wstring(monitoredFPS)
+			+ (isVsyncOn ? L" (vsync on)" : L"");
+		a.paint(10, 10);
 	}
 }
 // ----------------------------------------------------------------------------
