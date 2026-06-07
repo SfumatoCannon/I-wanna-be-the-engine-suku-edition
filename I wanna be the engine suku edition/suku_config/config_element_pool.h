@@ -18,5 +18,6 @@ namespace suku
 		// Render
 		inline static ConfigElement<int> renderFPS = { "Render", "fps", 50 };
 		inline static ConfigElement<bool> isVSyncOn = { "Render", "vsync", true };
+		inline static ConfigElement<int> vsyncFrameRate = { "Render", "vsyncFrameRate", 1 };
 	};
 }

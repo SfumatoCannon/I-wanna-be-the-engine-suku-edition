@@ -42,7 +42,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		soundInit();
 		init();
 		if (ConfigElementPool::isVSyncOn.value())
-			game_loop::startWithVsync();
+			game_loop::startWithVsync(ConfigElementPool::vsyncFrameRate.value());
 		else
 			game_loop::start();
 		break;

@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------------------
 namespace 
 {
+	bool debugMessage = true;
 	bool gameEndFlag = false;
 	void updateWork();
 	void paintWork();
@@ -127,6 +128,11 @@ namespace suku
 			}
 		}
 
+		void debugMessageDisplay(bool _isDisplay)
+		{
+			debugMessage = _isDisplay;
+		}
+
 		void start()
 		{
 			std::thread threadUpdate(updateSender);
@@ -135,10 +141,18 @@ namespace suku
 			threadRender.detach();
 		}
 
-		void startWithVsync()
+		void startWithVsync(int _frameRate)
 		{
-			std::thread thread(vsyncLoopSenderExtraFrames, 2);
-			thread.detach();
+			if (_frameRate <= 1)
+			{
+				std::thread thread(vsyncLoopSender);
+				thread.detach();
+			}
+			else
+			{
+				std::thread thread(vsyncLoopSenderExtraFrames, _frameRate);
+				thread.detach();
+			}
 		}
 	}
 }
@@ -244,10 +258,14 @@ namespace
 			suku::graphics::beginDrawGlobal();
 			suku::nowRoom->paint();
 
-			//suku::Text a("Consolas", 16);
-			//a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
-			//a.textContent = L"FPS: " + std::to_wstring(renderFPS);
-			//a.paint(10, 10);
+			if (debugMessage)
+			{
+				static suku::Text a("Consolas", 16);
+				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 255, 255, 1.0f)));
+				a.textContent = L"FPS: " + std::to_wstring(renderFPS);
+				a.paint(10, 10);
+			}
+
 			suku::graphics::endDrawGlobal();
 		}
 	}
@@ -255,8 +273,6 @@ namespace
 	void paintWork(double _additionalFrameRate)
 	{
 		double renderFPS = 0.0f;
-		//if (threadLock.try_lock())
-		//{
 		if (!gameEndFlag)
 		{
 			renderFPS = getMonitoredFPS(true);
@@ -264,18 +280,20 @@ namespace
 			suku::graphics::beginDrawGlobal();
 			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
-			suku::Text a("Consolas", 16);
-			if (_additionalFrameRate > 1.0)
-				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
-			else
-				a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-			a.textContent = L"FPS: " + std::to_wstring(renderFPS)
-				+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
-			a.paint(10, 10);
+			if (debugMessage)
+			{
+				static suku::Text a("Consolas", 16);
+				if (_additionalFrameRate > 1.0)
+					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(255, 0, 0, 1.0f)));
+				else
+					a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
+				a.textContent = L"FPS: " + std::to_wstring(renderFPS)
+					+ L"\nAdditional Frame Rate: " + std::to_wstring(_additionalFrameRate);
+				a.paint(10, 10);
+			}
+
 			suku::graphics::endDrawGlobal();
 		}
-		//	threadLock.unlock();
-		//}
 	}
 }
 // ----------------------------------------------------------------------------
