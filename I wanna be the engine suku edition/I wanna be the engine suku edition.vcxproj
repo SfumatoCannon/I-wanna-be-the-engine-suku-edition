@@ -174,7 +174,7 @@
     <ClInclude Include="suku_core\includes.h" />
     <ClInclude Include="suku_core\object.h" />
     <ClInclude Include="suku_core\room.h" />
-    <ClInclude Include="suku_core\room_collision_pool.h" />
+    <ClInclude Include="suku_core\object_collision_pool.h" />
     <ClInclude Include="suku_core\sprite.h" />
     <ClInclude Include="I wanna be the engine suku edition.h" />
     <ClInclude Include="suku_core\suku_property.h" />
@@ -255,7 +255,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="suku_core\room_collision_pool.cpp">
+    <ClCompile Include="suku_core\object_collision_pool.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -375,7 +375,7 @@
     <None Include="suku_config\config_file.inl" />
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />
-    <None Include="suku_core\room_collision_pool.inl" />
+    <None Include="suku_core\object_collision_pool.inl" />
     <None Include="suku_core\sprite.inl" />
     <None Include="suku_core\suku_property.inl" />
     <None Include="suku_draw\scale_mode.inl" />

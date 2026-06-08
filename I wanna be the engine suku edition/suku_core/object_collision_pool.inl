@@ -1,11 +1,11 @@
 #pragma once
-#include "room_collision_pool.h"
+#include "object_collision_pool.h"
 #include "object.h"
 
 namespace suku
 {
 	template<typename Obj>
-	Obj* RoomCollisionPool::getCrashedObject(Object* _sourceObj)
+	Obj* ObjectCollisionPool::getCrashedObject(Object* _sourceObj)
 	{
 		for (auto& [chunk, list] : chunk_)
 		{
@@ -22,7 +22,7 @@ namespace suku
 	}
 
 	template<typename Obj>
-	std::list<Obj*> RoomCollisionPool::getCrashedObjectList(Object* _sourceObj)
+	std::list<Obj*> ObjectCollisionPool::getCrashedObjectList(Object* _sourceObj)
 	{
 		std::list<Obj*> resultList;
 		for (auto& [chunk, list] : chunk_)

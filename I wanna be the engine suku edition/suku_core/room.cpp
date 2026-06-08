@@ -3,14 +3,14 @@
 #include "../suku_draw/effect.h"
 #include "../suku_draw/draw_core.h"
 #include "../suku_gamewindow/game_window.h"
-#include "room_collision_pool.h"
+#include "object_collision_pool.h"
 
 namespace suku
 {
 	Room* nowRoom;
 
 	Room::Room()
-		: collisionPool_(std::make_unique<RoomCollisionPool>())
+		: collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
 		static unsigned int roomIdCounter = 0;
 		roomIdCounter++;

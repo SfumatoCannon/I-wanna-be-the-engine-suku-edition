@@ -27,9 +27,6 @@
     <ClInclude Include="I wanna be the engine suku edition.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="global_value.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="suku_objects\basic\object_definer.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -120,7 +117,7 @@
     <ClInclude Include="suku_core\view.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_core\room_collision_pool.h">
+    <ClInclude Include="suku_core\object_collision_pool.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_foundation\file.h">
@@ -166,6 +163,24 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_config\config_file.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_constants.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_config\config_element.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_config\config_element_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_config\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_core\suku_property.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_core\transition.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -464,7 +479,7 @@
     <ClCompile Include="suku_draw\effect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="suku_core\room_collision_pool.cpp">
+    <ClCompile Include="suku_core\object_collision_pool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_foundation\codec.cpp">
@@ -506,6 +521,9 @@
     <ClCompile Include="suku_objects\map_loader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="suku_core\transition.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="I wanna be the engine suku edition.rc">
@@ -534,7 +552,16 @@
     <None Include="suku_foundation\save.inl">
       <Filter>头文件</Filter>
     </None>
-    <None Include="suku_core\room_collision_pool.inl">
+    <None Include="suku_core\object_collision_pool.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="suku_config\config_element.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="suku_config\config_file.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="suku_core\suku_property.inl">
       <Filter>头文件</Filter>
     </None>
   </ItemGroup>

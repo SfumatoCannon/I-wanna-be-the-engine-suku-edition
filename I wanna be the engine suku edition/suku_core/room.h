@@ -10,7 +10,7 @@ namespace suku
 {
 	class Object;
 	class Room;
-	class RoomCollisionPool;
+	class ObjectCollisionPool;
 
 	extern Room* nowRoom;
 
@@ -67,7 +67,7 @@ namespace suku
 		String alias_ = L"";
 		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
-		std::unique_ptr<RoomCollisionPool> collisionPool_;
+		std::unique_ptr<ObjectCollisionPool> collisionPool_;
 		std::map<double, std::list<std::shared_ptr<Object>>> preUpdateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> updateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;

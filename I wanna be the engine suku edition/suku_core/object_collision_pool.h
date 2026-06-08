@@ -7,13 +7,13 @@ namespace suku
 {
 	class Object;
 
-	class RoomCollisionPool
+	class ObjectCollisionPool
 	{
 	public:
 		static constexpr int chunkSize = 128;
 		static std::pair<int, int> getChunk(float _x, float _y);
 
-		RoomCollisionPool() = default;
+		ObjectCollisionPool() = default;
 		void addObject(Object* _obj);
 		void removeObject(Object* _obj);
 		void updateObject(Object* _obj);
@@ -30,4 +30,4 @@ namespace suku
 	};
 }
 
-#include "room_collision_pool.inl"
+#include "object_collision_pool.inl"

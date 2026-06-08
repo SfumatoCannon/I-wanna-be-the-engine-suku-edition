@@ -1,15 +1,15 @@
-#include "room_collision_pool.h"
+#include "object_collision_pool.h"
 #include "object.h"
 
 namespace suku
 {
-    std::pair<int, int> RoomCollisionPool::getChunk(float _x, float _y)
+    std::pair<int, int> ObjectCollisionPool::getChunk(float _x, float _y)
     {
-        return { static_cast<int>(_x / RoomCollisionPool::chunkSize),
-            static_cast<int>(_y / RoomCollisionPool::chunkSize) };
+        return { static_cast<int>(_x / ObjectCollisionPool::chunkSize),
+            static_cast<int>(_y / ObjectCollisionPool::chunkSize) };
     }
 
-    void RoomCollisionPool::addObject(Object* _obj)
+    void ObjectCollisionPool::addObject(Object* _obj)
     {
         std::pair<int, int> chunk = getChunk(_obj->x, _obj->y);
         chunk_[chunk].push_back(_obj);
@@ -18,7 +18,7 @@ namespace suku
 		objectUpdateTag_[_obj] = false;
     }
 
-    void RoomCollisionPool::removeObject(Object* _obj)
+    void ObjectCollisionPool::removeObject(Object* _obj)
     {
 		std::pair<int, int> chunk = objectChunk_[_obj];
         chunk_[chunk].erase(objectIterator_[_obj]);
@@ -26,7 +26,7 @@ namespace suku
 		objectIterator_.erase(_obj);
     }
 
-    void RoomCollisionPool::updateObject(Object* _obj)
+    void ObjectCollisionPool::updateObject(Object* _obj)
     {
         // no existence check for performance
 		std::pair<int, int> newChunk = getChunk(_obj->x, _obj->y);
@@ -40,7 +40,7 @@ namespace suku
 		}
     }
 
-  //  Object* RoomCollisionPool::getCrashedObject(Object* _sourceObj)
+  //  Object* ObjectCollisionPool::getCrashedObject(Object* _sourceObj)
   //  {
 		//// temporary implementation, will be optimized later
 		//for (auto& [chunk, list] : chunk_)
@@ -54,7 +54,7 @@ namespace suku
   //      return nullptr;
   //  }
 
-  //  std::list<Object*> RoomCollisionPool::getCrashedObjectList(Object* _sourceObj)
+  //  std::list<Object*> ObjectCollisionPool::getCrashedObjectList(Object* _sourceObj)
   //  {
   //      // temporary implementation, will be optimized later
 		//std::list<Object*> resultList;
