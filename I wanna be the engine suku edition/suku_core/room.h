@@ -3,6 +3,7 @@
 #include "../suku_foundation/type_tree.h"
 #include <map>
 #include <memory>
+#include "../suku_foundation/suku_string.h"
 #include "../suku_constants.h"
 
 namespace suku
@@ -17,7 +18,8 @@ namespace suku
 	{
 	public:
 		bool hasCreated = false;
-		Room() { collisionPool_ = std::make_unique<RoomCollisionPool>(); }
+		Room();
+		unsigned int getRoomId() const { return roomId_; }
 
 		template<typename Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
@@ -58,7 +60,11 @@ namespace suku
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
+	protected:
+		~Room() = default;
 	private:
+		unsigned int roomId_;
+		String alias_ = L"";
 		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
 		std::unique_ptr<RoomCollisionPool> collisionPool_;

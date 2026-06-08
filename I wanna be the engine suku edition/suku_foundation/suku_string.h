@@ -23,6 +23,11 @@ namespace suku
 		String operator+(const wchar_t* _wstring);
 		String operator+(std::string _string);
 		String operator+(std::wstring _wstring);
+		void operator+=(const String& _other);
+		void operator+=(const char* _string);
+		void operator+=(const wchar_t* _wstring);
+		void operator+=(std::string _string);
+		void operator+=(std::wstring _wstring);
 		~String();
 	};
 	String operator+(const char* _string1, const String& _string2);

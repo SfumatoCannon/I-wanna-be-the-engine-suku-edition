@@ -115,6 +115,31 @@ namespace suku
 		return String(contentInWString() + _wstring);
 	}
 
+	void String::operator+=(const String& _other)
+	{
+		*this = *this + _other;
+	}
+
+	void String::operator+=(const char* _string)
+	{
+		*this = *this + _string;
+	}
+
+	void String::operator+=(const wchar_t* _wstring)
+	{
+		*this = *this + _wstring;
+	}
+
+	void String::operator+=(std::string _string)
+	{
+		*this = *this + _string;
+	}
+
+	void String::operator+=(std::wstring _wstring)
+	{
+		*this = *this + _wstring;
+	}
+
 	String::~String()
 	{
 		if (content != nullptr)
