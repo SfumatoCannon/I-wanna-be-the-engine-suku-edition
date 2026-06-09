@@ -183,6 +183,9 @@
     <ClInclude Include="suku_core\transition.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_core\room_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
