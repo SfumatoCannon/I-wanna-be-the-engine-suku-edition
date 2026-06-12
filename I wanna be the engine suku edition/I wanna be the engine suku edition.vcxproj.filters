@@ -567,6 +567,9 @@
     <None Include="suku_core\suku_property.inl">
       <Filter>头文件</Filter>
     </None>
+    <None Include="suku_core\room_pool.inl">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="suku_icon.ico">

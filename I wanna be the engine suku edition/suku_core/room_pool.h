@@ -1,19 +1,41 @@
 #pragma once
 #include <map>
-#include "room.h"
+#include <suku_foundation/type_tree.h>
+#include <memory>
 
 
 namespace suku
 {
-	template<typename RoomType>
-	concept RoomType = std::derived_from<RoomType, Room>;
+	class Room;
+	template<typename T>
+	concept RoomType = std::derived_from<T, Room>;
 
 	class RoomPool
 	{
 	public:
-		template<RoomType T> void createRoom();
-		template<RoomType T> Room* getRoom();
+		template<RoomType T> static Room* createRoom();
+		template<RoomType T> static void releaseRoom();
+		template<RoomType T> static Room* getRoom();
 	private:
-		std::map<Typecode, std::unique_ptr<Room>> roomPool_;
+		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
 	};
+
+	template<RoomType T> void gotoRoom();
 }
+
+//void gotoRoom(Room& _room)
+//{
+//	if (_room.hasCreated == false)
+//	{
+//		_room.onCreate();
+//		//_room.onEntering()...?
+//		nowRoom = &_room;
+//	}
+//	else
+//	{
+//		_room.onEntering();
+//		nowRoom = &_room;
+//	}
+//}
+
+#include "room_pool.inl"

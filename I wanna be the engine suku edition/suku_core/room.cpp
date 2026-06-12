@@ -341,19 +341,4 @@ namespace suku
 			for (k = object_painting_array[j].begin(); k != object_painting_array[j].end(); k++)
 				(*k)->paintBody();
 	}*/
-
-	void gotoRoom(Room& _room)
-	{
-		if (_room.hasCreated == false)
-		{
-			_room.onCreate();
-			//_room.onEntering()...?
-			nowRoom = &_room;
-		}
-		else
-		{
-			_room.onEntering();
-			nowRoom = &_room;
-		}
-	}
 }

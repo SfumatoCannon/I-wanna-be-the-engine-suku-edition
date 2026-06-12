@@ -17,7 +17,6 @@ namespace suku
 	class Room
 	{
 	public:
-		bool hasCreated = false;
 		Room();
 		unsigned int getRoomId() const { return roomId_; }
 
@@ -60,8 +59,6 @@ namespace suku
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
-	protected:
-		~Room() = default;
 	private:
 		unsigned int roomId_;
 		String alias_ = L"";
@@ -74,8 +71,6 @@ namespace suku
 		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
 		template<typename Obj> void createObjectList();
 	};
-
-	void gotoRoom(Room& _room);
 }
 
 #include "room.inl"

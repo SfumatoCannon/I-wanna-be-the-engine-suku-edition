@@ -321,7 +321,7 @@ namespace suku
 		{
 			if (warp->roomTo != nullptr)
 			{
-				gotoRoom(*warp->roomTo);
+				//gotoRoom(*warp->roomTo);
 			}
 		}
 	}
