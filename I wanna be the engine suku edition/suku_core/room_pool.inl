@@ -4,19 +4,6 @@
 namespace suku
 {
 	template<RoomType T>
-	Room* RoomPool::getRegisteredRoom()
-	{
-		Typecode typecode = typecode(T);
-		if (roomPool_.find(typecode) == roomPool_.end())
-		{
-			auto newRoom = std::make_unique<T>();
-			newRoom->onCreate();
-			roomPool_[typecode] = std::move(newRoom);
-		}
-		return roomPool_[typecode].get();
-	}
-
-	template<RoomType T>
 	inline void RoomPool::releaseRoom()
 	{
 		Typecode typecode = typecode(T);
@@ -37,8 +24,8 @@ namespace suku
 	}
 
 	template<RoomType T>
-	void gotoRoom()
+	inline void RoomPool::gotoRoom()
 	{
-		nowRoom = RoomPool::getRegisteredRoom<T>();
+		RoomPool::nowRoom_ = getRoom<T>();
 	}
 }

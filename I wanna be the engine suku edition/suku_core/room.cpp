@@ -7,14 +7,13 @@
 
 namespace suku
 {
-	Room* nowRoom;
-
 	Room::Room()
 		: collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
 		static unsigned int roomIdCounter = 0;
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
+		displayLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)

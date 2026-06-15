@@ -14,8 +14,6 @@ namespace suku
 	template<typename T>
 	concept RoomType = std::derived_from<T, Room>;
 
-	extern Room* nowRoom;
-
 	class Room
 	{
 	public:
@@ -49,7 +47,6 @@ namespace suku
 		template<typename Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
 		template<typename Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
 
-		virtual void onCreate() { displayLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical); }
 		virtual void onEntering() {}
 		virtual void onRestart() {}
 		virtual void onPaintStart() { displayLayer_.clear(); }

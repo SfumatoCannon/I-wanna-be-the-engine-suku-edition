@@ -5,9 +5,8 @@ using namespace suku;
 class Room1 : public Room
 {
 public:
-	virtual void onCreate()override
+	Room1() : Room()
 	{
-		Room::onCreate();
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
@@ -22,10 +21,8 @@ class Room0 : public Room
 {
 public:
 	Player* p;
-	virtual void onCreate()override
+	Room0() : Room()
 	{
-		Room::onCreate();
-
 		static SaveFile save0("save123");
 		setSaveFile(&save0);
 

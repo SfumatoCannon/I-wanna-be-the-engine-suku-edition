@@ -12,14 +12,18 @@ namespace suku
 	class RoomPool
 	{
 	public:
-		template<RoomType T> static Room* getRegisteredRoom();
+		static Room* getNowRoom() { return nowRoom_; }
 		template<RoomType T> static void releaseRoom();
 		template<RoomType T> static Room* getRoom();
+		template<RoomType T> static void gotoRoom();
 	private:
 		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
+		inline static Room* nowRoom_ = nullptr;
 	};
 
-	template<RoomType T> void gotoRoom();
+	template<RoomType T> Room* getNowRoom() { return RoomPool::getNowRoom(); }
+	template<RoomType T> void gotoRoom() { RoomPool::gotoRoom<T>(); }
+
 }
 
 //void gotoRoom(Room& _room)
@@ -28,12 +32,12 @@ namespace suku
 //	{
 //		_room.onCreate();
 //		//_room.onEntering()...?
-//		nowRoom = &_room;
+//		nowRoom_ = &_room;
 //	}
 //	else
 //	{
 //		_room.onEntering();
-//		nowRoom = &_room;
+//		nowRoom_ = &_room;
 //	}
 //}
 
