@@ -317,12 +317,9 @@ namespace suku
 			die();
 			return;
 		}
-		if (auto warp = getCrashedObject<Warp>())
+		if (auto placeChanger = getCrashedObject<PlaceChangerRaw>())
 		{
-			if (warp->roomTo != nullptr)
-			{
-				//gotoRoom(*warp->roomTo);
-			}
+			placeChanger->warp();
 		}
 	}
 

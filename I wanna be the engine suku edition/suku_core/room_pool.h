@@ -2,18 +2,17 @@
 #include <map>
 #include <suku_foundation/type_tree.h>
 #include <memory>
+#include "room.h"
 
 
 namespace suku
 {
 	class Room;
-	template<typename T>
-	concept RoomType = std::derived_from<T, Room>;
 
 	class RoomPool
 	{
 	public:
-		template<RoomType T> static Room* createRoom();
+		template<RoomType T> static Room* getRegisteredRoom();
 		template<RoomType T> static void releaseRoom();
 		template<RoomType T> static Room* getRoom();
 	private:

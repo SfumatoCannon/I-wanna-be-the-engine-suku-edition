@@ -7,8 +7,9 @@
 namespace suku
 {
 	class Background;
-	class PlaceChanger;
-	class Warp;
+	class PlaceChangerRaw;
+	template<RoomType T> class PlaceChanger;
+	template<RoomType T> class Warp;
 	class Wall;
 	class Spike;
 	class Cherry;
@@ -40,23 +41,55 @@ namespace suku
 		}
 	};
 
-	class PlaceChanger :public Object
+	class PlaceChangerRaw :public Object
 	{
 	public:
-		Room* roomTo;
-		PlaceChanger(float _x = 0, float _y = 0, Room* _roomTo = nullptr) : Object(_x, _y), roomTo(_roomTo)
+		PlaceChangerRaw(float _x = 0, float _y = 0) : Object(_x, _y)
 		{
 			sprite_ = &Trigger::spr;
 		}
+
+		Room* getRoomTo() const
+		{
+			return getRoomToFunc_ ? getRoomToFunc_() : nullptr;
+		}
+
+		template<RoomType T>
+		void setRoomTo()
+		{
+			getRoomToFunc_ = []() { return RoomPool::getRoom<T>(); };
+			warpFunc_ = []() { gotoRoom<T>(); };
+		}
+
+		void warp()
+		{
+			if (warpFunc_)
+				warpFunc_();
+		}
+	private:
+		std::function<Room* ()> getRoomToFunc_;
+		std::function<void()> warpFunc_;
 	};
 
-	class Warp :public PlaceChanger
+	template<RoomType T>
+	class PlaceChanger :public PlaceChangerRaw
+	{
+	public:
+		PlaceChanger(float _x = 0, float _y = 0) : PlaceChangerRaw(_x, _y)
+		{
+			sprite_ = &Trigger::spr;
+			setRoomTo<T>();
+		}
+	};
+	
+	template<RoomType T>
+	class Warp :public PlaceChanger<T>
 	{
 	public:
 		inline static Sprite spr{ BitmapSpriteElement("Image\\warp.png", 16, 16, 0.2f) };
-		Warp(float _x = 0, float _y = 0, Room* _roomTo = nullptr) : PlaceChanger(_x, _y, _roomTo)
+		Warp(float _x = 0, float _y = 0) : PlaceChanger<T>(_x, _y)
 		{
-			sprite_ = &spr;
+			this->sprite_ = &spr;
 		}
 	};
 

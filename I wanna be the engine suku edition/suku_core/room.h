@@ -11,6 +11,8 @@ namespace suku
 	class Object;
 	class Room;
 	class ObjectCollisionPool;
+	template<typename T>
+	concept RoomType = std::derived_from<T, Room>;
 
 	extern Room* nowRoom;
 

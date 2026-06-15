@@ -4,7 +4,7 @@
 namespace suku
 {
 	template<RoomType T>
-	Room* RoomPool::createRoom()
+	Room* RoomPool::getRegisteredRoom()
 	{
 		Typecode typecode = typecode(T);
 		if (roomPool_.find(typecode) == roomPool_.end())
@@ -39,7 +39,6 @@ namespace suku
 	template<RoomType T>
 	void gotoRoom()
 	{
-		RoomPool::createRoom<T>();
-		nowRoom = RoomPool::getRoom<T>();
+		nowRoom = RoomPool::getRegisteredRoom<T>();
 	}
 }
