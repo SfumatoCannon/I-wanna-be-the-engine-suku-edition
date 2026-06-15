@@ -27,5 +27,6 @@ namespace suku
 	inline void RoomPool::gotoRoom()
 	{
 		RoomPool::nowRoom_ = getRoom<T>();
+		nowRoom_->onEntering();
 	}
 }
