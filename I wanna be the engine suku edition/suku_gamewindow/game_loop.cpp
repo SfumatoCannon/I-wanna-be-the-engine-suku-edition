@@ -203,6 +203,7 @@ namespace
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
 
+		Room* nowRoom = RoomPool::getNowRoom();
 		if (nowRoom)
 			nowRoom->update();
 
@@ -256,7 +257,7 @@ namespace
 			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
-			suku::nowRoom->paint();
+			suku::RoomPool::getNowRoom()->paint();
 
 			if (debugMessage)
 			{
@@ -274,7 +275,7 @@ namespace
 			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
-			suku::nowRoom->additionalFramePaint((float)_additionalFrameRate);
+			suku::RoomPool::getNowRoom()->additionalFramePaint((float)_additionalFrameRate);
 
 			if (debugMessage)
 			{
@@ -293,7 +294,7 @@ namespace
 		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
 		a.textContent = L"FPS: " + std::to_wstring(monitoredFPS)
 			+ (isVsyncOn ? L" (vsync on)" : L"");
-		a.textContent += L"\nRoom Id: " + std::to_wstring(suku::nowRoom->getRoomId());
+		a.textContent += L"\nRoom Id: " + std::to_wstring(suku::RoomPool::getNowRoom()->getRoomId());
 		a.paint(10, 10);
 	}
 }

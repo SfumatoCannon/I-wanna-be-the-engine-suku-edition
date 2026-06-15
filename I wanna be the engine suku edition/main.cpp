@@ -5,9 +5,8 @@ using namespace suku;
 class Room1 : public Room
 {
 public:
-	virtual void onCreate()override
+	Room1() : Room()
 	{
-		Room::onCreate();
 		create(Wall(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
@@ -16,16 +15,14 @@ public:
 		create(Water(224, 32));
 		//create(Spike(32, 128), Wall(32, 160));
 	}
-}room1;
+};
 
 class Room0 : public Room
 {
 public:
 	Player* p;
-	virtual void onCreate()override
+	Room0() : Room()
 	{
-		Room::onCreate();
-
 		static SaveFile save0("save123");
 		setSaveFile(&save0);
 
@@ -62,24 +59,24 @@ public:
 			}
 		);
 		create(Wall(96, 32))->addAction([=](Object* _this) {
-				if (input::Mouse::isDoubleClick())
-				{
-					_this->x = input::Mouse::getX();
-					_this->y = input::Mouse::getY();
-				}
-				return true;
+			if (input::Mouse::isDoubleClick())
+			{
+				_this->x = input::Mouse::getX();
+				_this->y = input::Mouse::getY();
+			}
+			return true;
 			}
 		);
 		create(Wall(256, 256))->addAction([=](Object* _this) {
-				if (input::isKeyHolding(input::VK_A))
-				{
-					_this->rotate(14);
-				}
-				if (input::isKeyHolding(input::VK_D))
-				{
-					_this->rotate(-14);
-				}
-				return true;
+			if (input::isKeyHolding(input::VK_A))
+			{
+				_this->rotate(14);
+			}
+			if (input::isKeyHolding(input::VK_D))
+			{
+				_this->rotate(-14);
+			}
+			return true;
 			}
 		);
 		auto pair = std::make_pair<double, Transition>(400, Transition(500.0, TransitionCurve::linear));
@@ -93,7 +90,7 @@ public:
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
-		create(Warp(128, 0, &room1));
+		create(Warp<Room1>(128, 0));
 	}
 
 	virtual void onPaintStart()override
@@ -118,9 +115,9 @@ public:
 		//a.textContent = "test message\npress s to save";
 		a.paint(256, 256, brushBlack);
 	}
-}room0;
+};
 
 void init()
 {
-	gotoRoom(room0);
+	gotoRoom<Room0>();
 }
