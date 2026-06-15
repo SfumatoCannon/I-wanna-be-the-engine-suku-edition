@@ -71,8 +71,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>soloud\src\**;soloud\include;$(IncludePath)</IncludePath>
-    <LibraryPath>soloud\include;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)out\</OutDir>
     <TargetName>$(ProjectName)_DEBUG</TargetName>
   </PropertyGroup>

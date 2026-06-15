@@ -26,19 +26,4 @@ namespace suku
 
 }
 
-//void gotoRoom(Room& _room)
-//{
-//	if (_room.hasCreated == false)
-//	{
-//		_room.onCreate();
-//		//_room.onEntering()...?
-//		nowRoom_ = &_room;
-//	}
-//	else
-//	{
-//		_room.onEntering();
-//		nowRoom_ = &_room;
-//	}
-//}
-
 #include "room_pool.inl"
