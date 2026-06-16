@@ -18,5 +18,6 @@ namespace suku
 	public:
 		static bool writeResource(String _originalFilePath);
 		static bool readResource(std::vector<char>& _byteData, String _originalFilePath);
+		static void refreshResourceFolder();
 	};
 }

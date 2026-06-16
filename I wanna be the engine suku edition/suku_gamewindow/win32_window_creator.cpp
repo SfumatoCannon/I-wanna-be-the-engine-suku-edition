@@ -4,6 +4,7 @@
 #include "game_window.h"
 #include "../suku_config/includes.h"
 #include "../Resource.h"
+#include "../suku_foundation/codec.h"
 
 #define MAX_LOADSTRING 100
 
@@ -125,6 +126,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+
+	suku::FileCodec::refreshResourceFolder();
 
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_IWANNAENGINE, szWindowClass, MAX_LOADSTRING);

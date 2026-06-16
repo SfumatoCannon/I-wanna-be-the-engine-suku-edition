@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "file.h"
 #include "message.h"
+#include <filesystem>
 
 namespace suku
 {
@@ -84,5 +85,28 @@ namespace suku
         encodedFile.closeRead();
         Codec::decodeData(_byteData);
         return true;
+    }
+
+    void FileCodec::refreshResourceFolder()
+    {
+        String originalAssetsFolderPath = filesystem::absolutePath(String("ProjectAssets"));
+        try
+        {
+            for (const auto& entry : std::filesystem::recursive_directory_iterator(originalAssetsFolderPath.contentInString()))
+            {
+                if (!entry.is_regular_file())
+                    continue;
+
+                String filePath(entry.path().string());
+                if (!writeResource(filePath))
+                {
+                    WARNINGWINDOW_GLOBAL("Failed to convert resource: " + filePath);
+                }
+            }
+        }
+        catch (const std::exception& e)
+        {
+            WARNINGWINDOW_GLOBAL("Failed to scan resources: " + String(e.what()));
+        }
     }
 }
