@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "transition.h"
+#include <algorithm>
 
 namespace suku
 {

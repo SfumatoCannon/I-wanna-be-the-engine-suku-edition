@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "game_loop.h"
 #include "game_window.h"
 #include "../suku_foundation/includes.h"

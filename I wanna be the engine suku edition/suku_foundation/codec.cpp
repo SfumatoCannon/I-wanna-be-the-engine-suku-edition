@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "codec.h"
 #include "suku_string.h"
 #include <sstream>

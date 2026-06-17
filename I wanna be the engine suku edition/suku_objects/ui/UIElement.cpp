@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "UIElement.h"
 
 namespace suku
