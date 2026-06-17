@@ -2,6 +2,8 @@
 #include <suku_foundation/suku_string.h>
 #include <dwrite.h>
 #include <wrl/client.h>
+#include "color.h"
+#include "transform.h"
 
 namespace suku
 {
@@ -55,12 +57,13 @@ namespace suku
 		void setTextWrapOption(TextWrapOption _option);
 		TextWrapOption getTextWarpOption() { return textWrapOption_; }
 
-		void paint(float _x, float _y);
-		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush);
-		void paint(float _x, float _y, float _width, float _height);
-		void paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush);
+		void paint(float _x, float _y, Transform _transform = Transform());
+		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(float _x, float _y, float _width, float _height, Transform _transform = Transform());
+		void paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
 
 		void setBrush(ComPtr<ID2D1Brush> _brush);
+		void setBrush(Color _color);
 	private:
 		String fontName_;
 		float size_;

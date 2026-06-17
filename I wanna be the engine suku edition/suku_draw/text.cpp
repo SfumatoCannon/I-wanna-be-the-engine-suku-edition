@@ -107,17 +107,17 @@ namespace suku
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 	}
 
-	void Text::paint(float _x, float _y)
+	void Text::paint(float _x, float _y, Transform _transform)
 	{
 		if (pBrush_ == nullptr)
 		{
 			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
 			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		}
-		paint(_x, _y, pBrush_);
+		paint(_x, _y, pBrush_, _transform);
 	}
 
-	void Text::paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush)
+	void Text::paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
 	{
 		if (textAlign_ == TextAlign::TopFill || textAlign_ == TextAlign::MiddleFill || textAlign_ == TextAlign::BottomFill)
 		{
@@ -158,6 +158,7 @@ namespace suku
 		default:
 			break;
 		}
+		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			textContent.content,
 			wcslen(textContent.content),
@@ -167,18 +168,19 @@ namespace suku
 		);
 	}
 
-	void Text::paint(float _x, float _y, float _width, float _height)
+	void Text::paint(float _x, float _y, float _width, float _height, Transform _transform)
 	{
 		if (pBrush_ == nullptr)
 		{
 			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
 			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		}
-		paint(_x, _y, _width, _height, pBrush_);
+		paint(_x, _y, _width, _height, pBrush_, _transform);
 	}
 
-	void Text::paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush)
+	void Text::paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
 	{
+		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			textContent.content,
 			wcslen(textContent.content),
@@ -191,6 +193,11 @@ namespace suku
 	void Text::setBrush(ComPtr<ID2D1Brush> _brush)
 	{
 		pBrush_ = _brush;
+	}
+
+	void Text::setBrush(Color _color)
+	{
+		setBrush(graphics::createSolidColorBrush(_color));
 	}
 
 	namespace graphics

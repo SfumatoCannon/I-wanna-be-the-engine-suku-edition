@@ -87,12 +87,12 @@ namespace suku
 
 	void Shape::setFill(Color _color)
 	{
-
+		pFillBrush_ = createSolidColorBrush(_color);
 	}
 
 	void Shape::setOutline(Color _color)
 	{
-
+		pOutlineBrush_ = createSolidColorBrush(_color);
 	}
 
 	void Shape::paint(float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth,

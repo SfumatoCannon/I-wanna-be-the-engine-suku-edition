@@ -35,6 +35,8 @@ public:
 		//static Player player(0, 0);
 		//append(&player);
 
+		create<UIElement>(400, 300, 200, 100);
+
 		Wall a(100, 100);
 		create(a);
 		p = create<Player>(0.f, 0.f);
