@@ -89,8 +89,11 @@ namespace suku
 	template<typename Obj, typename ...Args>
 	inline Obj* Room::create(Args && ...args)
 	{
+#pragma warning(push)
+#pragma warning(disable: 4244)
 		auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
 		return append(newObjPtr);
+#pragma warning(pop)
 	}
 
 	template<typename ...Objs>

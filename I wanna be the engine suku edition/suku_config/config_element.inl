@@ -39,6 +39,22 @@ namespace suku
 	template<typename T>
 	inline void ConfigElement<T>::setValue(T _value)
 	{
+		if (hasListConstraint_)
+		{
+			if (std::find(valueList_.begin(), valueList_.end(), _value) == valueList_.end())
+			{
+				WARNINGWINDOW("Attempted to set config variable " + String(name_)
+					+ " to a value that is not in the allowed list. Value not set.");
+				return;
+			}
+		}
+		else if (hasRangeConstraint_)
+		{
+			if (_value < minValue_)
+				_value = minValue_;
+			else if (_value > maxValue_)
+				_value = maxValue_;
+		}
 		value_ << _value;
 		ConfigFile::saveVar(name_, category_, _value);
 	}
