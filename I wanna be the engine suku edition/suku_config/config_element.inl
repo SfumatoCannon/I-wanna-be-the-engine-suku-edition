@@ -21,6 +21,68 @@ namespace suku
 	}
 
 	template<typename T>
+	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, T _minValue, T _maxValue)
+		: name_(_name.contentInWString()), category_(L"Config"), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
+	{
+		T valueT = ConfigFile::loadVar(_name, _defaultValue);
+		if (valueT < minValue_)
+		{
+			valueT = minValue_;
+		}
+		else if (valueT > maxValue_)
+		{
+			valueT = maxValue_;
+		}
+		value_ << valueT;
+	}
+
+	template<typename T>
+	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, T _minValue, T _maxValue)
+		: name_(_name.contentInWString()), category_(_category.contentInWString()), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
+	{
+		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
+		if (valueT < minValue_)
+		{
+			valueT = minValue_;
+		}
+		else if (valueT > maxValue_)
+		{
+			valueT = maxValue_;
+		}
+		value_ << valueT;
+	}
+
+	template<typename T>
+	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, std::vector<T> _valueList)
+		: name_(_name.contentInWString()), category_(L"Config"), hasListConstraint_(true), valueList_(_valueList)
+	{
+		T valueT = ConfigFile::loadVar(_name, _defaultValue);
+		if (std::find(valueList_.begin(), valueList_.end(), valueT) != valueList_.end())
+		{
+			value_ << valueT;
+		}
+		else
+		{
+			value_ << _defaultValue;
+		}
+	}
+
+	template<typename T>
+	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, std::vector<T> _valueList)
+		: name_(_name.contentInWString()), category_(_category.contentInWString()), hasListConstraint_(true), valueList_(_valueList)
+	{
+		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
+		if (std::find(valueList_.begin(), valueList_.end(), valueT) != valueList_.end())
+		{
+			value_ << valueT;
+		}
+		else
+		{
+			value_ << _defaultValue;
+		}
+	}
+
+	template<typename T>
 	inline void ConfigElement<T>::setValue(T _value)
 	{
 		if (hasListConstraint_)

@@ -41,9 +41,9 @@ namespace suku
 		}
 
 		wchar_t buffer[256];
-		auto categoryWStr = _category.contentInWString().c_str();
-		auto nameWStr = _name.contentInWString().c_str();
-		GetPrivateProfileStringW(categoryWStr, nameWStr, defaultValueStr.c_str(), buffer, 256,
+		auto categoryWStr = _category.contentInWString();
+		auto nameWStr = _name.contentInWString();
+		GetPrivateProfileStringW(categoryWStr.c_str(), nameWStr.c_str(), defaultValueStr.c_str(), buffer, 256,
 			filesystem::absolutePath(fileName_.c_str()).content);
 
 		if constexpr (std::is_same_v<T, bool>)
@@ -107,9 +107,9 @@ namespace suku
 			static_assert(sizeof(T) == 0, "Unsupported var type for saveVar");
 		}
 
-		auto categoryWStr = _category.contentInWString().c_str();
-		auto nameWStr = _name.contentInWString().c_str();
-		WritePrivateProfileStringW(categoryWStr, nameWStr, valueStr.c_str(),
+		auto categoryWStr = _category.contentInWString();
+		auto nameWStr = _name.contentInWString();
+		WritePrivateProfileStringW(categoryWStr.c_str(), nameWStr.c_str(), valueStr.c_str(),
 			filesystem::absolutePath(fileName_.c_str()).content);
 	}
 }
