@@ -6,13 +6,13 @@
 namespace suku
 {
 	template<config_var_type T>
-	inline T ConfigFile::loadVar(std::wstring _name, T _defaultValue)
+	inline T ConfigFile::loadVar(String _name, T _defaultValue)
 	{
 		return loadVar(_name, L"Config", _defaultValue);
 	}
 
 	template<config_var_type T>
-	inline T ConfigFile::loadVar(std::wstring _name, std::wstring _category, T _defaultValue)
+	inline T ConfigFile::loadVar(String _name, String _category, T _defaultValue)
 	{
 		std::wstring defaultValueStr;
 		if constexpr (std::is_same_v<T, bool>)
@@ -41,8 +41,10 @@ namespace suku
 		}
 
 		wchar_t buffer[256];
-		GetPrivateProfileStringW(_category.c_str(), _name.c_str(), defaultValueStr.c_str(), buffer, 256,
-			filesystem::absolutePath(fileName.c_str()).content);
+		auto categoryWStr = _category.contentInWString().c_str();
+		auto nameWStr = _name.contentInWString().c_str();
+		GetPrivateProfileStringW(categoryWStr, nameWStr, defaultValueStr.c_str(), buffer, 256,
+			filesystem::absolutePath(fileName_.c_str()).content);
 
 		if constexpr (std::is_same_v<T, bool>)
 		{
@@ -71,13 +73,13 @@ namespace suku
 	}
 
 	template<config_var_type T>
-	inline void ConfigFile::saveVar(std::wstring _name, T _value)
+	inline void ConfigFile::saveVar(String _name, T _value)
 	{
 		saveVar(_name, L"Config", _value);
 	}
 
 	template<config_var_type T>
-	inline void ConfigFile::saveVar(std::wstring _name, std::wstring _category, T _value)
+	inline void ConfigFile::saveVar(String _name, String _category, T _value)
 	{
 		std::wstring valueStr;
 		if constexpr (std::is_same_v<T, bool>)
@@ -105,31 +107,9 @@ namespace suku
 			static_assert(sizeof(T) == 0, "Unsupported var type for saveVar");
 		}
 
-		WritePrivateProfileStringW(_category.c_str(), _name.c_str(), valueStr.c_str(),
-			filesystem::absolutePath(fileName.c_str()).content);
-	}
-
-	template<config_var_type T>
-	inline T ConfigFile::loadVar(String _name, T _defaultValue)
-	{
-		return loadVar(_name.contentInWString(), _defaultValue);
-	}
-
-	template<config_var_type T>
-	inline T ConfigFile::loadVar(String _name, String _category, T _defaultValue)
-	{
-		return loadVar(_name.contentInWString(), _category.contentInWString(), _defaultValue);
-	}
-
-	template<config_var_type T>
-	inline void ConfigFile::saveVar(String _name, T _value)
-	{
-		saveVar(_name.contentInWString(), _value);
-	}
-
-	template<config_var_type T>
-	inline void ConfigFile::saveVar(String _name, String _category, T _value)
-	{
-		saveVar(_name.contentInWString(), _category.contentInWString(), _value);
+		auto categoryWStr = _category.contentInWString().c_str();
+		auto nameWStr = _name.contentInWString().c_str();
+		WritePrivateProfileStringW(categoryWStr, nameWStr, valueStr.c_str(),
+			filesystem::absolutePath(fileName_.c_str()).content);
 	}
 }

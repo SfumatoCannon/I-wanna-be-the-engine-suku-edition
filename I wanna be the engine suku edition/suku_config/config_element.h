@@ -5,14 +5,14 @@
 
 namespace suku
 {
+	class suku::String;
+
 	template<typename T>
 	class ConfigElement
 	{
 	public:
-		ConfigElement(std::string _name, T _defaultValue);
-		ConfigElement(std::wstring _name, T _defaultValue);
-		ConfigElement(std::string _category, std::string _name, T _defaultValue);
-		ConfigElement(std::wstring _category, std::wstring _name, T _defaultValue);
+		ConfigElement(String _name, T _defaultValue);
+		ConfigElement(String _category, String _name, T _defaultValue);
 		void setValue(T _value);
 		T value();
 		T getValue() { return value(); }

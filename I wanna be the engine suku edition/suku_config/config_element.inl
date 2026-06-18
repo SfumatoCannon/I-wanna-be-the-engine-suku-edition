@@ -5,32 +5,16 @@
 namespace suku
 {
 	template<typename T>
-	inline ConfigElement<T>::ConfigElement(std::string _name, T _defaultValue) 
-		: name_(String(_name).contentInWString()), category_(L"Config")
+	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue) 
+		: name_(_name.contentInWString()), category_(L"Config")
 	{
 		T valueT = ConfigFile::loadVar(_name, _defaultValue);
 		value_ << valueT;
 	}
 
 	template<typename T>
-	inline ConfigElement<T>::ConfigElement(std::wstring _name, T _defaultValue)
-		: name_(_name), category_(L"config")
-	{
-		T valueT = ConfigFile::loadVar(_name, _defaultValue);
-		value_ << valueT;
-	}
-
-	template<typename T>
-	inline ConfigElement<T>::ConfigElement(std::string _category, std::string _name, T _defaultValue)
-		: name_(String(_name).contentInWString()), category_(String(_category).contentInWString())
-	{
-		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
-		value_ << valueT;
-	}
-
-	template<typename T>
-	inline ConfigElement<T>::ConfigElement(std::wstring _category, std::wstring _name, T _defaultValue)
-		: name_(String(_name).contentInWString()), category_(String(_category).contentInWString())
+	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue)
+		: name_(_name.contentInWString()), category_(_category.contentInWString())
 	{
 		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
 		value_ << valueT;

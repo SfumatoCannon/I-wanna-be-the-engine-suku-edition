@@ -13,16 +13,12 @@ namespace suku
 	class ConfigFile
 	{
 	public:
-		template<config_var_type T> static T loadVar(std::wstring _name, T _defaultValue = T());
-		template<config_var_type T> static T loadVar(std::wstring _name, std::wstring _category, T _defaultValue = T());
-		template<config_var_type T> static void saveVar(std::wstring _name, T _value);
-		template<config_var_type T> static void saveVar(std::wstring _name, std::wstring _category, T _value);
 		template<config_var_type T> static T loadVar(String _name, T _defaultValue = T());
 		template<config_var_type T> static T loadVar(String _name, String _category, T _defaultValue = T());
 		template<config_var_type T> static void saveVar(String _name, T _value);
 		template<config_var_type T> static void saveVar(String _name, String _category, T _value);
 	private:
-		inline static std::wstring fileName = L"config.ini";
+		inline static std::wstring fileName_ = L"config.ini";
 	};
 }
 
