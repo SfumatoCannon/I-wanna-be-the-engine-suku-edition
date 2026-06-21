@@ -61,6 +61,10 @@ namespace suku
 		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
 		void paint(float _x, float _y, float _width, float _height, Transform _transform = Transform());
 		void paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(float _x, float _y, TextAlign _textAlign, Transform _transform = Transform());
+		void paint(float _x, float _y, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, Transform _transform = Transform());
+		void paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
 
 		void setBrush(ComPtr<ID2D1Brush> _brush);
 		void setBrush(Color _color);

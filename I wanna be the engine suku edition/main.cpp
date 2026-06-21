@@ -35,7 +35,8 @@ public:
 		//static Player player(0, 0);
 		//append(&player);
 
-		create<UIElement>(400, 300, 200, 100);
+		//create<UIElement>(400, 300, 200, 100);
+		create<OptionElement>(ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100);
 
 		Wall a(100, 100);
 		create(a);
@@ -92,7 +93,7 @@ public:
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
-		create(Warp<Room1>(128, 0));
+		create<Warp<Room1>>(128, 0);
 	}
 
 	virtual void onPaintStart()override

@@ -274,6 +274,12 @@ namespace suku
 					continue;
 				}
 
+				if (obj->onPaint())
+				{
+					iter++;
+					continue;
+				}
+
 				float posX, posY;
 				Transform transform;
 				if (obj->isPositionTransitionalFrame_)

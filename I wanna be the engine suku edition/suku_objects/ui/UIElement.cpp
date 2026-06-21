@@ -14,7 +14,7 @@ namespace suku
 	bool UIElement::onPaint()
 	{
 		RectangleShape area(width_, height_);
-		Text text("Consolas", 12, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, TextAlign::MiddleCenter);
+		Text text("Consolas", 12, TextAlign::MiddleCenter);
 		area.setFill(Color(128, 128, 128, 0.5f));
 		area.paint(x, y, transform);
 		text.setBrush(Color(255, 255, 0));

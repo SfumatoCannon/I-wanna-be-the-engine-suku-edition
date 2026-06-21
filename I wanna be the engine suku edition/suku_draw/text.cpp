@@ -111,7 +111,6 @@ namespace suku
 	{
 		if (pBrush_ == nullptr)
 		{
-			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
 			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		}
 		paint(_x, _y, pBrush_, _transform);
@@ -172,7 +171,6 @@ namespace suku
 	{
 		if (pBrush_ == nullptr)
 		{
-			WARNINGWINDOW("Paint brush empty. Program is trying to generate black brush instead.");
 			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		}
 		paint(_x, _y, _width, _height, pBrush_, _transform);
@@ -188,6 +186,58 @@ namespace suku
 			D2D1::RectF(_x, _y, _x + _width, _y + _height),
 			_brush.Get()
 		);
+	}
+
+	void Text::paint(float _x, float _y, TextAlign _textAlign, Transform _transform)
+	{
+		if (_textAlign == textAlign_)
+		{
+			paint(_x, _y, _transform);
+			return;
+		}
+		TextAlign originalTextAlign = textAlign_;
+		setTextAlign(_textAlign);
+		paint(_x, _y, _transform);
+		setTextAlign(originalTextAlign);
+	}
+
+	void Text::paint(float _x, float _y, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
+	{
+		if (_textAlign == textAlign_)
+		{
+			paint(_x, _y, _brush, _transform);
+			return;
+		}
+		TextAlign originalTextAlign = textAlign_;
+		setTextAlign(_textAlign);
+		paint(_x, _y, _brush, _transform);
+		setTextAlign(originalTextAlign);
+	}
+
+	void Text::paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, Transform _transform)
+	{
+		if (_textAlign == textAlign_)
+		{
+			paint(_x, _y, _width, _height, _transform);
+			return;
+		}
+		TextAlign originalTextAlign = textAlign_;
+		setTextAlign(_textAlign);
+		paint(_x, _y, _width, _height, _transform);
+		setTextAlign(originalTextAlign);
+	}
+
+	void Text::paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
+	{
+		if (_textAlign == textAlign_)
+		{
+			paint(_x, _y, _width, _height, _brush, _transform);
+			return;
+		}
+		TextAlign originalTextAlign = textAlign_;
+		setTextAlign(_textAlign);
+		paint(_x, _y, _width, _height, _brush, _transform);
+		setTextAlign(originalTextAlign);
 	}
 
 	void Text::setBrush(ComPtr<ID2D1Brush> _brush)

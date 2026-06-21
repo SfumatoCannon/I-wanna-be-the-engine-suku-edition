@@ -20,6 +20,11 @@ namespace suku
 		void setValue(T _value);
 		T value();
 		T getValue() { return value(); }
+		bool hasRangeConstraint() { return hasRangeConstraint_; }
+		bool hasListConstraint() { return hasListConstraint_; }
+		String getName() { return String(name_); }
+		std::pair<T, T> getRange() { return { minValue_, maxValue_ }; }
+		std::vector<T> getValueList() { return valueList_; }
 		void operator =(const ConfigElement& _other) = delete;
 		void operator =(ConfigElement&& _other) = delete;
 		void operator =(T _value) { setValue(_value); }
@@ -31,7 +36,7 @@ namespace suku
 		const T minValue_ = T();
 		const T maxValue_ = T();
 		const bool hasListConstraint_ = false;
-		std::vector<T> valueList_;
+		const std::vector<T> valueList_;
 	};
 }
 
