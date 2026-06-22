@@ -1,4 +1,4 @@
-#include "save.h"
+ï»¿#include "save.h"
 #include "maths.h"
 #include "suku_string.h"
 #include "message.h"
@@ -8,7 +8,7 @@ namespace suku
 	template<typename T>
 	bool setSavable(const std::string _name)
 	{
-		// ÎŞĞè×ö varIdMappingPool Ó³Éä£¬ÆäÓà±£³ÖÒ»ÖÂ
+		// æ— éœ€åš varIdMappingPool æ˜ å°„ï¼Œå…¶ä½™ä¿æŒä¸€è‡´
 		unsigned long long id = maths::hash(_name);
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;

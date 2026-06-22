@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "suku_foundation/suku_string.h"
 #include <Windows.h>
 #include <vector>
@@ -32,7 +32,7 @@ namespace suku
         void pause();
         void resume();
         void setVolume(float _volume);
-        void seek(float _seconds); // Ìø×ªµ½Ö¸¶¨Ê±¼äµã
+        void seek(float _seconds); // è·³è½¬åˆ°æŒ‡å®šæ—¶é—´ç‚¹
 
         void setLooping(bool _isEnable);
         void setLoopRegion(float _startSeconds, float _endSeconds);

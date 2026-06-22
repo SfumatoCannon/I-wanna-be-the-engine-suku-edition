@@ -1,4 +1,4 @@
-#include "object.h"
+ï»¿#include "object.h"
 #include "room.h"
 #include "sprite.h"
 #include <ranges>
@@ -294,7 +294,7 @@ namespace suku
 	{
 		remove();
 		destroyTag_ = true;
-		// inRoom_ != nullptr Ê±ÆäÉúÃüÖÜÆÚÓÉ Room ¹ÜÀí
+		// inRoom_ != nullptr æ—¶å…¶ç”Ÿå‘½å‘¨æœŸç”± Room ç®¡ç†
 		if (!inRoom_)
 		{
 			delete this;
