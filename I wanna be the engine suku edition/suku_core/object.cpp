@@ -116,12 +116,6 @@ namespace suku
 		}
 	}
 
-	void Object::onRestarting()
-	{
-		x = spawnX;
-		y = spawnY;
-	}
-
 	SpriteElement* Object::getSpriteFrame()const
 	{
 		if (!sprite_)

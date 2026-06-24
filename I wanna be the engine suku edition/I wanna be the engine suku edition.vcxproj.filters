@@ -186,6 +186,15 @@
     <ClInclude Include="suku_core\room_pool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_objects\ui\OptionElement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_objects\ui\UIElement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_objects\ui\OptionPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
@@ -525,6 +534,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_core\transition.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\ui\OptionElement.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\ui\UIElement.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\ui\OptionPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

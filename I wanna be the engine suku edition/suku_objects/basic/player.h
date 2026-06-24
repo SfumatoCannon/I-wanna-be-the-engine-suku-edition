@@ -24,7 +24,7 @@ namespace suku
 
 		Player(float _x = 0, float _y = 0);
 
-		virtual void onRoomEntering() override;
+		virtual void onRoomEntered() override;
 		virtual void onRestarting() override;
 		virtual void preUpdate() override;
 		virtual void update() override;

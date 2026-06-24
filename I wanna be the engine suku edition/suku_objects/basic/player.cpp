@@ -40,7 +40,7 @@ namespace suku
 		sprite_ = &sprStanding;
 	}
 
-	void Player::onRoomEntering()
+	void Player::onRoomEntered()
 	{
 		spawnX = x;
 		spawnY = y;

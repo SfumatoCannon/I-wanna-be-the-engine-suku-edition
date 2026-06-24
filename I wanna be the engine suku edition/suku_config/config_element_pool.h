@@ -16,7 +16,7 @@ namespace suku
 		inline static ConfigElement<int> windowPosY = { "Window", "posY", -1 };
 
 		// Render
-		inline static ConfigElement<int> renderFPS = { "Render", "fps", 50, {50, 60, 90, 100, 120, 144, 160, 240} };
+		inline static ConfigElement<int> renderFPS = { "Render", "fps", 50, {50, 60, 90, 100, 120, 144, 160, 200, 240} };
 		inline static ConfigElement<bool> isVSyncOn = { "Render", "vsync", true };
 		inline static ConfigElement<int> vsyncFrameRate = { "Render", "vsyncFrameRate", 1, 1, 4 };
 	};
