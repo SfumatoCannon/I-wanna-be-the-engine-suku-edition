@@ -245,31 +245,10 @@ namespace suku
 		return { (double)x / (double)width, (double)y / (double)height };
 	}
 
-	Object::Object(float _x, float _y)
-	{
-		var_.clear();
-		preUpdateId_ = 0;
-		updateId_ = 0;
-		postUpdateId_ = 0;
-		destroyTag_ = false;
-		paintId_ = 0;
-		sprite_ = nullptr;
-		inRoom_ = nullptr;
-		x = _x;
-		y = _y;
-		xLastFrame_ = x;
-		yLastFrame_ = y;
-		xScale = 1.0;
-		yScale = 1.0;
-		removeTag_ = false;
-		spawnX = _x;
-		spawnY = _y;
-		alpha = 1.0;
-		vspeed = hspeed = vspeedTemp = hspeedTemp = 0;
-		spriteTransformLastFrame_ = transform;
-		paintId_ = 0;
-		kindId_ = typecode(Object);
-	}
+	Object::Object(float _x, float _y, Room* _inRoom)
+		: x(_x), y(_y), inRoom_(_inRoom),
+		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX), 
+		spawnX(_x), spawnY(_y) {}
 
 	void Object::remove()
 	{

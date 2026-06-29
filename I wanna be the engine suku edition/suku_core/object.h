@@ -25,9 +25,8 @@ namespace suku
 	public:
 		Property<float> x, y;
 		float spawnX, spawnY;
-		float xScale, yScale;
-		float vspeed, hspeed;
-		float vspeedTemp, hspeedTemp;
+		float vspeed = 0, hspeed = 0, vspeedTemp = 0, hspeedTemp = 0;
+		float xScale = 1, yScale = 1;
 		Room* inRoom()const { return inRoom_; }
 		double preUpdateId()const { return preUpdateId_; }
 		double updateId()const { return updateId_; }
@@ -58,7 +57,7 @@ namespace suku
 
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 
-		Object(float _x = 0, float _y = 0);
+		Object(float _x = 0, float _y = 0, Room* _inRoom = nullptr);
 
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
@@ -142,16 +141,16 @@ namespace suku
 
 		std::map<std::string, Var> var_;
 
-		long double clock_ = 0.0;
-		Room* inRoom_ = nullptr;
-		size_t kindId_;
-		double	preUpdateId_,
-			updateId_,
-			postUpdateId_,
-			paintId_;
-		bool removeTag_ = false;
-		bool destroyTag_ = false;
-		Sprite* sprite_ = nullptr;
+		long double clock_		= 0.0;
+		Room* inRoom_			= nullptr;
+		size_t kindId_			= typecode(Object);
+		double	preUpdateId_	= 0.0,
+			updateId_			= 0.0,
+			postUpdateId_		= 0.0,
+			paintId_			= 0.0;
+		bool removeTag_			= false;
+		bool destroyTag_		= false;
+		Sprite* sprite_			= nullptr;
 		std::list<std::function<bool()> > actionList_;
 
 		float xLastFrame_;
