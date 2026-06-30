@@ -195,6 +195,9 @@
     <ClInclude Include="suku_objects\ui\OptionPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_core\suku_core_concepts.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">

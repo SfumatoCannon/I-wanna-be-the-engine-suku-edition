@@ -8,8 +8,8 @@ namespace suku
 {
 	class Background;
 	class PlaceChangerRaw;
-	template<RoomType T> class PlaceChanger;
-	template<RoomType T> class Warp;
+	template<suku_room T> class PlaceChanger;
+	template<suku_room T> class Warp;
 	class Wall;
 	class Spike;
 	class Cherry;
@@ -54,7 +54,7 @@ namespace suku
 			return getRoomToFunc_ ? getRoomToFunc_() : nullptr;
 		}
 
-		template<RoomType T>
+		template<suku_room T>
 		void setRoomTo()
 		{
 			getRoomToFunc_ = []() { return RoomPool::getRoom<T>(); };
@@ -71,7 +71,7 @@ namespace suku
 		std::function<void()> warpFunc_;
 	};
 
-	template<RoomType T>
+	template<suku_room T>
 	class PlaceChanger :public PlaceChangerRaw
 	{
 	public:
@@ -82,7 +82,7 @@ namespace suku
 		}
 	};
 	
-	template<RoomType T>
+	template<suku_room T>
 	class Warp :public PlaceChanger<T>
 	{
 	public:

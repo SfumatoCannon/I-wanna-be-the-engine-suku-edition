@@ -38,8 +38,6 @@ public:
 		//create<UIElement>(400, 300, 200, 100);
 		create<OptionPool>(OptionElement{ ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100 });
 
-		Wall a(100, 100);
-		create(a);
 		p = create<Player>(0.f, 0.f);
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});

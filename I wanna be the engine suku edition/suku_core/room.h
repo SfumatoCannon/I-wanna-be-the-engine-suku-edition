@@ -5,14 +5,13 @@
 #include <memory>
 #include "../suku_foundation/suku_string.h"
 #include "../suku_constants.h"
+#include "suku_core_concepts.h"
 
 namespace suku
 {
 	class Object;
 	class Room;
 	class ObjectCollisionPool;
-	template<typename T>
-	concept RoomType = std::derived_from<T, Room>;
 
 	class Room
 	{
@@ -20,18 +19,18 @@ namespace suku
 		Room();
 		unsigned int getRoomId() const { return roomId_; }
 
-		template<typename Obj> std::list<Obj*> getObjectList();
+		template<suku_object Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
 
-		template<typename Obj> Obj* append(std::shared_ptr<Obj> _objectPointer);
-		template<typename Obj> Obj* create(Obj&& _object);
-		template<typename Obj, typename ... Args> Obj* create(Args&&... args);
-		template<typename ... Objs> void create(Objs&&... _objects);
-		template<typename Obj> void createFill(Obj _object,
+		template<suku_object Obj> Obj* append(std::shared_ptr<Obj> _objectPointer);
+		template<suku_object Obj> Obj* create(Obj&& _object);
+		template<suku_object Obj, typename ... Args> Obj* create(Args&&... args);
+		template<suku_object ... Objs> void create(Objs&&... _objects);
+		template<suku_object Obj> void createFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
-		template<typename Obj> Obj* createCenter(Obj _object);
-		template<typename Obj, typename ... ObjNext> void createCenter(Obj _firstobject, ObjNext... _objectnext);
-		template<typename Obj> void createCenterFill(Obj _object,
+		template<suku_object Obj> Obj* createCenter(Obj _object);
+		template<suku_object Obj, suku_object ... ObjNext> void createCenter(Obj _firstobject, ObjNext... _objectnext);
+		template<suku_object Obj> void createCenterFill(Obj _object,
 			float _fillwidth, float _fillheight, float _footx, float _footy);
 
 		void remove(Object* _object);
@@ -44,8 +43,8 @@ namespace suku
 		void setObjectRecheckPriority(Object* _object, double _newId);
 		void setObjectPaintPriority(Object* _object, double _newId);
 
-		template<typename Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
-		template<typename Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
+		template<suku_object Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
+		template<suku_object Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
 
 		virtual void onEntering() {}
 		virtual void onRestart() {}
@@ -68,7 +67,7 @@ namespace suku
 		std::map<double, std::list<std::shared_ptr<Object>>> updateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
-		template<typename Obj> void createObjectList();
+		template<suku_object Obj> void createObjectList();
 	};
 }
 

@@ -6,13 +6,13 @@
 
 namespace suku
 {
-	template<typename Obj>
+	template<suku_object Obj>
 	inline void Room::createObjectList()
 	{
 		objectPointerArray_.try_emplace(typecode(Obj), std::list<std::shared_ptr<Object>>());
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Obj*> Room::getObjectList()
 	{
 		if (typecode(Obj) == typecode(Object))
@@ -48,7 +48,7 @@ namespace suku
 		return resultList;
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Room::append(std::shared_ptr<Obj> _objectPointer)
 	{
 		auto [iter, isFirst] =
@@ -81,14 +81,14 @@ namespace suku
 		return static_cast<Obj*>(objectParentPointer.get());
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Room::create(Obj&& _object)
 	{
 		auto newObjPtr = std::make_shared<std::decay_t<Obj>>(std::forward<Obj>(_object));
 		return append(newObjPtr);
 	}
 
-	template<typename Obj, typename ...Args>
+	template<suku_object Obj, typename ...Args>
 	inline Obj* Room::create(Args && ...args)
 	{
 #pragma warning(push)
@@ -98,13 +98,13 @@ namespace suku
 #pragma warning(pop)
 	}
 
-	template<typename ...Objs>
+	template<suku_object ...Objs>
 	inline void Room::create(Objs && ..._objects)
 	{
 		(append(std::make_shared<std::decay_t<Objs>>(std::forward<Objs>(_objects))), ...);
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline void Room::createFill(Obj _object, float _fillwidth, float _fillheight, float _footx, float _footy)
 	{
 		float i, j;
@@ -118,34 +118,34 @@ namespace suku
 			}
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Room::createCenter(Obj _object)
 	{
 		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		return create(_object);
 	}
 
-	template<typename Obj, typename ...ObjNext>
+	template<suku_object Obj, suku_object ...ObjNext>
 	inline void Room::createCenter(Obj _firstobject, ObjNext ..._objectnext)
 	{
 		createCenter(_firstobject);
 		createCenter(_objectnext...);
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline void Room::createCenterFill(Obj _object, float _fillwidth, float _fillheight, float _footx, float _footy)
 	{
 		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		createFill(_object, _fillwidth, _fillheight, _footx, _footy);
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline Obj* Room::getCrashedObject(Object* _sourceObj)
 	{
 		return collisionPool_->getCrashedObject<Obj>(_sourceObj);
 	}
 
-	template<typename Obj>
+	template<suku_object Obj>
 	inline std::list<Obj*> Room::getCrashedObjectList(Object* _sourceObj)
 	{
 		return collisionPool_->getCrashedObjectList<Obj>(_sourceObj);

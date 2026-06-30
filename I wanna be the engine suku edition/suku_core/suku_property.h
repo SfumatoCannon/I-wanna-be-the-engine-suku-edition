@@ -1,13 +1,9 @@
 #pragma once
 #include "transition.h"
+#include "suku_core_concepts.h"
 
 namespace suku
 {
-	class Object;
-
-	template<typename T>
-	concept suku_property_type = std::is_arithmetic<T>::value;
-
 	template<suku_property_type T>
 	class Property
 	{

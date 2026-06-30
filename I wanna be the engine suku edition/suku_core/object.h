@@ -4,6 +4,7 @@
 #include "../suku_foundation/var.h"
 #include "../suku_foundation/type_tree.h"
 #include "../suku_foundation/maths.h"
+#include "suku_core_concepts.h"
 #include "suku_property.h"
 #include <functional>
 #include <list>
@@ -15,9 +16,6 @@ namespace suku
 	class SpriteElement;
 	class Room;
 	class Object;
-
-	template<typename T>
-	concept suku_object = std::is_base_of_v<Object, T>;
 
 	class Object
 	{

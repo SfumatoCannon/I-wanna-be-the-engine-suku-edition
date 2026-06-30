@@ -3,14 +3,14 @@
 
 namespace suku
 {
-	template<RoomType T>
+	template<suku_room T>
 	inline void RoomPool::releaseRoom()
 	{
 		Typecode typecode = typecode(T);
 		roomPool_.erase(typecode);
 	}
 
-	template<RoomType T>
+	template<suku_room T>
 	Room* RoomPool::getRoom()
 	{
 		Typecode typecode = typecode(T);
@@ -23,7 +23,7 @@ namespace suku
 		return roomPool_[typecode].get();
 	}
 
-	template<RoomType T>
+	template<suku_room T>
 	inline void RoomPool::gotoRoom()
 	{
 		RoomPool::nowRoom_ = getRoom<T>();
