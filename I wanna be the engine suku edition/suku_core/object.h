@@ -51,7 +51,7 @@ namespace suku
 		double getScaleY();
 		Vector getScale();
 
-		float alpha;
+		float alpha = 1;
 
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 

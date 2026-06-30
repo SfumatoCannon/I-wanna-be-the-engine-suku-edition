@@ -14,9 +14,9 @@ namespace suku
 
 	void OptionPool::onRoomEntered()
 	{
-		for (auto& optionElement : optionElements_)
-		{
-			inRoom_->create(optionElement);
-		}
+		//for (auto& optionElement : optionElements_)
+		//{
+		//	inRoom_->create(optionElement);
+		//}
 	}
 }
