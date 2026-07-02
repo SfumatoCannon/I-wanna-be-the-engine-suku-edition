@@ -22,7 +22,7 @@ namespace suku
 		float movingSpeed;
 		float gravity;
 
-		Player(float _x = 0, float _y = 0);
+		Player(float _x = 0, float _y = 0, Room* _room = nullptr);
 
 		virtual void onRoomEntered() override;
 		virtual void onRestarting() override;

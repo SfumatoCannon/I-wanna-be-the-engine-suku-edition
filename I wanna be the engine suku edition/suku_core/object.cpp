@@ -142,30 +142,34 @@ namespace suku
 
 	void Object::setPreUpdateId(double _id)
 	{
-		if (inRoom_)
-			inRoom_->setObjectRevisePriority(this, _id);
-		else preUpdateId_ = _id;
+		//if (inRoom_)
+		//	inRoom_->setObjectRevisePriority(this, _id);
+		//else preUpdateId_ = _id;
+		preUpdateId_ = _id;
 	}
 
 	void Object::setUpdateId(double _id)
 	{
-		if (inRoom_)
-			inRoom_->setObjectUpdatePriority(this, _id);
-		else updateId_ = _id;
+		//if (inRoom_)
+		//	inRoom_->setObjectUpdatePriority(this, _id);
+		//else updateId_ = _id;
+		updateId_ = _id;
 	}
 
 	void Object::setPostUpdateId(double _id)
 	{
-		if (inRoom_)
-			inRoom_->setObjectRecheckPriority(this, _id);
-		else postUpdateId_ = _id;
+		//if (inRoom_)
+		//	inRoom_->setObjectRecheckPriority(this, _id);
+		//else postUpdateId_ = _id;
+		postUpdateId_ = _id;
 	}
 
 	void Object::setPaintId(double _id)
 	{
-		if (inRoom_)
-			inRoom_->setObjectPaintPriority(this, _id);
-		else paintId_ = _id;
+		//if (inRoom_)
+		//	inRoom_->setObjectPaintPriority(this, _id);
+		//else paintId_ = _id;
+		paintId_ = _id;
 	}
 
 	float Object::getWidth()

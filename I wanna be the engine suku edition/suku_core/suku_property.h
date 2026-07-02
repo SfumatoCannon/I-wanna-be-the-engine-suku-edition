@@ -3,7 +3,7 @@
 #include "suku_core_concepts.h"
 
 namespace suku
-{
+{ 
 	template<suku_property_type T>
 	class Property
 	{

@@ -20,7 +20,6 @@ public:
 class Room0 : public Room
 {
 public:
-	Player* p;
 	Room0() : Room()
 	{
 		static SaveFile save0("save123");
@@ -36,12 +35,11 @@ public:
 		//append(&player);
 
 		//create<UIElement>(400, 300, 200, 100);
-		create<OptionPool>(OptionElement{ ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100 });
+		//create<OptionPool>(OptionElement{ ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100 });
 
-		p = create<Player>(0.f, 0.f);
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
-
+		create<Player>(0.f, 0.f);
 		int x = 0;
 		setSavable<int>("test");
 		if (!hasValueInFile("test"))
@@ -112,9 +110,9 @@ public:
 		//layer.endDraw().paint();
 		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 			TextAlign::MiddleRight);
-		a.textContent = std::to_wstring(p->y.getValue());
+		//a.textContent = std::to_wstring(p->y.getValue());
 		//a.textContent = "test message\npress s to save";
-		a.paint(256, 256, brushBlack);
+		//a.paint(256, 256, brushBlack);
 	}
 };
 

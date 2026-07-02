@@ -13,7 +13,7 @@ namespace suku
 	Sprite Player::sprJumping("Image\\player_jumping.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
 	Sprite Player::sprFalling("Image\\player_falling.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
 	Sprite Player::sprSliding("Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23);
-	Player::Player(float _x, float _y) :Object(_x, _y)
+	Player::Player(float _x, float _y, Room* _room) :Object(_x, _y, _room)
 	{
 		isDied_ = false;
 		isOnPlatform_ = false;

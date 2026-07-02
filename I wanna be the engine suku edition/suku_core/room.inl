@@ -93,8 +93,16 @@ namespace suku
 	{
 #pragma warning(push)
 #pragma warning(disable: 4244)
-		auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
-		return append(newObjPtr);
+		if constexpr (std::is_constructible_v<Obj, Args..., Room*>)
+		{
+			auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)..., this);
+			return append(newObjPtr);
+		}
+		else
+		{
+			auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
+			return append(newObjPtr);
+		}
 #pragma warning(pop)
 	}
 
