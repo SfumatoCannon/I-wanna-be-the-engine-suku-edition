@@ -25,14 +25,13 @@ namespace suku
 		float spawnX, spawnY;
 		float vspeed = 0, hspeed = 0, vspeedTemp = 0, hspeedTemp = 0;
 		float xScale = 1, yScale = 1;
+		bool isInRoom()const { return inRoom_ != nullptr && isInRoom_; }
 		Room* inRoom()const { return inRoom_; }
 		double preUpdateId()const { return preUpdateId_; }
 		double updateId()const { return updateId_; }
 		double postUpdateId()const { return postUpdateId_; }
 		double paintId()const { return paintId_; }
 		size_t kindId()const { return kindId_; }
-
-		void setInRoom(Room* _room);
 
 		void setPreUpdateId(double _id);
 		void setUpdateId(double _id);
@@ -146,6 +145,7 @@ namespace suku
 			updateId_			= 0.0,
 			postUpdateId_		= 0.0,
 			paintId_			= 0.0;
+		bool isInRoom_			= false;
 		bool removeTag_			= false;
 		bool destroyTag_		= false;
 		Sprite* sprite_			= nullptr;

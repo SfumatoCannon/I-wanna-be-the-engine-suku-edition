@@ -130,46 +130,32 @@ namespace suku
 		return sprite_->getFrameStateIndex(clock_);
 	}
 
-	void Object::setInRoom(Room* _room)
-	{
-		//_room->append(this);
-		//if (inRoom_)
-		//{
-		//	inRoom_->destroyImmediately(this);
-		//}
-		//inRoom_ = _room;
-	}
-
 	void Object::setPreUpdateId(double _id)
 	{
-		//if (inRoom_)
-		//	inRoom_->setObjectRevisePriority(this, _id);
-		//else preUpdateId_ = _id;
-		preUpdateId_ = _id;
+		if (isInRoom())
+			inRoom_->setObjectRevisePriority(this, _id);
+		else preUpdateId_ = _id;
 	}
 
 	void Object::setUpdateId(double _id)
 	{
-		//if (inRoom_)
-		//	inRoom_->setObjectUpdatePriority(this, _id);
-		//else updateId_ = _id;
-		updateId_ = _id;
+		if (isInRoom())
+			inRoom_->setObjectUpdatePriority(this, _id);
+		else updateId_ = _id;
 	}
 
 	void Object::setPostUpdateId(double _id)
 	{
-		//if (inRoom_)
-		//	inRoom_->setObjectRecheckPriority(this, _id);
-		//else postUpdateId_ = _id;
-		postUpdateId_ = _id;
+		if (isInRoom())
+			inRoom_->setObjectRecheckPriority(this, _id);
+		else postUpdateId_ = _id;
 	}
 
 	void Object::setPaintId(double _id)
 	{
-		//if (inRoom_)
-		//	inRoom_->setObjectPaintPriority(this, _id);
-		//else paintId_ = _id;
-		paintId_ = _id;
+		if (isInRoom())
+			inRoom_->setObjectPaintPriority(this, _id);
+		else paintId_ = _id;
 	}
 
 	float Object::getWidth()
@@ -257,7 +243,7 @@ namespace suku
 	void Object::remove()
 	{
 		onRemove();
-		if (inRoom_)
+		if (isInRoom())
 		{
 			inRoom_->remove(this);
 		}
@@ -272,7 +258,7 @@ namespace suku
 		remove();
 		destroyTag_ = true;
 		// inRoom_ != nullptr 时其生命周期由 Room 管理
-		if (!inRoom_)
+		if (!isInRoom())
 		{
 			delete this;
 		}
