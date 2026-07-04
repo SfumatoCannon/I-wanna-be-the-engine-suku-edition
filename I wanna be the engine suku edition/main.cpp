@@ -35,6 +35,7 @@ public:
 		//append(&player);
 
 		//create<UIElement>(400, 300, 200, 100);
+		create(OptionElement{ ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100 });
 		//create<OptionPool>(OptionElement{ ConfigElementPool::renderFPS, "Render FPS", 400, 300, 200, 100 });
 
 		//create(Wall(32, 32))->addDelayAction(100, 

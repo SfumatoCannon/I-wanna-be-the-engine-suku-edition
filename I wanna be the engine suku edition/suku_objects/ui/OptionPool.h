@@ -10,15 +10,11 @@ namespace suku
 	class OptionPool : public Object
 	{
 	public:
-		OptionPool(OptionElement _element);
-		OptionPool(std::initializer_list<OptionElement> _elements);
+		OptionPool(OptionElement&& _element, Room* _inRoom);
+		OptionPool(std::initializer_list<OptionElement> _elements, Room* _inRoom);
 
-		template<typename... OptionElementType>
-			requires (std::is_same_v<OptionElementType, OptionElement> && ...)
-		OptionPool(OptionElementType... _elements) : Object() { optionElements_ = { _elements... }; }
-
-		virtual void onRoomEntered() override;
-	private:
-		std::list<OptionElement> optionElements_;
+		//template<typename... OptionElementType>
+		//	requires (std::is_same_v<OptionElementType, OptionElement> && ...)
+		//OptionPool(OptionElementType... _elements) : Object() { optionElements_ = { _elements... }; }
 	};
 }

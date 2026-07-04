@@ -2,21 +2,13 @@
 
 namespace suku
 {
-	OptionPool::OptionPool(OptionElement _element)
+	OptionPool::OptionPool(OptionElement&& _element, Room* _inRoom)
 	{
-		optionElements_.push_back(_element);
+		//_inRoom->create(_element);
 	}
 
-	OptionPool::OptionPool(std::initializer_list<OptionElement> _elements)
+	OptionPool::OptionPool(std::initializer_list<OptionElement> _elements, Room* _inRoom)
 	{
-		optionElements_ = _elements;
-	}
-
-	void OptionPool::onRoomEntered()
-	{
-		//for (auto& optionElement : optionElements_)
-		//{
-		//	inRoom_->create(optionElement);
-		//}
+		//optionElements_ = _elements;
 	}
 }

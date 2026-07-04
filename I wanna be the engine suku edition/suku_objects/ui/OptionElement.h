@@ -12,12 +12,12 @@ namespace suku
 		OptionElement* next = nullptr;
 		template<typename T> OptionElement(
 			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height);
-		virtual void update() override { onUpdateFunc_(); }
-		virtual bool onPaint() override { return onPaintFunc_(); }
+		virtual void update() override { onUpdateFunc_(this); }
+		virtual bool onPaint() override { return onPaintFunc_(this); }
 	private:
 		String label_;
-		std::function<void()> onUpdateFunc_;
-		std::function<bool()> onPaintFunc_;
+		std::function<void(OptionElement*)> onUpdateFunc_;
+		std::function<bool(OptionElement*)> onPaintFunc_;
 		bool isSelected_ = true;
 	};
 
@@ -25,24 +25,24 @@ namespace suku
 	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height)
 		: UIElement(_x, _y, _width, _height), label_(_label)
 	{
-		onUpdateFunc_ = [this, &_bindedConfig]()
+		onUpdateFunc_ = [&_bindedConfig](OptionElement* _element)
 			{
-				if (!isSelected_)
+				if (!_element->isSelected_)
 					return;
 				if (input::isKeyDown(VK_UP))
 				{
-					if (prev)
+					if (_element->prev)
 					{
-						isSelected_ = false;
-						prev->isSelected_ = true;
+						_element->isSelected_ = false;
+						_element->prev->isSelected_ = true;
 					}
 				}
 				else if (input::isKeyDown(VK_DOWN))
 				{
-					if (next)
+					if (_element->next)
 					{
-						isSelected_ = false;
-						next->isSelected_ = true;
+						_element->isSelected_ = false;
+						_element->next->isSelected_ = true;
 					}
 				}
 				else if (input::isKeyDown(VK_LEFT))
@@ -82,18 +82,18 @@ namespace suku
 					}
 				}
 			};
-		onPaintFunc_ = [this, &_bindedConfig]()
+		onPaintFunc_ = [&_bindedConfig](OptionElement* _element)
 			{
-				RectangleShape area(width_, height_);
-				area.setFill(isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
-				area.paint(x, y, transform);
+				RectangleShape area(_element->getWidth(), _element->getHeight());
+				area.setFill(_element->isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
+				area.paint(_element->x, _element->y, _element->transform);
 				Text text("Consolas", 12, TextAlign::MiddleRight);
 				text.setBrush(Color(255, 255, 255));
 				text.textContent = std::to_wstring(_bindedConfig.value());
-				text.paint(x + 8, y + 8, width_ - 16, height_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
-				text.textContent = label_;
+				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->getHeight() - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				text.textContent = _element->label_;
 				text.setTextAlign(TextAlign::MiddleLeft);
-				text.paint(x + 8, y + 8, width_ - 16, height_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->getHeight() - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
 				return false;
 			};
 	}
