@@ -10,14 +10,12 @@ namespace suku
 	class OptionPool : public Object
 	{
 	public:
-		OptionPool(OptionElement&& _element, Room* _inRoom);
-		OptionPool(
-			std::initializer_list<OptionElement> _elements, 
-			float _x, float _y, int _elementWidth, int _elementHeight,
-			Room* _inRoom);
-
-		//template<typename... OptionElementType>
-		//	requires (std::is_same_v<OptionElementType, OptionElement> && ...)
-		//OptionPool(OptionElementType... _elements) : Object() { optionElements_ = { _elements... }; }
+		OptionPool(int _elementWidth = 256, int _elementHeight = 32) : Object(0, 0), elementWidth_(_elementWidth), elementHeight_(_elementHeight) {}
+		void make(std::initializer_list<OptionElement> _elements,
+			float _x, float _y, int _elementWidth, int _elementHeight);
+		void make(std::initializer_list<OptionElement> _elements,
+			float _x, float _y);
+	private:
+		int elementWidth_, elementHeight_;
 	};
 }

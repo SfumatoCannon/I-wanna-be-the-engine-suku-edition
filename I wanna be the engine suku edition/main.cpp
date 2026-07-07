@@ -35,11 +35,12 @@ public:
 		//append(&player);
 
 		//create<UIElement>(400, 300, 200, 100);
-		create<OptionPool>(std::initializer_list<OptionElement>
-			{ 
+		create<OptionPool>()->make(
+			{
 				{ ConfigElementPool::renderFPS, "Render FPS" },
 				{ ConfigElementPool::isVSyncOn, "Vsync"}
-			}, 100, 100, 256, 64);
+			}
+		, 100, 100, 256, 64);
 
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
