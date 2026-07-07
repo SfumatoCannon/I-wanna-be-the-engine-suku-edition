@@ -11,7 +11,10 @@ namespace suku
 	{
 	public:
 		OptionPool(OptionElement&& _element, Room* _inRoom);
-		OptionPool(std::initializer_list<OptionElement> _elements, Room* _inRoom);
+		OptionPool(
+			std::initializer_list<OptionElement> _elements, 
+			float _x, float _y, int _elementWidth, int _elementHeight,
+			Room* _inRoom);
 
 		//template<typename... OptionElementType>
 		//	requires (std::is_same_v<OptionElementType, OptionElement> && ...)

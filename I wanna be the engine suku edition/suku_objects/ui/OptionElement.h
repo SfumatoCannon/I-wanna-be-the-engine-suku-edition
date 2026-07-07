@@ -5,16 +5,22 @@
 
 namespace suku
 {
+	class OptionPool;
+
 	class OptionElement : public UIElement
 	{
 	public:
 		OptionElement* prev = nullptr;
 		OptionElement* next = nullptr;
+
 		template<typename T> OptionElement(
 			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height);
+		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32) {}
+
 		virtual void update() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }
 	private:
+		friend class OptionPool;
 		String label_;
 		std::function<void(OptionElement*)> onUpdateFunc_;
 		std::function<bool(OptionElement*)> onPaintFunc_;
