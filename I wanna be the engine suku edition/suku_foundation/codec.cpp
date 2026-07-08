@@ -58,7 +58,8 @@ namespace suku
         originalFile.read(fileData);
         originalFile.closeRead();
         Codec::encodeData(fileData);
-        File encodedFile(filesystem::absolutePath("GameAssets\\" + Codec::getHashedString(_originalFilePath) + ".dat"));
+		filesystem::createPath(filesystem::absolutePath(L"GameAssets"));
+        File encodedFile(filesystem::absolutePath(L"GameAssets\\" + Codec::getHashedString(_originalFilePath) + L".dat"));
         if (encodedFile.tryOpenForWrite() == false)
         {
             WARNINGWINDOW_GLOBAL("Failed to open converted resource file: " + _originalFilePath);
@@ -74,7 +75,7 @@ namespace suku
 
     bool FileCodec::readResource(std::vector<char>& _byteData, String _originalFilePath)
     {
-        File encodedFile(filesystem::absolutePath("GameAssets\\" + Codec::getHashedString(_originalFilePath) + ".dat"));
+        File encodedFile(filesystem::absolutePath(L"GameAssets\\" + Codec::getHashedString(_originalFilePath) + L".dat"));
         if (encodedFile.tryOpenForRead() == false)
         {
             ERRORWINDOW_GLOBAL("No file or resource file found: " + String(_originalFilePath));
