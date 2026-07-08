@@ -220,6 +220,7 @@
     <ClInclude Include="suku_objects\ui\OptionElement.h" />
     <ClInclude Include="suku_objects\ui\OptionPool.h" />
     <ClInclude Include="suku_objects\ui\UIElement.h" />
+    <ClInclude Include="suku_preset_rooms\RoomConfigPage.hpp" />
     <ClInclude Include="suku_sounds.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
