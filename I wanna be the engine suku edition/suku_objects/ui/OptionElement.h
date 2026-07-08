@@ -68,6 +68,17 @@ namespace suku
 						if (it != list.end() && it != list.begin())
 							_bindedConfig.setValue(*(it - 1));
 					}
+					else
+					{
+						if constexpr (std::is_same_v<bool, T>)
+						{
+							_bindedConfig.setValue(!_bindedConfig.getValue());
+						}
+						if constexpr (std::is_arithmetic_v<T>)
+						{
+							_bindedConfig.setValue(_bindedConfig.getValue() - 1);
+						}
+					}
 				}
 				else if (input::isKeyDown(VK_RIGHT))
 				{
@@ -85,6 +96,17 @@ namespace suku
 						auto it = std::find(list.begin(), list.end(), _bindedConfig.value());
 						if (it != list.end() && it != list.end() - 1)
 							_bindedConfig.setValue(*(it + 1));
+					}
+					else
+					{
+						if constexpr (std::is_same_v<bool, T>)
+						{
+							_bindedConfig.setValue(!_bindedConfig.getValue());
+						}
+						else if constexpr (std::is_arithmetic_v<T>)
+						{
+							_bindedConfig.setValue(_bindedConfig.getValue() + 1);
+						}
 					}
 				}
 			};
