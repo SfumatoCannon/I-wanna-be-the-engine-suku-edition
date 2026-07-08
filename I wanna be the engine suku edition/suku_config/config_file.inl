@@ -5,13 +5,13 @@
 
 namespace suku
 {
-	template<config_var_type T>
+	template<suku_config_var_type T>
 	inline T ConfigFile::loadVar(String _name, T _defaultValue)
 	{
 		return loadVar(_name, L"Config", _defaultValue);
 	}
 
-	template<config_var_type T>
+	template<suku_config_var_type T>
 	inline T ConfigFile::loadVar(String _name, String _category, T _defaultValue)
 	{
 		std::wstring defaultValueStr;
@@ -72,13 +72,13 @@ namespace suku
 		}
 	}
 
-	template<config_var_type T>
+	template<suku_config_var_type T>
 	inline void ConfigFile::saveVar(String _name, T _value)
 	{
 		saveVar(_name, L"Config", _value);
 	}
 
-	template<config_var_type T>
+	template<suku_config_var_type T>
 	inline void ConfigFile::saveVar(String _name, String _category, T _value)
 	{
 		std::wstring valueStr;

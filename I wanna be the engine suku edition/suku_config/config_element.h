@@ -2,12 +2,13 @@
 #include <string>
 #include <vector>
 #include "../suku_foundation/var.h"
+#include "suku_config_concepts.h"
 
 namespace suku
 {
-	class suku::String;
+	class String;
 
-	template<typename T>
+	template<suku_config_var_type T>
 	class ConfigElement
 	{
 	public:

@@ -4,7 +4,7 @@
 
 namespace suku
 {
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue) 
 		: name_(_name.contentInWString()), category_(L"Config")
 	{
@@ -12,7 +12,7 @@ namespace suku
 		value_ << valueT;
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue)
 		: name_(_name.contentInWString()), category_(_category.contentInWString())
 	{
@@ -20,7 +20,7 @@ namespace suku
 		value_ << valueT;
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, T _minValue, T _maxValue)
 		: name_(_name.contentInWString()), category_(L"Config"), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
 	{
@@ -36,7 +36,7 @@ namespace suku
 		value_ << valueT;
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, T _minValue, T _maxValue)
 		: name_(_name.contentInWString()), category_(_category.contentInWString()), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
 	{
@@ -52,7 +52,7 @@ namespace suku
 		value_ << valueT;
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, std::vector<T> _valueList)
 		: name_(_name.contentInWString()), category_(L"Config"), hasListConstraint_(true), valueList_(_valueList)
 	{
@@ -67,7 +67,7 @@ namespace suku
 		}
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, std::vector<T> _valueList)
 		: name_(_name.contentInWString()), category_(_category.contentInWString()), hasListConstraint_(true), valueList_(_valueList)
 	{
@@ -82,7 +82,7 @@ namespace suku
 		}
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline void ConfigElement<T>::setValue(T _value)
 	{
 		if (hasListConstraint_)
@@ -105,7 +105,7 @@ namespace suku
 		ConfigFile::saveVar(name_, category_, _value);
 	}
 
-	template<typename T>
+	template<suku_config_var_type T>
 	inline T ConfigElement<T>::value()
 	{
 		return value_.getValue<T>();

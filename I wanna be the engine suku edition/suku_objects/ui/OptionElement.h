@@ -24,7 +24,7 @@ namespace suku
 		String label_;
 		std::function<void(OptionElement*)> onUpdateFunc_;
 		std::function<bool(OptionElement*)> onPaintFunc_;
-		bool isSelected_ = true;
+		bool isSelected_ = false;
 	};
 
 	template<typename T>
