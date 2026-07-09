@@ -35,23 +35,8 @@ namespace suku
 			{
 				if (!_element->isSelected_)
 					return;
-				if (input::isKeyDown(VK_UP))
-				{
-					if (_element->prev)
-					{
-						_element->isSelected_ = false;
-						_element->prev->isSelected_ = true;
-					}
-				}
-				else if (input::isKeyDown(VK_DOWN))
-				{
-					if (_element->next)
-					{
-						_element->isSelected_ = false;
-						_element->next->isSelected_ = true;
-					}
-				}
-				else if (input::isKeyDown(VK_LEFT))
+
+				if (input::isKeyDown(VK_LEFT))
 				{
 					if (_bindedConfig.hasRangeConstraint())
 					{
@@ -74,7 +59,7 @@ namespace suku
 						{
 							_bindedConfig.setValue(!_bindedConfig.getValue());
 						}
-						if constexpr (std::is_arithmetic_v<T>)
+						else if constexpr (std::is_arithmetic_v<T>)
 						{
 							_bindedConfig.setValue(_bindedConfig.getValue() - 1);
 						}
@@ -85,7 +70,7 @@ namespace suku
 					if (_bindedConfig.hasRangeConstraint())
 					{
 						auto range = _bindedConfig.getRange();
-						T newValue = T();
+						T newValue = _bindedConfig.getValue() + 1;
 						if (newValue > range.second)
 							newValue = range.second;
 						_bindedConfig.setValue(newValue);

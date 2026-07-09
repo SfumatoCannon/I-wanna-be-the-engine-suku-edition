@@ -1,5 +1,5 @@
 #include "I wanna be the engine suku edition.h"
-
+#include "suku_preset_rooms/RoomConfigPage.hpp"
 using namespace suku;
 
 class Room1 : public Room
@@ -117,5 +117,5 @@ public:
 
 void init()
 {
-	gotoRoom<Room0>();
+	gotoRoom<RoomConfigPage>();
 }

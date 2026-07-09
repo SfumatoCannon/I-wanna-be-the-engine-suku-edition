@@ -15,7 +15,9 @@ namespace suku
 			float _x, float _y, int _elementWidth, int _elementHeight);
 		void make(std::initializer_list<OptionElement> _elements,
 			float _x, float _y) { make(_elements, _x, _y, elementWidth_, elementHeight_); }
+		virtual void update() override;
 	private:
+		std::list<OptionElement*> elements_;
 		int elementWidth_, elementHeight_;
 	};
 }

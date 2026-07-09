@@ -7,6 +7,10 @@ class RoomConfigPage : public Room
 public:
 	RoomConfigPage() : Room()
 	{
+		int windowWidth = GameWindow::getLogicalWidth();
+		int windowHeight = GameWindow::getLogicalHeight();
+		float configElementWidth = windowWidth * 0.5f;
+		float configElementHeight = 48;
 		create<OptionPool>()->make(
 			{
 				{ ConfigElementPool::renderFPS, "Render FPS" },
@@ -14,6 +18,6 @@ public:
 				{ ConfigElementPool::vsyncFrameRate, "Vsync Frame Rate" },
 				{ ConfigElementPool::isFullScreen, "Fullscreen"}
 			}
-		, 100, 100, 256, 64);
+		, (windowWidth - configElementWidth) / 2, 64, configElementWidth, configElementHeight);
 	}
 };
