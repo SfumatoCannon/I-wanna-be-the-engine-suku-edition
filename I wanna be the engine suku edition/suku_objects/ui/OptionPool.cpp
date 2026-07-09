@@ -18,7 +18,7 @@ namespace suku
 			newElement->x = _x;
 			newElement->y = _y + i * _elementHeight;
 			newElement->width_ = _elementWidth;
-			newElement->height_ = _elementHeight;
+			newElement->height_ = newElement->originalHeight_ = _elementHeight;
 			if (prevElement)
 			{
 				prevElement->next = newElement;
@@ -57,6 +57,25 @@ namespace suku
 					element->next->isSelected_ = true;
 					break;
 				}
+			}
+		}
+	}
+
+	void OptionPool::postUpdate()
+	{
+		bool isFirstElement = true;
+		int totalY = 0;
+		for (OptionElement* element : elements_)
+		{
+			if (isFirstElement)
+			{
+				isFirstElement = false;
+				totalY = element->y + element->getHeight();
+			}
+			else
+			{
+				element->y = totalY;
+				totalY = element->y + element->getHeight();
 			}
 		}
 	}

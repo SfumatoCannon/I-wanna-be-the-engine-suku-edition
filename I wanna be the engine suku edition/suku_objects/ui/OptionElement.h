@@ -14,8 +14,9 @@ namespace suku
 		OptionElement* next = nullptr;
 
 		template<typename T> OptionElement(
-			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height);
+			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info = String(), String _infoOnChanging = String());
 		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32) {}
+		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label, String _info, String _infoOnChanging = String()) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32, _info, _infoOnChanging) {}
 
 		virtual void update() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }
@@ -24,15 +25,37 @@ namespace suku
 		String label_;
 		std::function<void(OptionElement*)> onUpdateFunc_;
 		std::function<bool(OptionElement*)> onPaintFunc_;
+		bool hasInfo_ = false;
+		bool hasInfoOnChanging_ = false;
+		String info_;
+		String infoOnChanging_;
 		bool isSelected_ = false;
+		int originalHeight_;
 	};
 
 	template<typename T>
-	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height)
-		: UIElement(_x, _y, _width, _height), label_(_label)
+	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info, String _infoOnChanging)
+		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height)
 	{
+		if (!_info.isEmpty())
+		{
+			hasInfo_ = true;
+			info_ = _info;
+		}
+
+		if (!_infoOnChanging.isEmpty())
+		{
+			hasInfoOnChanging_ = true;
+			infoOnChanging_ = _infoOnChanging;
+		}
+
 		onUpdateFunc_ = [&_bindedConfig](OptionElement* _element)
 			{
+				if (_element->hasInfo_ && _element->isSelected_)
+					_element->height_ = _element->originalHeight_ + 24;
+				else
+					_element->height_ = _element->originalHeight_;
+
 				if (!_element->isSelected_)
 					return;
 
@@ -100,13 +123,20 @@ namespace suku
 				RectangleShape area(_element->getWidth(), _element->getHeight());
 				area.setFill(_element->isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
 				area.paint(_element->x, _element->y, _element->transform);
-				Text text("Consolas", 12, TextAlign::MiddleRight);
+				Text text("Consolas", _element->originalHeight_ / 2, TextAlign::MiddleRight);
 				text.setBrush(Color(255, 255, 255));
 				text.textContent = std::to_wstring(_bindedConfig.value());
-				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->getHeight() - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
 				text.textContent = _element->label_;
 				text.setTextAlign(TextAlign::MiddleLeft);
-				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->getHeight() - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				if (_element->hasInfo_ && _element->isSelected_)
+				{
+					Text infoText("Consolas", 16, TextAlign::TopLeft);
+					infoText.setBrush(Color(192, 192, 192));
+					infoText.textContent = _element->info_;
+					infoText.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				}
 				return false;
 			};
 	}

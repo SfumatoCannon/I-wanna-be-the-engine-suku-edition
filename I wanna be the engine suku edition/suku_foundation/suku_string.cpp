@@ -54,6 +54,11 @@ namespace suku
 		content[length] = L'\0';
 	}
 
+	bool String::isEmpty() const
+	{
+		return content == nullptr || wcslen(content) == 0;
+	}
+
 	bool String::operator==(const String& _other)const
 	{
 		if (content == nullptr && _other.content == nullptr)

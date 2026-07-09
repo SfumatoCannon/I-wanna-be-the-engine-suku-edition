@@ -15,6 +15,8 @@ namespace suku
 		String(const wchar_t* _wstring);
 		String(std::wstring _wstring);
 		String(const String& _other);
+		bool isEmpty()const;
+
 		bool operator==(const String& _other)const;
 		auto operator<=>(const String& _other)const;
 		void operator=(const String& _other);
