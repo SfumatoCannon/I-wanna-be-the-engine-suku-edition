@@ -18,7 +18,7 @@ namespace suku
 		area.setFill(Color(128, 128, 128, 0.5f));
 		area.paint(x, y, transform);
 		text.setBrush(Color(255, 255, 0));
-		text.textContent = L"UI";
+		text.contentString = L"UI";
 		text.paint(x, y, width_, height_, graphics::createSolidColorBrush(Color(255, 255, 255)));
 		return false;
 	}

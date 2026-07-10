@@ -291,9 +291,9 @@ namespace
 		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
 		static suku::Text a("Consolas", 16);
 		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-		a.textContent = L"FPS: " + std::to_wstring(monitoredFPS)
+		a.contentString = L"FPS: " + std::to_wstring(monitoredFPS)
 			+ (isVsyncOn ? L" (vsync on)" : L"");
-		a.textContent += L"\nRoom Id: " + std::to_wstring(suku::RoomPool::getNowRoom()->getRoomId());
+		a.contentString += L"\nRoom Id: " + std::to_wstring(suku::RoomPool::getNowRoom()->getRoomId());
 		a.paint(10, 10);
 	}
 }

@@ -52,7 +52,12 @@ namespace suku
 		onUpdateFunc_ = [&_bindedConfig](OptionElement* _element)
 			{
 				if (_element->hasInfo_ && _element->isSelected_)
-					_element->height_ = _element->originalHeight_ + 24;
+				{
+					Text infoText("Consolas", 16, TextAlign::TopLeft);
+					infoText.contentString = _element->info_;
+
+					_element->height_ = _element->originalHeight_ + 8 + infoText.getContentHeight(_element->getWidth() - 16);
+				}
 				else
 					_element->height_ = _element->originalHeight_;
 
@@ -125,17 +130,18 @@ namespace suku
 				area.paint(_element->x, _element->y, _element->transform);
 				Text text("Consolas", _element->originalHeight_ / 2, TextAlign::MiddleRight);
 				text.setBrush(Color(255, 255, 255));
-				text.textContent = std::to_wstring(_bindedConfig.value());
+				text.contentString = std::to_wstring(_bindedConfig.value());
 				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
-				text.textContent = _element->label_;
+				text.contentString = _element->label_;
 				text.setTextAlign(TextAlign::MiddleLeft);
 				text.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
 				if (_element->hasInfo_ && _element->isSelected_)
 				{
 					Text infoText("Consolas", 16, TextAlign::TopLeft);
 					infoText.setBrush(Color(192, 192, 192));
-					infoText.textContent = _element->info_;
-					infoText.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+					infoText.contentString = _element->info_;
+					float height = infoText.getContentHeight(_element->getWidth() - 16);
+					infoText.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, height, graphics::createSolidColorBrush(Color(255, 255, 255)));
 				}
 				return false;
 			};

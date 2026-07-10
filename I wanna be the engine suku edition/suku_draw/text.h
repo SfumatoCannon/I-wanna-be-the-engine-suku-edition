@@ -35,7 +35,7 @@ namespace suku
 	class Text
 	{
 	public:
-		String textContent;
+		String contentString;
 		Text(String _fontName, float _size, 
 			TextAlign _textAlign = TextAlign::TopLeft, 
 			TextWrapOption _wrapOption = TextWrapOption::Wrap);
@@ -56,6 +56,9 @@ namespace suku
 		TextAlign getTextAlign() { return textAlign_; }
 		void setTextWrapOption(TextWrapOption _option);
 		TextWrapOption getTextWarpOption() { return textWrapOption_; }
+
+		int getContentLineCount(float _width);
+		float getContentHeight(float _width);
 
 		void paint(float _x, float _y, Transform _transform = Transform());
 		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());

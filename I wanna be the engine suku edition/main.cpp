@@ -109,8 +109,8 @@ public:
 		//layer.endDraw().paint();
 		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 			TextAlign::MiddleRight);
-		//a.textContent = std::to_wstring(p->y.getValue());
-		//a.textContent = "test message\npress s to save";
+		//a.contentString = std::to_wstring(p->y.getValue());
+		//a.contentString = "test message\npress s to save";
 		//a.paint(256, 256, brushBlack);
 	}
 };

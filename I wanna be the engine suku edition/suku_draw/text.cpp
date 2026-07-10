@@ -26,7 +26,7 @@ namespace suku
 	Text::Text(String _content, String _fontName, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
 		:Text(_fontName, _size, _textAlign, _wrapOption)
 	{
-		textContent = _content;
+		contentString = _content;
 	}
 
 	Text::Text(String _fontName, float _size, 
@@ -53,7 +53,7 @@ namespace suku
 		TextAlign _textAlign, TextWrapOption _wrapOption)
 		:Text(_fontName, _size, _fontWeight, _fontStyle, _fontStretch, _textAlign, _wrapOption)
 	{
-		textContent = _content;
+		contentString = _content;
 	}
 
 	void Text::setTextAlign(TextAlign _textAlign)
@@ -105,6 +105,38 @@ namespace suku
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_CHARACTER);
 		else if (_option == TextWrapOption::WrapWord)
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+	}
+
+	int Text::getContentLineCount(float _width)
+	{
+		IDWriteTextLayout* pTextLayout = nullptr;
+		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
+			contentString.content,
+			wcslen(contentString.content),
+			pTextFormat_.Get(),
+			_width,
+			FLT_MAX,
+			&pTextLayout
+		);
+		DWRITE_TEXT_METRICS textMetrics;
+		pTextLayout->GetMetrics(&textMetrics);
+		return textMetrics.lineCount;
+	}
+
+	float Text::getContentHeight(float _width)
+	{
+		IDWriteTextLayout* pTextLayout = nullptr;
+		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
+			contentString.content,
+			wcslen(contentString.content),
+			pTextFormat_.Get(),
+			_width,
+			FLT_MAX,
+			&pTextLayout
+		);
+		DWRITE_TEXT_METRICS textMetrics;
+		pTextLayout->GetMetrics(&textMetrics);
+		return textMetrics.height;
 	}
 
 	void Text::paint(float _x, float _y, Transform _transform)
@@ -159,8 +191,8 @@ namespace suku
 		}
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
-			textContent.content,
-			wcslen(textContent.content),
+			contentString.content,
+			wcslen(contentString.content),
 			pTextFormat_.Get(),
 			textBoxArea,
 			_brush.Get()
@@ -180,8 +212,8 @@ namespace suku
 	{
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
-			textContent.content,
-			wcslen(textContent.content),
+			contentString.content,
+			wcslen(contentString.content),
 			pTextFormat_.Get(),
 			D2D1::RectF(_x, _y, _x + _width, _y + _height),
 			_brush.Get()

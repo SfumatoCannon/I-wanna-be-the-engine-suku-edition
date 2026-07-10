@@ -14,7 +14,7 @@ public:
 		create<OptionPool>()->make(
 			{
 				{ ConfigElementPool::renderFPS, "Render FPS" },
-				{ ConfigElementPool::isVSyncOn, "Vsync", "abc", "abc"},
+				{ ConfigElementPool::isVSyncOn, "Vsync", "abcdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "abc"},
 				{ ConfigElementPool::vsyncFrameRate, "Vsync Frame Rate" },
 				{ ConfigElementPool::isFullScreen, "Fullscreen"}
 			}
