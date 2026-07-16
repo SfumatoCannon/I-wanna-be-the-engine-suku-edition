@@ -11,8 +11,8 @@ namespace suku
 	class UILayoutVertical : public UIElement
 	{
 	public:
-		UILayoutVertical<T>(float _x, float _y) : UIElement(_x, _y), width_(0), height_(0) { setUpdateId(-1); }
-		void addElement(T&& _element);
+		UILayoutVertical<T>(float _x, float _y) : UIElement(_x, _y, 0, 0) { setUpdateId(-1); }
+		void addElement(T* _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
 		virtual void onRemove() override;

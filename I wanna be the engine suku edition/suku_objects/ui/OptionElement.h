@@ -20,6 +20,8 @@ namespace suku
 
 		virtual void update() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }
+
+		void setHeight(int _height) { height_ = originalHeight_ = _height; }
 	private:
 		friend class OptionPool;
 		String label_;

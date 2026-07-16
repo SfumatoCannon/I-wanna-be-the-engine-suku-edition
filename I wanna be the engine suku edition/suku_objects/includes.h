@@ -6,5 +6,6 @@
 #include "ui/OptionElement.h"
 #include "ui/OptionPool.h"
 #include "ui/UIElement.h"
+#include "ui/UILayout.h"
 
 #include "map_loader.h"

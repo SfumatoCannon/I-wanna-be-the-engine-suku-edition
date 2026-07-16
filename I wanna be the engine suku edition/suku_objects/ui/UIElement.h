@@ -11,7 +11,9 @@ namespace suku
 		virtual void update() override;
 		virtual bool onPaint() override;
 		int getWidth() const { return width_; }
+		void setWidth(int _width) { width_ = _width; }
 		int getHeight() const { return height_; }
+		void setHeight(int _height) { height_ = _height; }
 		std::pair<int, int> getSize() const { return { width_, height_ }; }
 	protected:
 		int width_, height_;
