@@ -17,6 +17,7 @@ namespace suku
 		void clear();
 		virtual void onRemove() override;
 		virtual void postUpdate() override;
+		virtual bool onPaint() override { return false; }
 	private:
 		std::list<T*> elements_;
 	};
