@@ -18,9 +18,22 @@ namespace suku
 		virtual void onRemove() override;
 		virtual void postUpdate() override;
 		virtual bool onPaint() override { return false; }
-	private:
+	protected:
 		std::list<T*> elements_;
 	};
+
+	template<typename T>
+		requires std::is_base_of_v<UIElement, T>&& std::is_base_of_v<ISelectable, T>
+	class UILayoutVerticalSelectable : public UILayoutVertical<T>, ISelectable
+	{
+	public:
+		// Implement ISelectable interface
+		virtual void select() override;
+		virtual bool deselect() override;
+		virtual bool isSelected() const override;
+	private:
+		bool isSelected_ = false;
+	}
 }
 
 #include "UILayout.inl"
