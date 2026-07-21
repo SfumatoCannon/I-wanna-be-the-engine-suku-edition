@@ -4,7 +4,6 @@
 #include "basic/player.h"
 
 #include "ui/OptionElement.h"
-#include "ui/OptionPool.h"
 #include "ui/UIElement.h"
 #include "ui/UILayout.h"
 

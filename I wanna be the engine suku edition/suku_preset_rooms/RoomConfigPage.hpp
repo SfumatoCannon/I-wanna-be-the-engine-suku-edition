@@ -19,7 +19,8 @@ public:
 		//		{ ConfigElementPool::isFullScreen, "Fullscreen"}
 		//	}
 		//, (windowWidth - configElementWidth) / 2, 64, configElementWidth, configElementHeight);
-		create<UILayoutVertical<OptionElement>>((windowWidth - configElementWidth) / 2, 0)->make(
+		auto optionLayout = create<UILayoutVerticalSelectable<OptionElement>>((windowWidth - configElementWidth) / 2, 0);
+		optionLayout->make(
 			{
 				{ ConfigElementPool::renderFPS, "Render FPS" },
 				{ ConfigElementPool::isVSyncOn, "Vsync", "abcdddffffffffffffffffffffff\nddddddddddddddddddddd"},
@@ -28,5 +29,6 @@ public:
 			},
 			configElementWidth, configElementHeight
 		);
+		optionLayout->select();
 	}
 };

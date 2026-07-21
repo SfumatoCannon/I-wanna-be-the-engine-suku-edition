@@ -76,4 +76,89 @@ namespace suku
 		}
 		setHeight(totalY - y);
 	}
+
+	template<typename T>
+		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<ISelectable, T>
+	void UILayoutVerticalSelectable<T>::select()
+	{
+		isSelected_ = true;
+		if (this->elements_.size() == 0)
+			return;
+		if (input::isKeyDown(VK_DOWN))
+		{
+			selectedElementIndex = 0;
+		}
+		else if (input::isKeyDown(VK_UP))
+		{
+			selectedElementIndex = this->elements_.size() - 1;
+		}
+		this->elements_[selectedElementIndex]->select();
+		}
+
+	template<typename T>
+		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<ISelectable, T>
+	inline bool UILayoutVerticalSelectable<T>::deselect()
+	{
+		if (!isSelected())
+			return false;
+		if (!this->elements_[selectedElementIndex]->deselect())
+			return false;
+		if (input::isKeyDown(VK_DOWN))
+		{
+			if (selectedElementIndex == this->elements_.size() - 1)
+			{
+				isSelected_ = false;
+				return true;
+			}
+			else
+			{
+				selectedElementIndex++;
+				this->elements_[selectedElementIndex]->select();
+				return false;
+			}
+		}
+		else if (input::isKeyDown(VK_UP))
+		{
+			if (selectedElementIndex == 0)
+			{
+				isSelected_ = false;
+				return true;
+			}
+			else
+			{
+				selectedElementIndex--;
+				this->elements_[selectedElementIndex]->select();
+				return false;
+			}
+		}
+	}
+
+	template<typename T>
+		requires std::is_base_of_v<UIElement, T>&& std::is_base_of_v<ISelectable, T>
+	inline void UILayoutVerticalSelectable<T>::postUpdate()
+	{
+		if (isSelected())
+		{
+			if (input::isKeyDown(VK_DOWN))
+			{
+				if (selectedElementIndex < this->elements_.size() - 1)
+				{
+					this->elements_[selectedElementIndex]->deselect();
+					selectedElementIndex++;
+					this->elements_[selectedElementIndex]->select();
+				}
+
+			}
+			else if (input::isKeyDown(VK_UP))
+			{
+				if (selectedElementIndex > 0)
+				{
+					this->elements_[selectedElementIndex]->deselect();
+					selectedElementIndex--;
+					this->elements_[selectedElementIndex]->select();
+				}
+			}
+		}
+		UILayoutVertical<T>::postUpdate();
+	}
 }

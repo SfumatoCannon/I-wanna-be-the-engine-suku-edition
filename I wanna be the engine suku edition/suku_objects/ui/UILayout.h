@@ -2,6 +2,7 @@
 
 #include "UIElement.h"
 #include "interfaces/ISelectable.h"
+#include <vector>
 
 namespace suku
 {
@@ -19,21 +20,26 @@ namespace suku
 		virtual void postUpdate() override;
 		virtual bool onPaint() override { return false; }
 	protected:
-		std::list<T*> elements_;
+		std::vector<T*> elements_;
 	};
 
 	template<typename T>
-		requires std::is_base_of_v<UIElement, T>&& std::is_base_of_v<ISelectable, T>
+		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<ISelectable, T>
 	class UILayoutVerticalSelectable : public UILayoutVertical<T>, ISelectable
 	{
 	public:
+		UILayoutVerticalSelectable<T>(float _x, float _y) : UILayoutVertical<T>(_x, _y) { this->setUpdateId(1); }
+
 		// Implement ISelectable interface
 		virtual void select() override;
 		virtual bool deselect() override;
-		virtual bool isSelected() const override;
+		virtual bool isSelected() const override { return isSelected_; }
+
+		virtual void postUpdate() override;
 	private:
 		bool isSelected_ = false;
-	}
+		int selectedElementIndex = 0;
+	};
 }
 
 #include "UILayout.inl"

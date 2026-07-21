@@ -2,12 +2,13 @@
 #include "UIElement.h"
 #include "suku_config/config_element.h"
 #include "suku_foundation/input.h"
+#include "interfaces/ISelectable.h"
 
 namespace suku
 {
 	class OptionPool;
 
-	class OptionElement : public UIElement
+	class OptionElement : public UIElement, public ISelectable
 	{
 	public:
 		OptionElement* prev = nullptr;
@@ -17,6 +18,11 @@ namespace suku
 			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info = String());
 		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32) {}
 		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
+
+		// Implement ISelectable interface
+		virtual void select() override { isSelected_ = true; }
+		virtual bool deselect() override { isSelected_ = false; return true; }
+		virtual bool isSelected() const override { return isSelected_; }
 
 		virtual void update() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }

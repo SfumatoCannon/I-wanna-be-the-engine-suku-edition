@@ -219,7 +219,6 @@
     <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_objects\ui\interfaces\ISelectable.h" />
     <ClInclude Include="suku_objects\ui\OptionElement.h" />
-    <ClInclude Include="suku_objects\ui\OptionPool.h" />
     <ClInclude Include="suku_objects\ui\UIElement.h" />
     <ClInclude Include="suku_objects\ui\UILayout.h" />
     <ClInclude Include="suku_preset_rooms\RoomConfigPage.hpp" />
@@ -378,7 +377,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="suku_objects\ui\OptionElement.cpp" />
-    <ClCompile Include="suku_objects\ui\OptionPool.cpp" />
     <ClCompile Include="suku_objects\ui\UIElement.cpp" />
     <ClCompile Include="suku_sounds.cpp" />
   </ItemGroup>
