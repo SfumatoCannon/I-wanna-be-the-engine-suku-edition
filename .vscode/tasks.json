@@ -1,0 +1,35 @@
+{
+    "version":"2.0.0",
+
+    "tasks":[
+    {
+        "label":"Build (Debug x64)",
+
+        "type":"shell",
+
+        "command":"D:\\VSBuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+
+        "args":[
+            "I wanna be the engine suku edition.sln",
+            "/p:Configuration=Debug",
+            "/p:Platform=x64"
+        ],
+
+        "group":"build"
+    },
+    {
+        "label":"Build (Release x64)",
+
+        "type":"shell",
+
+        "command":"D:\\VSBuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+
+        "args":[
+            "I wanna be the engine suku edition.sln",
+            "/p:Configuration=Release",
+            "/p:Platform=x64"
+        ],
+
+        "group":"build"
+    }]
+}
