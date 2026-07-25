@@ -20,7 +20,7 @@ namespace suku
 		int i = 0;
 		for (auto& element : _elements)
 		{
-			T* newElement = inRoom_->create<T>(element);
+			T* newElement = inRoom_->create<T>(element).get();
 			if (newElement == nullptr)
 			{
 				WARNINGWINDOW_GLOBAL("Failed to create UIElement in UILayoutVertical::make()");

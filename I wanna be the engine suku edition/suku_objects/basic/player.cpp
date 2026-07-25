@@ -150,7 +150,7 @@ namespace suku
 			i++;
 			float bloodhspeed = randF(-5, 5);
 			float bloodvspeed = randF(-5, 5);
-			Blood* newBlood = inRoom()->create(Blood(getCenterX(), getCenterY()));
+			Blood* newBlood = inRoom()->create(Blood(getCenterX(), getCenterY())).get();
 			newBlood->setSpeed(bloodhspeed, bloodvspeed);
 			newBlood->rotate(randF(0, 360));
 			newBlood->xScale = newBlood->yScale = randF(0.5f, 1.5f);

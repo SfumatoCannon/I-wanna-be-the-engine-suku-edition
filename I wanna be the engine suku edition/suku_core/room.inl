@@ -83,26 +83,29 @@ namespace suku
 	}
 
 	template<suku_object Obj>
-	inline Obj* Room::create(Obj&& _object)
+	inline std::shared_ptr<Obj> Room::create(Obj&& _object)
 	{
 		auto newObjPtr = std::make_shared<std::decay_t<Obj>>(std::forward<Obj>(_object));
-		return append(newObjPtr);
+		append(newObjPtr);
+		return newObjPtr;
 	}
 
 	template<suku_object Obj, typename ...Args>
-	inline Obj* Room::create(Args && ...args)
+	inline std::shared_ptr<Obj> Room::create(Args && ...args)
 	{
 #pragma warning(push)
 #pragma warning(disable: 4244)
 		if constexpr (std::is_constructible_v<Obj, Args..., Room*>)
 		{
 			auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)..., this);
-			return append(newObjPtr);
+			append(newObjPtr);
+			return newObjPtr;
 		}
 		else
 		{
 			auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)...);
-			return append(newObjPtr);
+			append(newObjPtr);
+			return newObjPtr;
 		}
 #pragma warning(pop)
 	}
@@ -128,7 +131,7 @@ namespace suku
 	}
 
 	template<suku_object Obj>
-	inline Obj* Room::createCenter(Obj _object)
+	inline std::shared_ptr<Obj>	Room::createCenter(Obj _object)
 	{
 		_object.setPlaceAndSave(_object.x - _object.getSpriteFrame()->centerX, _object.y - _object.getSpriteFrame()->centerY);
 		return create(_object);
