@@ -132,6 +132,10 @@ namespace suku
 
 		void save();
 		void spawn();
+		
+		bool isFrozen()const { return isFrozen_; }
+		void setFrozen(bool _isFrozen) { isFrozen_ = _isFrozen; }
+
 	protected:
 		template<suku_property_type T> friend class Property;
 		friend class Room;
@@ -146,6 +150,7 @@ namespace suku
 			postUpdateId_		= 0.0,
 			paintId_			= 0.0;
 		bool isInRoom_			= false;
+		bool isFrozen_			= false;
 		bool removeTag_			= false;
 		bool destroyTag_		= false;
 		Sprite* sprite_			= nullptr;

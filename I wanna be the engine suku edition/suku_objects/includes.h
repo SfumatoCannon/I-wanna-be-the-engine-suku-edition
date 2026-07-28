@@ -7,4 +7,6 @@
 #include "ui/UIElement.h"
 #include "ui/UILayout.h"
 
+#include "ui/presets/PausePage.h"
+
 #include "map_loader.h"

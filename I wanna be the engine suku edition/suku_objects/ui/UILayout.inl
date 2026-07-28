@@ -1,4 +1,5 @@
 #include "UILayout.h"
+#include "../../suku_foundation/input.h"
 
 namespace suku
 {

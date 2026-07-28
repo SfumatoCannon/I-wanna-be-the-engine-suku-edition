@@ -159,8 +159,10 @@ namespace suku
 					obj->isPositionTransitionalFrame_ = true;
 					obj->isSpriteTransformTransitionalFrame_ = true;
 					obj->hspeedTemp = obj->vspeedTemp = 0;
-					obj->updateFunction();
-
+					if (!obj->isFrozen())
+					{
+						obj->updateFunction();
+					}
 					iter++;
 				}
 			}
@@ -177,7 +179,10 @@ namespace suku
 					continue;
 				}
 				obj->spriteTransformLastFrame_ = obj->transform;
-				obj->preUpdate();
+				if (!obj->isFrozen())
+				{
+					obj->preUpdate();
+				}
 				iter++;
 			}
 		}
@@ -192,7 +197,10 @@ namespace suku
 					iter = objArray.erase(iter);
 					continue;
 				}
-				obj->update();
+				if (!obj->isFrozen())
+				{
+					obj->update();
+				}
 				iter++;
 			}
 		}
@@ -201,10 +209,13 @@ namespace suku
 		{
 			for (auto& obj : objArray)
 			{
-				obj->xLastFrame_ = obj->x;
-				obj->yLastFrame_ = obj->y;
-				obj->x += obj->totalHspeed();
-				obj->y += obj->totalVspeed();
+				if (!obj->isFrozen())
+				{
+					obj->xLastFrame_ = obj->x;
+					obj->yLastFrame_ = obj->y;
+					obj->x += obj->totalHspeed();
+					obj->y += obj->totalVspeed();
+				}
 			}
 		}
 
@@ -218,9 +229,12 @@ namespace suku
 					iter = objArray.erase(iter);
 					continue;
 				}
-				obj->postUpdate();
-				obj->x.addTick();
-				obj->y.addTick();
+				if (!obj->isFrozen())
+				{
+					obj->postUpdate();
+					obj->x.addTick();
+					obj->y.addTick();
+				}
 				iter++;
 			}
 		}
