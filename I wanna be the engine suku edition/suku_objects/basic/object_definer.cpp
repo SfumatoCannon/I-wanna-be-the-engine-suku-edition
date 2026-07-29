@@ -1,5 +1,5 @@
 #include "object_definer.h"
-#include "suku_sounds.h"
+#include "suku_sounds/includes.h"
 
 using namespace suku::maths;
 

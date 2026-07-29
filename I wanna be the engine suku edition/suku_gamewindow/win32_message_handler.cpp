@@ -3,7 +3,7 @@
 #include "game_window.h"
 #include "../suku_draw/includes.h"
 #include "../suku_foundation/includes.h"
-#include "../suku_sounds.h"
+#include "../suku_sounds/suku_sounds.h"
 #include "../suku_config/includes.h"
 #include "game_loop.h"
 

@@ -2,7 +2,7 @@
 #include <suku_core/includes.h>
 #include <suku_foundation/includes.h>
 #include <suku_constants.h>
-#include <suku_sounds.h>
+#include <suku_sounds/includes.h>
 #include "object_definer.h"
 
 namespace suku
