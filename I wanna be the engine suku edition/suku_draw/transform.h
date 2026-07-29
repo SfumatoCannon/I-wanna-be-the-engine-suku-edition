@@ -1,9 +1,10 @@
 #pragma once
 #include <d2d1helper.h>
-#include "../suku_foundation/type_tree.h"
 
 namespace suku
 {
+	class Vector;
+
 	class Transform
 	{
 	public:
