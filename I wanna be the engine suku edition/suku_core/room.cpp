@@ -139,6 +139,26 @@ namespace suku
 
 	void Room::update()
 	{
+		if (isUpdatePaused_)
+		{
+			onUpdateStart();
+			Object* obj = updateControllerObject_;
+			obj->isPositionTransitionalFrame_ = true;
+			obj->isSpriteTransformTransitionalFrame_ = true;
+			obj->hspeedTemp = obj->vspeedTemp = 0;
+			obj->updateFunction();
+			obj->spriteTransformLastFrame_ = obj->transform;
+			obj->preUpdate();
+			obj->update();
+			obj->xLastFrame_ = obj->x;
+			obj->yLastFrame_ = obj->y;
+			obj->x += obj->totalHspeed();
+			obj->y += obj->totalVspeed();
+			obj->postUpdate();
+			obj->x.addTick();
+			obj->y.addTick();
+			return;
+		}
 		onUpdateStart();
 
 		for (auto& [type, objArray] : objectPointerArray_)
@@ -274,6 +294,9 @@ namespace suku
 
 	void Room::additionalFramePaint(float _offsetRate)
 	{
+		if (isUpdatePaused_)
+			_offsetRate = 0.0f;
+
 		displayLayer_.beginDraw();
 		onPaintStart();
 
@@ -339,6 +362,17 @@ namespace suku
 			objPointer->onRestarting();
 		}
 		//player->spawn();
+	}
+
+	void Room::pause(Object* _controllerObject)
+	{
+		isUpdatePaused_ = true;
+		updateControllerObject_ = _controllerObject;
+	}
+
+	void Room::resume()
+	{
+		isUpdatePaused_ = false;
 	}
 
 	/*

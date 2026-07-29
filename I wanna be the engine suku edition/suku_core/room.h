@@ -57,6 +57,9 @@ namespace suku
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
+
+		void pause(Object* _controllerObject);
+		void resume();
 	private:
 		unsigned int roomId_;
 		String alias_ = L"";
@@ -68,6 +71,9 @@ namespace suku
 		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
 		template<suku_object Obj> void createObjectList();
+
+		bool isUpdatePaused_ = false;
+		Object* updateControllerObject_ = nullptr;
 	};
 }
 

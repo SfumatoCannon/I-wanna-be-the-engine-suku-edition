@@ -89,6 +89,7 @@ public:
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(32, 128), Wall(32, 160));
 		create<Warp<Room1>>(128, 0);
+		create<PausePage>();
 	}
 
 	virtual void onPaintStart()override
@@ -117,5 +118,6 @@ public:
 
 void init()
 {
-	gotoRoom<RoomConfigPage>();
+	//gotoRoom<RoomConfigPage>();
+	gotoRoom<Room0>();
 }

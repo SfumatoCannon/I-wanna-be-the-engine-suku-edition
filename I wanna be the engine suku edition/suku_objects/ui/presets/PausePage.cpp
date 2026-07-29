@@ -7,14 +7,25 @@ namespace suku
 	PausePage::PausePage()
 		: UIElement(0, 0, GameWindow::getLogicalWidth(), GameWindow::getLogicalHeight())
 	{
-
+		setPaintId(1000);
 	}
 
 	void PausePage::update()
 	{
 		if (input::isKeyDown(input::VK_P))
 		{
-			isPaused_ = !isPaused_;
+			if (!isPaused_)
+			{
+				isPaused_ = true;
+				if (inRoom_)
+					inRoom_->pause(this);
+			}
+			else
+			{
+				isPaused_ = false;
+				if (inRoom_)
+					inRoom_->resume();
+			}
 		}
 	}
 
