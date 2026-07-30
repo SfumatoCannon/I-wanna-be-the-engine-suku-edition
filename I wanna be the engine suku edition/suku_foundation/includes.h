@@ -8,5 +8,5 @@
 #include "message.h"
 #include "save.h"
 #include "suku_string.h"
-#include "type_tree.h"
+#include "suku_type.h"
 #include "var.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include "suku_foundation/includes.h"
 #include "suku_core/includes.h"
-#include "suku_foundation/type_tree.h"
+#include "suku_foundation/suku_type.h"
 #include <suku_constants.h>
 
 namespace suku

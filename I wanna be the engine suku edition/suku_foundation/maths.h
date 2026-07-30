@@ -7,6 +7,15 @@
 #define PI 3.14159265358979323846
 namespace suku
 {
+	class Vector
+	{
+	public:
+		float x = 0.0f;
+		float y = 0.0f;
+		Vector(float _x, float _y) : x(_x), y(_y) {}
+		Vector(double _x, double _y) : x((float)_x), y((float)_y) {}
+	};
+
 	namespace maths
 	{
 		double bRound(double _x);

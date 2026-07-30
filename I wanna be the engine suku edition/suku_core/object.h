@@ -2,7 +2,7 @@
 #include "../framework.h"
 #include "../suku_draw/transform.h"
 #include "../suku_foundation/var.h"
-#include "../suku_foundation/type_tree.h"
+#include "../suku_foundation/suku_type.h"
 #include "../suku_foundation/maths.h"
 #include "suku_core_concepts.h"
 #include "suku_property.h"

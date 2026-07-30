@@ -9,18 +9,8 @@ namespace suku
 {
 	typedef size_t Typecode;
 
-	class Vector;
 	class TypeNode;
 	class SukuObjectTypeTree;
-
-	class Vector
-	{
-	public:
-		float x = 0.0f;
-		float y = 0.0f;
-		Vector(float _x, float _y) : x(_x), y(_y) {}
-		Vector(double _x, double _y) : x((float)_x), y((float)_y) {}
-	};
 
 	class TypeNode
 	{
@@ -63,4 +53,4 @@ namespace suku
 	};
 }
 
-#include "type_tree.inl"
+#include "suku_type.inl"
