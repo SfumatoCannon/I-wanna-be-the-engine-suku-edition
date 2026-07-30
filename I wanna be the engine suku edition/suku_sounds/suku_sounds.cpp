@@ -24,15 +24,15 @@ namespace suku
 	IXAudio2* g_xaudio2 = nullptr;
 	IXAudio2MasteringVoice* g_masterVoice = nullptr;
 
-	Sound::Sound(String _path) {
-		_path = "ProjectAssets\\" + _path;
-		File file(_path);
+	Sound::Sound(String _path) : sourceUrl_(_path) {
+		sourceUrl_ = "ProjectAssets\\" + sourceUrl_;
+		File file(sourceUrl_);
 		std::vector<char> soundData;
 		ComPtr<IMFSourceReader> reader = nullptr;
 		if (!file.isExist())
 		{
 			// read from resource file
-			FileCodec::readResource(soundData, _path);
+			FileCodec::readResource(soundData, sourceUrl_);
 
 			IStream* stream = SHCreateMemStream(
 				(BYTE*)soundData.data(),
@@ -53,12 +53,12 @@ namespace suku
 		}
 		else
 		{
-			FileCodec::writeResource(_path);		
+			FileCodec::writeResource(sourceUrl_);		
 
-			String path = filesystem::absolutePath(_path);
+			String path = filesystem::absolutePath(sourceUrl_);
 			MFCreateSourceReaderFromURL(path.content, nullptr, &reader);
 			if (!reader) {
-				ERRORWINDOW("Failed to create source reader for audio file: " + _path);
+				ERRORWINDOW("Failed to create source reader for audio file: " + sourceUrl_);
 				return;
 			}
 		}
@@ -66,7 +66,7 @@ namespace suku
 		ComPtr<IMFMediaType> mediaTypeOut;
 		MFCreateMediaType(&mediaTypeOut);
 		if (!mediaTypeOut) {
-			ERRORWINDOW("Failed to create media type for audio file: " + _path);
+			ERRORWINDOW("Failed to create media type for audio file: " + sourceUrl_);
 			return;
 		}
 		mediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);

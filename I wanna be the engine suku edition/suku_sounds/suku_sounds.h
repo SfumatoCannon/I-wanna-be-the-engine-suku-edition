@@ -13,9 +13,11 @@ namespace suku
         Sound(String _url);
         ~Sound();
 
+		String getSourceUrl() const { return sourceUrl_; }
         SoundController* play();
 
     private:
+        String sourceUrl_;
         WAVEFORMATEX* format_ = nullptr;
         std::vector<BYTE> pcmData_;
 

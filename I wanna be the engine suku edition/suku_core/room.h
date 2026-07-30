@@ -74,6 +74,9 @@ namespace suku
 
 		bool isUpdatePaused_ = false;
 		Object* updateControllerObject_ = nullptr;
+
+		bool hasBGM_ = false;
+
 	};
 }
 
