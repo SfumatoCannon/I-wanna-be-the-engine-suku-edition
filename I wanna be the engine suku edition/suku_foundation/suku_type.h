@@ -9,7 +9,6 @@ namespace suku
 {
 	typedef size_t Typecode;
 
-	class Vector;
 	class TypeNode;
 	class SukuObjectTypeTree;
 
@@ -54,4 +53,4 @@ namespace suku
 	};
 }
 
-#include "type_tree.inl"
+#include "suku_type.inl"

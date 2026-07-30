@@ -181,6 +181,7 @@
     <ClInclude Include="suku_core\suku_core_concepts.h" />
     <ClInclude Include="suku_core\suku_property.h" />
     <ClInclude Include="suku_core\transition.h" />
+    <ClInclude Include="suku_foundation\update_id_register.h" />
     <ClInclude Include="suku_objects\basic\object_definer.h" />
     <ClInclude Include="suku_core\view.h" />
     <ClInclude Include="suku_draw\bitmap.h" />
@@ -206,7 +207,7 @@
     <ClInclude Include="suku_foundation\input_mouse.h" />
     <ClInclude Include="suku_foundation\save.h" />
     <ClInclude Include="suku_foundation\suku_string.h" />
-    <ClInclude Include="suku_foundation\type_tree.h" />
+    <ClInclude Include="suku_foundation\suku_type.h" />
     <ClInclude Include="suku_foundation\var.h" />
     <ClInclude Include="suku_foundation\codec.h" />
     <ClInclude Include="suku_gamewindow\game_loop.h" />
@@ -397,7 +398,7 @@
     <None Include="suku_core\suku_property.inl" />
     <None Include="suku_draw\scale_mode.inl" />
     <None Include="suku_foundation\save.inl" />
-    <None Include="suku_foundation\type_tree.inl" />
+    <None Include="suku_foundation\suku_type.inl" />
     <None Include="suku_foundation\var.inl" />
     <None Include="suku_objects\ui\UILayout.inl" />
   </ItemGroup>
