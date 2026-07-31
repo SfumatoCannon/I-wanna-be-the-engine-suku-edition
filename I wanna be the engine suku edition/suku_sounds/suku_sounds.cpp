@@ -15,87 +15,23 @@
 #include <propvarutil.h>
 #include <comdef.h>
 #include <xaudio2.h>
+#include "audio_core.h"
 
 
 using Microsoft::WRL::ComPtr;
 
 namespace suku
 {
-	IXAudio2* g_xaudio2 = nullptr;
-	IXAudio2MasteringVoice* g_masterVoice = nullptr;
-
-	Sound::Sound(String _path) : sourceUrl_(_path) {
+	Sound::Sound(String _url) : sourceUrl_(_url)
+	{
 		sourceUrl_ = "ProjectAssets\\" + sourceUrl_;
-		File file(sourceUrl_);
-		std::vector<char> soundData;
-		ComPtr<IMFSourceReader> reader = nullptr;
-		if (!file.isExist())
-		{
-			// read from resource file
-			FileCodec::readResource(soundData, sourceUrl_);
+		SoundFactoryGlobal::getInstance().loadSoundData(sourceUrl_, &format_, pcmData_);
+	}
 
-			IStream* stream = SHCreateMemStream(
-				(BYTE*)soundData.data(),
-				(UINT)soundData.size()
-			);
-			ComPtr<IMFByteStream> byteStream = nullptr;
-			MFCreateMFByteStreamOnStream(stream, &byteStream);
-			MFCreateSourceReaderFromByteStream(
-				byteStream.Get(),
-				nullptr,
-				&reader
-			);
-			if (!reader)
-			{
-				ERRORWINDOW("Failed to create source reader for audio file: " + _path);
-				return;
-			}
-		}
-		else
-		{
-			FileCodec::writeResource(sourceUrl_);		
-
-			String path = filesystem::absolutePath(sourceUrl_);
-			MFCreateSourceReaderFromURL(path.content, nullptr, &reader);
-			if (!reader) {
-				ERRORWINDOW("Failed to create source reader for audio file: " + sourceUrl_);
-				return;
-			}
-		}
-
-		ComPtr<IMFMediaType> mediaTypeOut;
-		MFCreateMediaType(&mediaTypeOut);
-		if (!mediaTypeOut) {
-			ERRORWINDOW("Failed to create media type for audio file: " + sourceUrl_);
-			return;
-		}
-		mediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
-		mediaTypeOut->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-		reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, mediaTypeOut.Get());
-
-		ComPtr<IMFMediaType> mediaType;
-		reader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &mediaType);
-
-		UINT32 size = 0;
-		MFCreateWaveFormatExFromMFMediaType(mediaType.Get(), &format_, &size);
-
-		// read PCM data
-		while (true) {
-			ComPtr<IMFSample> sample;
-			DWORD flags = 0;
-			if (FAILED(reader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &flags, nullptr, &sample))) break;
-			if (flags & MF_SOURCE_READERF_ENDOFSTREAM) break;
-			if (!sample) continue;
-
-			ComPtr<IMFMediaBuffer> buffer;
-			sample->ConvertToContiguousBuffer(&buffer);
-
-			BYTE* data = nullptr;
-			DWORD cb = 0;
-			buffer->Lock(&data, nullptr, &cb);
-			pcmData_.insert(pcmData_.end(), data, data + cb);
-			buffer->Unlock();
-		}
+	Sound::Sound(String _url, float _basicVolume)
+		: Sound(_url)
+	{
+		basicVolume_ = _basicVolume;
 	}
 
 	Sound::~Sound() {
@@ -106,25 +42,29 @@ namespace suku
 		return new SoundController(this);
 	}
 
-	extern IXAudio2* g_xaudio2;
+	SoundController* Sound::playWithLoop()
+	{
+		return new SoundController(this, true);
+	}
 
 	SoundController::SoundController(Sound* _sound, bool _isLoop) : sound_(_sound) {
-		g_xaudio2->CreateSourceVoice(&sourceVoice_, _sound->format_);
+		SoundFactoryGlobal::getInstance().createSourceVoice(&sourceVoice_, sound_->format_);
 
+		XAUDIO2_BUFFER buffer = {};
+		buffer.AudioBytes = static_cast<UINT32>(_sound->pcmData_.size());
+		buffer.pAudioData = _sound->pcmData_.data();
 		if (!_isLoop)
 		{
-			XAUDIO2_BUFFER buffer = {};
-			buffer.AudioBytes = static_cast<UINT32>(_sound->pcmData_.size());
-			buffer.pAudioData = _sound->pcmData_.data();
 			buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-			sourceVoice_->SubmitSourceBuffer(&buffer);
-			sourceVoice_->Start();
+			buffer.LoopCount = 0;
 		}
 		else
 		{
-
+			buffer.Flags = 0;
+			buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 		}
+		sourceVoice_->SubmitSourceBuffer(&buffer);
+		sourceVoice_->Start();
 	}
 
 	SoundController::~SoundController() {
@@ -300,33 +240,5 @@ namespace suku
 		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 		sourceVoice_->SubmitSourceBuffer(&buffer);
-	}
-
-	void soundInit() {
-		MFStartup(MF_VERSION);
-		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-		if (SUCCEEDED(hr))
-		{
-			XAudio2Create(&g_xaudio2, 0);
-			g_xaudio2->CreateMasteringVoice(&g_masterVoice);
-		}
-		else
-		{
-			WARNINGWINDOW_GLOBAL("Failed to initialize COM library for sound system.");
-		}
-	}
-
-	void soundUninit()
-	{
-		if (g_masterVoice) {
-			g_masterVoice->DestroyVoice();
-			g_masterVoice = nullptr;
-		}
-		if (g_xaudio2) {
-			g_xaudio2->Release();
-			g_xaudio2 = nullptr;
-		}
-		MFShutdown();
-		CoUninitialize();
 	}
 }

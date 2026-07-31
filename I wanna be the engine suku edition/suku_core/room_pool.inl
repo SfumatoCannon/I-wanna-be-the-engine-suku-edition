@@ -27,6 +27,28 @@ namespace suku
 	inline void RoomPool::gotoRoom()
 	{
 		RoomPool::nowRoom_ = getRoom<T>();
+		if (nowRoom_->hasBGM())
+		{
+			if (nowRoom_->getBGM() == nullptr)
+			{
+				if (BGMController_ != nullptr)
+				{
+					BGMController_->stop();
+					BGMController_ = nullptr;
+				}
+				nowBGM_ = nullptr;
+			}
+			else if (nowBGM_ != nowRoom_->getBGM())
+			{
+				if (BGMController_ != nullptr)
+				{
+					BGMController_->stop();
+					BGMController_ = nullptr;
+				}
+				BGMController_ = nowRoom_->getBGM()->playWithLoop();
+				nowBGM_ = nowRoom_->getBGM();
+			}
+		}
 		nowRoom_->onEntering();
 	}
 }

@@ -375,6 +375,12 @@ namespace suku
 		isUpdatePaused_ = false;
 	}
 
+	void Room::setBGM(Sound* _bgm)
+	{
+		hasBGM_ = true;
+		bgm_ = _bgm;
+	}
+
 	/*
 	void Room::paintBody()
 	{

@@ -11,12 +11,17 @@ namespace suku
     class Sound {
     public:
         Sound(String _url);
+        Sound(String _url, float _basicVolume);
         ~Sound();
 
 		String getSourceUrl() const { return sourceUrl_; }
         SoundController* play();
+        SoundController* playWithLoop();
+
+		float getBasicVolume() const { return basicVolume_; }
 
     private:
+		float basicVolume_ = 1.0f;
         String sourceUrl_;
         WAVEFORMATEX* format_ = nullptr;
         std::vector<BYTE> pcmData_;

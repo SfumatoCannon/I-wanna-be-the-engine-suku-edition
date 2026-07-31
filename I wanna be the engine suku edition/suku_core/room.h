@@ -6,6 +6,7 @@
 #include "../suku_foundation/suku_string.h"
 #include "../suku_constants.h"
 #include "suku_core_concepts.h"
+#include <suku_sounds/suku_sounds.h>
 
 namespace suku
 {
@@ -60,6 +61,10 @@ namespace suku
 
 		void pause(Object* _controllerObject);
 		void resume();
+
+		bool hasBGM() const { return hasBGM_; }
+		void setBGM(Sound* _bgm);
+		Sound* getBGM() const { return bgm_; }
 	private:
 		unsigned int roomId_;
 		String alias_ = L"";
@@ -76,7 +81,7 @@ namespace suku
 		Object* updateControllerObject_ = nullptr;
 
 		bool hasBGM_ = false;
-
+		Sound* bgm_ = nullptr;
 	};
 }
 

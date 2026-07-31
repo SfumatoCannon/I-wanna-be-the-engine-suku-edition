@@ -3,7 +3,7 @@
 #include "game_window.h"
 #include "../suku_draw/includes.h"
 #include "../suku_foundation/includes.h"
-#include "../suku_sounds/suku_sounds.h"
+#include "../suku_sounds/includes.h"
 #include "../suku_config/includes.h"
 #include "game_loop.h"
 
@@ -39,7 +39,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		graphics::WICFactoryGlobal::getWICFactory();
 		graphics::D2DFactoryGlobal::getD2DFactory();
 		graphics::suku_drawing_postinit(hWnd);
-		soundInit();
+		//soundInit();
 		init();
 		if (ConfigElementPool::isVSyncOn.value())
 			game_loop::startWithVsync(ConfigElementPool::vsyncFrameRate.value());
@@ -65,7 +65,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		timeEndPeriod(1);
 		graphics::suku_drawing_uninit();
-		soundUninit();
+		SoundFactoryGlobal::uninitialize();
 		PostQuitMessage(0);
 		break;
 	case WM_SIZE:

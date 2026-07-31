@@ -19,6 +19,8 @@ namespace suku
 	private:
 		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
 		inline static Room* nowRoom_ = nullptr;
+		inline static SoundController* BGMController_ = nullptr;
+		inline static Sound* nowBGM_ = nullptr;
 	};
 
 	template<suku_room T> Room* getNowRoom() { return RoomPool::getNowRoom(); }

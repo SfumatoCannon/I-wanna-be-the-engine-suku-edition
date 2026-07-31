@@ -25,10 +25,6 @@ public:
 		static SaveFile save0("save123");
 		setSaveFile(&save0);
 
-		//MCIDEVICEID a = openAudio("Audio\\musOnDeath.mp3");
-		//playDevice(a, true);
-		//music1.setVolume(0.01);
-		//music1.setSpeed(0.5);
 		//create(Background(Bitmap("Image\\bg.jpg")));
 
 		//static Player player(0, 0);
@@ -90,6 +86,8 @@ public:
 		create(Spike(32, 128), Wall(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
+
+		setBGM(&suku::SoundPool::musGuyRock);
 	}
 
 	virtual void onPaintStart()override
@@ -110,9 +108,9 @@ public:
 		//layer.endDraw().paint();
 		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 			TextAlign::MiddleRight);
-		//a.contentString = std::to_wstring(p->y.getValue());
+		a.contentString = std::to_wstring(getObjectList<Player>().front()->y.getValue());
 		//a.contentString = "test message\npress s to save";
-		//a.paint(256, 256, brushBlack);
+		a.paint(256, 256, brushBlack);
 	}
 };
 
