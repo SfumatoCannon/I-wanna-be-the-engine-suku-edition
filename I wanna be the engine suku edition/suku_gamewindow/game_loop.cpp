@@ -4,12 +4,13 @@
 #include "../suku_core/includes.h"
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
+#include <suku_objects/basic/player.h>
 
 // Private functions declaration
 // ----------------------------------------------------------------------------
-namespace 
+namespace
 {
-	bool debugMessage = true;
+	bool debugMessage = false;
 	bool gameEndFlag = false;
 	void updateWork();
 	void paintWork();
@@ -194,10 +195,13 @@ namespace
 	void updateWork()
 	{
 		using namespace suku;
-		//if (threadLock.try_lock())
-		//{
 		suku::input::frameStateUpdate();
 		suku::input::Mouse::frameStateUpdate();
+
+#ifdef _DEBUG
+		if (suku::input::isKeyDown(VK_F1))
+			debugMessage = !debugMessage;
+#endif
 
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
@@ -208,9 +212,6 @@ namespace
 
 		suku::input::resetKeyState();
 		suku::input::Mouse::resetButtonState();
-
-		//	threadLock.unlock();
-		//}
 	}
 
 	double getMonitoredFPS(bool _isUpdate = false)
@@ -289,11 +290,25 @@ namespace
 	{
 		double monitoredFPS = getMonitoredFPS(false);
 		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
-		static suku::Text a("Consolas", 16);
-		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 0, 0, 1.0f)));
-		a.contentString = L"FPS: " + std::to_wstring(monitoredFPS)
-			+ (isVsyncOn ? L" (vsync on)" : L"");
-		a.contentString += L"\nRoom Id: " + std::to_wstring(suku::RoomPool::getNowRoom()->getRoomId());
+		static suku::Text a("Consolas", 24);
+		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 255, 0, 1.0f)));
+		a.contentString.clear();
+
+		// FPS
+		a.contentString += L"FPS: " + std::to_wstring(monitoredFPS) + (isVsyncOn ? L" (vsync on)" : L"");
+
+		// Now Room
+		auto nowRoom = suku::RoomPool::getNowRoom();
+		a.contentString += L"\nRoom Id: " + std::to_wstring(nowRoom->getRoomId());
+
+		// Player
+		if (!nowRoom->getObjectList<suku::Player>().empty())
+		{
+			suku::Player* p = nowRoom->getObjectList<suku::Player>().front();
+			a.contentString += L"\nPlayer X: " + std::to_wstring(p->x.getValue());
+			a.contentString += L"\nPlayer Y: " + std::to_wstring(p->y.getValue());
+		}
+
 		a.paint(10, 10);
 	}
 }

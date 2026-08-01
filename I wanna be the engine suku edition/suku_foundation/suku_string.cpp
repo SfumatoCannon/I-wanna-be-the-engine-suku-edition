@@ -54,6 +54,12 @@ namespace suku
 		content[length] = L'\0';
 	}
 
+	void String::clear()
+	{
+		delete[] content;
+		content = new wchar_t[1] { L'\0' };
+	}
+
 	bool String::isEmpty() const
 	{
 		return content == nullptr || wcslen(content) == 0;

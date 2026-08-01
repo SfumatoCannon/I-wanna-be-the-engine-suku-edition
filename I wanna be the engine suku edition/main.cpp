@@ -87,7 +87,7 @@ public:
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 
-		setBGM(&suku::SoundPool::musGuyRock);
+		// setBGM(&suku::SoundPool::musGuyRock);
 	}
 
 	virtual void onPaintStart()override
