@@ -39,12 +39,16 @@ namespace suku
 	}
 
 	SoundController* Sound::play() {
-		return new SoundController(this);
+		SoundController* pSoundController = new SoundController(this);
+		pSoundController->setVolume(1.0f);
+		return pSoundController;
 	}
 
 	SoundController* Sound::playWithLoop()
 	{
-		return new SoundController(this, true);
+		SoundController* pSoundController = new SoundController(this, true);
+		pSoundController->setVolume(1.0f);
+		return pSoundController;
 	}
 
 	SoundController::SoundController(Sound* _sound, bool _isLoop) : sound_(_sound) {
@@ -131,7 +135,7 @@ namespace suku
 	void SoundController::setVolume(float volume) {
 		if (sourceVoice_) {
 			currentVolume_ = volume;
-			sourceVoice_->SetVolume(volume);
+			sourceVoice_->SetVolume(sound_->getBasicVolume() * volume);
 		}
 	}
 

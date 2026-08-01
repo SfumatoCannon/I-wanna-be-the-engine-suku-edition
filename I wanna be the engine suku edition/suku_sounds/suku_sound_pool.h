@@ -6,6 +6,6 @@ namespace suku
 	class SoundPool
 	{
 	public:
-		static inline Sound musGuyRock = Sound("Audio\\musGuyRock.mp3");
+		static inline Sound musGuyRock = Sound("Audio\\musGuyRock.mp3", 0.3f);
 	};
 }
