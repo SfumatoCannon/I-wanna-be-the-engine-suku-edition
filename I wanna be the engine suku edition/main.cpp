@@ -37,14 +37,14 @@ public:
 		create<Player>(0.f, 0.f);
 		int x = 0;
 		setSavable<int>("test");
-		if (!hasValueInFile("test"))
+		if (!getGlobalSaveFile()->hasValue("test"))
 		{
 			x = 0;
 		}
 		else
-			x = loadVar<int>("test");
+			x = getGlobalSaveFile()->loadVar<int>("test");
 		x++;
-		saveVar("test", x);
+		getGlobalSaveFile()->saveVar("test", x);
 
 		create(Wall(32, 32))->addTimelineAction({ 100, 200 },
 			{

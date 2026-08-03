@@ -28,15 +28,13 @@ namespace suku
 		// mapping from variable address to savable_var id
 		std::map<const char*, unsigned long long> varIdMappingPool;
 		// shows the current var status in the file (after do a loading)
-		std::map<unsigned long long, bool> dataExistInFilePool;
+		// std::map<unsigned long long, bool> dataExistInFilePool;
 
 		int saveFileId;
 
 		void setSaveFile(SaveFile* _saveFile);
 		SaveFile* getSaveFile() { return saveFile_; }
 
-		void writeData();
-		void readData();
 		void refreshLoadTag() { loadTag_ = false; }
 	private:
 		bool loadTag_ = false;
@@ -51,28 +49,29 @@ namespace suku
 		SaveFile(String _fileName);
 
 		void writeData();
-		std::map<unsigned long long, bool> readData();
+		void readData();
 		void setFileName(String _fileName);
 		String getFileName();
+
+		template<typename T> void saveVar(const std::string _name, T _val);
+		template<typename T> void saveVar(const std::string _name, Property<T>& _val);
+		template<typename T> void saveVar(T& _x);
+		template<typename T> void saveVar(Property<T>& _x);
+		template<typename T> void loadVar(T& _x, T _defaultValue = T());
+		template<typename T> void loadVar(Property<T>& _x, T _defaultValue = T());
+		template<typename T> T loadVar(const std::string _name, T _defaultValue = T());
+
+		bool hasValue(const std::string _name);
 	private:
 		std::unique_ptr<File> file_ = nullptr;
 	};
 
 	void setSaveFile(SaveFile* _saveFile);
-	SaveFile* getSaveFile();
+	SaveFile* getGlobalSaveFile();
 	template<typename T> bool setSavable(const std::string _name);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
 	template<typename T> bool setSavable(Property<T>& _x, const std::string _name);
-	template<typename T> void saveVar(const std::string _name, T _val);
-	template<typename T> void saveVar(const std::string _name, Property<T>& _val);
-	template<typename T> void saveVar(T& _x);
-	template<typename T> void saveVar(Property<T>& _x);
-	template<typename T> void loadVar(T& _x, T _defaultValue = T());
-	template<typename T> void loadVar(Property<T>& _x, T _defaultValue = T());
-	template<typename T> T loadVar(const std::string _name, T _defaultValue = T());
-	template<typename T> T loadVar(const std::string _name, Property<T>& _defaultValue);
 	bool isSavable(const std::string _name);
-	bool hasValueInFile(const std::string _name);
 }
 
 #include "save.inl"

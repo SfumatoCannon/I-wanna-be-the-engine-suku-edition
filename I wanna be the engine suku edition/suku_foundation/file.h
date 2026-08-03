@@ -19,8 +19,8 @@ namespace suku
 		void create()const;
 		bool isExist();
 		bool isOpenedForWrite()const;
-		void openForWrite();
-		bool tryOpenForWrite();
+		void openForWrite(bool _overwrite = true);
+		bool tryOpenForWrite(bool _overwrite = true);
 		bool isOpenedForRead()const;
 		void openForRead();
 		bool tryOpenForRead();
@@ -34,8 +34,11 @@ namespace suku
 		void read(std::vector<char>& _data);
 		void read(std::vector<char>& _data, size_t _size);
 
-		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
-		std::map<unsigned long long, bool> readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
+		void writeDataPtr(unsigned long long _id, char* _data, size_t _size);
+		void writeDataPtrMap(const std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap, bool _overwrite = false);
+		std::vector<std::pair<unsigned long long, size_t>> readDataPtrMapIdList();
+		void readDataPtr(unsigned long long _id, char* _data, size_t _size);
+		void readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap);
 	private:
 		std::ofstream ofs_;
 		std::ifstream ifs_;

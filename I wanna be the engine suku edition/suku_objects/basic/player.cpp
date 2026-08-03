@@ -33,8 +33,6 @@ namespace suku
 		setPaintId(3);
 		setSavable(x, "player_x");
 		setSavable(y, "player_y");
-		loadVar(x);
-		loadVar(y);
 		spawnX = x;
 		spawnY = y;
 		sprite_ = &sprStanding;
@@ -115,8 +113,8 @@ namespace suku
 			return;
 		spawnX = x;
 		spawnY = y;
-		saveVar(y);
-		saveVar(x);
+		getGlobalSaveFile()->saveVar("player_x", x);
+		getGlobalSaveFile()->saveVar("player_y", y);
 	}
 
 	bool Player::isAlive()

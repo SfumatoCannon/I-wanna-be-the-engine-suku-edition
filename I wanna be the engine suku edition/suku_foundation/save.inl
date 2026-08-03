@@ -2,6 +2,7 @@
 #include "maths.h"
 #include "suku_string.h"
 #include "message.h"
+#include "file.h"
 
 namespace suku
 {
@@ -53,66 +54,67 @@ namespace suku
 	}
 
 	template<typename T>
-	inline void saveVar(const std::string _name, T _val)
+	inline void SaveFile::saveVar(const std::string _name, T _val)
 	{
 		unsigned long long id = maths::hash(_name);
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		if (dataPointerVarPool.find(id) == dataPointerVarPool.end())
 		{
-			WARNINGWINDOW_GLOBAL("Variable name \"" + _name + "\" not set as savable.Attempting to set it as savable.");
+			WARNINGWINDOW("Variable name \"" + _name + "\" not set as savable.Attempting to set it as savable.");
 			setSavable<T>(_name);
 		}
 		Var pointerInVar = dataPointerVarPool[id];
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _val;
-		SaveAssetGlobal::getInstance().writeData();
+		file_->writeDataPtr(id, reinterpret_cast<char*>(pointer), sizeof(T));
 	}
 
 	template<typename T>
-	void saveVar(const std::string _name, Property<T>& _val)
+	void SaveFile::saveVar(const std::string _name, Property<T>& _val)
 	{
 		//saveVar(_name, _val.value_);
 	}
 
 	template<typename T>
-	inline void saveVar(T& _x)
+	inline void SaveFile::saveVar(T& _x)
 	{
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
 		if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
 		{
-			ERRORWINDOW_GLOBAL("Variable not set as savable");
+			ERRORWINDOW("Variable not set as savable");
 			return;
 		}
-		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
+		unsigned long long id = varIdMappingPool[reinterpret_cast<char*>(&_x)];
+		auto iter = dataPointerVarPool.find(id);
 		if (iter == dataPointerVarPool.end())
 		{
-			ERRORWINDOW_GLOBAL("Variable not set as savable. (Var name mapping exists but failed to get data pointer var)");
+			ERRORWINDOW("Variable not set as savable. (Var name mapping exists but failed to get data pointer var)");
 			return;
 		}
 		Var pointerInVar = (*iter).second;
 		T* pointer;
 		pointerInVar >> pointer;
 		*pointer = _x;
-		SaveAssetGlobal::getInstance().writeData();
+		file_->writeDataPtr(id, reinterpret_cast<char*>(pointer), sizeof(T));
 	}
 
 	template<typename T>
-	void saveVar(Property<T>& _x)
+	void SaveFile::saveVar(Property<T>& _x)
 	{
 		//saveVar(_x.value_);
 	}
 
 	template<typename T>
-	inline void loadVar(T& _x, T _defaultValue)
+	inline void SaveFile::loadVar(T& _x, T _defaultValue)
 	{
 		SaveAssetGlobal::getInstance().readData();
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
 		if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
 		{
-			ERRORWINDOW_GLOBAL("Variable not set as savable");
+			ERRORWINDOW("Variable not set as savable");
 			return;
 		}
 		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
@@ -128,15 +130,14 @@ namespace suku
 	}
 
 	template<typename T>
-	void loadVar(Property<T>& _x, T _defaultValue)
+	void SaveFile::loadVar(Property<T>& _x, T _defaultValue)
 	{
 		//loadVar(_x.value_, _defaultValue);
 	}
 
 	template<typename T>
-	T loadVar(const std::string _name, T _defaultValue)
+	T SaveFile::loadVar(const std::string _name, T _defaultValue)
 	{
-		SaveAssetGlobal::getInstance().readData();
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		unsigned long long id = maths::hash(_name);
 		auto iter = dataPointerVarPool.find(id);
@@ -147,13 +148,7 @@ namespace suku
 		Var pointerInVar = (*iter).second;
 		T* pointer;
 		pointerInVar >> pointer;
+		file_->readDataPtr(id, reinterpret_cast<char*>(pointer), sizeof(T));
 		return (*pointer);
-	}
-
-	template<typename T>
-	T loadVar(const std::string _name, Property<T>& _defaultValue)
-	{
-		//return loadVar(_name, _defaultValue.value_);
-		return T();
 	}
 }

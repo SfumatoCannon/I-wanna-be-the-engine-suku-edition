@@ -13,30 +13,6 @@ namespace suku
 		refreshLoadTag();
 	}
 
-	void SaveAssetGlobal::writeData()
-	{
-		refreshLoadTag();
-		if (!saveFile_)
-		{
-			ERRORWINDOW("SaveFile is NULL");
-			return;
-		}
-		saveFile_->writeData();
-	}
-
-	void SaveAssetGlobal::readData()
-	{
-		if (loadTag_ == true)
-			return;
-		if (!saveFile_)
-		{
-			ERRORWINDOW("SaveFile is NULL");
-			return;
-		}
-		dataExistInFilePool = saveFile_->readData();
-		loadTag_ = true;
-	}
-
 	SaveAssetGlobal::SaveAssetGlobal()
 	{
 		saveFileId = 0;
@@ -69,21 +45,20 @@ namespace suku
 		file_->closeWrite();
 	}
 
-	std::map<unsigned long long, bool> SaveFile::readData()
+	void SaveFile::readData()
 	{
 		if (!file_)
 		{
 			ERRORWINDOW("SaveFile is NULL");
-			return std::map<unsigned long long, bool>();
+			return;
 		}
 		if (!file_->isExist())
 		{
 			WARNINGWINDOW("SaveFile doesn't exist in the given path: " + file_->getPath());
-			return std::map<unsigned long long, bool>();
+			return;
 		}
-		auto existenceMap = file_->readDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
+		file_->readDataPtrMap(SaveAssetGlobal::getInstance().byteDataPool);
 		file_->closeRead();
-		return existenceMap;
 	}
 
 	void SaveFile::setFileName(String _fileName)
@@ -103,12 +78,24 @@ namespace suku
 		return file_->getName();
 	}
 
+	bool SaveFile::hasValue(const std::string _name)
+	{
+		auto idList = file_->readDataPtrMapIdList();
+		unsigned long long id = maths::hash(_name);
+		for (auto& i : idList)
+		{
+			if (i.first == id)
+				return true;
+		}
+		return false;
+	}
+
 	void setSaveFile(SaveFile* _saveFile)
 	{
 		SaveAssetGlobal::getInstance().setSaveFile(_saveFile);
 	}
 
-	SaveFile* getSaveFile()
+	SaveFile* getGlobalSaveFile()
 	{
 		return SaveAssetGlobal::getInstance().getSaveFile();
 	}
@@ -118,13 +105,5 @@ namespace suku
 		unsigned long long id = maths::hash(_name);
 		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
 		return dataPointerVarPool.find(id) != dataPointerVarPool.end();
-	}
-
-	bool hasValueInFile(const std::string _name)
-	{
-		SaveAssetGlobal::getInstance().readData();
-		auto& dataExistInFilePool = SaveAssetGlobal::getInstance().dataExistInFilePool;
-		unsigned long long id = maths::hash(_name);
-		return dataExistInFilePool.find(id) != dataExistInFilePool.end() && dataExistInFilePool[id] == true;
 	}
 }
