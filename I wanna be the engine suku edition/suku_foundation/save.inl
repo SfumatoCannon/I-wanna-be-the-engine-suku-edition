@@ -109,24 +109,34 @@ namespace suku
 	template<typename T>
 	inline void SaveFile::loadVar(T& _x, T _defaultValue)
 	{
-		SaveAssetGlobal::getInstance().readData();
-		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
-		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
+		//SaveAssetGlobal::getInstance().readData();
+		//auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
+		//auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
+		//if (varIdMappingPool.find(reinterpret_cast<char*>(&_x)) == varIdMappingPool.end())
+		//{
+		//	ERRORWINDOW("Variable not set as savable");
+		//	return;
+		//}
+		//auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
+		//if (iter == dataPointerVarPool.end())
+		//{
+		//	_x = _defaultValue;
+		//	return;
+		//}
+		//Var pointerInVar = (*iter).second;
+		//T* pointer;
+		//pointerInVar >> pointer;
+		//_x = *pointer;
+		auto& idPool = SaveAssetGlobal::getInstance().varIdMappingPool;
+		auto iter = idPool.find(reinterpret_cast<char*>(&_x));
+		if (iter == idPool.end())
 		{
 			ERRORWINDOW("Variable not set as savable");
 			return;
 		}
-		auto iter = dataPointerVarPool.find(varIdMappingPool[reinterpret_cast<char*>(&_x)]);
-		if (iter == dataPointerVarPool.end())
-		{
-			_x = _defaultValue;
-			return;
-		}
-		Var pointerInVar = (*iter).second;
-		T* pointer;
-		pointerInVar >> pointer;
-		_x = *pointer;
+		unsigned long long id = (*iter);
+		auto& [dataPtr, size] = SaveAssetGlobal::getInstance().byteDataPool[id];
+		file_->readDataPtr(id, dataPtr, size);
 	}
 
 	template<typename T>

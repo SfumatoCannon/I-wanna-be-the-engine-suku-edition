@@ -213,7 +213,6 @@ namespace suku
 		std::streamsize _fileSize = ifs_.tellg();
 		if (_fileSize < 0)
 		{
-			ifs_.clear();
 			ERRORWINDOW("Failed to get file size for reading");
 			return;
 		}
@@ -406,7 +405,7 @@ namespace suku
 		return idList;
 	}
 
-	void File::readDataPtr(unsigned long long _id, char* _data, size_t _size)
+	bool File::readDataPtr(unsigned long long _id, char* _data, size_t _size)
 	{
 		if (!ifs_.is_open())
 			openForRead();
@@ -447,10 +446,16 @@ namespace suku
 				WARNINGWINDOW("Unexpected file end when reading data. File may be corrupted.");
 				break;
 			}
+			else
+			{
+				ifs_.seekg(0, std::ios::beg);
+				return true;
+			}
 		}
+		return false;
 	}
 
-	void File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
+	std::map<unsigned long long, bool> File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
 		if (!ifs_.is_open())
 			openForRead();
@@ -460,6 +465,7 @@ namespace suku
 			ifs_.seekg(0, std::ios::beg);
 		}
 		unsigned long long id = 0LL;
+		std::map<unsigned long long, bool> isRead;
 		while (true)
 		{
 			if (!ifs_.read(reinterpret_cast<char*>(&id), sizeof(unsigned long long)))
@@ -493,6 +499,11 @@ namespace suku
 				WARNINGWINDOW("Unexpected file end when reading data. File may be corrupted.");
 				break;
 			}
+			else
+			{
+				isRead[id] = true;
+			}
 		}
+		return isRead;
 	}
 }

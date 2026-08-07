@@ -103,7 +103,7 @@ namespace suku
 	bool isSavable(const std::string _name)
 	{
 		unsigned long long id = maths::hash(_name);
-		auto& dataPointerVarPool = SaveAssetGlobal::getInstance().dataPointerVarPool;
-		return dataPointerVarPool.find(id) != dataPointerVarPool.end();
+		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
+		return byteDataPool.find(id) != byteDataPool.end();
 	}
 }
