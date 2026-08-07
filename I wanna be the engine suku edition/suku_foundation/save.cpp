@@ -90,7 +90,7 @@ namespace suku
 		return false;
 	}
 
-	void setSaveFile(SaveFile* _saveFile)
+	void setGlobalSaveFile(SaveFile* _saveFile)
 	{
 		SaveAssetGlobal::getInstance().setSaveFile(_saveFile);
 	}

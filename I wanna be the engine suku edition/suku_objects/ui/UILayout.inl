@@ -91,7 +91,7 @@ namespace suku
 		}
 		else if (input::isKeyDown(VK_UP))
 		{
-			selectedElementIndex = this->elements_.size() - 1;
+			selectedElementIndex = (int)this->elements_.size() - 1;
 		}
 		this->elements_[selectedElementIndex]->select();
 		}

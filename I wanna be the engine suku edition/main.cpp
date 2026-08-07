@@ -23,7 +23,7 @@ public:
 	Room0() : Room()
 	{
 		static SaveFile save0("save123");
-		setSaveFile(&save0);
+		setGlobalSaveFile(&save0);
 
 		//create(Background(Bitmap("Image\\bg.jpg")));
 

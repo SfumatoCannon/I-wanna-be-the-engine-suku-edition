@@ -62,7 +62,7 @@ namespace suku
 		std::unique_ptr<File> file_ = nullptr;
 	};
 
-	void setSaveFile(SaveFile* _saveFile);
+	void setGlobalSaveFile(SaveFile* _saveFile);
 	SaveFile* getGlobalSaveFile();
 	template<typename T> bool setSavable(const std::string _name);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
