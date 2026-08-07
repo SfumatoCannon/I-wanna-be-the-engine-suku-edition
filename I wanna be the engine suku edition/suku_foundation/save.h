@@ -1,5 +1,4 @@
 #pragma once
-#include "var.h"
 #include <map>
 #include <utility>
 #include <windows.h>
@@ -24,11 +23,8 @@ namespace suku
 		}
 
 		std::map<unsigned long long, std::pair<char*, size_t>> byteDataPool;
-		std::map<unsigned long long, Var> dataPointerVarPool;
 		// mapping from variable address to savable_var id
 		std::map<const char*, unsigned long long> varIdMappingPool;
-		// shows the current var status in the file (after do a loading)
-		// std::map<unsigned long long, bool> dataExistInFilePool;
 
 		int saveFileId;
 
