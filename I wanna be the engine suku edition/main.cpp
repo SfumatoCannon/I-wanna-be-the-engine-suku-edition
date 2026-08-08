@@ -22,6 +22,8 @@ class Room0 : public Room
 public:
 	Room0() : Room()
 	{
+		setBackground("Image\\bg.jpg");
+
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);
 

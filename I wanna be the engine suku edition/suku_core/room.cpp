@@ -267,6 +267,11 @@ namespace suku
 		displayLayer_.beginDraw();
 		onPaintStart();
 
+		if (hasBackground_ && background_.isValid())
+		{
+			background_.paint(0, 0);
+		}
+
 		for (auto& [type, objArray] : paintArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
@@ -299,6 +304,11 @@ namespace suku
 
 		displayLayer_.beginDraw();
 		onPaintStart();
+
+		if (hasBackground_)
+		{
+			background_.paint(0, 0);
+		}
 
 		for (auto& [type, objArray] : paintArray_)
 		{
@@ -379,6 +389,15 @@ namespace suku
 	{
 		hasBGM_ = true;
 		bgm_ = _bgm;
+	}
+
+	void Room::setBackground(Bitmap _background)
+	{
+		if (!_background.isValid())
+			return;
+
+		hasBackground_ = true;
+		background_ = _background;
 	}
 
 	/*

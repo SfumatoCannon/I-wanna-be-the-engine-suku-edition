@@ -9,9 +9,6 @@
 
 namespace suku
 {
-	// Macro for initializing a sprite
-#define SPR_INIT(sprPointer, func) static Sprite* temp_##sprPointer = sprPointer = new Sprite func;
-
 	class SpriteElement;
 	class BitmapSpriteElement;
 	class ShapeSpriteElement;

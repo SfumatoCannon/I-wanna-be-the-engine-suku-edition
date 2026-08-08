@@ -296,9 +296,14 @@ namespace suku
 		bytesPerPixel_ = 0;
 		if (SUCCEEDED(hr))
 		{
+			isValid_ = true;
 			Array2D<Color> pixelArray(width_, height_);
 			_bitmap.getPixelDetail(pixelArray);
 			updatePixelDetail(pixelArray);
+		}
+		else
+		{
+			isValid_ = false;
 		}
 
 		return *this;
@@ -317,6 +322,7 @@ namespace suku
 		wicBitmap_ = std::move(_bitmap.wicBitmap_);
 		d2dBitmap_ = std::move(_bitmap.d2dBitmap_);
 		bytesPerPixel_ = _bitmap.bytesPerPixel_;
+		isValid_ = _bitmap.isValid_;
 
 		_bitmap.wicBitmap_.Reset();
 		_bitmap.d2dBitmap_.Reset();
