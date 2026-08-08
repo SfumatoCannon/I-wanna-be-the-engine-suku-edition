@@ -10,7 +10,7 @@ namespace suku
 		setPaintId(1000);
 	}
 
-	void PausePage::update()
+	void PausePage::onUpdate()
 	{
 		if (input::isKeyDown(input::VK_P))
 		{

@@ -7,7 +7,7 @@ namespace suku
 	{
 	}
 
-	void UIElement::update()
+	void UIElement::onUpdate()
 	{
 	}
 

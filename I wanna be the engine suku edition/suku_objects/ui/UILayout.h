@@ -17,7 +17,7 @@ namespace suku
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
 		virtual void onRemove() override;
-		virtual void postUpdate() override;
+		virtual void onPostUpdate() override;
 		virtual bool onPaint() override { return false; }
 	protected:
 		std::vector<T*> elements_;
@@ -35,7 +35,7 @@ namespace suku
 		virtual bool deselect() override;
 		virtual bool isSelected() const override { return isSelected_; }
 
-		virtual void postUpdate() override;
+		virtual void onPostUpdate() override;
 	private:
 		bool isSelected_ = false;
 		int selectedElementIndex = 0;

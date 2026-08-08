@@ -70,9 +70,9 @@ namespace suku
 		virtual void onRestarting() { x = spawnX; y = spawnY; }
 		virtual void onRemove() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
-		virtual void preUpdate() {}
-		virtual void update() {}
-		virtual void postUpdate() {}
+		virtual void onPreUpdate() {}
+		virtual void onUpdate() {}
+		virtual void onPostUpdate() {}
 
 		float totalHspeed()const;
 		float totalVspeed()const;

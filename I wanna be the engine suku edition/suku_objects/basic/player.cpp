@@ -158,7 +158,7 @@ namespace suku
 		}
 	}
 
-	void Player::preUpdate()
+	void Player::onPreUpdate()
 	{
 		using namespace suku::input;
 		if (isKeyDown(VK_R))
@@ -290,7 +290,7 @@ namespace suku
 			vspeed = 9.4f;
 	}
 
-	void Player::update()
+	void Player::onUpdate()
 	{
 		if (!isAlive())
 			return;
@@ -308,7 +308,7 @@ namespace suku
 			hspeed = hspeedTemp = 0;
 	}
 
-	void Player::postUpdate()
+	void Player::onPostUpdate()
 	{
 		if (getCrashedObject<Spike>() || getCrashedObject<Cherry>())
 		{
@@ -353,7 +353,7 @@ namespace suku
 		gravity = 0.2f;
 	}
 
-	void Blood::preUpdate()
+	void Blood::onPreUpdate()
 	{
 		if (input::isKeyDown(input::VK_R))
 			destroy();
@@ -362,7 +362,7 @@ namespace suku
 		vspeed += gravity;
 	}
 
-	void Blood::update()
+	void Blood::onUpdate()
 	{
 		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
 

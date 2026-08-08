@@ -148,13 +148,13 @@ namespace suku
 			obj->hspeedTemp = obj->vspeedTemp = 0;
 			obj->updateFunction();
 			obj->spriteTransformLastFrame_ = obj->transform;
-			obj->preUpdate();
-			obj->update();
+			obj->onPreUpdate();
+			obj->onUpdate();
 			obj->xLastFrame_ = obj->x;
 			obj->yLastFrame_ = obj->y;
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
-			obj->postUpdate();
+			obj->onPostUpdate();
 			obj->x.addTick();
 			obj->y.addTick();
 			return;
@@ -201,7 +201,7 @@ namespace suku
 				obj->spriteTransformLastFrame_ = obj->transform;
 				if (!obj->isFrozen())
 				{
-					obj->preUpdate();
+					obj->onPreUpdate();
 				}
 				iter++;
 			}
@@ -219,7 +219,7 @@ namespace suku
 				}
 				if (!obj->isFrozen())
 				{
-					obj->update();
+					obj->onUpdate();
 				}
 				iter++;
 			}
@@ -251,7 +251,7 @@ namespace suku
 				}
 				if (!obj->isFrozen())
 				{
-					obj->postUpdate();
+					obj->onPostUpdate();
 					obj->x.addTick();
 					obj->y.addTick();
 				}

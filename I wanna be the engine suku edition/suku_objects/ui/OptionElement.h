@@ -24,7 +24,7 @@ namespace suku
 		virtual bool deselect() override { isSelected_ = false; return true; }
 		virtual bool isSelected() const override { return isSelected_; }
 
-		virtual void update() override { onUpdateFunc_(this); }
+		virtual void onUpdate() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }
 
 		void setHeight(int _height) { height_ = originalHeight_ = _height; }
