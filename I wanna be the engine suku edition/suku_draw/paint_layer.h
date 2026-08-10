@@ -30,7 +30,7 @@ namespace suku
 		void clear();
 		void clear(Color _backgroundcolor);
 
-		void pushBasicTransform(Transform _transform);
+		void setBasicTransform(Transform _transform);
 		void popBasicTransform();
 		std::vector<Transform> getBasicTransformStack();
 		Transform getBasicTransform();
@@ -52,7 +52,7 @@ namespace suku
 	private:
 		static std::stack<PaintLayer*> currentPaintLayerPtrStack_;
 		static std::stack<ComPtr<ID2D1Bitmap1>> currentLayerStateStack_;
-		std::vector<Transform> basicTransformStack_;
+		Transform basicTransform_;
 		ComPtr<ID2D1Bitmap1> pLayerBitmap_;
 		UINT width_ = 0;
 		UINT height_ = 0;

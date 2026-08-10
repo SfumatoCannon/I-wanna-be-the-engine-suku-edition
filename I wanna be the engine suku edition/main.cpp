@@ -88,7 +88,7 @@ public:
 		create(Spike(32, 128), Wall(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
-		displayLayer_.pushBasicTransform(rotation(0,0,15.0));
+		displayLayer.setBasicTransform(rotation(0,0,15.0));
 		// setBGM(&suku::SoundPool::musGuyRock);
 	}
 

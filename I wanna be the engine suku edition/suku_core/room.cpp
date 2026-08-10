@@ -13,7 +13,7 @@ namespace suku
 		static unsigned int roomIdCounter = 0;
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
-		displayLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical);
+		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
@@ -264,7 +264,7 @@ namespace suku
 
 	void Room::paint()
 	{
-		displayLayer_.beginDraw();
+		displayLayer.beginDraw();
 		onPaintStart();
 
 		if (hasBackground_ && background_.isValid())
@@ -290,7 +290,7 @@ namespace suku
 		}
 
 		onPaintEnd();
-		auto pic = displayLayer_.endDraw();
+		auto pic = displayLayer.endDraw();
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
@@ -302,7 +302,7 @@ namespace suku
 		if (isUpdatePaused_)
 			_offsetRate = 0.0f;
 
-		displayLayer_.beginDraw();
+		displayLayer.beginDraw();
 		onPaintStart();
 
 		if (hasBackground_)
@@ -357,7 +357,7 @@ namespace suku
 			}
 		}
 		onPaintEnd();
-		auto pic = displayLayer_.endDraw();
+		auto pic = displayLayer.endDraw();
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);

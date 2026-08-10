@@ -69,35 +69,14 @@ namespace suku
 		endDraw();
 	}
 
-	void PaintLayer::pushBasicTransform(Transform _transform)
+	void PaintLayer::setBasicTransform(Transform _transform)
 	{
-		basicTransformStack_.push_back(_transform);
-	}
-
-	void PaintLayer::popBasicTransform()
-	{
-		if (basicTransformStack_.empty())
-		{
-			return;
-		}
-		basicTransformStack_.pop_back();
-	}
-
-	std::vector<Transform> PaintLayer::getBasicTransformStack()
-	{
-		return basicTransformStack_;
+		basicTransform_ = _transform;
 	}
 
 	Transform PaintLayer::getBasicTransform()
 	{
-		Transform result = Transform();
-		if (basicTransformStack_.empty())
-			return result;
-		for (auto& i : basicTransformStack_)
-		{
-			result = result + i;
-		}
-		return result;
+		return basicTransform_;
 	}
 
 	void PaintLayer::drawBitmap(Bitmap& _bitmap, float _x, float _y, float _alpha)

@@ -50,7 +50,7 @@ namespace suku
 
 		virtual void onEntering() {}
 		virtual void onRestart() {}
-		virtual void onPaintStart() { displayLayer_.clear(); }
+		virtual void onPaintStart() { displayLayer.clear(); }
 		virtual void onPaintEnd() {}
 		virtual void onUpdateStart() {}
 		virtual void onUpdateEnd() {}
@@ -90,7 +90,7 @@ namespace suku
 		Bitmap background_ = Bitmap();
 
 	protected:
-		PaintLayer displayLayer_;
+		PaintLayer displayLayer;
 
 		float backgroundOffsetX = 0.0f;
 		float backgroundOffsetY = 0.0f;
