@@ -348,17 +348,27 @@ namespace suku
 		flipTime_ = _speed;
 	}
 
-	SpriteElement* Sprite::getFrameState(int _frameTick)const
+	SpriteElement* Sprite::getFrameState(long long _frameTick)const
 	{
 		if (bodyList.empty())
 			return nullptr;
 		else return bodyList[_frameTick / flipTime_ % bodyList.size()];
 	}
 
-	UINT Sprite::getFrameStateIndex(int _frameTick) const
+	SpriteElement* Sprite::getFrameState(long double _frameTick) const
+	{
+		return getFrameState(static_cast<long long>(_frameTick));
+	}
+
+	UINT Sprite::getFrameStateIndex(long long _frameTick) const
 	{
 		if (bodyList.empty())
 			return 0;
 		else return _frameTick / flipTime_ % bodyList.size();
+	}
+
+	UINT Sprite::getFrameStateIndex(long double _frameTick) const
+	{
+		return getFrameStateIndex(static_cast<long long>(_frameTick));
 	}
 }

@@ -11,6 +11,7 @@ namespace suku
 {
 	using namespace suku::graphics;
 
+	std::stack<PaintLayer*> PaintLayer::currentPaintLayerPtrStack_;
 	std::stack<ComPtr<ID2D1Bitmap1>> PaintLayer::currentLayerStateStack_;
 
 	void PaintLayer::newLayer(UINT _width, UINT _height)
@@ -21,6 +22,7 @@ namespace suku
 	void PaintLayer::beginDraw()
 	{
 		currentLayerStateStack_.push(pLayerBitmap_);
+		currentPaintLayerPtrStack_.push(this);
 		pD2DContext->SetTarget(pLayerBitmap_.Get());
 	}
 
@@ -40,6 +42,7 @@ namespace suku
 		else
 		{
 			currentLayerStateStack_.pop();
+			currentPaintLayerPtrStack_.pop();
 		}
 
 		if (currentLayerStateStack_.empty())
@@ -66,13 +69,41 @@ namespace suku
 		endDraw();
 	}
 
+	void PaintLayer::pushBasicTransform(Transform _transform)
+	{
+		basicTransformStack_.push_back(_transform);
+	}
+
+	void PaintLayer::popBasicTransform()
+	{
+		if (basicTransformStack_.empty())
+		{
+			return;
+		}
+		basicTransformStack_.pop_back();
+	}
+
+	std::vector<Transform> PaintLayer::getBasicTransformStack()
+	{
+		return basicTransformStack_;
+	}
+
+	Transform PaintLayer::getBasicTransform()
+	{
+		Transform result = Transform();
+		if (basicTransformStack_.empty())
+			return result;
+		for (auto& i : basicTransformStack_)
+		{
+			result = result + i;
+		}
+		return result;
+	}
+
 	void PaintLayer::drawBitmap(Bitmap& _bitmap, float _x, float _y, float _alpha)
 	{
 		beginDraw();
 		_bitmap.paint(_x, _y, _alpha);
-			//pD2DContext->SetTransform(translation(_x, _y).matrix);
-			//pD2DContext->DrawBitmap(_bitmap.getD2DBitmap().Get(),
-			//	D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 		endDraw();
 	}
 
@@ -80,9 +111,6 @@ namespace suku
 	{
 		beginDraw();
 		_bitmap.paint(_x, _y, _transform, _alpha);
-			//pD2DContext->SetTransform((translation(_x, _y) + _transform).matrix);
-			//pD2DContext->DrawBitmap(_bitmap.getD2DBitmap().Get(),
-			//	D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 		endDraw();
 	}
 
@@ -90,9 +118,6 @@ namespace suku
 	{
 		beginDraw();
 		_bitmap.paint(_transform, _alpha);
-			//pD2DContext->SetTransform(_transform.matrix);
-			//pD2DContext->DrawBitmap(_bitmap.getD2DBitmap().Get(),
-			//	D2D1::RectF(0, 0, (float)_bitmap.getWidth(), (float)_bitmap.getHeight()), _alpha);
 		endDraw();
 	}
 
@@ -148,5 +173,12 @@ namespace suku
 		if (_fillBrush)
 			pD2DContext->FillGeometry(_shape.currentGeometry.Get(), _fillBrush.Get());
 		endDraw();
+	}
+
+	PaintLayer* PaintLayer::getCurrentPaintLayer()
+	{
+		if (currentPaintLayerPtrStack_.empty())
+			return nullptr;
+		return currentPaintLayerPtrStack_.top();
 	}
 }

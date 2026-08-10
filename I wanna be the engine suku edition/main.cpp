@@ -88,13 +88,14 @@ public:
 		create(Spike(32, 128), Wall(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
-
+		displayLayer_.pushBasicTransform(rotation(0,0,15.0));
 		// setBGM(&suku::SoundPool::musGuyRock);
 	}
 
 	virtual void onPaintStart()override
 	{
 		Room::onPaintStart();
+		
 		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
 		//auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));

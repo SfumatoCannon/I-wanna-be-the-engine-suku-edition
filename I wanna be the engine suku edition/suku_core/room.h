@@ -72,7 +72,6 @@ namespace suku
 	private:
 		unsigned int roomId_;
 		String alias_ = L"";
-		PaintLayer displayLayer_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
 		std::unique_ptr<ObjectCollisionPool> collisionPool_;
 		std::map<double, std::list<std::shared_ptr<Object>>> preUpdateArray_;
@@ -89,6 +88,15 @@ namespace suku
 
 		bool hasBackground_ = false;
 		Bitmap background_ = Bitmap();
+
+	protected:
+		PaintLayer displayLayer_;
+
+		float backgroundOffsetX = 0.0f;
+		float backgroundOffsetY = 0.0f;
+
+		float cameraX = 0.0f;
+		float cameraY = 0.0f;
 	};
 }
 
