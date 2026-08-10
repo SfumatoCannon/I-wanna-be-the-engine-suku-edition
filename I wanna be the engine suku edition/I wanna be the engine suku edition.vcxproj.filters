@@ -87,9 +87,6 @@
     <ClInclude Include="suku_foundation\save.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_foundation\type_tree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="suku_foundation\var.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -211,6 +208,21 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_sounds\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_foundation\update_id_register.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_foundation\suku_type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_sounds\audio_core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_sounds\suku_sound_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_core\camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -563,6 +575,9 @@
     <ClCompile Include="suku_sounds\suku_sounds.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="suku_sounds\audio_core.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="I wanna be the engine suku edition.rc">
@@ -580,9 +595,6 @@
       <Filter>头文件</Filter>
     </None>
     <None Include="suku_foundation\var.inl">
-      <Filter>头文件</Filter>
-    </None>
-    <None Include="suku_foundation\type_tree.inl">
       <Filter>头文件</Filter>
     </None>
     <None Include="suku_draw\scale_mode.inl">
@@ -607,6 +619,9 @@
       <Filter>头文件</Filter>
     </None>
     <None Include="suku_objects\ui\UILayout.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="suku_foundation\suku_type.inl">
       <Filter>头文件</Filter>
     </None>
   </ItemGroup>

@@ -4,16 +4,20 @@
 #include "../suku_draw/draw_core.h"
 #include "../suku_gamewindow/game_window.h"
 #include "object_collision_pool.h"
+#include <suku_foundation/maths.h>
 
 namespace suku
 {
-	Room::Room()
-		: collisionPool_(std::make_unique<ObjectCollisionPool>())
+	Room::Room() : Room(constants::window::widthLogical, constants::window::heightLogical) {}
+
+	Room::Room(unsigned int _width, unsigned int _height)
+		: width_(_width), height_(_height),
+		collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
 		static unsigned int roomIdCounter = 0;
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
-		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
+		displayLayer.newLayer(width_, height_);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
@@ -269,7 +273,20 @@ namespace suku
 
 		if (hasBackground_ && background_.isValid())
 		{
-			background_.paint(0, 0);
+			double backgroundStartX = maths::modR((double)backgroundOffsetX, width_);
+			double backgroundStartY = maths::modR((double)backgroundOffsetY, height_);
+			if (backgroundStartX > 0)
+				backgroundStartX -= static_cast<double>(GameWindow::getLogicalWidth());
+			if (backgroundStartY > 0)
+				backgroundStartY -= static_cast<double>(GameWindow::getLogicalHeight());
+			auto [backgroundWidth, backgroundHeight] = background_.getSize();
+			for (float x = backgroundStartX; x < width_; x += backgroundWidth)
+			{
+				for (float y = backgroundStartY; y < height_; y += backgroundHeight)
+				{
+					background_.paint(x, y);
+				}
+			}
 		}
 
 		for (auto& [type, objArray] : paintArray_)
@@ -305,9 +322,22 @@ namespace suku
 		displayLayer.beginDraw();
 		onPaintStart();
 
-		if (hasBackground_)
+		if (hasBackground_ && background_.isValid())
 		{
-			background_.paint(0, 0);
+			double backgroundStartX = maths::modR((double)backgroundOffsetX, width_);
+			double backgroundStartY = maths::modR((double)backgroundOffsetY, height_);
+			if (backgroundStartX > 0)
+				backgroundStartX -= static_cast<double>(GameWindow::getLogicalWidth());
+			if (backgroundStartY > 0)
+				backgroundStartY -= static_cast<double>(GameWindow::getLogicalHeight());
+			auto [backgroundWidth, backgroundHeight] = background_.getSize();
+			for (double x = backgroundStartX; x < width_; x += backgroundWidth)
+			{
+				for (double y = backgroundStartY; y < height_; y += backgroundHeight)
+				{
+					background_.paint(x, y);
+				}
+			}
 		}
 
 		for (auto& [type, objArray] : paintArray_)

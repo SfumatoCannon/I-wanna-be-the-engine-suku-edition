@@ -19,6 +19,11 @@ namespace suku
 	{
 	public:
 		Room();
+		Room(unsigned int _width, unsigned int _height);
+
+		unsigned int getWidth() { return width_; }
+		unsigned int getHeight() { return height_; }
+
 		unsigned int getRoomId() const { return roomId_; }
 
 		template<suku_object Obj> std::list<Obj*> getObjectList();
@@ -70,6 +75,9 @@ namespace suku
 		void setBackground(Bitmap _background);
 		Bitmap getBackground() { return background_; }
 	private:
+		unsigned int width_;
+		unsigned int height_;
+
 		unsigned int roomId_;
 		String alias_ = L"";
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
