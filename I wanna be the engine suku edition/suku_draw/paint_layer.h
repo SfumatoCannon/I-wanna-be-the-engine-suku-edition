@@ -31,8 +31,6 @@ namespace suku
 		void clear(Color _backgroundcolor);
 
 		void setBasicTransform(Transform _transform);
-		void popBasicTransform();
-		std::vector<Transform> getBasicTransformStack();
 		Transform getBasicTransform();
 
 		void drawBitmap(Bitmap& _bitmap, float _x, float _y, float _alpha = 1.0f);

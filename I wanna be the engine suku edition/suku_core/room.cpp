@@ -18,6 +18,7 @@ namespace suku
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
 		displayLayer.newLayer(width_, height_);
+		backgroundLayer_.newLayer(width_, height_);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
@@ -400,6 +401,7 @@ namespace suku
 
 	void Room::paintBackground()
 	{
+		backgroundLayer_.beginDraw();
 		if (hasBackground_ && background_.isValid())
 		{
 			double backgroundStartX = maths::modR((double)backgroundOffsetX, width_);
@@ -417,6 +419,7 @@ namespace suku
 				}
 			}
 		}
+		backgroundLayer_.endDraw().paint(0, 0);
 	}
 
 	/*
