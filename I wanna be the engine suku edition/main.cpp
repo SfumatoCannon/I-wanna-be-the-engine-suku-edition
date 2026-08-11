@@ -94,6 +94,9 @@ public:
 
 	virtual void onPaintStart()override
 	{
+		backgroundOffsetX += 0.5;
+		backgroundOffsetY += 0.2;
+
 		Room::onPaintStart();
 		
 		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));

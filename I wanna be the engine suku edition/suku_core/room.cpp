@@ -404,13 +404,13 @@ namespace suku
 		backgroundLayer_.beginDraw();
 		if (hasBackground_ && background_.isValid())
 		{
-			double backgroundStartX = maths::modR((double)backgroundOffsetX, width_);
-			double backgroundStartY = maths::modR((double)backgroundOffsetY, height_);
-			if (backgroundStartX > 0)
-				backgroundStartX -= static_cast<double>(GameWindow::getLogicalWidth());
-			if (backgroundStartY > 0)
-				backgroundStartY -= static_cast<double>(GameWindow::getLogicalHeight());
 			auto [backgroundWidth, backgroundHeight] = background_.getSize();
+			double backgroundStartX = maths::modR((double)backgroundOffsetX, backgroundWidth);
+			double backgroundStartY = maths::modR((double)backgroundOffsetY, backgroundHeight);
+			if (backgroundStartX > 0)
+				backgroundStartX -= backgroundWidth;
+			if (backgroundStartY > 0)
+				backgroundStartY -= backgroundHeight;
 			for (double x = backgroundStartX; x < width_; x += backgroundWidth)
 			{
 				for (double y = backgroundStartY; y < height_; y += backgroundHeight)
