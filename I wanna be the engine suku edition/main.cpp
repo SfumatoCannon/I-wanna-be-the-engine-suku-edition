@@ -88,7 +88,7 @@ public:
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 		// setBGM(&suku::SoundPool::musGuyRock);
-		camera.x = {64, Transition(100.0, TransitionCurve::easeInOutExpo)};
+		camera.angle = {720, Transition(100.0, TransitionCurve::easeOutExpo)};
 	}
 
 	virtual void onPaintStart()override

@@ -25,6 +25,9 @@ namespace suku
 		static const TransitionCurve easeInExpo;
 		static const TransitionCurve easeOutExpo;
 		static const TransitionCurve easeInOutExpo;
+		static TransitionCurve easeInExpoWithK(double _k);
+		static TransitionCurve easeOutExpoWithK(double _k);
+		static TransitionCurve easeInOutExpoWithK(double _k);
 	private:
 		std::function<double(double)> function_;
 	};
