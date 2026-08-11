@@ -33,6 +33,7 @@ namespace suku
 		T getExpectedValue() const;
 		T getFrameState() const { return frameState_; }
 		T getLastFrameState() const { return lastFrameState_; }
+		T getInterpolatedFrameState(float _offsetRate) const;
 		void updateFrameState();
 		void addTick(double _ticks = 1.0);
 	private:

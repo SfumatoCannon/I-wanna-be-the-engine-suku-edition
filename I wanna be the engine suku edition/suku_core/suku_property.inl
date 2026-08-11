@@ -163,6 +163,12 @@ namespace suku
 	}
 
 	template<suku_property_type T>
+	inline T Property<T>::getInterpolatedFrameState(float _offsetRate) const
+	{
+		return getLastFrameState() * (1 - _offsetRate) + getFrameState() * _offsetRate;
+	}
+
+	template<suku_property_type T>
 	inline void Property<T>::updateFrameState()
 	{
 		if (!isTranslating_ && forceUpdateTag_)

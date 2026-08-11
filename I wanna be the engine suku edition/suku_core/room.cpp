@@ -12,13 +12,14 @@ namespace suku
 
 	Room::Room(unsigned int _width, unsigned int _height)
 		: width_(_width), height_(_height),
+		camera(constants::window::widthLogical, constants::window::heightLogical),
 		collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
 		static unsigned int roomIdCounter = 0;
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
-		displayLayer.newLayer(width_, height_);
-		backgroundLayer_.newLayer(width_, height_);
+		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
+		backgroundLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
@@ -265,11 +266,20 @@ namespace suku
 		}
 
 		onUpdateEnd();
+
+		camera.x.addTick();
+		camera.y.addTick();
+		camera.angle.addTick();
 	}
 
 	void Room::paint()
 	{
 		displayLayer.beginDraw();
+		displayLayer.setBasicTransform(
+			translation(-camera.x, -camera.y) 
+			+ rotation(camera.getCenterX(), camera.getCenterY(), -camera.angle)
+		);
+
 		onPaintStart();
 
 		paintBackground();
@@ -305,6 +315,16 @@ namespace suku
 			_offsetRate = 0.0f;
 
 		displayLayer.beginDraw();
+
+		float cameraX = camera.x.getInterpolatedFrameState(_offsetRate);
+		float cameraY = camera.y.getInterpolatedFrameState(_offsetRate);
+		float cameraAngle = camera.angle.getInterpolatedFrameState(_offsetRate);
+
+		displayLayer.setBasicTransform(
+			translation(-cameraX, -cameraY)
+			+ rotation(camera.getCenterX(), camera.getCenterY(), -cameraAngle)
+		);
+
 		onPaintStart();
 
 		paintBackground();
@@ -330,10 +350,12 @@ namespace suku
 				Transform transform;
 				if (obj->isPositionTransitionalFrame_)
 				{
-					float objXLastFrame = obj->x.getLastFrameState();
-					float objYLastFrame = obj->y.getLastFrameState();
-					posX = objXLastFrame * (1 - _offsetRate) + obj->x.getFrameState() * _offsetRate;
-					posY = objYLastFrame * (1 - _offsetRate) + obj->y.getFrameState() * _offsetRate;
+					//float objXLastFrame = obj->x.getLastFrameState();
+					//float objYLastFrame = obj->y.getLastFrameState();
+					//posX = objXLastFrame * (1 - _offsetRate) + obj->x.getFrameState() * _offsetRate;
+					//posY = objYLastFrame * (1 - _offsetRate) + obj->y.getFrameState() * _offsetRate;
+					posX = obj->x.getInterpolatedFrameState(_offsetRate);
+					posY = obj->y.getInterpolatedFrameState(_offsetRate);
 				}
 				else
 				{

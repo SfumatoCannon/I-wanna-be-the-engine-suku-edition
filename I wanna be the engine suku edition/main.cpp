@@ -75,7 +75,6 @@ public:
 			return true;
 			}
 		);
-		auto pair = std::make_pair<double, Transition>(400, Transition(500.0, TransitionCurve::linear));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
 		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
@@ -88,14 +87,14 @@ public:
 		create(Spike(32, 128), Wall(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
-		displayLayer.setBasicTransform(rotation(0,0,15.0));
 		// setBGM(&suku::SoundPool::musGuyRock);
+		camera.x = {64, Transition(100.0, TransitionCurve::easeInOutExpo)};
 	}
 
 	virtual void onPaintStart()override
 	{
-		backgroundOffsetX += 0.5;
-		backgroundOffsetY += 0.2;
+		backgroundOffsetX += 0.2;
+		backgroundOffsetY += 0.5;
 
 		Room::onPaintStart();
 		

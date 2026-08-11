@@ -4,10 +4,10 @@
 #include <map>
 #include <memory>
 #include "../suku_foundation/suku_string.h"
-#include "../suku_constants.h"
 #include "suku_core_concepts.h"
 #include <suku_draw/bitmap.h>
 #include <suku_sounds/suku_sounds.h>
+#include "camera.h"
 
 namespace suku
 {
@@ -18,6 +18,8 @@ namespace suku
 	class Room
 	{
 	public:
+		Camera camera;
+
 		Room();
 		Room(unsigned int _width, unsigned int _height);
 
@@ -103,9 +105,6 @@ namespace suku
 
 		float backgroundOffsetX = 0.0f;
 		float backgroundOffsetY = 0.0f;
-
-		float cameraX = 0.0f;
-		float cameraY = 0.0f;
 	};
 }
 
