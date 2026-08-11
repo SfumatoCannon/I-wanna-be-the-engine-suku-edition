@@ -126,7 +126,7 @@ namespace suku
 			auto basicTransform = paintLayer ? paintLayer->getBasicTransform() : Transform();
 			pD2DContext->SetTransform((basicTransform + _transform).matrix);
 		}
-
+		
 		ComPtr<ID2D1SolidColorBrush> createSolidColorBrush(Color _color)
 		{
 			ComPtr<ID2D1SolidColorBrush> brush;
