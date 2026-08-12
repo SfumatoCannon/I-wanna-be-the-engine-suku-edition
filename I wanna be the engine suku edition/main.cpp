@@ -20,7 +20,7 @@ public:
 class Room0 : public Room
 {
 public:
-	Room0() : Room()
+	Room0() : Room(2000, 1216)
 	{
 		setBackground("Image\\bg.jpg");
 

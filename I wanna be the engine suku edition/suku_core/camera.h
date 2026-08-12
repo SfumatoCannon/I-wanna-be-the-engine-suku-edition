@@ -31,6 +31,19 @@ namespace suku
 		void setBind(std::function<void(Camera*)> _func);
 		void resetBind();
 
+		struct CameraBorder
+		{
+			float top;
+			float left;
+			float bottom;
+			float right;
+		};
+
+		CameraBorder getBorder();
+		void setBorder(float _top, float _left, float _bottom, float _right);
+		void resetBorder();
+
+
 		static std::function<void(Camera*)> follow(Object* _object, float _velocity /* 0 ~ 1 */);
 
 		Property<float> x = 0.0f;
@@ -43,5 +56,9 @@ namespace suku
 		float height_ = constants::window::heightLogical;
 		float centerX_ = constants::window::widthLogical / 2;
 		float centerY_ = constants::window::heightLogical / 2;
+		float borderTop_ = 0.0f;
+		float borderBottom_ = FLT_MAX;
+		float borderLeft_ = 0.0f;
+		float borderRight_ = FLT_MAX;
 	};
 }

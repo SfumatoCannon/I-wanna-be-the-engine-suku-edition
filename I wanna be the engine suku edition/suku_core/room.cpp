@@ -20,6 +20,7 @@ namespace suku
 		roomId_ = roomIdCounter;
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 		backgroundLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical);
+		camera.setBorder(0, 0, _height, _width);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
