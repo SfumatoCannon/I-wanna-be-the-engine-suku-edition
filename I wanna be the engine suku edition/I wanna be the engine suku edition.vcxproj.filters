@@ -578,6 +578,9 @@
     <ClCompile Include="suku_sounds\audio_core.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="suku_core\camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="I wanna be the engine suku edition.rc">

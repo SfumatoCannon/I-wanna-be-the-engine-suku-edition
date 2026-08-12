@@ -2,6 +2,7 @@
 
 #include "../suku_constants.h"
 #include "suku_property.h"
+#include <functional>
 
 namespace suku
 {
@@ -25,10 +26,19 @@ namespace suku
 		void setCenterX(float _centerX) { centerX_ = _centerX; }
 		void setCenterY(float _centerY) { centerY_ = _centerY; }
 
+		void update();
+		bool isBinded() { return isBinded_; }
+		void setBind(std::function<void(Camera*)> _func);
+		void resetBind();
+
+		static std::function<void(Camera*)> follow(Object* _object, float _velocity /* 0 ~ 1 */);
+
 		Property<float> x = 0.0f;
 		Property<float> y = 0.0f;
 		Property<float> angle = 0.0f;
 	private:
+		std::function<void(Camera*)> bindFunc_;
+		bool isBinded_ = false;
 		float width_ = constants::window::widthLogical;
 		float height_ = constants::window::heightLogical;
 		float centerX_ = constants::window::widthLogical / 2;

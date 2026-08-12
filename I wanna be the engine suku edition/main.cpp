@@ -36,7 +36,7 @@ public:
 
 		//create(Wall(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
-		create<Player>(0.f, 0.f);
+		Player* p = create<Player>(0.f, 0.f).get();
 		int x = 0;
 		setSavable<int>("test");
 		if (!getGlobalSaveFile()->hasValue("test"))
@@ -88,7 +88,8 @@ public:
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 		// setBGM(&suku::SoundPool::musGuyRock);
-		camera.angle = {720, Transition(100.0, TransitionCurve::easeOutExpo)};
+		//camera.angle = {720, Transition(100.0, TransitionCurve::easeOutExpo)};
+		camera.setBind(Camera::follow(p, 0.2));
 	}
 
 	virtual void onPaintStart()override

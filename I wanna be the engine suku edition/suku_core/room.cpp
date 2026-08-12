@@ -267,6 +267,7 @@ namespace suku
 
 		onUpdateEnd();
 
+		camera.update();
 		camera.x.addTick();
 		camera.y.addTick();
 		camera.angle.addTick();
