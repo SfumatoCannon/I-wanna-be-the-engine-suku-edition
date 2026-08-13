@@ -221,10 +221,12 @@
     <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_objects\ui\interfaces\ISelectable.h" />
     <ClInclude Include="suku_objects\ui\OptionElement.h" />
+    <ClInclude Include="suku_objects\ui\presets\ConfigPage.h" />
     <ClInclude Include="suku_objects\ui\presets\PausePage.h" />
     <ClInclude Include="suku_objects\ui\UIElement.h" />
     <ClInclude Include="suku_objects\ui\UILayout.h" />
     <ClInclude Include="suku_preset_rooms\RoomConfigPage.hpp" />
+    <ClInclude Include="suku_preset_rooms\RoomTitle.hpp" />
     <ClInclude Include="suku_sounds\audio_core.h" />
     <ClInclude Include="suku_sounds\includes.h" />
     <ClInclude Include="suku_sounds\suku_sound_pool.h" />

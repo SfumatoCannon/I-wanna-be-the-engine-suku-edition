@@ -194,7 +194,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : preUpdateArray_)
+		for (auto& [id, objArray] : preUpdateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -213,7 +213,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : updateArray_)
+		for (auto& [id, objArray] : updateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -231,7 +231,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : objectPointerArray_)
+		for (auto& [id, objArray] : objectPointerArray_)
 		{
 			for (auto& obj : objArray)
 			{
@@ -245,7 +245,7 @@ namespace suku
 			}
 		}
 
-		for (auto& [type, objArray] : postUpdateArray_)
+		for (auto& [id, objArray] : postUpdateArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -285,7 +285,7 @@ namespace suku
 
 		paintBackground();
 
-		for (auto& [type, objArray] : paintArray_)
+		for (auto& [id, objArray] : paintArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -295,6 +295,13 @@ namespace suku
 					iter = objArray.erase(iter);
 					continue;
 				}
+
+				if (!obj->isVisible)
+				{
+					iter++;
+					continue;
+				}
+
 				if (!obj->onPaint())
 					obj->paintBody();
 
@@ -330,7 +337,7 @@ namespace suku
 
 		paintBackground();
 
-		for (auto& [type, objArray] : paintArray_)
+		for (auto& [id, objArray] : paintArray_)
 		{
 			for (auto iter = objArray.begin(); iter != objArray.end();)
 			{
@@ -338,6 +345,12 @@ namespace suku
 				if (obj->removeTag_)
 				{
 					iter = objArray.erase(iter);
+					continue;
+				}
+
+				if (!obj->isVisible)
+				{
+					iter++;
 					continue;
 				}
 
@@ -351,10 +364,6 @@ namespace suku
 				Transform transform;
 				if (obj->isPositionTransitionalFrame_)
 				{
-					//float objXLastFrame = obj->x.getLastFrameState();
-					//float objYLastFrame = obj->y.getLastFrameState();
-					//posX = objXLastFrame * (1 - _offsetRate) + obj->x.getFrameState() * _offsetRate;
-					//posY = objYLastFrame * (1 - _offsetRate) + obj->y.getFrameState() * _offsetRate;
 					posX = obj->x.getInterpolatedFrameState(_offsetRate);
 					posY = obj->y.getInterpolatedFrameState(_offsetRate);
 				}
