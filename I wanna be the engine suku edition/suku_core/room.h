@@ -98,7 +98,6 @@ namespace suku
 
 		bool hasBackground_ = false;
 		Bitmap background_ = Bitmap();
-		PaintLayer backgroundLayer_;
 		void paintBackground();
 	protected:
 		PaintLayer displayLayer;

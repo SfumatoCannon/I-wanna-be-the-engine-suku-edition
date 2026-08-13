@@ -19,7 +19,6 @@ namespace suku
 		roomIdCounter++;
 		roomId_ = roomIdCounter;
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
-		backgroundLayer_.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 		camera.setBorder(0, 0, _height, _width);
 	}
 
@@ -425,7 +424,6 @@ namespace suku
 
 	void Room::paintBackground()
 	{
-		backgroundLayer_.beginDraw();
 		if (hasBackground_ && background_.isValid())
 		{
 			auto [backgroundWidth, backgroundHeight] = background_.getSize();
@@ -443,7 +441,6 @@ namespace suku
 				}
 			}
 		}
-		backgroundLayer_.endDraw().paint(0, 0);
 	}
 
 	/*
