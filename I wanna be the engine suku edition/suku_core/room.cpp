@@ -48,7 +48,7 @@ namespace suku
 			{ return objPtr.get() == _object; });
 		postUpdateArray_[_object->postUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		paintArray_[_object->getTargetPaintLayer()][_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
 	}
 
@@ -63,7 +63,7 @@ namespace suku
 			{ return objPtr.get() == _object; });
 		postUpdateArray_[_object->postUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
-		paintArray_[_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		paintArray_[_object->getTargetPaintLayer()][_object->paintId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
 	}
 
@@ -126,8 +126,8 @@ namespace suku
 
 	void Room::setObjectPaintPriority(Object* _object, double _newId)
 	{
-		auto& originalArray = paintArray_[_object->paintId_];
-		auto& targetArray = paintArray_[_newId];
+		auto& originalArray = paintArray_[_object->getTargetPaintLayer()][_object->paintId_];
+		auto& targetArray = paintArray_[_object->getTargetPaintLayer()][_newId];
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
@@ -141,6 +141,27 @@ namespace suku
 		// not found in original array
 		targetArray.push_back(std::shared_ptr<Object>(_object));
 		_object->paintId_ = _newId;
+	}
+
+	void Room::setObjectPaintLayer(Object* _object, PaintLayer* _paintLayer)
+	{
+		if (_paintLayer == _object->getTargetPaintLayer())
+			return;
+		auto& originalArray = paintArray_[_object->getTargetPaintLayer()][_object->paintId_];
+		auto& targetArray = paintArray_[_paintLayer][_object->paintId_];
+		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
+		{
+			if ((*iter).get() == _object)
+			{
+				targetArray.push_back(std::move(*iter));
+				originalArray.erase(iter);
+				_object->targetPaintLayer_ = _paintLayer;
+				break;
+			}
+		}
+		// not found in original array
+		targetArray.push_back(std::shared_ptr<Object>(_object));
+		_object->targetPaintLayer_ = _paintLayer;
 	}
 
 	void Room::update()
@@ -273,48 +294,130 @@ namespace suku
 		camera.angle.addTick();
 	}
 
+	RenderBitmap Room::paintOnLayer(PaintLayer& _layer)
+	{
+		auto& targetPaintArray = paintArray_[&_layer];
+		_layer.beginDraw();
+		onPaintStart(_layer);
+		auto work = [&]() {
+			for (auto& [id, objArray] : targetPaintArray)
+			{
+				for (auto iter = objArray.begin(); iter != objArray.end();)
+				{
+					Object* obj = (*iter).get();
+					if (obj->removeTag_)
+					{
+						iter = objArray.erase(iter);
+						continue;
+					}
+
+					if (!obj->isVisible)
+					{
+						iter++;
+						continue;
+					}
+
+					if (!obj->onPaint())
+						obj->paintBody();
+
+					iter++;
+				}
+			}
+			};
+		work();
+		if (&_layer == &displayLayer)
+		{
+			targetPaintArray = paintArray_[nullptr];
+			work();
+		}
+		onPaintEnd(_layer);
+		return _layer.endDraw();
+	}
+
+	RenderBitmap Room::paintOnLayer(PaintLayer& _layer, float _frameOffsetRate)
+	{
+		auto& targetPaintArray = paintArray_[&_layer];
+		_layer.beginDraw();
+		onPaintStart(_layer);
+		auto work = [&]() {
+
+			for (auto& [id, objArray] : targetPaintArray)
+			{
+				for (auto iter = objArray.begin(); iter != objArray.end();)
+				{
+					Object* obj = (*iter).get();
+					if (obj->removeTag_)
+					{
+						iter = objArray.erase(iter);
+						continue;
+					}
+
+					if (!obj->isVisible)
+					{
+						iter++;
+						continue;
+					}
+
+					if (obj->onPaint())
+					{
+						iter++;
+						continue;
+					}
+
+					float posX, posY;
+					Transform transform;
+					if (obj->isPositionTransitionalFrame_)
+					{
+						posX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
+						posY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
+					}
+					else
+					{
+						posX = obj->x.getFrameState();
+						posY = obj->y.getFrameState();
+					}
+					if (obj->isSpriteTransformTransitionalFrame_)
+					{
+						Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
+						transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform, _frameOffsetRate);
+					}
+					else
+					{
+						transform = obj->transform;
+					}
+
+					obj->paintBody(posX, posY, transform);
+
+					iter++;
+				}
+			}
+			};
+		work();
+		if (&_layer == &displayLayer)
+		{
+			targetPaintArray = paintArray_[nullptr];
+			work();
+		}
+		onPaintEnd(_layer);
+		return _layer.endDraw();
+	}
+
 	void Room::paint()
 	{
-		displayLayer.beginDraw();
+		onPaintStart();
+
 		displayLayer.setBasicTransform(
-			translation(-camera.x, -camera.y) 
+			translation(-camera.x, -camera.y)
 			+ rotation(camera.getCenterX(), camera.getCenterY(), -camera.angle)
 		);
 
-		onPaintStart();
-
-		paintBackground();
-
-		for (auto& [id, objArray] : paintArray_)
-		{
-			for (auto iter = objArray.begin(); iter != objArray.end();)
-			{
-				Object* obj = (*iter).get();
-				if (obj->removeTag_)
-				{
-					iter = objArray.erase(iter);
-					continue;
-				}
-
-				if (!obj->isVisible)
-				{
-					iter++;
-					continue;
-				}
-
-				if (!obj->onPaint())
-					obj->paintBody();
-
-				iter++;
-			}
-		}
-
-		onPaintEnd();
-		auto pic = displayLayer.endDraw();
+		auto pic = paintOnLayer(displayLayer);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
 		scaleEffect.paint();
+
+		onPaintEnd();
 	}
 
 	void Room::additionalFramePaint(float _offsetRate)
@@ -322,7 +425,7 @@ namespace suku
 		if (isUpdatePaused_)
 			_offsetRate = 0.0f;
 
-		displayLayer.beginDraw();
+		onPaintStart();
 
 		float cameraX = camera.x.getInterpolatedFrameState(_offsetRate);
 		float cameraY = camera.y.getInterpolatedFrameState(_offsetRate);
@@ -332,67 +435,14 @@ namespace suku
 			translation(-cameraX, -cameraY)
 			+ rotation(camera.getCenterX(), camera.getCenterY(), -cameraAngle)
 		);
-
-		onPaintStart();
-
-		paintBackground();
-
-		for (auto& [id, objArray] : paintArray_)
-		{
-			for (auto iter = objArray.begin(); iter != objArray.end();)
-			{
-				Object* obj = (*iter).get();
-				if (obj->removeTag_)
-				{
-					iter = objArray.erase(iter);
-					continue;
-				}
-
-				if (!obj->isVisible)
-				{
-					iter++;
-					continue;
-				}
-
-				if (obj->onPaint())
-				{
-					iter++;
-					continue;
-				}
-
-				float posX, posY;
-				Transform transform;
-				if (obj->isPositionTransitionalFrame_)
-				{
-					posX = obj->x.getInterpolatedFrameState(_offsetRate);
-					posY = obj->y.getInterpolatedFrameState(_offsetRate);
-				}
-				else
-				{
-					posX = obj->x.getFrameState();
-					posY = obj->y.getFrameState();
-				}
-				if (obj->isSpriteTransformTransitionalFrame_)
-				{
-					Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
-					transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform, _offsetRate);
-				}
-				else
-				{
-					transform = obj->transform;
-				}
-
-				obj->paintBody(posX, posY, transform);
-
-				iter++;
-			}
-		}
-		onPaintEnd();
-		auto pic = displayLayer.endDraw();
+		
+		auto pic = paintOnLayer(displayLayer, _offsetRate);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
 		scaleEffect.paint();
+
+		onPaintEnd();
 	}
 
 	void Room::reset()

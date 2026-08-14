@@ -51,18 +51,23 @@ namespace suku
 		void setObjectUpdatePriority(Object* _object, double _newId);
 		void setObjectRecheckPriority(Object* _object, double _newId);
 		void setObjectPaintPriority(Object* _object, double _newId);
+		void setObjectPaintLayer(Object* _object, PaintLayer* _paintLayer);
 
 		template<suku_object Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
 		template<suku_object Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
 
 		virtual void onEntering() {}
 		virtual void onRestart() {}
-		virtual void onPaintStart() { displayLayer.clear(); }
+		virtual void onPaintStart() {}
+		virtual void onPaintStart(PaintLayer& _layer) { _layer.clear(); if (&_layer == &displayLayer) paintBackground(); }
 		virtual void onPaintEnd() {}
+		virtual void onPaintEnd(PaintLayer& _layer) {}
 		virtual void onUpdateStart() {}
 		virtual void onUpdateEnd() {}
 
 		void update();
+		RenderBitmap paintOnLayer(PaintLayer& _layer);
+		RenderBitmap paintOnLayer(PaintLayer& _layer, float _frameOffset);
 		void paint();
 		void additionalFramePaint(float _offset);
 		void reset();
@@ -87,7 +92,7 @@ namespace suku
 		std::map<double, std::list<std::shared_ptr<Object>>> preUpdateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> updateArray_;
 		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;
-		std::map<double, std::list<std::shared_ptr<Object>>> paintArray_;
+		std::map<PaintLayer*, std::map<double, std::list<std::shared_ptr<Object>>>> paintArray_;
 		template<suku_object Obj> void createObjectList();
 
 		bool isUpdatePaused_ = false;

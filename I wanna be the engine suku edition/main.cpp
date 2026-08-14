@@ -93,12 +93,12 @@ public:
 		camera.setBind(Camera::follow(p, 0.2));
 	}
 
-	virtual void onPaintStart()override
+	virtual void onPaintStart(PaintLayer& _layer)override
 	{
 		backgroundOffsetX += 0.2;
 		backgroundOffsetY += 0.5;
 
-		Room::onPaintStart();
+		Room::onPaintStart(_layer);
 		
 		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
 		//auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));

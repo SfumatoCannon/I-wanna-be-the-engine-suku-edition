@@ -3,6 +3,7 @@
 #include "../suku_constants.h"
 #include "suku_property.h"
 #include <functional>
+#include <suku_draw/transform.h>
 
 namespace suku
 {
@@ -22,6 +23,7 @@ namespace suku
 		float getCenterY() { return centerY_; }
 		float getWidth() { return width_; }
 		float getHeight() { return height_; }
+		Transform getTransformToLayer();
 
 		void setCenterX(float _centerX) { centerX_ = _centerX; }
 		void setCenterY(float _centerY) { centerY_ = _centerY; }

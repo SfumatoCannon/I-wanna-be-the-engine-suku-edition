@@ -15,6 +15,11 @@ namespace suku
 			};
 	}
 
+	Transform Camera::getTransformToLayer()
+	{
+		return translation(-x, -y) + rotation(getCenterX(), getCenterY(), -angle);
+	}
+
 	void Camera::update()
 	{
 		if (isBinded_)

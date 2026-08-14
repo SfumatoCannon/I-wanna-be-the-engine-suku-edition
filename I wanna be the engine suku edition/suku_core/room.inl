@@ -67,7 +67,7 @@ namespace suku
 		preUpdateArray_[objectParentPointer->preUpdateId_].push_back(objectParentPointer);
 		updateArray_[objectParentPointer->updateId_].push_back(objectParentPointer);
 		postUpdateArray_[objectParentPointer->postUpdateId_].push_back(objectParentPointer);
-		paintArray_[objectParentPointer->paintId_].push_back(objectParentPointer);
+		paintArray_[objectParentPointer->targetPaintLayer_][objectParentPointer->paintId_].push_back(objectParentPointer);
 
 		collisionPool_->addObject(objectParentPointer.get());
 

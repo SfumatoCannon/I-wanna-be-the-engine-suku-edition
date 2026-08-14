@@ -1,7 +1,7 @@
 ﻿#include "object.h"
 #include "room.h"
 #include "sprite.h"
-#include <ranges>
+#include <suku_draw/includes.h>
 
 using namespace suku::maths;
 
@@ -156,6 +156,11 @@ namespace suku
 		if (isInRoom())
 			inRoom_->setObjectPaintPriority(this, _id);
 		else paintId_ = _id;
+	}
+
+	void Object::setTargetPaintLayer(PaintLayer& _layer)
+	{
+		targetPaintLayer_ = &_layer;
 	}
 
 	float Object::getWidth()

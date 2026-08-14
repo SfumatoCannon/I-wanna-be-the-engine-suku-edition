@@ -24,7 +24,6 @@ namespace suku
 		currentLayerStateStack_.push(pLayerBitmap_);
 		currentPaintLayerPtrStack_.push(this);
 		pD2DContext->SetTarget(pLayerBitmap_.Get());
-		basicTransform_ = Transform();
 	}
 
 	RenderBitmap PaintLayer::endDraw()

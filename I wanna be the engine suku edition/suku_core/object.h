@@ -16,6 +16,7 @@ namespace suku
 	class SpriteElement;
 	class Room;
 	class Object;
+	class PaintLayer;
 
 	class Object
 	{
@@ -37,6 +38,8 @@ namespace suku
 		void setUpdateId(double _id);
 		void setPostUpdateId(double _id);
 		void setPaintId(double _id);
+		void setTargetPaintLayer(PaintLayer& _layer);
+		PaintLayer* getTargetPaintLayer() { return targetPaintLayer_; }
 
 		Transform transform;
 		float getWidth();
@@ -152,16 +155,19 @@ namespace suku
 			paintId_			= 0.0;
 		bool isInRoom_			= false;
 		bool isFrozen_			= false;
-		bool removeTag_			= false;
-		bool destroyTag_		= false;
+
 		Sprite* sprite_			= nullptr;
 		std::list<std::function<bool()> > actionList_;
-
 		float xLastFrame_;
 		float yLastFrame_;
-		Transform spriteTransformLastFrame_ = Transform();
+
 		bool isPositionTransitionalFrame_ = true;
 		bool isSpriteTransformTransitionalFrame_ = true;
+	private:
+		bool removeTag_ = false;
+		bool destroyTag_ = false;
+		PaintLayer* targetPaintLayer_ = nullptr;
+		Transform spriteTransformLastFrame_ = Transform();
 	};
 }
 
