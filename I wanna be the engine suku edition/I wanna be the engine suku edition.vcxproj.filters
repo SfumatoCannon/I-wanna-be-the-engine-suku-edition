@@ -225,6 +225,18 @@
     <ClInclude Include="suku_core\camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_objects\ui\presets\ConfigPage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_preset_rooms\RoomTitle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_preset_rooms\includes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="suku_preset_rooms\RoomSelectSave.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
@@ -579,6 +591,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_core\camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_preset_rooms\RoomTitle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_core\room_pool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_preset_rooms\RoomSelectSave.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

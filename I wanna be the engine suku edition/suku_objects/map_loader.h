@@ -6,6 +6,7 @@ namespace suku
 {
 	class MapLoader
 	{
-		static void loadFromJtoolMsg(suku::Room* _room, std::string _msg);
+	public:
+		static void loadFromJtool(suku::Room* _room, std::string_view _msg);
 	};
 }

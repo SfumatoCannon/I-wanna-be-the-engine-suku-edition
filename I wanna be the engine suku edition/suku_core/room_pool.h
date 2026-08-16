@@ -23,9 +23,8 @@ namespace suku
 		inline static Sound* nowBGM_ = nullptr;
 	};
 
-	template<suku_room T> Room* getNowRoom() { return RoomPool::getNowRoom(); }
+	Room* getNowRoom();
 	template<suku_room T> void gotoRoom() { RoomPool::gotoRoom<T>(); }
-
 }
 
 #include "room_pool.inl"

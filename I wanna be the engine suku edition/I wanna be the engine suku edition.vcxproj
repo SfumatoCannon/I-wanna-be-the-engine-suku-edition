@@ -225,8 +225,10 @@
     <ClInclude Include="suku_objects\ui\presets\PausePage.h" />
     <ClInclude Include="suku_objects\ui\UIElement.h" />
     <ClInclude Include="suku_objects\ui\UILayout.h" />
+    <ClInclude Include="suku_preset_rooms\includes.h" />
     <ClInclude Include="suku_preset_rooms\RoomConfigPage.hpp" />
-    <ClInclude Include="suku_preset_rooms\RoomTitle.hpp" />
+    <ClInclude Include="suku_preset_rooms\RoomSelectSave.h" />
+    <ClInclude Include="suku_preset_rooms\RoomTitle.h" />
     <ClInclude Include="suku_sounds\audio_core.h" />
     <ClInclude Include="suku_sounds\includes.h" />
     <ClInclude Include="suku_sounds\suku_sound_pool.h" />
@@ -277,6 +279,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_core\room_pool.cpp" />
     <ClCompile Include="suku_core\sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -388,6 +391,8 @@
     <ClCompile Include="suku_objects\ui\OptionElement.cpp" />
     <ClCompile Include="suku_objects\ui\presets\PausePage.cpp" />
     <ClCompile Include="suku_objects\ui\UIElement.cpp" />
+    <ClCompile Include="suku_preset_rooms\RoomSelectSave.cpp" />
+    <ClCompile Include="suku_preset_rooms\RoomTitle.cpp" />
     <ClCompile Include="suku_sounds\audio_core.cpp" />
     <ClCompile Include="suku_sounds\suku_sounds.cpp" />
   </ItemGroup>
