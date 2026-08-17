@@ -924,7 +924,7 @@ namespace
 		{
 			// load from resource data file
 			FileCodec::readResource(bitmapData, _path);
-
+			
 			pWICFactory->CreateStream(&stream);
 			stream->InitializeFromMemory(
 				(BYTE*)bitmapData.data(),

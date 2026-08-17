@@ -5,6 +5,7 @@
 #include "../suku_gamewindow/game_window.h"
 #include "object_collision_pool.h"
 #include <suku_foundation/maths.h>
+#include <suku_objects/map_loader.h>
 
 namespace suku
 {
@@ -20,6 +21,11 @@ namespace suku
 		roomId_ = roomIdCounter;
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 		camera.setBorder(0, 0, _height, _width);
+	}
+
+	void Room::loadFromJtoolData(std::string_view _data)
+	{
+		MapLoader::loadFromJtoolData(this, _data);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)

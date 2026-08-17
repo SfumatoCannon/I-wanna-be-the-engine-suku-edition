@@ -23,6 +23,9 @@ namespace suku
 		Room();
 		Room(unsigned int _width, unsigned int _height);
 
+		void loadFromJtoolData(std::string_view _data);
+		//void loadFromJtoolFile(String _url);
+
 		unsigned int getWidth() { return width_; }
 		unsigned int getHeight() { return height_; }
 

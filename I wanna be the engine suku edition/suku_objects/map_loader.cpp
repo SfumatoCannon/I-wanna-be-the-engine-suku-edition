@@ -14,7 +14,8 @@ namespace
 		if (c >= 'a' && c <= 'v')
 			return c - 'a' + 10;
 
-		throw std::runtime_error("Invalid base32 character");
+		WARNINGWINDOW_GLOBAL("Invalid char when decoding base32.");
+		return 0;
 	}
 
 	int base32(std::string_view s)
@@ -27,7 +28,7 @@ namespace
 		return result;
 	}
 
-	struct JtoolObjectMsg
+	struct JtoolObjectInfo
 	{
 		int x;
 		int y;
@@ -39,9 +40,9 @@ namespace
 
 namespace suku
 {
-	std::vector<JtoolObjectMsg> decodeJtoolObjects(std::string_view _str)
+	std::vector<JtoolObjectInfo> decodeJtoolObjects(std::string_view _str)
 	{
-		std::vector<JtoolObjectMsg> result;
+		std::vector<JtoolObjectInfo> result;
 
 		int y = 0;
 		size_t i = 0;
@@ -70,10 +71,10 @@ namespace suku
 		return result;
 	}
 
-	void MapLoader::loadFromJtool(suku::Room* _room, std::string_view _msg)
+	void MapLoader::loadFromJtoolData(suku::Room* _room, std::string_view _data)
 	{
 		using namespace suku;
-		std::vector<JtoolObjectMsg> objectMsgList = decodeJtoolObjects(_msg);
+		std::vector<JtoolObjectInfo> objectMsgList = decodeJtoolObjects(_data);
 		for (auto& i : objectMsgList)
 		{
 			switch (i.type)
@@ -100,5 +101,10 @@ namespace suku
 				break;
 			}
 		}
+	}
+
+	void MapLoader::loadFromJtoolFile(suku::Room* _room, String _url)
+	{
+		File jtoolFile(_url);
 	}
 }
