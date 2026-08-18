@@ -123,6 +123,6 @@ public:
 
 void init()
 {
-	//gotoRoom<RoomConfigPage>();
-	gotoRoom<RoomTitle>();
+	gotoRoom<Room0>();
+	//gotoRoom<RoomTitle>();
 }

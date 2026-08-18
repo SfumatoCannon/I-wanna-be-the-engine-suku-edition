@@ -60,7 +60,6 @@ namespace suku
 		}
 		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
 		std::shared_ptr<Object> objectParentPointer = _objectPointer;
-		objectParentPointer->kindId_ = typecode(Obj);
 		objectParentPointer->inRoom_ = this;
 		objList.push_back(objectParentPointer);
 

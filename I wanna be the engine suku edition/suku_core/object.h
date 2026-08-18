@@ -32,7 +32,8 @@ namespace suku
 		double updateId()const { return updateId_; }
 		double postUpdateId()const { return postUpdateId_; }
 		double paintId()const { return paintId_; }
-		size_t kindId()const { return kindId_; }
+
+		virtual const Typecode getTypecode() const { return typecode(*this); }
 
 		void setPreUpdateId(double _id);
 		void setUpdateId(double _id);
@@ -148,7 +149,6 @@ namespace suku
 
 		long double clock_		= 0.0;
 		Room* inRoom_			= nullptr;
-		size_t kindId_			= typecode(Object);
 		double	preUpdateId_	= 0.0,
 			updateId_			= 0.0,
 			postUpdateId_		= 0.0,

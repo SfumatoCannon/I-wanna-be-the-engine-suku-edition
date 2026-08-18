@@ -61,7 +61,7 @@ namespace suku
 	void Room::destroyImmediately(Object* _object)
 	{
 		collisionPool_->removeObject(_object);
-		objectPointerArray_[_object->kindId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
+		objectPointerArray_[_object->getTypecode()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
 		preUpdateArray_[_object->preUpdateId()].remove_if([_object](std::shared_ptr<Object>& objPtr)
 			{ return objPtr.get() == _object; });
