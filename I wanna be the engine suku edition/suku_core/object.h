@@ -26,6 +26,10 @@ namespace suku
 		float spawnX, spawnY;
 		float vspeed = 0, hspeed = 0, vspeedTemp = 0, hspeedTemp = 0;
 		float xScale = 1, yScale = 1;
+		
+		unsigned int spriteBasicIndex = 0;
+		double spriteAnimationRate = 1.0;
+
 		bool isInRoom()const { return inRoom_ != nullptr && isInRoom_; }
 		Room* inRoom()const { return inRoom_; }
 		double preUpdateId()const { return preUpdateId_; }
