@@ -127,20 +127,30 @@ namespace suku
 		template<typename SprZ> void push(const SprZ& _spriteZ);
 		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
 
+		void setStartingIndex(UINT _index);
+
 		UINT getWidth()const { return width_; }
 		UINT getHeight()const { return height_; }
 		std::pair<UINT, UINT> getSize()const { return { width_, height_ }; }
 		float getCenterX()const { return centerX_; }
 		float getCenterY()const { return centerY_; }
 		std::pair<float, float> getCenter()const { return { centerX_, centerY_ }; }
+
+		SpriteElement* operator[](UINT _index) { return getState(_index); }
+		SpriteElement* getState(UINT _index);
 		SpriteElement* getFrameState(long long _frameTick)const;
 		SpriteElement* getFrameState(long double _frameTick)const;
+		SpriteElement* getFrameState(UINT _startIndex, long long _frameTick)const;
+		SpriteElement* getFrameState(UINT _startIndex, long double _frameTick)const;
 		UINT getFrameStateIndex(long long _frameTick)const;
 		UINT getFrameStateIndex(long double _frameTick)const;
+		UINT getFrameStateIndex(UINT _startIndex, long long _frameTick)const;
+		UINT getFrameStateIndex(UINT _startIndex, long double _frameTick)const;
 	private:
 		UINT width_, height_;
 		float centerX_, centerY_;
 		int flipTime_;
+		UINT lastSetIndex_ = 0;
 	};
 }
 
