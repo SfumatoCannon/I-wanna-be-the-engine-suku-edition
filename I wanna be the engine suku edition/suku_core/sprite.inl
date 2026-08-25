@@ -20,7 +20,7 @@ namespace suku
 	}
 
 	template<typename SprZ>
-	inline void Sprite::init(const SprZ& _spriteZ)
+	inline void Sprite::init(SprZ&& _spriteZ)
 	{
 		bodyList.clear();
 		flipTime_ = 1;
@@ -28,7 +28,7 @@ namespace suku
 	}
 
 	template<typename SprZ, typename ...SprZNext>
-	inline void Sprite::init(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	inline void Sprite::init(int _flipTime, SprZ&& _spriteZ, SprZNext&& ..._spriteZNext)
 	{
 		bodyList.clear();
 		flipTime_ = _flipTime;
@@ -37,18 +37,17 @@ namespace suku
 	}
 
 	template<typename SprZ>
-	inline void Sprite::push(const SprZ& _spriteZ)
+	inline void Sprite::push(SprZ&& _spriteZ)
 	{
 		if (_spriteZ.width > width_)
 			width_ = _spriteZ.width;
 		if (_spriteZ.height > height_)
 			height_ = _spriteZ.height;
-		SprZ* newSpriteZ = new SprZ(_spriteZ);
-		bodyList.push_back(newSpriteZ);
+		bodyList.emplace_back(new SprZ(std::move(_spriteZ)));
 	}
 
 	template<typename SprZ, typename ...SprZNext>
-	inline void Sprite::push(const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	inline void Sprite::push(SprZ&& _spriteZ, SprZNext&& ..._spriteZNext)
 	{
 		push(_spriteZ);
 		push(_spriteZNext...);
