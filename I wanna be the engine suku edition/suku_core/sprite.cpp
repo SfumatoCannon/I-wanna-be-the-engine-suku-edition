@@ -54,10 +54,6 @@ namespace suku
 		outlineStrokeStyle = _outlineStrokeStyle;
 	}
 
-	ShapeSpriteElement::~ShapeSpriteElement()
-	{
-	}
-
 	void ShapeSpriteElement::setShapeTransform(Transform _transform)
 	{
 		shape.setTransform(_transform);
@@ -127,22 +123,12 @@ namespace suku
 
 	void BitmapSpriteElement::catchBitmap(String _path, UINT _startX, UINT _startY)
 	{
-		if (pBitmap_ != nullptr)
-		{
-			delete pBitmap_;
-			pBitmap_ = nullptr;
-		}
-		pBitmap_ = new Bitmap(_path, _startX, _startY, width, height);
+		pBitmap_ = std::make_unique<Bitmap>(_path, _startX, _startY, width, height);
 	}
 
 	void BitmapSpriteElement::catchBitmapAndSize(String _path)
 	{
-		if (pBitmap_ != nullptr)
-		{
-			delete pBitmap_;
-			pBitmap_ = nullptr;
-		}
-		pBitmap_ = new Bitmap(_path);
+		pBitmap_ = std::make_unique<Bitmap>(_path);
 		width = pBitmap_->getWidth();
 		height = pBitmap_->getHeight();
 	}
@@ -180,8 +166,8 @@ namespace suku
 		height = _bitmap.getHeight();
 		centerX = _centerX;
 		centerY = _centerY;
-		pBitmap_ = new Bitmap(_bitmap);
-		hitArea = new ShapeCollisionBox(_collisionBox);
+		pBitmap_ = std::make_unique<Bitmap>(_bitmap);
+		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(String _path, const Shape& _collisionBox, float _centerX, float _centerY)
@@ -190,7 +176,7 @@ namespace suku
 		centerY = _centerY;
 		pBitmap_ = nullptr;
 		catchBitmapAndSize(_path);
-		hitArea = new ShapeCollisionBox(_collisionBox);
+		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
@@ -200,8 +186,8 @@ namespace suku
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
-		hitArea = new ShapeCollisionBox(_collisionBox);
+		pBitmap_ = std::make_unique<Bitmap>(_path, _startX, _startY, _width, _height);
+		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY)
@@ -211,18 +197,18 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 		pBitmap_ = nullptr;
-		hitArea = new ShapeCollisionBox(_collisionBox);
+		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 		float _centerX, float _centerY, String _path)
 	{
-		hitArea = new BitmapCollisionBox(_collisionBox);
+		hitArea = std::make_unique<BitmapCollisionBox>(_collisionBox);
 		width = _width;
 		height = _height;
 		centerX = _centerX;
 		centerY = _centerY;
-		pBitmap_ = new Bitmap(_path);
+		pBitmap_ = std::make_unique<Bitmap>(_path);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(String _path, float _centerX, float _centerY, float _alphaThreshold)
@@ -231,13 +217,13 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 
-		pBitmap_ = new Bitmap(_path);
+		pBitmap_ = std::make_unique<Bitmap>(_path);
 
 		if (pBitmap_)
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
-			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
+			hitArea = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
 		}
 		else
 		{
@@ -255,10 +241,10 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 
-		pBitmap_ = new Bitmap(_path, _startX, _startY, _width, _height);
+		pBitmap_ = std::make_unique<Bitmap>(_path, _startX, _startY, _width, _height);
 
 		if (pBitmap_)
-			hitArea = new BitmapCollisionBox(pBitmap_, _alphaThreshold);
+			hitArea = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
 		else
 			hitArea = nullptr;
 	}
@@ -281,9 +267,8 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
-				_collisionBox, _centerX, _centerY);
-			bodyList.push_back((SpriteElement*)sprZ);
+			push(BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
+				_collisionBox, _centerX, _centerY));
 		}
 	}
 
@@ -301,9 +286,8 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
-				_centerX, _centerY, _alphaThreshold);
-			bodyList.push_back((SpriteElement*)sprZ);
+			push(BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
+				_centerX, _centerY, _alphaThreshold));
 		}
 	}
 
@@ -319,9 +303,8 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
-				_collisionBox, _centerX, _centerY);
-			bodyList.push_back((SpriteElement*)sprZ);
+			push(BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
+				_collisionBox, _centerX, _centerY));
 		}
 	}
 
@@ -337,9 +320,8 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			BitmapSpriteElement* sprZ = new BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
-				_centerX, _centerY, _alphaThreshold);
-			bodyList.push_back((SpriteElement*)sprZ);
+			push(BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
+				_centerX, _centerY, _alphaThreshold));
 		}
 	}
 
@@ -355,7 +337,7 @@ namespace suku
 
 	SpriteElement* Sprite::getState(UINT _index)
 	{
-		return bodyList[_index % bodyList.size()];
+		return bodyList[_index % bodyList.size()].get();
 	}
 
 	SpriteElement* Sprite::getFrameState(long long _frameTick)const
@@ -363,13 +345,13 @@ namespace suku
 		if (bodyList.empty())
 			return nullptr;
 		else if (flipTime_ == 0)
-			return bodyList[lastSetIndex_];
+			return bodyList[lastSetIndex_].get();
 		else if (flipTime_ > 0)
-			return bodyList[(lastSetIndex_ + _frameTick / flipTime_) % bodyList.size()];
+			return bodyList[(lastSetIndex_ + _frameTick / flipTime_) % bodyList.size()].get();
 		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size];
+			return bodyList[((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size].get();
 		}
 	}
 
@@ -383,13 +365,13 @@ namespace suku
 		if (bodyList.empty())
 			return nullptr;
 		else if (flipTime_ == 0)
-			return bodyList[_startIndex];
+			return bodyList[_startIndex].get();
 		else if (flipTime_ > 0)
-			return bodyList[(_startIndex + _frameTick / flipTime_) % bodyList.size()];
+			return bodyList[(_startIndex + _frameTick / flipTime_) % bodyList.size()].get();
 		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((_startIndex + _frameTick / flipTime_) % size + size) % size];
+			return bodyList[((_startIndex + _frameTick / flipTime_) % size + size) % size].get();
 		}
 	}
 

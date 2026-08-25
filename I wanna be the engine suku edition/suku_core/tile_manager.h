@@ -14,6 +14,8 @@ namespace suku
 		
 		template<typename T> Sprite* getTile() { return getTile(typecode(T)); }
 		Sprite* getTile(Typecode _typecode);
+
+
 	private:
 		std::map<Typecode, Sprite> tileOfObjectType_;
 	};

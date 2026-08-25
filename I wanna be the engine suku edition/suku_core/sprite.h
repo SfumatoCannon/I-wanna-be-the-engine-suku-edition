@@ -24,10 +24,12 @@ namespace suku
 	class SpriteElement
 	{
 	public:
-		UINT height, width;
-		float centerX, centerY;
-		CollisionBox* hitArea;
-		SpriteElement() : height(0), width(0), centerX(0), centerY(0), hitArea(nullptr) {}
+		UINT height = 0, width = 0;
+		float centerX = 0.0f, centerY = 0.0f;
+		std::unique_ptr<CollisionBox> hitArea;
+
+		SpriteElement() = default;
+		SpriteElement(SpriteElement&& _other) = default;
 
 		virtual void paint(float _x, float _y,
 			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) = 0;
@@ -42,6 +44,8 @@ namespace suku
 	{
 	public:
 		BitmapSpriteElement();
+		BitmapSpriteElement(BitmapSpriteElement&& _other) = default;
+
 		BitmapSpriteElement(const Shape& _collisionBox, const Bitmap& _bitmap, float _centerX = 0.0f, float _centerY = 0.0f);
 		BitmapSpriteElement(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		BitmapSpriteElement(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
@@ -65,9 +69,8 @@ namespace suku
 		virtual void paint(float _x, float _y,
 			Transform _transform, float _alpha = 1.0) override;
 		virtual void paint(Transform _transform, float _alpha = 1.0) override;
-
 	private:
-		Bitmap* pBitmap_;
+		std::unique_ptr<Bitmap> pBitmap_;
 	};
 
 	class ShapeSpriteElement :public SpriteElement
@@ -78,12 +81,15 @@ namespace suku
 		Microsoft::WRL::ComPtr<ID2D1Brush> outlineBrush;
 		Microsoft::WRL::ComPtr<ID2D1StrokeStyle> outlineStrokeStyle;
 		float outlineWidth;
+
+		ShapeSpriteElement(ShapeSpriteElement&& _other) = default;
+
 		ShapeSpriteElement(const Shape& _shape, const Microsoft::WRL::ComPtr<ID2D1Brush>& _fillBrush = nullptr,
 			const Microsoft::WRL::ComPtr<ID2D1Brush>& _outlineBrush = nullptr, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
 		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor);
 		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
 			const Color& _outlineColor, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
-		~ShapeSpriteElement();
+
 		void setShapeTransform(Transform _transform);
 		void paint(float _x, float _y,
 			float _xScale = 1.0f, float _yScale = 1.0f, float _angle = 0.0f);
@@ -103,10 +109,10 @@ namespace suku
 	class Sprite
 	{
 	public:
-		std::vector<SpriteElement*> bodyList;
+		std::vector<std::unique_ptr<SpriteElement>> bodyList;
 		Sprite();
-		template<typename SprZ> Sprite(const SprZ& _spriteZ);
-		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ> Sprite(SprZ&& _spriteZ);
+		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
 
 		//Load Sprite Directly from the long sprite bitmap; width and height will be auto calculated.
 		Sprite(String _path, UINT _amount, int _flipTime,
@@ -119,13 +125,13 @@ namespace suku
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 
-		template<typename SprZ> void init(const SprZ& _spriteZ);
-		template<typename SprZ, typename... SprZNext> void init(int _flipTime, const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ> void init(SprZ&& _spriteZ);
+		template<typename SprZ, typename... SprZNext> void init(int _flipTime, SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
 		void setSpeed(int _speed);
-		template<typename SprZ> void push(const SprZ& _spriteZ);
-		template<typename SprZ, typename... SprZNext> void push(const SprZ& _spriteZ, const SprZNext&... _spriteZNext);
+		template<typename SprZ> void push(SprZ&& _spriteZ);
+		template<typename SprZ, typename... SprZNext> void push(SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
 
 		void setStartingIndex(UINT _index);
 

@@ -3,20 +3,20 @@
 namespace suku
 {
 	template<typename SprZ>
-	inline Sprite::Sprite(const SprZ& _spriteZ) 
+	inline Sprite::Sprite(SprZ&& _spriteZ) 
 		: width_(_spriteZ.width), height_(_spriteZ.height), centerX_(_spriteZ.centerX), centerY_(_spriteZ.centerY)
 	{
 		flipTime_ = 1;
-		push(_spriteZ);
+		push(std::move(_spriteZ));
 	}
 
 	template<typename SprZ, typename ...SprZNext>
-	inline Sprite::Sprite(int _flipTime, const SprZ& _spriteZ, const SprZNext & ..._spriteZNext)
+	inline Sprite::Sprite(int _flipTime, SprZ&& _spriteZ, SprZNext&& ..._spriteZNext)
 		: width_(_spriteZ.width), height_(_spriteZ.height), centerX_(_spriteZ.centerX), centerY_(_spriteZ.centerY)
 	{
 		flipTime_ = _flipTime;
-		push(_spriteZ);
-		push(_spriteZNext...);
+		push(std::move(_spriteZ));
+		push(std::move(_spriteZNext...));
 	}
 
 	template<typename SprZ>
@@ -24,7 +24,7 @@ namespace suku
 	{
 		bodyList.clear();
 		flipTime_ = 1;
-		push(_spriteZ);
+		push(std::move(_spriteZ));
 	}
 
 	template<typename SprZ, typename ...SprZNext>
@@ -32,8 +32,8 @@ namespace suku
 	{
 		bodyList.clear();
 		flipTime_ = _flipTime;
-		push(_spriteZ);
-		push(_spriteZNext...);
+		push(std::move(_spriteZ));
+		push(std::move(_spriteZNext...));
 	}
 
 	template<typename SprZ>
@@ -43,13 +43,13 @@ namespace suku
 			width_ = _spriteZ.width;
 		if (_spriteZ.height > height_)
 			height_ = _spriteZ.height;
-		bodyList.emplace_back(new SprZ(std::move(_spriteZ)));
+		bodyList.push_back(std::make_unique<SprZ>(std::move(_spriteZ)));
 	}
 
 	template<typename SprZ, typename ...SprZNext>
 	inline void Sprite::push(SprZ&& _spriteZ, SprZNext&& ..._spriteZNext)
 	{
-		push(_spriteZ);
-		push(_spriteZNext...);
+		push(std::move(_spriteZ));
+		push(std::move(_spriteZNext...));
 	}
 }
