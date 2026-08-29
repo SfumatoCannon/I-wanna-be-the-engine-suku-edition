@@ -654,6 +654,9 @@
     <None Include="suku_foundation\suku_type.inl">
       <Filter>头文件</Filter>
     </None>
+    <None Include="suku_core\tile_manager.inl">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="suku_icon.ico">

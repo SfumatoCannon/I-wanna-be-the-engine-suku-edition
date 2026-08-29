@@ -111,6 +111,9 @@ namespace suku
 	public:
 		std::vector<std::unique_ptr<SpriteElement>> bodyList;
 		Sprite();
+		Sprite(Sprite&& _other) = default;
+		Sprite& operator=(Sprite&& _other) = default;
+
 		template<typename SprZ> Sprite(SprZ&& _spriteZ);
 		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
 

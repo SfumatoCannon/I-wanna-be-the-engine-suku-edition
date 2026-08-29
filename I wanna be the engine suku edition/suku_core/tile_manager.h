@@ -7,6 +7,24 @@
 
 namespace suku
 {
+	class ITile
+	{
+	public:
+		virtual void makeTile() = 0;
+		virtual void resetTile() = 0;
+	};
+
+	template<suku_object Obj>
+	class Tile : public ITile
+	{
+	public:
+		Tile(Sprite&& _spr);
+		virtual void makeTile(Room* _room) override;
+		virtual void resetTile(Room* _room) override;
+	private:
+		Sprite sprite_;
+	};
+
 	class TileManager
 	{
 	public:
@@ -20,3 +38,5 @@ namespace suku
 		std::map<Typecode, Sprite> tileOfObjectType_;
 	};
 }
+
+#include "tile_manager.inl"

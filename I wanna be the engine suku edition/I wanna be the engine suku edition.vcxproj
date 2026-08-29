@@ -410,6 +410,7 @@
     <None Include="suku_core\room_pool.inl" />
     <None Include="suku_core\sprite.inl" />
     <None Include="suku_core\suku_property.inl" />
+    <None Include="suku_core\tile_manager.inl" />
     <None Include="suku_draw\scale_mode.inl" />
     <None Include="suku_foundation\save.inl" />
     <None Include="suku_foundation\suku_type.inl" />
