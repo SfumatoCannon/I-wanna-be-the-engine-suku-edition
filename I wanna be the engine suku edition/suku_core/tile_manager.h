@@ -7,21 +7,16 @@
 
 namespace suku
 {
-	class ITile
+	class Tile
 	{
 	public:
-		virtual void makeTile() = 0;
-		virtual void resetTile() = 0;
-	};
-
-	template<suku_object Obj>
-	class Tile : public ITile
-	{
-	public:
-		Tile(Sprite&& _spr);
-		virtual void makeTile(Room* _room) override;
-		virtual void resetTile(Room* _room) override;
+		Tile(Sprite& _sprSource, Sprite&& _spr);
+		~Tile();
+		void use();
+		static void resetAll();
 	private:
+		inline static std::map<Sprite*, Sprite*> spriteLinkPool_;
+		Sprite& spriteSource_;
 		Sprite sprite_;
 	};
 

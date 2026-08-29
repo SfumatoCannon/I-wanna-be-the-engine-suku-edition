@@ -24,6 +24,12 @@ public:
 	{
 		setBackground("Image\\bg.jpg");
 
+		Tile a(Wall::spr, Sprite{ BitmapSpriteElement("Image\\stage0\\block.png", SquareShape(32), 16, 16) });
+		a.use();
+
+
+		create<Object>()->addDelayAction(50, [](Object* _o) {Tile::resetAll(); return false; });
+
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);
 
@@ -91,6 +97,10 @@ public:
 		// setBGM(&suku::SoundPool::musGuyRock);
 		//camera.angle = {720, Transition(100.0, TransitionCurve::easeOutExpo)};
 		camera.setBind(Camera::follow(p, 0.2));
+	}
+
+	virtual void onUpdateStart() override
+	{
 	}
 
 	virtual void onPaintStart(PaintLayer& _layer)override

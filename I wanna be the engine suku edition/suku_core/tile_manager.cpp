@@ -2,8 +2,40 @@
 
 namespace suku
 {
-    Sprite* TileManager::getTile(Typecode _typecode)
+    Tile::Tile(Sprite& _sprSource, Sprite&& _spr)
+        :spriteSource_(_sprSource), sprite_(std::move(_spr))
     {
-        return nullptr;
+    }
+
+    Tile::~Tile()
+    {
+        auto iter = spriteLinkPool_.find(&spriteSource_);
+        if (iter != spriteLinkPool_.end())
+        {
+            if ((*iter).second == &sprite_)
+            {
+                std::swap(spriteSource_, sprite_);
+                spriteLinkPool_.erase(iter);
+            }
+        }
+    }
+
+    void Tile::use()
+    {
+        if (spriteLinkPool_.find(&spriteSource_) != spriteLinkPool_.end())
+        {
+            std::swap(spriteSource_, *spriteLinkPool_[&spriteSource_]);
+        }
+        std::swap(spriteSource_, sprite_);
+        spriteLinkPool_[&spriteSource_] = &sprite_;
+    }
+
+    void Tile::resetAll()
+    {
+        for (auto& [key, value] : spriteLinkPool_)
+        {
+            std::swap(*key, *value);
+        }
+        spriteLinkPool_.clear();
     }
 }
