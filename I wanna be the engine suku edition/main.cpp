@@ -24,11 +24,17 @@ public:
 	{
 		setBackground("Image\\bg.jpg");
 
-		Tile a(Wall::spr, Sprite{ BitmapSpriteElement("Image\\stage0\\block.png", SquareShape(32), 16, 16) });
+		static TilePack a(
+			Tile{ Wall::spr, Sprite{ BitmapSpriteElement("Image\\stage0\\block.png", SquareShape(32), 16, 16) } },
+			Tile{ Spike::sprUp, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_u.png") } },
+			Tile{ Spike::sprDown, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_d.png") } },
+			Tile{ Spike::sprLeft, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_l.png") } },
+			Tile{ Spike::sprRight, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_r.png") } }
+		);
 		a.use();
 
 
-		create<Object>()->addDelayAction(50, [](Object* _o) {Tile::resetAll(); return false; });
+		create<Object>()->addDelayAction(50, [](Object* _o) {TilePack::resetAll(); return false; });
 
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);

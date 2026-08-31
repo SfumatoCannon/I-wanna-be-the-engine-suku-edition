@@ -1,8 +1,7 @@
 #pragma once
 
 #include "sprite.h"
-#include <suku_foundation/suku_type.h>
-#include <suku_core/object.h>
+#include <list>
 #include <map>
 
 namespace suku
@@ -11,8 +10,10 @@ namespace suku
 	{
 	public:
 		Tile(Sprite& _sprSource, Sprite&& _spr);
+		Tile(Tile&& _other) = default;
 		~Tile();
 		void use();
+		void unuse();
 		static void resetAll();
 	private:
 		inline static std::map<Sprite*, Sprite*> spriteLinkPool_;
@@ -20,17 +21,23 @@ namespace suku
 		Sprite sprite_;
 	};
 
-	class TileManager
+	class TilePack
 	{
 	public:
-		TileManager(std::initializer_list<std::pair<Typecode, Sprite>> _objectTileList);
-		
-		template<typename T> Sprite* getTile() { return getTile(typecode(T)); }
-		Sprite* getTile(Typecode _typecode);
+		template<typename... T>
+			requires (std::is_same_v<T, Tile> && ...)
+		TilePack(T&&... _tiles);
 
+		TilePack(std::list<Tile>&& _tiles) : tiles_(std::move(_tiles)) {}
+		TilePack(Tile&& _tile);
 
+		void add(Tile&& _tile);
+		void use();
+		void unuse();
+
+		static void resetAll() { Tile::resetAll(); }
 	private:
-		std::map<Typecode, Sprite> tileOfObjectType_;
+		std::list<Tile> tiles_;
 	};
 }
 

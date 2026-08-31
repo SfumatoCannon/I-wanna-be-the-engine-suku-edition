@@ -1,16 +1,12 @@
 #pragma once
 #include "tile_manager.h"
 
-//namespace suku
-//{
-//	template<suku_object Obj>
-//	inline Tile<Obj>::Tile(Sprite&& _spr)
-//		: sprite_(std::move(_spr))
-//	{}
-//
-//	template<suku_object Obj>
-//	inline void Tile<Obj>::makeTile(Room* _room)
-//	{
-//		Obj::spr
-//	}
-//}
+namespace suku
+{
+	template<typename... T>			
+		requires (std::is_same_v<T, Tile> && ...)
+	TilePack::TilePack(T&&... _tiles)
+	{
+		(add(std::move(_tiles)), ...);
+	}
+}
