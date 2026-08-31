@@ -6,5 +6,5 @@
 #include "room.h"
 #include "room_pool.h"
 #include "sprite.h"
-#include "tile_manager.h"
+#include "tile.h"
 #include "view.h"

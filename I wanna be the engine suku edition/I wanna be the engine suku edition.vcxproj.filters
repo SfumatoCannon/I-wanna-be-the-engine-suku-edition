@@ -237,7 +237,7 @@
     <ClInclude Include="suku_preset_rooms\RoomSelectSave.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_core\tile_manager.h">
+    <ClInclude Include="suku_core\tile.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -605,7 +605,7 @@
     <ClCompile Include="suku_preset_rooms\RoomSelectSave.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="suku_core\tile_manager.cpp">
+    <ClCompile Include="suku_core\tile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -654,7 +654,7 @@
     <None Include="suku_foundation\suku_type.inl">
       <Filter>头文件</Filter>
     </None>
-    <None Include="suku_core\tile_manager.inl">
+    <None Include="suku_core\tile.inl">
       <Filter>头文件</Filter>
     </None>
   </ItemGroup>

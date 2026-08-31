@@ -1,5 +1,5 @@
 #pragma once
-#include "tile_manager.h"
+#include "tile.h"
 
 namespace suku
 {

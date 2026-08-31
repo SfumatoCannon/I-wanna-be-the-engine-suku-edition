@@ -41,4 +41,4 @@ namespace suku
 	};
 }
 
-#include "tile_manager.inl"
+#include "tile.inl"
