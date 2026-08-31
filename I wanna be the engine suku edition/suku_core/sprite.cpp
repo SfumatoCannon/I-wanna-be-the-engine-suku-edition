@@ -387,11 +387,11 @@ namespace suku
 		else if (flipTime_ == 0)
 			return lastSetIndex_;
 		else if (flipTime_ > 0)
-			return (lastSetIndex_ + _frameTick / flipTime_) % bodyList.size();
+			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTime_) % bodyList.size());
 		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return ((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size;
+			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size);
 		}
 	}
 
@@ -407,11 +407,11 @@ namespace suku
 		else if (flipTime_ == 0)
 			return _startIndex;
 		else if (flipTime_ > 0)
-			return (_startIndex + _frameTick / flipTime_) % bodyList.size();
+			return static_cast<UINT>((_startIndex + _frameTick / flipTime_) % bodyList.size());
 		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return ((_startIndex + _frameTick / flipTime_) % size + size) % size;
+			return static_cast<UINT>(((_startIndex + _frameTick / flipTime_) % size + size) % size);
 		}
 	}
 

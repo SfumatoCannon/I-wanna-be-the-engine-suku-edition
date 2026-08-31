@@ -112,7 +112,7 @@ namespace suku
 		IDWriteTextLayout* pTextLayout = nullptr;
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
 			contentString.content,
-			wcslen(contentString.content),
+			static_cast<UINT32>(wcslen(contentString.content)),
 			pTextFormat_.Get(),
 			_width,
 			FLT_MAX,
@@ -128,7 +128,7 @@ namespace suku
 		IDWriteTextLayout* pTextLayout = nullptr;
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
 			contentString.content,
-			wcslen(contentString.content),
+			static_cast<UINT32>(wcslen(contentString.content)),
 			pTextFormat_.Get(),
 			_width,
 			FLT_MAX,
@@ -192,7 +192,7 @@ namespace suku
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			contentString.content,
-			wcslen(contentString.content),
+			static_cast<UINT32>(wcslen(contentString.content)),
 			pTextFormat_.Get(),
 			textBoxArea,
 			_brush.Get()
@@ -213,7 +213,7 @@ namespace suku
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			contentString.content,
-			wcslen(contentString.content),
+			static_cast<UINT32>(wcslen(contentString.content)),
 			pTextFormat_.Get(),
 			D2D1::RectF(_x, _y, _x + _width, _y + _height),
 			_brush.Get()

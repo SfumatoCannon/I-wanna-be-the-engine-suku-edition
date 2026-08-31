@@ -92,8 +92,6 @@ namespace suku
 	template<suku_object Obj, typename ...Args>
 	inline std::shared_ptr<Obj> Room::create(Args && ...args)
 	{
-#pragma warning(push)
-#pragma warning(disable: 4244)
 		if constexpr (std::is_constructible_v<Obj, Args..., Room*>)
 		{
 			auto newObjPtr = std::make_shared<Obj>(std::forward<Args>(args)..., this);
@@ -106,7 +104,6 @@ namespace suku
 			append(newObjPtr);
 			return newObjPtr;
 		}
-#pragma warning(pop)
 	}
 
 	template<suku_object ...Objs>
