@@ -20,6 +20,9 @@ namespace suku
 	class Transform;
 	class Shape;
 	class Bitmap;
+	
+	template<typename T>
+	concept sprite_element_type = std::is_base_of_v<SpriteElement, T>;
 
 	class SpriteElement
 	{
@@ -114,8 +117,8 @@ namespace suku
 		Sprite(Sprite&& _other) = default;
 		Sprite& operator=(Sprite&& _other) = default;
 
-		template<typename SprZ> Sprite(SprZ&& _spriteZ);
-		template<typename SprZ, typename... SprZNext> Sprite(int _flipTime, SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
+		template<sprite_element_type T> Sprite(T&& _spriteZ);
+		template<sprite_element_type T, sprite_element_type... TNext> Sprite(int _flipTime, T&& _spriteZ, TNext&&... _spriteZNext);
 
 		//Load Sprite Directly from the long sprite bitmap; width and height will be auto calculated.
 		Sprite(String _path, UINT _amount, int _flipTime,
@@ -127,14 +130,24 @@ namespace suku
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		//Load Sprite Directly from the tileset; width and height will be auto calculated.
+		Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime,
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		//Load Sprite Directly from the tileset, with given starting position and size.
+		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, int _flipTime,
+			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, int _flipTime,
+			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
 
-		template<typename SprZ> void init(SprZ&& _spriteZ);
-		template<typename SprZ, typename... SprZNext> void init(int _flipTime, SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
+		template<sprite_element_type T> void init(T&& _spriteZ);
+		template<sprite_element_type T, sprite_element_type... TNext> void init(int _flipTime, T&& _spriteZ, TNext&&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
 		void setSpeed(int _speed);
-		template<typename SprZ> void push(SprZ&& _spriteZ);
-		template<typename SprZ, typename... SprZNext> void push(SprZ&& _spriteZ, SprZNext&&... _spriteZNext);
+		template<sprite_element_type T> void push(T&& _spriteZ);
+		template<sprite_element_type T, sprite_element_type... TNext> void push(T&& _spriteZ, TNext&&... _spriteZNext);
 
 		void setStartingIndex(UINT _index);
 
@@ -158,7 +171,8 @@ namespace suku
 	private:
 		UINT width_, height_;
 		float centerX_, centerY_;
-		int flipTime_;
+		int flipTimeCol_;
+		int flipTimeRow_ = 0;
 		UINT lastSetIndex_ = 0;
 	};
 }

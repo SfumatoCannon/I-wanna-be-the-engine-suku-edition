@@ -250,12 +250,12 @@ namespace suku
 	}
 
 	Sprite::Sprite()
-		: flipTime_(1), width_(0), height_(0), centerX_(0), centerY_(0) {
+		: flipTimeCol_(1), width_(0), height_(0), centerX_(0), centerY_(0) {
 	}
 
 	Sprite::Sprite(String _path, UINT _amount, int _flipTime, const Shape& _collisionBox, float _centerX, float _centerY)
 	{
-		flipTime_ = _flipTime;
+		flipTimeCol_ = _flipTime;
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
@@ -274,7 +274,7 @@ namespace suku
 
 	Sprite::Sprite(String _path, UINT _amount, int _flipTime, float _centerX, float _centerY, float _alphaThreshold)
 	{
-		flipTime_ = _flipTime;
+		flipTimeCol_ = _flipTime;
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
@@ -294,7 +294,7 @@ namespace suku
 	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 		const Shape& _collisionBox, float _centerX, float _centerY)
 	{
-		flipTime_ = _flipTime;
+		flipTimeCol_ = _flipTime;
 
 		width_ = _width;
 		height_ = _height;
@@ -311,7 +311,7 @@ namespace suku
 	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 		float _centerX, float _centerY, float _alphaThreshold)
 	{
-		flipTime_ = _flipTime;
+		flipTimeCol_ = _flipTime;
 
 		width_ = _width;
 		height_ = _height;
@@ -327,7 +327,7 @@ namespace suku
 
 	void Sprite::setSpeed(int _speed)
 	{
-		flipTime_ = _speed;
+		flipTimeCol_ = _speed;
 	}
 
 	void Sprite::setStartingIndex(UINT _index)
@@ -344,14 +344,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else if (flipTime_ == 0)
+		else if (flipTimeCol_ == 0)
 			return bodyList[lastSetIndex_].get();
-		else if (flipTime_ > 0)
-			return bodyList[(lastSetIndex_ + _frameTick / flipTime_) % bodyList.size()].get();
-		else // flipTime_ < 0
+		else if (flipTimeCol_ > 0)
+			return bodyList[(lastSetIndex_ + _frameTick / flipTimeCol_) % bodyList.size()].get();
+		else // flipTimeCol_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size].get();
+			return bodyList[((lastSetIndex_ + _frameTick / flipTimeCol_) % size + size) % size].get();
 		}
 	}
 
@@ -364,14 +364,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else if (flipTime_ == 0)
+		else if (flipTimeCol_ == 0)
 			return bodyList[_startIndex].get();
-		else if (flipTime_ > 0)
-			return bodyList[(_startIndex + _frameTick / flipTime_) % bodyList.size()].get();
-		else // flipTime_ < 0
+		else if (flipTimeCol_ > 0)
+			return bodyList[(_startIndex + _frameTick / flipTimeCol_) % bodyList.size()].get();
+		else // flipTimeCol_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((_startIndex + _frameTick / flipTime_) % size + size) % size].get();
+			return bodyList[((_startIndex + _frameTick / flipTimeCol_) % size + size) % size].get();
 		}
 	}
 
@@ -384,14 +384,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return 0;
-		else if (flipTime_ == 0)
+		else if (flipTimeCol_ == 0)
 			return lastSetIndex_;
-		else if (flipTime_ > 0)
-			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTime_) % bodyList.size());
-		else // flipTime_ < 0
+		else if (flipTimeCol_ > 0)
+			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTimeCol_) % bodyList.size());
+		else // flipTimeCol_ < 0
 		{
 			size_t size = bodyList.size();
-			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size);
+			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTimeCol_) % size + size) % size);
 		}
 	}
 
@@ -404,14 +404,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return 0;
-		else if (flipTime_ == 0)
+		else if (flipTimeCol_ == 0)
 			return _startIndex;
-		else if (flipTime_ > 0)
-			return static_cast<UINT>((_startIndex + _frameTick / flipTime_) % bodyList.size());
-		else // flipTime_ < 0
+		else if (flipTimeCol_ > 0)
+			return static_cast<UINT>((_startIndex + _frameTick / flipTimeCol_) % bodyList.size());
+		else // flipTimeCol_ < 0
 		{
 			size_t size = bodyList.size();
-			return static_cast<UINT>(((_startIndex + _frameTick / flipTime_) % size + size) % size);
+			return static_cast<UINT>(((_startIndex + _frameTick / flipTimeCol_) % size + size) % size);
 		}
 	}
 
