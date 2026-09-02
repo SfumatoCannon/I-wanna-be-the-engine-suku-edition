@@ -7,7 +7,7 @@ namespace suku
 	inline Sprite::Sprite(T&& _spriteZ) 
 		: width_(_spriteZ.width), height_(_spriteZ.height), centerX_(_spriteZ.centerX), centerY_(_spriteZ.centerY)
 	{
-		flipTimeCol_ = 1;
+		flipTime_ = 1;
 		push(std::move(_spriteZ));
 	}
 
@@ -15,7 +15,7 @@ namespace suku
 	inline Sprite::Sprite(int _flipTime, T&& _spriteZ, TNext&& ..._spriteZNext)
 		: width_(_spriteZ.width), height_(_spriteZ.height), centerX_(_spriteZ.centerX), centerY_(_spriteZ.centerY)
 	{
-		flipTimeCol_ = _flipTime;
+		flipTime_ = _flipTime;
 		push(std::move(_spriteZ));
 		push(std::move(_spriteZNext...));
 	}
@@ -24,7 +24,7 @@ namespace suku
 	inline void Sprite::init(T&& _spriteZ)
 	{
 		bodyList.clear();
-		flipTimeCol_ = 1;
+		flipTime_ = 1;
 		push(std::move(_spriteZ));
 	}
 
@@ -32,7 +32,7 @@ namespace suku
 	inline void Sprite::init(int _flipTime, T&& _spriteZ, TNext&& ..._spriteZNext)
 	{
 		bodyList.clear();
-		flipTimeCol_ = _flipTime;
+		flipTime_ = _flipTime;
 		push(std::move(_spriteZ));
 		push(std::move(_spriteZNext...));
 	}

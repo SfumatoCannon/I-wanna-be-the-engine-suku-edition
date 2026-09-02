@@ -25,11 +25,11 @@ public:
 		setBackground("Image\\bg.jpg");
 
 		static TilePack a(
-			Tile{ Wall::spr, Sprite{ BitmapSpriteElement("Image\\stage0\\block.png", SquareShape(32), 16, 16) } },
-			Tile{ Spike::sprUp, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_u.png") } },
-			Tile{ Spike::sprDown, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_d.png") } },
-			Tile{ Spike::sprLeft, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_l.png") } },
-			Tile{ Spike::sprRight, Sprite{ BitmapSpriteElement("Image\\stage0\\spike_r.png") } }
+			Tile{ Wall::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32)) },
+			Tile{ Spike::sprUp, Sprite("Image\\stage0\\spike_u.png") },
+			Tile{ Spike::sprDown, Sprite("Image\\stage0\\spike_d.png") },
+			Tile{ Spike::sprLeft, Sprite("Image\\stage0\\spike_l.png") },
+			Tile{ Spike::sprRight, Sprite("Image\\stage0\\spike_r.png") }
 		);
 		a.use();
 

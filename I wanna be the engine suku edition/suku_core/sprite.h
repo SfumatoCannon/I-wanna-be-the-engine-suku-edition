@@ -120,22 +120,25 @@ namespace suku
 		template<sprite_element_type T> Sprite(T&& _spriteZ);
 		template<sprite_element_type T, sprite_element_type... TNext> Sprite(int _flipTime, T&& _spriteZ, TNext&&... _spriteZNext);
 
-		//Load Sprite Directly from the long sprite bitmap; width and height will be auto calculated.
+		//Load Sprite which has only one frame.
+		Sprite(String _path, const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
+		Sprite(String _path, float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
+		//Load Sprite directly from the long sprite bitmap; width and height will be auto calculated.
 		Sprite(String _path, UINT _amount, int _flipTime,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		Sprite(String _path, UINT _amount, int _flipTime,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		//Load Sprite Directly from the long sprite bitmap, with given starting position and size.
+		//Load Sprite directly from the long sprite bitmap, with given starting position and size.
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		//Load Sprite Directly from the tileset; width and height will be auto calculated.
+		//Load Sprite directly from the tileset; width and height will be auto calculated.
 		Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime,
 			float _centerX = 0.0f, float _centerY = 0.0f, float _alphaThreshold = 0.0f);
-		//Load Sprite Directly from the tileset, with given starting position and size.
+		//Load Sprite directly from the tileset, with given starting position and size.
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, int _flipTime,
 			const Shape& _collisionBox, float _centerX = 0.0f, float _centerY = 0.0f);
 		Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, int _flipTime,
@@ -154,6 +157,11 @@ namespace suku
 		UINT getWidth()const { return width_; }
 		UINT getHeight()const { return height_; }
 		std::pair<UINT, UINT> getSize()const { return { width_, height_ }; }
+		UINT getRowCount()const { return rowCount_; }
+		UINT getColCount()const { return colCount_; }
+		std::pair<UINT, UINT> getRowColCount()const { return { rowCount_, colCount_ }; }
+		UINT getCount()const { return bodyList.size(); }
+		int getFlipTime()const { return flipTime_; }
 		float getCenterX()const { return centerX_; }
 		float getCenterY()const { return centerY_; }
 		std::pair<float, float> getCenter()const { return { centerX_, centerY_ }; }
@@ -169,10 +177,10 @@ namespace suku
 		UINT getFrameStateIndex(UINT _startIndex, long long _frameTick)const;
 		UINT getFrameStateIndex(UINT _startIndex, long double _frameTick)const;
 	private:
+		UINT rowCount_, colCount_;
 		UINT width_, height_;
 		float centerX_, centerY_;
-		int flipTimeCol_;
-		int flipTimeRow_ = 0;
+		int flipTime_;
 		UINT lastSetIndex_ = 0;
 	};
 }

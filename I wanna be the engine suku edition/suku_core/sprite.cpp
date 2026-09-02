@@ -250,20 +250,42 @@ namespace suku
 	}
 
 	Sprite::Sprite()
-		: flipTimeCol_(1), width_(0), height_(0), centerX_(0), centerY_(0) {
+		: flipTime_(0), width_(0), height_(0), centerX_(0), centerY_(0) {
+	}
+
+	Sprite::Sprite(String _path, const Shape& _collisionBox, float _centerX, float _centerY)
+		: flipTime_(0), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(1)
+	{
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+
+		width_ = originalWidth;
+		height_ = originalHeight;
+
+		push(BitmapSpriteElement(_path, 0, 0, width_, height_, _collisionBox, _centerX, _centerY));
+	}
+
+	Sprite::Sprite(String _path, float _centerX, float _centerY, float _alphaThreshold)
+		: flipTime_(0), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(1)
+	{
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+
+		width_ = originalWidth;
+		height_ = originalHeight;
+
+		push(BitmapSpriteElement(_path, 0, 0, width_, height_, _centerX, _centerY, _alphaThreshold));
 	}
 
 	Sprite::Sprite(String _path, UINT _amount, int _flipTime, const Shape& _collisionBox, float _centerX, float _centerY)
+		: flipTime_(_flipTime), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(_amount)
 	{
-		flipTimeCol_ = _flipTime;
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
 
 		width_ = width;
 		height_ = originalHeight;
-		centerX_ = _centerX;
-		centerY_ = _centerY;
 
 		for (UINT i = 0; i < _amount; i++)
 		{
@@ -273,16 +295,14 @@ namespace suku
 	}
 
 	Sprite::Sprite(String _path, UINT _amount, int _flipTime, float _centerX, float _centerY, float _alphaThreshold)
+		: flipTime_(_flipTime), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(_amount)
 	{
-		flipTimeCol_ = _flipTime;
 		Bitmap originalBitmap(_path);
 		auto [originalWidth, originalHeight] = originalBitmap.getSize();
 		UINT width = originalWidth / _amount;
 
 		width_ = width;
 		height_ = originalHeight;
-		centerX_ = _centerX;
-		centerY_ = _centerY;
 
 		for (UINT i = 0; i < _amount; i++)
 		{
@@ -293,14 +313,8 @@ namespace suku
 
 	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 		const Shape& _collisionBox, float _centerX, float _centerY)
+		: flipTime_(_flipTime), width_(_width), height_(_height), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(_amount)
 	{
-		flipTimeCol_ = _flipTime;
-
-		width_ = _width;
-		height_ = _height;
-		centerX_ = _centerX;
-		centerY_ = _centerY;
-
 		for (UINT i = 0; i < _amount; i++)
 		{
 			push(BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
@@ -310,14 +324,8 @@ namespace suku
 
 	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amount, int _flipTime,
 		float _centerX, float _centerY, float _alphaThreshold)
+		: flipTime_(_flipTime), width_(_width), height_(_height), centerX_(_centerX), centerY_(_centerY), rowCount_(1), colCount_(_amount)
 	{
-		flipTimeCol_ = _flipTime;
-
-		width_ = _width;
-		height_ = _height;
-		centerX_ = _centerX;
-		centerY_ = _centerY;
-
 		for (UINT i = 0; i < _amount; i++)
 		{
 			push(BitmapSpriteElement(_path, _startX + i * _width, _startY, _width, _height,
@@ -325,9 +333,80 @@ namespace suku
 		}
 	}
 
+	Sprite::Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime, 
+		const Shape& _collisionBox, float _centerX, float _centerY)
+		: flipTime_(_flipTime), centerX_(_centerX), centerY_(_centerY), rowCount_(_amountRow), colCount_(_amountCol)
+	{
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+		UINT width = originalWidth / _amountCol;
+		UINT height = originalHeight / _amountRow;
+
+		width_ = width;
+		height_ = originalHeight;
+
+		for (UINT j = 0; j < _amountRow; j++)
+		{
+			for (UINT i = 0; i < _amountCol; i++)
+			{
+				push(BitmapSpriteElement(_path, i * width, j * height, width, height,
+					_collisionBox, _centerX, _centerY));
+			}
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _amountRow, UINT _amountCol, int _flipTime, 
+		float _centerX, float _centerY, float _alphaThreshold)
+		: flipTime_(_flipTime), centerX_(_centerX), centerY_(_centerY), rowCount_(_amountRow), colCount_(_amountCol)
+	{
+		Bitmap originalBitmap(_path);
+		auto [originalWidth, originalHeight] = originalBitmap.getSize();
+		UINT width = originalWidth / _amountCol;
+		UINT height = originalHeight / _amountRow;
+
+		width_ = width;
+		height_ = originalHeight;
+
+		for (UINT j = 0; j < _amountRow; j++)
+		{
+			for (UINT i = 0; i < _amountCol; i++)
+			{
+				push(BitmapSpriteElement(_path, i * width, j * height, width, height,
+					_centerX, _centerY, _alphaThreshold));
+			}
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, 
+		int _flipTime, const Shape& _collisionBox, float _centerX, float _centerY)
+		: flipTime_(_flipTime), width_(_width), height_(_height), centerX_(_centerX), centerY_(_centerY), rowCount_(_amountRow), colCount_(_amountCol)
+	{
+		for (UINT j = 0; j < _amountRow; j++)
+		{
+			for (UINT i = 0; i < _amountCol; i++)
+			{
+				push(BitmapSpriteElement(_path, _startX + i * _width, _startY + j * _height, _width, _height,
+					_collisionBox, _centerX, _centerY));
+			}
+		}
+	}
+
+	Sprite::Sprite(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height, UINT _amountRow, UINT _amountCol, int _flipTime, float _centerX, float _centerY, float _alphaThreshold)
+		: flipTime_(_flipTime), width_(_width), height_(_height), centerX_(_centerX), centerY_(_centerY), rowCount_(_amountRow), colCount_(_amountCol)
+	{
+		for (UINT j = 0; j < _amountRow; j++)
+		{
+			for (UINT i = 0; i < _amountCol; i++)
+			{
+				push(BitmapSpriteElement(_path, _startX + i * _width, _startY + j * _height, _width, _height,
+					_centerX, _centerY, _alphaThreshold));
+			}
+		}
+	}
+
 	void Sprite::setSpeed(int _speed)
 	{
-		flipTimeCol_ = _speed;
+		flipTime_ = _speed;
 	}
 
 	void Sprite::setStartingIndex(UINT _index)
@@ -344,14 +423,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else if (flipTimeCol_ == 0)
+		else if (flipTime_ == 0)
 			return bodyList[lastSetIndex_].get();
-		else if (flipTimeCol_ > 0)
-			return bodyList[(lastSetIndex_ + _frameTick / flipTimeCol_) % bodyList.size()].get();
-		else // flipTimeCol_ < 0
+		else if (flipTime_ > 0)
+			return bodyList[(lastSetIndex_ + _frameTick / flipTime_) % bodyList.size()].get();
+		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((lastSetIndex_ + _frameTick / flipTimeCol_) % size + size) % size].get();
+			return bodyList[((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size].get();
 		}
 	}
 
@@ -364,14 +443,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return nullptr;
-		else if (flipTimeCol_ == 0)
+		else if (flipTime_ == 0)
 			return bodyList[_startIndex].get();
-		else if (flipTimeCol_ > 0)
-			return bodyList[(_startIndex + _frameTick / flipTimeCol_) % bodyList.size()].get();
-		else // flipTimeCol_ < 0
+		else if (flipTime_ > 0)
+			return bodyList[(_startIndex + _frameTick / flipTime_) % bodyList.size()].get();
+		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return bodyList[((_startIndex + _frameTick / flipTimeCol_) % size + size) % size].get();
+			return bodyList[((_startIndex + _frameTick / flipTime_) % size + size) % size].get();
 		}
 	}
 
@@ -384,14 +463,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return 0;
-		else if (flipTimeCol_ == 0)
+		else if (flipTime_ == 0)
 			return lastSetIndex_;
-		else if (flipTimeCol_ > 0)
-			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTimeCol_) % bodyList.size());
-		else // flipTimeCol_ < 0
+		else if (flipTime_ > 0)
+			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTime_) % bodyList.size());
+		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTimeCol_) % size + size) % size);
+			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size);
 		}
 	}
 
@@ -404,14 +483,14 @@ namespace suku
 	{
 		if (bodyList.empty())
 			return 0;
-		else if (flipTimeCol_ == 0)
+		else if (flipTime_ == 0)
 			return _startIndex;
-		else if (flipTimeCol_ > 0)
-			return static_cast<UINT>((_startIndex + _frameTick / flipTimeCol_) % bodyList.size());
-		else // flipTimeCol_ < 0
+		else if (flipTime_ > 0)
+			return static_cast<UINT>((_startIndex + _frameTick / flipTime_) % bodyList.size());
+		else // flipTime_ < 0
 		{
 			size_t size = bodyList.size();
-			return static_cast<UINT>(((_startIndex + _frameTick / flipTimeCol_) % size + size) % size);
+			return static_cast<UINT>(((_startIndex + _frameTick / flipTime_) % size + size) % size);
 		}
 	}
 
