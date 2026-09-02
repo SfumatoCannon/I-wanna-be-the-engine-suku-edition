@@ -80,7 +80,7 @@ namespace suku
 			switch (i.type)
 			{
 			case 1:
-				_room->create<Wall>((float)i.x, (float)i.y);
+				_room->create<Block>((float)i.x, (float)i.y);
 				break;
 			case 3:
 				_room->create<Spike>((float)i.x, (float)i.y, Direction::Up);

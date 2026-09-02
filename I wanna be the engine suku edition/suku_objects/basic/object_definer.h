@@ -10,7 +10,7 @@ namespace suku
 	class PlaceChangerRaw;
 	template<suku_room T> class PlaceChanger;
 	template<suku_room T> class Warp;
-	class Wall;
+	class Block;
 	class Spike;
 	class Cherry;
 	class Platform;
@@ -93,11 +93,17 @@ namespace suku
 		}
 	};
 
-	class Wall :public Object
+	class Solid :public Object
+	{
+	public:
+		Solid(float _x = 0, float _y = 0) : Object(_x, _y) {}
+	};
+
+	class Block :public Solid
 	{
 	public:
 		inline static Sprite spr{ BitmapSpriteElement("Image\\wall.png", SquareShape(32), 16, 16) };
-		Wall(float _x = 0, float _y = 0) : Object(_x, _y)
+		Block(float _x = 0, float _y = 0) : Solid(_x, _y)
 		{
 			sprite_ = &spr;
 			setPreUpdateId(-1);
@@ -109,7 +115,6 @@ namespace suku
 
 	class Spike :public Object
 	{
-		SUKU_DERIVE(Spike, Wall);
 	public:
 		static Sprite sprUp;
 		static Sprite sprDown;

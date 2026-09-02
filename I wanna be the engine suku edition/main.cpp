@@ -7,13 +7,13 @@ class Room1 : public Room
 public:
 	Room1() : Room()
 	{
-		create(Wall(96, 32));
+		create(Block(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
-		//create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
+		//create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
-		//create(Spike(32, 128), Wall(32, 160));
+		//create(Spike(32, 128), Block(32, 160));
 	}
 };
 
@@ -25,7 +25,7 @@ public:
 		setBackground("Image\\bg.jpg");
 
 		static TilePack a(
-			Tile{ Wall::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32)) },
+			Tile{ Block::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32)) },
 			Tile{ Spike::sprUp, Sprite("Image\\stage0\\spike_u.png") },
 			Tile{ Spike::sprDown, Sprite("Image\\stage0\\spike_d.png") },
 			Tile{ Spike::sprLeft, Sprite("Image\\stage0\\spike_l.png") },
@@ -34,7 +34,7 @@ public:
 		a.use();
 
 
-		create<Object>()->addDelayAction(50, [](Object* _o) {TilePack::resetAll(); return false; });
+		//create<Object>()->addDelayAction(50, [](Object* _o) {TilePack::resetAll(); return false; });
 
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);
@@ -46,9 +46,9 @@ public:
 
 		//create<UIElement>(400, 300, 200, 100);
 
-		//create(Wall(32, 32))->addDelayAction(100, 
+		//create(Block(32, 32))->addDelayAction(100, 
 		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
-		create<Wall>(1400, 400);
+		create<Block>(1400, 400);
 		Player* p = create<Player>(0.f, 0.f).get();
 		int x = 0;
 		setSavable<int>("test");
@@ -61,13 +61,13 @@ public:
 		x++;
 		getGlobalSaveFile()->saveVar("test", x);
 
-		create(Wall(32, 32))->addTimelineAction({ 100, 200 },
+		create(Block(32, 32))->addTimelineAction({ 100, 200 },
 			{
 				[=](Object* _this)->bool { _this->movingTo(64 + x * 32, 64 + x * 32, 50); return false; },
 				[](Object* _this)->bool { _this->movingTo(32, 32, 50); return false; }
 			}
 		);
-		create(Wall(96, 32))->addAction([=](Object* _this) {
+		create(Block(96, 32))->addAction([=](Object* _this) {
 			if (input::Mouse::isDoubleClick())
 			{
 				_this->x = input::Mouse::getX();
@@ -76,7 +76,7 @@ public:
 			return true;
 			}
 		);
-		create(Wall(256, 256))->addAction([=](Object* _this) {
+		create(Block(256, 256))->addAction([=](Object* _this) {
 			if (input::isKeyHolding(input::VK_A))
 			{
 				_this->rotate(14);
@@ -90,14 +90,14 @@ public:
 		);
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
-		create(Wall(96, 64), Wall(64, 96), Wall(96, 96), Wall(128, 96));
-		create(Wall(800, 32));
+		create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
+		create(Block(800, 32));
 		for (int i = 0; i < 608; i += 32)
-			create(Wall(300, i));
+			create(Block(300, i));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
-		create(Spike(32, 128), Wall(32, 160));
+		create(Spike(32, 128), Block(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 		// setBGM(&suku::SoundPool::musGuyRock);

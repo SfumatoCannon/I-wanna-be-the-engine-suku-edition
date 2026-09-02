@@ -172,7 +172,7 @@ namespace suku
 			return;
 		}
 
-		if (auto wall = getCrashedObject<Wall>(x, y + 1, false))
+		if (auto wall = getCrashedObject<Solid>(x, y + 1, false))
 		{
 			isOnFloor_ = true;
 			jumpTime_ = maxJumpTime;
@@ -294,7 +294,7 @@ namespace suku
 	{
 		if (!isAlive())
 			return;
-		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
+		auto tempList = getCrashedObjectList<Solid>(x + totalHspeed(), y + totalVspeed(), true);
 
 		float vspeedBefore = totalVspeed();
 		for (auto& wall : tempList)
@@ -304,7 +304,7 @@ namespace suku
 			vspeedTemp = totalVspeed();
 			vspeed = 0;
 		}
-		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
+		if (getCrashedObject<Solid>(x + totalHspeed(), y + totalVspeed(), true))
 			hspeed = hspeedTemp = 0;
 	}
 
@@ -364,7 +364,7 @@ namespace suku
 
 	void Blood::onUpdate()
 	{
-		auto tempList = getCrashedObjectList<Wall>(x + totalHspeed(), y + totalVspeed(), true);
+		auto tempList = getCrashedObjectList<Solid>(x + totalHspeed(), y + totalVspeed(), true);
 
 		float vspeedBefore = totalVspeed();
 
@@ -376,7 +376,7 @@ namespace suku
 			vspeedTemp = totalVspeed();
 			vspeed = 0;
 		}
-		if (getCrashedObject<Wall>(x + totalHspeed(), y + totalVspeed(), true))
+		if (getCrashedObject<Solid>(x + totalHspeed(), y + totalVspeed(), true))
 			hspeed = hspeedTemp = 0;
 	}
 }
