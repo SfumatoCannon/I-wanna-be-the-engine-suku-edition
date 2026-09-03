@@ -1,6 +1,7 @@
 #pragma once
 
 #include "basic/object_definer.h"
+#include "basic/Block.hpp"
 #include "basic/player.h"
 
 #include "ui/OptionElement.h"

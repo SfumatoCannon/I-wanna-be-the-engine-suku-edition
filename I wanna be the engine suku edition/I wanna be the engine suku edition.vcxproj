@@ -188,6 +188,7 @@
     <ClInclude Include="suku_core\tile.h" />
     <ClInclude Include="suku_core\transition.h" />
     <ClInclude Include="suku_foundation\update_id_register.h" />
+    <ClInclude Include="suku_objects\basic\Block.hpp" />
     <ClInclude Include="suku_objects\basic\object_definer.h" />
     <ClInclude Include="suku_core\view.h" />
     <ClInclude Include="suku_draw\bitmap.h" />

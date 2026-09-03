@@ -59,8 +59,12 @@ namespace suku
 		template<suku_object Obj = Object> Obj* getCrashedObject(Object* _sourceObj);
 		template<suku_object Obj = Object> std::list<Obj*> getCrashedObjectList(Object* _sourceObj);
 
-		virtual void onEntering() {}
+		void enter();
+		void restart();
+
+		virtual void onEnter() {}
 		virtual void onRestart() {}
+		virtual void onStart() {}
 		virtual void onPaintStart() {}
 		virtual void onPaintStart(PaintLayer& _layer) { _layer.clear(); if (&_layer == &displayLayer) paintBackground(); }
 		virtual void onPaintEnd() {}
@@ -73,7 +77,6 @@ namespace suku
 		RenderBitmap paintOnLayer(PaintLayer& _layer, float _frameOffset);
 		void paint();
 		void additionalFramePaint(float _offset);
-		void reset();
 
 		void pause(Object* _controllerObject);
 		void resume();

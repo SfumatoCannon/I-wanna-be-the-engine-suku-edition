@@ -38,13 +38,13 @@ namespace suku
 		sprite_ = &sprStanding;
 	}
 
-	void Player::onRoomEntered()
+	void Player::onRoomEnter()
 	{
 		spawnX = x;
 		spawnY = y;
 	}
 
-	void Player::onRestarting()
+	void Player::onRoomRestart()
 	{
 		x = { spawnX, Transition(0) };
 		y = { spawnY, Transition(0) };

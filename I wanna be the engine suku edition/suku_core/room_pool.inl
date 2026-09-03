@@ -49,6 +49,6 @@ namespace suku
 				nowBGM_ = nowRoom_->getBGM();
 			}
 		}
-		nowRoom_->onEntering();
+		nowRoom_->enter();
 	}
 }

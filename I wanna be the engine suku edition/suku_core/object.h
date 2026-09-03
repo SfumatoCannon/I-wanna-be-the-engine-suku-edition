@@ -75,8 +75,9 @@ namespace suku
 		void updateFunction();
 
 		static void classInitialize() {}
-		virtual void onRoomEntered() {}
-		virtual void onRestarting() { x = spawnX; y = spawnY; }
+		virtual void onRoomEnter() {}
+		virtual void onRoomStart() {}
+		virtual void onRoomRestart() { x = spawnX; y = spawnY; }
 		virtual void onRemove() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
 		virtual void onPreUpdate() {}

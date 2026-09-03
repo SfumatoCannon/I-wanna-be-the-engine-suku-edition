@@ -76,7 +76,7 @@ namespace suku
 		}
 
 		objectParentPointer->isInRoom_ = true;
-		objectParentPointer->onRoomEntered();
+		objectParentPointer->onRoomEnter();
 
 		return static_cast<Obj*>(objectParentPointer.get());
 	}

@@ -170,6 +170,30 @@ namespace suku
 		_object->targetPaintLayer_ = _paintLayer;
 	}
 
+	void Room::enter()
+	{
+		std::list<Object*> allObjList = getObjectList<Object>();
+		for (auto& objPointer : allObjList)
+		{
+			objPointer->onRoomStart();
+			objPointer->onRoomEnter();
+		}
+		onStart();
+		onEnter();
+	}
+
+	void Room::restart()
+	{
+		std::list<Object*> allObjList = getObjectList<Object>();
+		for (auto& objPointer : allObjList)
+		{
+			objPointer->onRoomStart();
+			objPointer->onRoomRestart();
+		}
+		onStart();
+		onRestart();
+	}
+
 	void Room::update()
 	{
 		if (isUpdatePaused_)
@@ -449,16 +473,6 @@ namespace suku
 		scaleEffect.paint();
 
 		onPaintEnd();
-	}
-
-	void Room::reset()
-	{
-		std::list<Object*> allObjList = getObjectList<Object>();
-		for (auto& objPointer : allObjList)
-		{
-			objPointer->onRestarting();
-		}
-		//player->spawn();
 	}
 
 	void Room::pause(Object* _controllerObject)
