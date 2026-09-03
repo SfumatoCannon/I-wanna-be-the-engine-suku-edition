@@ -289,7 +289,7 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			push(BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
+			push(BitmapSpriteElement(_path, i * width_, 0, width_, height_,
 				_collisionBox, _centerX, _centerY));
 		}
 	}
@@ -306,7 +306,7 @@ namespace suku
 
 		for (UINT i = 0; i < _amount; i++)
 		{
-			push(BitmapSpriteElement(_path, i * width, 0, width, originalHeight,
+			push(BitmapSpriteElement(_path, i * width_, 0, width_, height_,
 				_centerX, _centerY, _alphaThreshold));
 		}
 	}
@@ -343,13 +343,13 @@ namespace suku
 		UINT height = originalHeight / _amountRow;
 
 		width_ = width;
-		height_ = originalHeight;
+		height_ = height;
 
 		for (UINT j = 0; j < _amountRow; j++)
 		{
 			for (UINT i = 0; i < _amountCol; i++)
 			{
-				push(BitmapSpriteElement(_path, i * width, j * height, width, height,
+				push(BitmapSpriteElement(_path, i * width_, j * height_, width_, height_,
 					_collisionBox, _centerX, _centerY));
 			}
 		}
@@ -365,13 +365,13 @@ namespace suku
 		UINT height = originalHeight / _amountRow;
 
 		width_ = width;
-		height_ = originalHeight;
+		height_ = height;
 
 		for (UINT j = 0; j < _amountRow; j++)
 		{
 			for (UINT i = 0; i < _amountCol; i++)
 			{
-				push(BitmapSpriteElement(_path, i * width, j * height, width, height,
+				push(BitmapSpriteElement(_path, i * width_, j * height_, width_, height_,
 					_centerX, _centerY, _alphaThreshold));
 			}
 		}

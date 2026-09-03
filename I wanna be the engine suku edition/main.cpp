@@ -92,7 +92,7 @@ public:
 		create(VineRight(96, 32));
 		create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 		create(Block(800, 32));
-		for (int i = 0; i < 608; i += 32)
+		for (int i = 64; i < 608; i += 32)
 			create(Block(300, i));
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));

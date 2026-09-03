@@ -15,5 +15,30 @@ namespace suku
 			setPostUpdateId(-1);
 			setPaintId(2);
 		}
+		virtual void onRoomEnter() override
+		{
+			// autotile the block
+			if (!isInRoom())
+				return;
+			if (sprite_->getFlipTime() != 0)
+				return;
+			auto [width, height] = sprite_->getSize();
+			auto [row, col] = sprite_->getRowColCount();
+			if (row == 1 && col == 1)
+			{
+				return;
+			}
+			else if ((row == 1 && col == 2) || (row == 2 && col == 1))
+			{
+				if (getCrashedObject<Block>(x, y - height) != nullptr)
+				{
+					this->spriteBasicIndex = 1;
+				}
+				else
+				{
+					this->spriteBasicIndex = 0;
+				}
+			}
+		}
 	};
 }
