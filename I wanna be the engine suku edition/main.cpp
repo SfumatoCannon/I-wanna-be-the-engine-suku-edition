@@ -33,21 +33,9 @@ public:
 		);
 		a.use();
 
-
-		//create<Object>()->addDelayAction(50, [](Object* _o) {TilePack::resetAll(); return false; });
-
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);
 
-		//create(Background(Bitmap("Image\\bg.jpg")));
-
-		//static Player player(0, 0);
-		//append(&player);
-
-		//create<UIElement>(400, 300, 200, 100);
-
-		//create(Block(32, 32))->addDelayAction(100, 
-		//	[&](Object* _this)->bool { _this->movingTo(64, 64, 50); return false;});
 		create<Block>(1400, 400);
 		Player* p = create<Player>(0.f, 0.f).get();
 		int x = 0;

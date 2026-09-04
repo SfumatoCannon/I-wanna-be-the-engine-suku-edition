@@ -1,5 +1,6 @@
 #include "room_pool.h"
 #include "room.h"
+#include <suku_core/tile.h>
 
 namespace suku
 {
@@ -26,6 +27,7 @@ namespace suku
 	template<suku_room T>
 	inline void RoomPool::gotoRoom()
 	{
+		Tile::resetAll();
 		RoomPool::nowRoom_ = getRoom<T>();
 		if (nowRoom_->hasBGM())
 		{

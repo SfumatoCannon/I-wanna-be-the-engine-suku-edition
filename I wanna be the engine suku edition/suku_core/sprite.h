@@ -29,7 +29,6 @@ namespace suku
 	public:
 		UINT height = 0, width = 0;
 		float centerX = 0.0f, centerY = 0.0f;
-		std::unique_ptr<CollisionBox> hitArea;
 
 		SpriteElement() = default;
 		SpriteElement(SpriteElement&& _other) = default;
@@ -41,6 +40,8 @@ namespace suku
 		virtual void paint(Transform _transform, float _alpha = 1.0) = 0;
 		bool isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const;
+	protected:
+		std::unique_ptr<CollisionBox> hitArea_;
 	};
 
 	class BitmapSpriteElement :public SpriteElement

@@ -5,16 +5,16 @@ namespace suku
 {
 	bool SpriteElement::isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const
 	{
-		if (!hitArea || !(_other.hitArea))
+		if (!hitArea_ || !(_other.hitArea_))
 			return false;
-		return hitArea->isCrashed(_transform, *(_other.hitArea), _otherTransform);
+		return hitArea_->isCrashed(_transform, *(_other.hitArea_), _otherTransform);
 	}
 
 	bool SpriteElement::isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const
 	{
-		if (!hitArea || !(_other->hitArea))
+		if (!hitArea_ || !(_other->hitArea_))
 			return false;
-		return hitArea->isCrashed(_transform, *(_other->hitArea), _otherTransform);
+		return hitArea_->isCrashed(_transform, *(_other->hitArea_), _otherTransform);
 	}
 
 	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const ComPtr<ID2D1Brush>& _fillBrush,
@@ -152,7 +152,7 @@ namespace suku
 
 	BitmapSpriteElement::BitmapSpriteElement()
 	{
-		hitArea = nullptr;
+		hitArea_ = nullptr;
 		pBitmap_ = nullptr;
 		width = 0;
 		height = 0;
@@ -167,7 +167,7 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 		pBitmap_ = std::make_unique<Bitmap>(_bitmap);
-		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
+		hitArea_ = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(String _path, const Shape& _collisionBox, float _centerX, float _centerY)
@@ -176,7 +176,7 @@ namespace suku
 		centerY = _centerY;
 		pBitmap_ = nullptr;
 		catchBitmapAndSize(_path);
-		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
+		hitArea_ = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(String _path, UINT _startX, UINT _startY, UINT _width, UINT _height,
@@ -187,7 +187,7 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 		pBitmap_ = std::make_unique<Bitmap>(_path, _startX, _startY, _width, _height);
-		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
+		hitArea_ = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(UINT _width, UINT _height, const Shape& _collisionBox, float _centerX, float _centerY)
@@ -197,13 +197,13 @@ namespace suku
 		centerX = _centerX;
 		centerY = _centerY;
 		pBitmap_ = nullptr;
-		hitArea = std::make_unique<ShapeCollisionBox>(_collisionBox);
+		hitArea_ = std::make_unique<ShapeCollisionBox>(_collisionBox);
 	}
 
 	BitmapSpriteElement::BitmapSpriteElement(UINT _width, UINT _height, const BitmapCollisionBox& _collisionBox,
 		float _centerX, float _centerY, String _path)
 	{
-		hitArea = std::make_unique<BitmapCollisionBox>(_collisionBox);
+		hitArea_ = std::make_unique<BitmapCollisionBox>(_collisionBox);
 		width = _width;
 		height = _height;
 		centerX = _centerX;
@@ -223,12 +223,12 @@ namespace suku
 		{
 			width = pBitmap_->getWidth();
 			height = pBitmap_->getHeight();
-			hitArea = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
+			hitArea_ = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
 		}
 		else
 		{
 			width = height = 0;
-			hitArea = nullptr;
+			hitArea_ = nullptr;
 		}
 	}
 
@@ -244,9 +244,9 @@ namespace suku
 		pBitmap_ = std::make_unique<Bitmap>(_path, _startX, _startY, _width, _height);
 
 		if (pBitmap_)
-			hitArea = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
+			hitArea_ = std::make_unique<BitmapCollisionBox>(pBitmap_.get(), _alphaThreshold);
 		else
-			hitArea = nullptr;
+			hitArea_ = nullptr;
 	}
 
 	Sprite::Sprite()
