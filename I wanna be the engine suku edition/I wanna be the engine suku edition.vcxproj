@@ -235,6 +235,7 @@
     <ClInclude Include="suku_preset_rooms\RoomConfigPage.hpp" />
     <ClInclude Include="suku_preset_rooms\RoomSelectSave.h" />
     <ClInclude Include="suku_preset_rooms\RoomTitle.h" />
+    <ClInclude Include="suku_preset_rooms\skins.hpp" />
     <ClInclude Include="suku_sounds\audio_core.h" />
     <ClInclude Include="suku_sounds\includes.h" />
     <ClInclude Include="suku_sounds\suku_sound_pool.h" />

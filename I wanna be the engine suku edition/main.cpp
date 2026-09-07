@@ -23,16 +23,6 @@ public:
 	Room0() : Room(2000, 1216)
 	{
 		setBackground("Image\\bg.jpg");
-
-		static TilePack a(
-			Tile{ Block::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32)) },
-			Tile{ Spike::sprUp, Sprite("Image\\stage0\\spike_u.png") },
-			Tile{ Spike::sprDown, Sprite("Image\\stage0\\spike_d.png") },
-			Tile{ Spike::sprLeft, Sprite("Image\\stage0\\spike_l.png") },
-			Tile{ Spike::sprRight, Sprite("Image\\stage0\\spike_r.png") }
-		);
-		a.use();
-
 		static SaveFile save0("save123");
 		setGlobalSaveFile(&save0);
 
@@ -104,19 +94,7 @@ public:
 
 		Room::onPaintStart(_layer);
 		
-		//auto brush = graphics::createSolidColorBrush(Color(255, 255, 255, 1.0f));
-		//auto brush2 = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
-		//Shape A(SquareShape(64));
-		//Bitmap B("Image\\bg.jpg");
-		//Bitmap C("Image\\wall.png");
-		//static PaintLayer layer(1000, 608);
-		//layer.beginDraw();
-		//layer.clear(Color::GREEN());
-		//layer.drawBitmap(B, translation(0, 0), 0.5f);
-		//layer.drawShape(A, translation(400, 300), brush, brush2, 5.0f);
-		//layer.drawBitmap(C, 128, 256, 0, 0, 16, 16);
-		//layer.endDraw().paint();
 		Text a("Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 			TextAlign::MiddleRight);
 		a.contentString = std::to_wstring(getObjectList<Player>().front()->y.getValue());
@@ -127,6 +105,5 @@ public:
 
 void init()
 {
-	gotoRoom<Room0>();
-	//gotoRoom<RoomTitle>();
+	gotoRoom<RoomTitle>();
 }

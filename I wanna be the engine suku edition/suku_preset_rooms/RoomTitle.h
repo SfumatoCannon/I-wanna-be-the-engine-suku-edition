@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../I wanna be the engine suku edition.h"
+#include <I wanna be the engine suku edition.h>
+#include "skins.hpp"
 
 using namespace suku;
 
-class RoomTitle : public Room
+class RoomTitle : public RoomStage0
 {
 public:
 	RoomTitle();
