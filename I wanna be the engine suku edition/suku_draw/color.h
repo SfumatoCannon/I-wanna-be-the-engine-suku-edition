@@ -27,11 +27,11 @@ namespace suku
 		void setV(float _v);
 		void setHSV(float _h, float _s, float _v);
 
-		static constexpr Color BLACK(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 0.0f, _alpha); }
-		static constexpr Color WHITE(float _alpha = 1.0f) { return Color(255.0f, 255.0f, 255.0f, _alpha); }
-		static constexpr Color RED(float _alpha = 1.0f) { return Color(255.0f, 0.0f, 0.0f, _alpha); }
-		static constexpr Color GREEN(float _alpha = 1.0f) { return Color(0.0f, 255.0f, 0.0f, _alpha); }
-		static constexpr Color BLUE(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 255.0f, _alpha); }
+		static constexpr Color Black(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 0.0f, _alpha); }
+		static constexpr Color White(float _alpha = 1.0f) { return Color(255.0f, 255.0f, 255.0f, _alpha); }
+		static constexpr Color Red(float _alpha = 1.0f) { return Color(255.0f, 0.0f, 0.0f, _alpha); }
+		static constexpr Color Green(float _alpha = 1.0f) { return Color(0.0f, 255.0f, 0.0f, _alpha); }
+		static constexpr Color Blue(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 255.0f, _alpha); }
 	private:
 		float r_, g_, b_;	//range: 0.0f ~ 255.0f
 	};

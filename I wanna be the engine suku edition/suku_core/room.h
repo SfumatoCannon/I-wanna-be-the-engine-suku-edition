@@ -15,6 +15,8 @@ namespace suku
 	class Room;
 	class ObjectCollisionPool;
 
+	class RectangleShape;
+
 	class Room
 	{
 	public:
@@ -86,7 +88,9 @@ namespace suku
 		Sound* getBGM() const { return bgm_; }
 
 		void setBackground(Bitmap _background);
-		Bitmap getBackground() { return background_; }
+		Bitmap* getBackground() { return background_.get(); }
+		void setBackground(Color _color);
+		Color getBackgroundColor() { return backgroundColor_; }
 	private:
 		unsigned int width_;
 		unsigned int height_;
@@ -108,7 +112,10 @@ namespace suku
 		Sound* bgm_ = nullptr;
 
 		bool hasBackground_ = false;
-		Bitmap background_ = Bitmap();
+		bool hasBackgroundColor_ = false;
+		std::unique_ptr<Bitmap> background_ = nullptr;
+		Color backgroundColor_ = Color::Black();
+		std::unique_ptr<RectangleShape> backgroundShape_ = nullptr;
 		void paintBackground();
 	protected:
 		PaintLayer displayLayer;

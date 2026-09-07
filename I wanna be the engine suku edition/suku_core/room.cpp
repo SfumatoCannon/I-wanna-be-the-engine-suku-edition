@@ -6,6 +6,7 @@
 #include "object_collision_pool.h"
 #include <suku_foundation/maths.h>
 #include <suku_objects/map_loader.h>
+#include <suku_draw/shape.h>
 
 namespace suku
 {
@@ -498,47 +499,43 @@ namespace suku
 			return;
 
 		hasBackground_ = true;
-		background_ = _background;
+		background_ = std::make_unique<Bitmap>(_background);
+	}
+
+	void Room::setBackground(Color _color)
+	{
+		hasBackground_ = true;
+		background_ = nullptr;
+		backgroundColor_ = _color;
+		backgroundShape_ = std::make_unique<RectangleShape>(width_, height_);
+		backgroundShape_->setFill(backgroundColor_);
 	}
 
 	void Room::paintBackground()
 	{
-		if (hasBackground_ && background_.isValid())
+		if (hasBackground_)
 		{
-			auto [backgroundWidth, backgroundHeight] = background_.getSize();
-			double backgroundStartX = maths::modR((double)backgroundOffsetX, backgroundWidth);
-			double backgroundStartY = maths::modR((double)backgroundOffsetY, backgroundHeight);
-			if (backgroundStartX > 0)
-				backgroundStartX -= backgroundWidth;
-			if (backgroundStartY > 0)
-				backgroundStartY -= backgroundHeight;
-			for (double x = backgroundStartX; x < width_; x += backgroundWidth)
+			if (background_ && background_->isValid())
 			{
-				for (double y = backgroundStartY; y < height_; y += backgroundHeight)
+				auto [backgroundWidth, backgroundHeight] = background_->getSize();
+				double backgroundStartX = maths::modR((double)backgroundOffsetX, backgroundWidth);
+				double backgroundStartY = maths::modR((double)backgroundOffsetY, backgroundHeight);
+				if (backgroundStartX > 0)
+					backgroundStartX -= backgroundWidth;
+				if (backgroundStartY > 0)
+					backgroundStartY -= backgroundHeight;
+				for (double x = backgroundStartX; x < width_; x += backgroundWidth)
 				{
-					background_.paint(x, y);
+					for (double y = backgroundStartY; y < height_; y += backgroundHeight)
+					{
+						background_->paint(x, y);
+					}
 				}
+			}
+			else
+			{
+				backgroundShape_->paint(0, 0);
 			}
 		}
 	}
-
-	/*
-	void Room::paintBody()
-	{
-		int j;
-		std::list<Object*>::iterator k;
-		std::list<Object*> object_painting_array[VALUE_MAXPAINT];
-		//for (j = 0; j < VALUE_MAXPAINT; j++)
-		//	object_painting_array[j].clear();
-		for (auto& i : objectPointerArray_[typeid(Object).hash_code()])
-		{
-			Object* obj;
-			i >> obj;
-			object_painting_array[obj->paintId_].push_back(obj);
-		}
-		//object_painting_array[player->paintId_].push_back(player);
-		for (j = 0; j < VALUE_MAXPAINT; j++)
-			for (k = object_painting_array[j].begin(); k != object_painting_array[j].end(); k++)
-				(*k)->paintBody();
-	}*/
 }

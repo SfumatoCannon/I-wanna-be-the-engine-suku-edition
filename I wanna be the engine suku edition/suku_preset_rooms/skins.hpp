@@ -16,7 +16,7 @@ public:
 	};
 	RoomStage0(unsigned int _width = 800, unsigned int _height = 600) : Room(_width, _height)
 	{
-		
+		setBackground(Color(200, 180, 180));
 		tilepack.use();
 	}
 };
