@@ -16,6 +16,7 @@ namespace suku
 	class ObjectCollisionPool;
 
 	class RectangleShape;
+	class TilePack;
 
 	class Room
 	{
@@ -85,12 +86,17 @@ namespace suku
 
 		bool hasBGM() const { return hasBGM_; }
 		void setBGM(Sound* _bgm);
+		void setBGM(Sound& _bgm) { setBGM(&_bgm); }
 		Sound* getBGM() const { return bgm_; }
 
 		void setBackground(Bitmap _background);
 		Bitmap* getBackground() { return background_.get(); }
 		void setBackground(Color _color);
 		Color getBackgroundColor() { return backgroundColor_; }
+
+		void setTilePack(TilePack& _tilepack);
+		void addTilePack(TilePack& _tilepack);
+		void removeTilePack(TilePack& _tilepack);
 	private:
 		unsigned int width_;
 		unsigned int height_;

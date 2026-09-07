@@ -7,6 +7,7 @@
 #include <suku_foundation/maths.h>
 #include <suku_objects/map_loader.h>
 #include <suku_draw/shape.h>
+#include "tile.h"
 
 namespace suku
 {
@@ -509,6 +510,22 @@ namespace suku
 		backgroundColor_ = _color;
 		backgroundShape_ = std::make_unique<RectangleShape>(width_, height_);
 		backgroundShape_->setFill(backgroundColor_);
+	}
+
+	void Room::setTilePack(TilePack& _tilepack)
+	{
+		TilePack::resetAll();
+		_tilepack.use();
+	}
+
+	void Room::addTilePack(TilePack& _tilepack)
+	{
+		_tilepack.use();
+	}
+
+	void Room::removeTilePack(TilePack& _tilepack)
+	{
+		_tilepack.unuse();
 	}
 
 	void Room::paintBackground()

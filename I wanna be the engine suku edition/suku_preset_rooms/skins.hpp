@@ -14,9 +14,12 @@ public:
 		Tile{ Spike::sprLeft, Sprite("Image\\stage0\\spike_l.png") },
 		Tile{ Spike::sprRight, Sprite("Image\\stage0\\spike_r.png") }
 	};
+	inline static Sound bgm{ "Audio\\musGuyRock.mp3", 0.1f };
+
 	RoomStage0(unsigned int _width = 800, unsigned int _height = 600) : Room(_width, _height)
 	{
+		setBGM(bgm);
 		setBackground(Color(200, 180, 180));
-		tilepack.use();
+		setTilePack(tilepack);
 	}
 };
