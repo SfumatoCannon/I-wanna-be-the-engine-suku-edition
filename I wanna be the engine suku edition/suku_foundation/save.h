@@ -43,11 +43,12 @@ namespace suku
 	public:
 		SaveFile() = default;
 		SaveFile(String _fileName);
+		SaveFile(const SaveFile& _other);
 
 		void writeData();
 		void readData();
 		void setFileName(String _fileName);
-		String getFileName();
+		String getFileName()const;
 
 		template<typename T> void saveVar(const std::string _name, T _val);
 		template<typename T> void saveVar(const std::string _name, Property<T>& _val);

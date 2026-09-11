@@ -14,12 +14,12 @@ namespace suku
 	bool UIElement::onPaint()
 	{
 		RectangleShape area(width_, height_);
-		Text text("Consolas", 12, TextAlign::MiddleCenter);
+		Text text({ "Consolas", 12, TextAlign::MiddleCenter });
 		area.setFill(Color(128, 128, 128, 0.5f));
 		area.paint(x, y, transform);
-		text.setBrush(Color(255, 255, 0));
-		text.contentString = L"UI";
-		text.paint(x, y, width_, height_, graphics::createSolidColorBrush(Color(255, 255, 255)));
+		text.style.setBrush(Color(255, 255, 255));
+		text.text = L"UI";
+		text.paint(x, y, width_, height_);
 		return false;
 	}
 }

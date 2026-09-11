@@ -45,13 +45,13 @@ namespace suku
 	template<typename T>
 	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info)
 		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height),
-		labelText_("Consolas", _height / 2, TextAlign::MiddleLeft), valueText_("Consolas", _height / 2, TextAlign::MiddleRight), infoText_("Consolas", 16, TextAlign::TopLeft)
+		labelText_({ "Consolas", _height / 2.0f, TextAlign::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextAlign::MiddleRight }), infoText_({ "Consolas", 16, TextAlign::TopLeft })
 	{
 		if (!_info.isEmpty())
 		{
 			hasInfo_ = true;
 			info_ = _info;
-			infoText_.contentString = _info;
+			infoText_.text = _info;
 		}
 
 		onUpdateFunc_ = [&_bindedConfig](OptionElement* _element)
@@ -132,19 +132,19 @@ namespace suku
 				area.paint(_element->x, _element->y, _element->transform);
 
 				// label text
-				_element->labelText_.setBrush(Color(255, 255, 255));
-				_element->labelText_.contentString = _element->label_;
-				_element->labelText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				_element->labelText_.style.setBrush(Color(255, 255, 255));
+				_element->labelText_.text = _element->label_;
+				_element->labelText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16);
 
 				// value text
-				_element->valueText_.setBrush(Color(255, 255, 255));
-				_element->valueText_.contentString = std::to_wstring(_bindedConfig.value());
-				_element->valueText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16, graphics::createSolidColorBrush(Color(255, 255, 255)));
+				_element->valueText_.style.setBrush(Color(255, 255, 255));
+				_element->valueText_.text = std::to_wstring(_bindedConfig.value());
+				_element->valueText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16);
 				
 				if (_element->hasInfo_ && _element->isSelected_)
 				{
 					float height = _element->infoText_.getContentHeight(_element->getWidth() - 16);
-					_element->infoText_.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, height, graphics::createSolidColorBrush(Color(255, 255, 255)));
+					_element->infoText_.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, height);
 				}
 				return false;
 			};

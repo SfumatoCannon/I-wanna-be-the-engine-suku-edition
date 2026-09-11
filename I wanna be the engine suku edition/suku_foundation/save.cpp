@@ -24,6 +24,11 @@ namespace suku
 		setFileName(_fileName);
 	}
 
+	SaveFile::SaveFile(const SaveFile& _other)
+	{
+		setFileName(_other.getFileName());
+	}
+
 	void SaveFile::writeData()
 	{
 		if (!file_)
@@ -71,7 +76,7 @@ namespace suku
 		file_ = std::make_unique<File>(_fileName, filesystem::absolutePath(L"Save\\" + _fileName + ".sav"));
 	}
 
-	String SaveFile::getFileName()
+	String SaveFile::getFileName()const
 	{
 		if (!file_)
 			return String();

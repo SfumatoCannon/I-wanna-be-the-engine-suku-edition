@@ -290,23 +290,23 @@ namespace
 	{
 		double monitoredFPS = getMonitoredFPS(false);
 		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
-		static suku::Text a("Consolas", 24);
-		a.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 255, 0, 1.0f)));
-		a.contentString.clear();
+		static suku::Text a({"Consolas", 24});
+		a.style.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 255, 0, 1.0f)));
+		a.text.clear();
 
 		// FPS
-		a.contentString += L"FPS: " + std::to_wstring(monitoredFPS) + (isVsyncOn ? L" (vsync on)" : L"");
+		a.text += L"FPS: " + std::to_wstring(monitoredFPS) + (isVsyncOn ? L" (vsync on)" : L"");
 
 		// Now Room
 		auto nowRoom = suku::RoomPool::getNowRoom();
-		a.contentString += L"\nRoom Id: " + std::to_wstring(nowRoom->getRoomId());
+		a.text += L"\nRoom Id: " + std::to_wstring(nowRoom->getRoomId());
 
 		// Player
 		if (!nowRoom->getObjectList<suku::Player>().empty())
 		{
 			suku::Player* p = nowRoom->getObjectList<suku::Player>().front();
-			a.contentString += L"\nPlayer X: " + std::to_wstring(p->x.getValue());
-			a.contentString += L"\nPlayer Y: " + std::to_wstring(p->y.getValue());
+			a.text += L"\nPlayer X: " + std::to_wstring(p->x.getValue());
+			a.text += L"\nPlayer Y: " + std::to_wstring(p->y.getValue());
 		}
 
 		a.paint(10, 10);

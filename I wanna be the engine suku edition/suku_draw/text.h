@@ -32,21 +32,13 @@ namespace suku
 		WrapWord
 	};
 
-	class Text
+	class TextStyle
 	{
 	public:
-		String contentString;
-		Text(String _fontName, float _size, 
-			TextAlign _textAlign = TextAlign::TopLeft, 
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		Text(String _content, String _fontName, float _size,
+		TextStyle(String _fontName, float _size,
 			TextAlign _textAlign = TextAlign::TopLeft,
 			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		Text(String _fontName, float _size,
-			DWRITE_FONT_WEIGHT _fontWeight,	DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
-			TextAlign _textAlign = TextAlign::TopLeft,
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		Text(String _content, String _fontName, float _size,
+		TextStyle(String _fontName, float _size,
 			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
 			TextAlign _textAlign = TextAlign::TopLeft,
 			TextWrapOption _wrapOption = TextWrapOption::Wrap);
@@ -57,17 +49,14 @@ namespace suku
 		void setTextWrapOption(TextWrapOption _option);
 		TextWrapOption getTextWarpOption() { return textWrapOption_; }
 
-		int getContentLineCount(float _width);
-		float getContentHeight(float _width);
+		int getContentLineCount(String _text, float _width);
+		float getContentHeight(String _text, float _width);
 
-		void paint(float _x, float _y, Transform _transform = Transform());
-		void paint(float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
-		void paint(float _x, float _y, float _width, float _height, Transform _transform = Transform());
-		void paint(float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
-		void paint(float _x, float _y, TextAlign _textAlign, Transform _transform = Transform());
-		void paint(float _x, float _y, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
-		void paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, Transform _transform = Transform());
-		void paint(float _x, float _y, float _width, float _height, TextAlign _textAlign, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(String _text, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, float _width, float _height, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
 
 		void setBrush(ComPtr<ID2D1Brush> _brush);
 		void setBrush(Color _color);
@@ -80,10 +69,31 @@ namespace suku
 		TextWrapOption textWrapOption_;
 	};
 
+	class Text
+	{
+	public:
+		Text(const TextStyle& _textStyle);
+		Text(String _text, const TextStyle& _textStyle);
+		Text(String _text);
+
+		TextStyle style;
+		String text;
+
+		void setStyle(const TextStyle& _textStyle) { style = _textStyle; }
+
+		int getContentLineCount(float _width) { return style.getContentLineCount(text, _width); }
+		float getContentHeight(float _width) { return style.getContentHeight(text, _width); }
+
+		void paint(float _x, float _y, Transform _transform = Transform());
+		void paint(float _x, float _y, float _width, float _height, Transform _transform = Transform());
+
+	private:
+	};
+
 	class TextArea
 	{
 	public:
-		TextArea();
+		TextArea() = default;
 	private:
 		ComPtr<IDWriteTextLayout> pTextLayout_;
 		float maxWidth_;
