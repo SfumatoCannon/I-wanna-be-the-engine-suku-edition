@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <wrl/client.h>
+#include <utility>
+#include <dxgi1_2.h>
 
 namespace suku
 {
@@ -9,11 +11,10 @@ namespace suku
 	{
 		using Microsoft::WRL::ComPtr;
 
-		extern ComPtr<IDXGISwapChain1>         pSwapChain;
-
 		void createD3DDevice(ComPtr<ID3D11Device>& _pD3DDevice,
 			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext);
 		void createSwapChain(HWND _hWnd);
+		ComPtr<IDXGISwapChain1> getSwapChain();
 
 		void suku_d3d_preinit(ComPtr<ID3D11Device>& _pD3DDevice, 
 			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext);

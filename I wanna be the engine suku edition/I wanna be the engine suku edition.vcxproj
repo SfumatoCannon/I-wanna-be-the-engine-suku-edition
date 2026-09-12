@@ -187,6 +187,7 @@
     <ClInclude Include="suku_core\suku_property.h" />
     <ClInclude Include="suku_core\tile.h" />
     <ClInclude Include="suku_core\transition.h" />
+    <ClInclude Include="suku_draw\brush.h" />
     <ClInclude Include="suku_foundation\update_id_register.h" />
     <ClInclude Include="suku_objects\basic\Block.hpp" />
     <ClInclude Include="suku_objects\basic\object_definer.h" />
@@ -305,6 +306,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_draw\brush.cpp" />
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

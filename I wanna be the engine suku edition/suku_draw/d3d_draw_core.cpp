@@ -2,12 +2,15 @@
 #include "d3d_draw_core.h"
 #include "../suku_foundation/includes.h"
 
+namespace
+{
+	Microsoft::WRL::ComPtr<IDXGISwapChain1>         pSwapChain_;
+}
+
 namespace suku
 {
 	namespace graphics
 	{
-		ComPtr<IDXGISwapChain1>         pSwapChain;
-
 		void createD3DDevice(ComPtr<ID3D11Device>& _pD3DDevice,
 			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext)
 		{
@@ -66,7 +69,7 @@ namespace suku
 				&desc,
 				nullptr,
 				nullptr,
-				&pSwapChain
+				&pSwapChain_
 			);
 
 			if (FAILED(hr))
@@ -76,6 +79,11 @@ namespace suku
 			}
 
 			factory->MakeWindowAssociation(_hWnd, DXGI_MWA_NO_ALT_ENTER);
+		}
+
+		ComPtr<IDXGISwapChain1> getSwapChain()
+		{
+			return pSwapChain_;
 		}
 
 		void suku_d3d_preinit(ComPtr<ID3D11Device>& _pD3DDevice,
@@ -98,7 +106,7 @@ namespace suku
 				_pD3DDeviceContext->Flush();
 			}
 
-			pSwapChain.Reset();
+			pSwapChain_.Reset();
 
 			_pD3DDeviceContext.Reset();
 

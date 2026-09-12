@@ -4,6 +4,7 @@
 #include "../suku_foundation/includes.h"
 #include "d3d_draw_core.h"
 #include "scale_mode.h"
+#include <wincodec.h>
 
 namespace suku
 {
@@ -84,7 +85,7 @@ namespace suku
 
 			// Set D2D Device Context Target
 			ComPtr<IDXGISurface> dxgiBackBuffer;
-			hr = graphics::pSwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+			hr = graphics::getSwapChain()->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
 			if (FAILED(hr))
 			{
 				ERRORWINDOW_GLOBAL("Failed to create dxgiBackBuffer");
@@ -143,6 +144,25 @@ namespace suku
 			if (FAILED(hr))
 			{
 				ERRORWINDOW_GLOBAL("Failed to create solid color brush");
+				return nullptr;
+			}
+			return brush;
+		}
+
+		ComPtr<ID2D1BitmapBrush> createBitmapBrush(const ComPtr<ID2D1Bitmap1>& _bitmap, D2D1_EXTEND_MODE _extendModeX, D2D1_EXTEND_MODE _extendModeY)
+		{
+			ComPtr<ID2D1BitmapBrush> brush;
+			HRESULT hr = pD2DContext->CreateBitmapBrush(
+				_bitmap.Get(),
+				D2D1::BitmapBrushProperties(
+					_extendModeX,
+					_extendModeY
+				),
+				&brush
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create bitmap brush");
 				return nullptr;
 			}
 			return brush;
@@ -291,7 +311,7 @@ namespace suku
 		{
 			pD2DContext->EndDraw();
 			pD2DContext->SetTarget(nullptr);
-			graphics::pSwapChain->Present(1, 0);
+			graphics::getSwapChain()->Present(1, 0);
 		}
 
 		void clearScreen()

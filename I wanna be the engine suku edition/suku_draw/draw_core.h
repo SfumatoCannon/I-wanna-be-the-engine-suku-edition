@@ -2,9 +2,11 @@
 #include <wrl/client.h>
 #include "d3d_draw_core.h"
 #include <d2d1.h>
+#include <d2d1_1.h>
 #include "color.h"
 #include "transform.h"
 #include "scale_mode.h"
+#include <wincodec.h>
 
 namespace suku
 {
@@ -23,6 +25,8 @@ namespace suku
 
 		void setPaintingTransform(Transform _transform);
 		ComPtr<ID2D1SolidColorBrush> createSolidColorBrush(Color _color);
+		ComPtr<ID2D1BitmapBrush> createBitmapBrush(const ComPtr<ID2D1Bitmap1>& _bitmap, D2D1_EXTEND_MODE _extendModeX = D2D1_EXTEND_MODE_WRAP, D2D1_EXTEND_MODE _extendModeY = D2D1_EXTEND_MODE_WRAP);
+
 		void drawGeometryOutline(
 			const ComPtr<ID2D1Geometry>& _geometry,
 			const ComPtr<ID2D1Brush>& _brush,

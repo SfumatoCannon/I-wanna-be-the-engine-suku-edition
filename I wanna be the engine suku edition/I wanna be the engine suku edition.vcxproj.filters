@@ -246,6 +246,9 @@
     <ClInclude Include="suku_preset_rooms\skins.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_draw\brush.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
@@ -612,6 +615,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_core\tile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_draw\brush.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
