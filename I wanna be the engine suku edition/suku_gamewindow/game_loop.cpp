@@ -291,7 +291,7 @@ namespace
 		double monitoredFPS = getMonitoredFPS(false);
 		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
 		static suku::Text a({"Consolas", 24});
-		a.style.setBrush(suku::graphics::createSolidColorBrush(suku::Color(0, 255, 0, 1.0f)));
+		a.style.setBrush(suku::Color(0, 255, 0, 1.0f));
 		a.text.clear();
 
 		// FPS

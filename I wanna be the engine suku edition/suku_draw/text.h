@@ -4,6 +4,7 @@
 #include <wrl/client.h>
 #include "color.h"
 #include "transform.h"
+#include "brush.h"
 
 namespace suku
 {
@@ -54,17 +55,16 @@ namespace suku
 
 		void paint(String _text, Transform _transform = Transform());
 		void paint(String _text, float _x, float _y, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform = Transform());
 		void paint(String _text, float _x, float _y, float _width, float _height, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform = Transform());
+		void paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform = Transform());
 
-		void setBrush(ComPtr<ID2D1Brush> _brush);
-		void setBrush(Color _color);
+		void setBrush(const Brush& _brush);
 	private:
 		String fontName_;
 		float size_;
 		ComPtr<IDWriteTextFormat> pTextFormat_;
-		ComPtr<ID2D1Brush> pBrush_;
+		Brush brush_;
 		TextAlign textAlign_;
 		TextWrapOption textWrapOption_;
 	};

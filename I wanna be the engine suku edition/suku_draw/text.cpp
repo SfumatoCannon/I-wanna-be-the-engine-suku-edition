@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "text.h"
 #include "draw_core.h"
+#include "color.h"
 
 namespace suku
 {
 	TextStyle::TextStyle(String _fontName, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
-		pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
 			_fontName.content,
 			nullptr,
@@ -23,9 +23,8 @@ namespace suku
 	}
 
 	TextStyle::TextStyle(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
-		pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
 		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
 			_fontName.content,
 			nullptr,
@@ -130,14 +129,10 @@ namespace suku
 
 	void TextStyle::paint(String _text, float _x, float _y, Transform _transform)
 	{
-		if (pBrush_ == nullptr)
-		{
-			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
-		}
-		paint(_text, _x, _y, pBrush_, _transform);
+		paint(_text, _x, _y, brush_, _transform);
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform)
 	{
 		if (textAlign_ == TextAlign::TopFill || textAlign_ == TextAlign::MiddleFill || textAlign_ == TextAlign::BottomFill)
 		{
@@ -184,20 +179,16 @@ namespace suku
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
 			textBoxArea,
-			_brush.Get()
+			_brush.getD2DBrush().Get()
 		);
 	}
 
 	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, Transform _transform)
 	{
-		if (pBrush_ == nullptr)
-		{
-			pBrush_ = graphics::createSolidColorBrush({ 0, 0, 0 });
-		}
-		paint(_text, _x, _y, _width, _height, pBrush_, _transform);
+		paint(_text, _x, _y, _width, _height, brush_, _transform);
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const ComPtr<ID2D1Brush>& _brush, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform)
 	{
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
@@ -205,18 +196,13 @@ namespace suku
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
 			D2D1::RectF(_x, _y, _x + _width, _y + _height),
-			_brush.Get()
+			_brush.getD2DBrush().Get()
 		);
 	}
 
-	void TextStyle::setBrush(ComPtr<ID2D1Brush> _brush)
+	void TextStyle::setBrush(const Brush& _brush)
 	{
-		pBrush_ = _brush; 
-	}
-
-	void TextStyle::setBrush(Color _color)
-	{
-		setBrush(graphics::createSolidColorBrush(_color));
+		brush_ = _brush;
 	}
 
 	namespace graphics

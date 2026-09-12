@@ -2,6 +2,8 @@
 #include "../suku_foundation/array.h"
 #include "../suku_foundation/suku_string.h"
 #include <functional>
+#include <d2d1_1.h>
+#include <wincodec.h>
 
 namespace suku
 {

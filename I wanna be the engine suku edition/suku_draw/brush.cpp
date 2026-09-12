@@ -2,6 +2,7 @@
 
 #include "color.h"
 #include "bitmap.h"
+#include "draw_core.h"
 
 namespace suku
 {

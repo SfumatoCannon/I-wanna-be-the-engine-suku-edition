@@ -1,6 +1,7 @@
 #pragma once
 
 #include "bitmap.h"
+#include "brush.h"
 #include "scale_mode.h"
 #include "color.h"
 #include "d3d_draw_core.h"
