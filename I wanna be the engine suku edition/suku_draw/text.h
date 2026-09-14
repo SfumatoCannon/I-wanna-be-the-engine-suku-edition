@@ -112,6 +112,15 @@ namespace suku
 			}
 			TextFactoryGlobal(const TextFactoryGlobal&) = delete;
 			TextFactoryGlobal& operator=(const TextFactoryGlobal&) = delete;
+
+			static ComPtr<IDWriteTextFormat> createTextFormat(
+				String _fontName, float _size,
+				DWRITE_FONT_WEIGHT _fontWeight = DWRITE_FONT_WEIGHT_NORMAL,
+				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
+			);
+
+			static void addLocalFont(const String& _url);
 		private:
 			TextFactoryGlobal();
 			ComPtr<IDWriteFactory> pDWriteFactory_ = nullptr;

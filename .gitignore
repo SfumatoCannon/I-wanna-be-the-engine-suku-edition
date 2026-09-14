@@ -30,4 +30,6 @@ build/
 out/*
 !out/ProjectAssets/
 !out/ProjectAssets/**
+!out/Font/
+!out/Font/**
 /BuildPerfCpp_trace_20260419_191245.etl

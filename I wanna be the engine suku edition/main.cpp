@@ -105,5 +105,6 @@ public:
 
 void init()
 {
+	graphics::TextFactoryGlobal::addLocalFont("Font\\staatliches-latin-400-normal.ttf");
 	gotoRoom<RoomTitle>();
 }

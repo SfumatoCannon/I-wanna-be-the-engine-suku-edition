@@ -2,22 +2,14 @@
 #include "text.h"
 #include "draw_core.h"
 #include "color.h"
+#include <suku_foundation/file.h>
 
 namespace suku
 {
 	TextStyle::TextStyle(String _fontName, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
-		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
-			_fontName.content,
-			nullptr,
-			DWRITE_FONT_WEIGHT_NORMAL,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			_size,
-			L"",
-			pTextFormat_.GetAddressOf()
-		);
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -25,16 +17,7 @@ namespace suku
 	TextStyle::TextStyle(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
-		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextFormat(
-			_fontName.content,
-			nullptr,
-			_fontWeight,
-			_fontStyle,
-			_fontStretch,
-			_size,
-			L"",
-			pTextFormat_.GetAddressOf()
-		);
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -207,6 +190,26 @@ namespace suku
 
 	namespace graphics
 	{
+		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
+		{
+			ComPtr<IDWriteTextFormat> pTextFormat = nullptr;
+			HRESULT hr = getDWriteFactory()->CreateTextFormat(
+				_fontName.content,
+				nullptr,
+				_fontWeight,
+				_fontStyle,
+				_fontStretch,
+				_size,
+				L"",
+				pTextFormat.GetAddressOf()
+			);
+			return pTextFormat;
+		}
+
+		void TextFactoryGlobal::addLocalFont(const String& _url)
+		{
+		}
+
 		TextFactoryGlobal::TextFactoryGlobal()
 		{
 			DWriteCreateFactory(

@@ -16,8 +16,15 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 	constexpr int saveSlotX[3] = { 96, 336, 576 };
 	constexpr int saveSlotWidth = 128;
 	constexpr int saveSlotHeight = 288;
+	constexpr int padding = 8;
 
-	Text saveSlotTitle({ "Arial", 32, TextAlign::TopCenter });
+	TextStyle saveSlotTitle({ "Staatliches", 32, TextAlign::TopCenter });
+
+	for (int i = 0; i < 3; i++)
+	{
+		saveSlotTitle.paint(L"Save" + std::to_wstring(i + 1), saveSlotX[i], saveSlotY + padding,
+			saveSlotWidth, saveSlotHeight);
+	}
 
 	//saveSlotTitle.paint();
 }
