@@ -2,12 +2,14 @@
 #include <d2d1.h>
 #include <wrl/client.h>
 #include "transform.h"
+#include <memory>
 
 namespace suku
 {
     using Microsoft::WRL::ComPtr;
 	class Bitmap;
 	class Color;
+	class Brush;
 
 	class Shape
 	{
@@ -24,21 +26,29 @@ namespace suku
 
 		void setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry);
 		void setTransform(Transform _transform);
-		void setFill(Color _color);
-		void setOutline(Color _color);
+		void setFill(const Brush& _brush);
+		void setOutline(const Brush& _brush);
+		void setOpacity(float _opacity);
+		void setFillOpacity(float _opacity);
+		void setOutlineOpacity(float _opacity);
+
+		void paintFill(float _x, float _y, const Brush& _fillBrush);
+		void paintFill(float _x, float _y, Transform _paintingTransform, const Brush& _fillBrush);
+		void paintFill(Transform _paintingTransform, const Brush& _fillBrush);
+		void paintOutline(float  _x, float _y, const Brush& _outlineBrush, float _outlineWidth = 1.0, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
+		void paintOutline(float  _x, float _y, Transform _paintingTransform, const Brush& _outlineBrush, float _outlineWidth = 1.0, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
+		void paintOutline(Transform _paintingTransform, const Brush& _outlineBrush, float _outlineWidth = 1.0, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 
 		void paint(float _x, float _y,
-			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(float _x, float _y, Transform _paintingTransform,
-			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
 		void paint(Transform _paintingTransform,
-			const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
+			const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth = 1.0,
 			const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
-		//Bitmap* paintOnBitmap(Bitmap& _bitmap, float _x, float _y,
-		//	const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth = 1.0,
-		//	const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle = nullptr);
+
 		void paint(float _x, float _y);
 		void paint(float _x, float _y, Transform _paintingTransform);
 		void paint(Transform _paintingTransform);
@@ -55,8 +65,8 @@ namespace suku
 		bool operator==(const Shape& other) const = default;
 
 	private:
-		ComPtr<ID2D1Brush> pFillBrush_ = nullptr;
-		ComPtr<ID2D1Brush> pOutlineBrush_ = nullptr;
+		std::unique_ptr<Brush> fillBrush_;
+		std::unique_ptr<Brush> outlineBrush_;
 		float outlineWidth_ = 1.0f;
 		ComPtr<ID2D1StrokeStyle> pOutlineStrokeStyle_ = nullptr;
 	};

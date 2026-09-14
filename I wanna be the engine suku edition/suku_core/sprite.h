@@ -81,27 +81,10 @@ namespace suku
 	{
 	public:
 		Shape shape;
-		Microsoft::WRL::ComPtr<ID2D1Brush> fillBrush;
-		Microsoft::WRL::ComPtr<ID2D1Brush> outlineBrush;
-		Microsoft::WRL::ComPtr<ID2D1StrokeStyle> outlineStrokeStyle;
-		float outlineWidth;
 
 		ShapeSpriteElement(ShapeSpriteElement&& _other) = default;
 
-		ShapeSpriteElement(const Shape& _shape, const Microsoft::WRL::ComPtr<ID2D1Brush>& _fillBrush = nullptr,
-			const Microsoft::WRL::ComPtr<ID2D1Brush>& _outlineBrush = nullptr, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
-		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor);
-		ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
-			const Color& _outlineColor, float _outlineWidth = 1.0f, const Microsoft::WRL::ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle = nullptr);
-
-		void setShapeTransform(Transform _transform);
-		void paint(float _x, float _y,
-			float _xScale = 1.0f, float _yScale = 1.0f, float _angle = 0.0f);
-		void paint(float _x, float _y, Transform _paintingTransform);
-		void paint(Transform _paintingTransform);
-		void setFillColor(const Color& _color);
-		void setOutlineColor(const Color& _color);
-		void setOutlineWidth(int _width);
+		ShapeSpriteElement(const Shape& _shape);
 
 		virtual void paint(float _x, float _y,
 			float _xScale = 1.0f, float _yScale = 1.0f, float _alpha = 1.0f, float _angle = 0.0f) override;

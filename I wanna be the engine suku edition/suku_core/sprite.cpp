@@ -17,108 +17,26 @@ namespace suku
 		return hitArea_->isCrashed(_transform, *(_other->hitArea_), _otherTransform);
 	}
 
-	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const ComPtr<ID2D1Brush>& _fillBrush,
-		const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle)
-	{
-		shape = _shape;
-		fillBrush = _fillBrush;
-		outlineBrush = _outlineBrush;
-
-		outlineWidth = _outlineWidth;
-
-		outlineStrokeStyle = _outlineStrokeStyle;
-	}
-
-	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const Color& _fillColor)
-	{
-		shape = _shape;
-
-		ComPtr<ID2D1SolidColorBrush> newBrush;
-		newBrush = graphics::createSolidColorBrush(_fillColor);
-		fillBrush = newBrush;
-		outlineBrush = newBrush;
-
-		outlineWidth = 1.0f;
-		outlineStrokeStyle = nullptr;
-	}
-
-	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape, const Color& _fillColor,
-		const Color& _outlineColor, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& _outlineStrokeStyle)
-	{
-		shape = _shape;
-
-		fillBrush = graphics::createSolidColorBrush(_fillColor);
-		outlineBrush = graphics::createSolidColorBrush(_outlineColor);
-
-		outlineWidth = _outlineWidth;
-		outlineStrokeStyle = _outlineStrokeStyle;
-	}
-
-	void ShapeSpriteElement::setShapeTransform(Transform _transform)
-	{
-		shape.setTransform(_transform);
-	}
-
-	void ShapeSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _angle)
-	{
-		Transform paintingTransform = translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale)
-			+ rotation(centerX, centerY, _angle);
-		shape.paint(paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
-	}
-
-	void ShapeSpriteElement::paint(float _x, float _y, Transform _paintingTransform)
-	{
-		shape.paint(_x, _y, _paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
-	}
-
-	void ShapeSpriteElement::paint(Transform _paintingTransform)
-	{
-		shape.paint(_paintingTransform, fillBrush, outlineBrush, outlineWidth, outlineStrokeStyle);
-	}
-
-	void ShapeSpriteElement::setFillColor(const Color& _color)
-	{
-		fillBrush = graphics::createSolidColorBrush(_color);
-	}
-
-	void ShapeSpriteElement::setOutlineColor(const Color& _color)
-	{
-		outlineBrush = graphics::createSolidColorBrush(_color);
-	}
-
-	void ShapeSpriteElement::setOutlineWidth(int _width)
-	{
-		outlineWidth = (float)_width;
-	}
+	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape) : shape(_shape)
+	{}
 
 	void ShapeSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
-		shape.paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
-			fillBrush,
-			outlineBrush,
-			outlineWidth,
-			outlineStrokeStyle
-		);
+		Transform paintingTransform = translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle);
+		shape.setOpacity(_alpha);
+		shape.paint(paintingTransform);
 	}
 
 	void ShapeSpriteElement::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
-		shape.paint(translation(_x, _y) + _transform,
-			fillBrush,
-			outlineBrush,
-			outlineWidth,
-			outlineStrokeStyle
-		);
+		shape.setOpacity(_alpha);
+		shape.paint(_x, _y, _transform);
 	}
 
 	void ShapeSpriteElement::paint(Transform _transform, float _alpha)
 	{
-		shape.paint(_transform,
-			fillBrush,
-			outlineBrush,
-			outlineWidth,
-			outlineStrokeStyle
-		);
+		shape.setOpacity(_alpha);
+		shape.paint(_transform);
 	}
 
 	void BitmapSpriteElement::catchBitmap(String _path, UINT _startX, UINT _startY)
