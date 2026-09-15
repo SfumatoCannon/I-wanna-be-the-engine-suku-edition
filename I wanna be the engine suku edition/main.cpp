@@ -95,8 +95,7 @@ public:
 		Room::onPaintStart(_layer);
 		
 		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
-		Text a({"Consolas", 24, DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-			TextAlign::MiddleRight});
+		Text a({"Consolas", 24, TextStyle::Align::MiddleRight});
 		a.text = std::to_wstring(getObjectList<Player>().front()->y.getValue());
 		//a.contentString = "test message\npress s to save";
 		a.paint(256, 256);

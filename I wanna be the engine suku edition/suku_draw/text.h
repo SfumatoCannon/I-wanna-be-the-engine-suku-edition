@@ -11,51 +11,86 @@ namespace suku
 {
 	using Microsoft::WRL::ComPtr;
 
-	enum class TextAlign
-	{
-		TopLeft,
-		TopCenter,
-		TopRight,
-		TopFill,
-		MiddleLeft,
-		MiddleCenter,
-		MiddleRight,
-		MiddleFill,
-		BottomLeft,
-		BottomCenter,
-		BottomRight,
-		BottomFill
-	};
-
-	enum TextWrapOption
-	{
-		NoWrap,
-		Wrap,
-		WrapWord
-	};
-
 	class TextStyle
 	{
 	public:
-		TextStyle(String _fontName, float _size,
-			TextAlign _textAlign = TextAlign::TopLeft,
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		TextStyle(String _fontName, float _size,
-			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
-			TextAlign _textAlign = TextAlign::TopLeft,
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		TextStyle(String _fontName, String _localUrl, float _size,
-			TextAlign _textAlign = TextAlign::TopLeft,
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-		TextStyle(String _fontName, String _localUrl, float _size,
-			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
-			TextAlign _textAlign = TextAlign::TopLeft,
-			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+		enum class Align
+		{
+			TopLeft,
+			TopCenter,
+			TopRight,
+			TopFill,
+			MiddleLeft,
+			MiddleCenter,
+			MiddleRight,
+			MiddleFill,
+			BottomLeft,
+			BottomCenter,
+			BottomRight,
+			BottomFill
+		};
 
-		void setTextAlign(TextAlign _textAlign);
-		TextAlign getTextAlign() { return textAlign_; }
-		void setTextWrapOption(TextWrapOption _option);
-		TextWrapOption getTextWarpOption() { return textWrapOption_; }
+		enum class WrapOption
+		{
+			NoWrap,
+			Wrap,
+			WrapWord
+		};
+
+		enum class Weight
+		{
+			Thin = DWRITE_FONT_WEIGHT_THIN,
+			ExtraLight = DWRITE_FONT_WEIGHT_EXTRA_LIGHT,
+			Light = DWRITE_FONT_WEIGHT_LIGHT,
+			SemiLight = DWRITE_FONT_WEIGHT_SEMI_LIGHT,
+			Normal = DWRITE_FONT_WEIGHT_NORMAL,
+			Medium = DWRITE_FONT_WEIGHT_MEDIUM,
+			SemiBold = DWRITE_FONT_WEIGHT_SEMI_BOLD,
+			Bold = DWRITE_FONT_WEIGHT_BOLD,
+			ExtraBold = DWRITE_FONT_WEIGHT_EXTRA_BOLD,
+			Black = DWRITE_FONT_WEIGHT_BLACK,
+			ExtraBlack = DWRITE_FONT_WEIGHT_EXTRA_BLACK
+		};
+
+		enum class ItalicType
+		{
+			None = DWRITE_FONT_STYLE_NORMAL,
+			Oblique = DWRITE_FONT_STYLE_OBLIQUE,
+			Italic = DWRITE_FONT_STYLE_ITALIC
+		};
+
+		enum class Stretch
+		{
+			UltraCondensed = DWRITE_FONT_STRETCH_ULTRA_CONDENSED,
+			ExtraCondensed = DWRITE_FONT_STRETCH_EXTRA_CONDENSED,
+			Condensed = DWRITE_FONT_STRETCH_CONDENSED,
+			SemiCondensed = DWRITE_FONT_STRETCH_SEMI_CONDENSED,
+			Normal = DWRITE_FONT_STRETCH_NORMAL,
+			SemiExpanded = DWRITE_FONT_STRETCH_SEMI_EXPANDED,
+			Expanded = DWRITE_FONT_STRETCH_EXPANDED,
+			ExtraExpanded = DWRITE_FONT_STRETCH_EXTRA_EXPANDED,
+			UltraExpanded = DWRITE_FONT_STRETCH_ULTRA_EXPANDED
+		};
+
+		TextStyle(String _fontName, float _size,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+		TextStyle(String _fontName, float _size,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+		TextStyle(String _fontName, String _localUrl, float _size,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+		TextStyle(String _fontName, String _localUrl, float _size,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+
+		void setTextAlign(TextStyle::Align _textAlign);
+		TextStyle::Align getTextAlign() { return textAlign_; }
+		void setTextWrapOption(TextStyle::WrapOption _option);
+		TextStyle::WrapOption getTextWrapOption() { return textWrapOption_; }
 
 		int getContentLineCount(String _text, float _width);
 		float getContentHeight(String _text, float _width);
@@ -72,8 +107,8 @@ namespace suku
 		float size_;
 		ComPtr<IDWriteTextFormat> pTextFormat_;
 		Brush brush_;
-		TextAlign textAlign_;
-		TextWrapOption textWrapOption_;
+		TextStyle::Align textAlign_;
+		TextStyle::WrapOption textWrapOption_;
 	};
 
 	class Text

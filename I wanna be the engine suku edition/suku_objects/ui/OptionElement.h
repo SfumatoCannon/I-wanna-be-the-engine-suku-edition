@@ -45,7 +45,7 @@ namespace suku
 	template<typename T>
 	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info)
 		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height),
-		labelText_({ "Consolas", _height / 2.0f, TextAlign::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextAlign::MiddleRight }), infoText_({ "Consolas", 16, TextAlign::TopLeft })
+		labelText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleRight }), infoText_({ "Consolas", 16, TextStyle::Align::TopLeft })
 	{
 		if (!_info.isEmpty())
 		{

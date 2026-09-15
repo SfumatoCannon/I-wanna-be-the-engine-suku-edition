@@ -7,7 +7,8 @@
 
 namespace suku
 {
-	TextStyle::TextStyle(String _fontName, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
+	TextStyle::TextStyle(String _fontName, float _size, 
+		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
@@ -15,16 +16,20 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
+	TextStyle::TextStyle(String _fontName, float _size, 
+		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size,
-			_fontWeight, _fontStyle, _fontStretch);
+			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
+			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
+			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, 
+		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size);
@@ -32,16 +37,19 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, 
+		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size,
-			_fontWeight, _fontStyle, _fontStretch);
+			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
+			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
+			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
 
-	void TextStyle::setTextAlign(TextAlign _textAlign)
+	void TextStyle::setTextAlign(TextStyle::Align _textAlign)
 	{
 		if (!pTextFormat_)
 			return;
@@ -49,16 +57,16 @@ namespace suku
 		// Horizonal
 		switch (_textAlign)
 		{
-		case TextAlign::TopLeft: case TextAlign::MiddleLeft: case TextAlign::BottomLeft:
+		case TextStyle::Align::TopLeft: case TextStyle::Align::MiddleLeft: case TextStyle::Align::BottomLeft:
 			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 			break;
-		case TextAlign::TopCenter: case TextAlign::MiddleCenter: case TextAlign::BottomCenter:
+		case TextStyle::Align::TopCenter: case TextStyle::Align::MiddleCenter: case TextStyle::Align::BottomCenter:
 			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 			break;
-		case TextAlign::TopRight: case TextAlign::MiddleRight: case TextAlign::BottomRight:
+		case TextStyle::Align::TopRight: case TextStyle::Align::MiddleRight: case TextStyle::Align::BottomRight:
 			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
 			break;
-		case TextAlign::TopFill: case TextAlign::MiddleFill: case TextAlign::BottomFill:
+		case TextStyle::Align::TopFill: case TextStyle::Align::MiddleFill: case TextStyle::Align::BottomFill:
 			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
 			break;
 		default:
@@ -67,13 +75,13 @@ namespace suku
 		// Vertical
 		switch (_textAlign)
 		{
-		case TextAlign::TopLeft: case TextAlign::TopCenter: case TextAlign::TopRight: case TextAlign::TopFill:
+		case TextStyle::Align::TopLeft: case TextStyle::Align::TopCenter: case TextStyle::Align::TopRight: case TextStyle::Align::TopFill:
 			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 			break;
-		case TextAlign::MiddleLeft: case TextAlign::MiddleCenter: case TextAlign::MiddleRight: case TextAlign::MiddleFill:
+		case TextStyle::Align::MiddleLeft: case TextStyle::Align::MiddleCenter: case TextStyle::Align::MiddleRight: case TextStyle::Align::MiddleFill:
 			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 			break;
-		case TextAlign::BottomLeft: case TextAlign::BottomCenter: case TextAlign::BottomRight: case TextAlign::BottomFill:
+		case TextStyle::Align::BottomLeft: case TextStyle::Align::BottomCenter: case TextStyle::Align::BottomRight: case TextStyle::Align::BottomFill:
 			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			break;
 		default:
@@ -81,14 +89,14 @@ namespace suku
 		}
 	}
 
-	void TextStyle::setTextWrapOption(TextWrapOption _option)
+	void TextStyle::setTextWrapOption(TextStyle::WrapOption _option)
 	{
 		textWrapOption_ = _option;
-		if (_option == TextWrapOption::NoWrap)
+		if (_option == TextStyle::WrapOption::NoWrap)
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		else if (_option == TextWrapOption::Wrap)
+		else if (_option == TextStyle::WrapOption::Wrap)
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_CHARACTER);
-		else if (_option == TextWrapOption::WrapWord)
+		else if (_option == TextStyle::WrapOption::WrapWord)
 			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 	}
 
@@ -136,7 +144,7 @@ namespace suku
 
 	void TextStyle::paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform)
 	{
-		if (textAlign_ == TextAlign::TopFill || textAlign_ == TextAlign::MiddleFill || textAlign_ == TextAlign::BottomFill)
+		if (textAlign_ == TextStyle::Align::TopFill || textAlign_ == TextStyle::Align::MiddleFill || textAlign_ == TextStyle::Align::BottomFill)
 		{
 			ERRORWINDOW("A fill property was set in the textAlign. You should assign the size of the text box.");
 			return;
@@ -145,31 +153,31 @@ namespace suku
 		float wideLength = 4096;
 		switch (textAlign_)
 		{
-		case suku::TextAlign::TopLeft:
+		case suku::TextStyle::Align::TopLeft:
 			textBoxArea = D2D1::RectF(_x, _y, _x + wideLength, _y + wideLength);
 			break;
-		case suku::TextAlign::TopCenter:
+		case suku::TextStyle::Align::TopCenter:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x + wideLength, _y + wideLength);
 			break;
-		case suku::TextAlign::TopRight:
+		case suku::TextStyle::Align::TopRight:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x, _y + wideLength);
 			break;
-		case suku::TextAlign::MiddleLeft:
+		case suku::TextStyle::Align::MiddleLeft:
 			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y + wideLength);
 			break;
-		case suku::TextAlign::MiddleCenter:
+		case suku::TextStyle::Align::MiddleCenter:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y + wideLength);
 			break;
-		case suku::TextAlign::MiddleRight:
+		case suku::TextStyle::Align::MiddleRight:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y + wideLength);
 			break;
-		case suku::TextAlign::BottomLeft:
+		case suku::TextStyle::Align::BottomLeft:
 			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y);
 			break;
-		case suku::TextAlign::BottomCenter:
+		case suku::TextStyle::Align::BottomCenter:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y);
 			break;
-		case suku::TextAlign::BottomRight:
+		case suku::TextStyle::Align::BottomRight:
 			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y);
 			break;
 		default:

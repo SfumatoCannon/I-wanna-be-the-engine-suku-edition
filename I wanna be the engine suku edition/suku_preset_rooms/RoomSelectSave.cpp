@@ -18,7 +18,7 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 	constexpr int saveSlotHeight = 288;
 	constexpr int padding = 8;
 
-	TextStyle saveSlotTitle({ "Staatliches", "Font\\staatliches-latin-400-normal.ttf", 32, TextAlign::TopCenter });
+	TextStyle saveSlotTitle({ "Staatliches", "Font\\staatliches-latin-400-normal.ttf", 32, TextStyle::Align::TopCenter });
 
 	for (int i = 0; i < 3; i++)
 	{

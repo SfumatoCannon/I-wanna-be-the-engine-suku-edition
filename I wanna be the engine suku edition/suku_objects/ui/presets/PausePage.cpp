@@ -34,7 +34,7 @@ namespace suku
 
 	bool PausePage::onPaint()
 	{
-		Text pauseText(L"PAUSED", {"Consolas", 64, TextAlign::MiddleCenter});
+		Text pauseText(L"PAUSED", {"Consolas", 64, TextStyle::Align::MiddleCenter});
 		RectangleShape background(GameWindow::getLogicalWidth() + 1, GameWindow::getLogicalHeight() + 1);
 		background.setFill(Color(0, 0, 0, 0.5f));
 		background.paint(0, 0);
