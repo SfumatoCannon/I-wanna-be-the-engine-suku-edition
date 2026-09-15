@@ -17,7 +17,7 @@ namespace suku
 		String getPath()const { return path_; }
 
 		void create()const;
-		bool isExist();
+		bool isExist()const;
 		bool isOpenedForWrite()const;
 		void openForWrite(bool _overwrite = true);
 		bool tryOpenForWrite(bool _overwrite = true);
@@ -27,6 +27,7 @@ namespace suku
 		void close();
 		void closeWrite();
 		void closeRead();
+		void deleteFile();
 
 		void write(const char* _ptrData, size_t _size);
 		void read(char* _ptrData, size_t _size);

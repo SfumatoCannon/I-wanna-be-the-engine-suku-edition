@@ -29,6 +29,40 @@ namespace suku
 		setFileName(_other.getFileName());
 	}
 
+	bool SaveFile::isExist() const
+	{
+		return file_->isExist();
+	}
+
+	void SaveFile::clear()
+	{
+		if (!file_)
+		{
+			ERRORWINDOW("SaveFile is NULL");
+			return;
+		}
+		if (!file_->isExist())
+		{
+			WARNINGWINDOW("SaveFile doesn't exist: " + file_->getPath());
+			return;
+		}
+		bool result = file_->tryOpenForWrite(true);
+		if (result)
+		{
+			file_->closeWrite();
+		}
+	}
+
+	void SaveFile::deleteFile()
+	{
+		if (!file_)
+		{
+			ERRORWINDOW("SaveFile is NULL");
+			return;
+		}
+		file_->deleteFile();
+	}
+
 	void SaveFile::writeData()
 	{
 		if (!file_)

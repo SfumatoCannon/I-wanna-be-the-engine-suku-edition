@@ -45,6 +45,10 @@ namespace suku
 		SaveFile(String _fileName);
 		SaveFile(const SaveFile& _other);
 
+		bool isExist()const;
+
+		void clear();
+		void deleteFile();
 		void writeData();
 		void readData();
 		void setFileName(String _fileName);

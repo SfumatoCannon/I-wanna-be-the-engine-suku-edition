@@ -93,7 +93,7 @@ namespace suku
 		ofsForCreating.close();
 	}
 
-	bool File::isExist()
+	bool File::isExist() const
 	{
 		String absPath = filesystem::absolutePath(path_);
 		if (absPath.content == nullptr)
@@ -182,6 +182,20 @@ namespace suku
 	{
 		if (ifs_.is_open())
 			ifs_.close();
+	}
+
+	void File::deleteFile()
+	{
+		if (ofs_.is_open())
+			ofs_.close();
+		if (ifs_.is_open())
+			ifs_.close();
+		std::error_code errorCode;
+		std::filesystem::remove(filesystem::absolutePath(path_).content, errorCode);
+		if (errorCode)
+		{
+			ERRORWINDOW("Failed to delete file: " + errorCode.message());
+		}
 	}
 
 	void File::write(const char* _ptrData, size_t _size)
