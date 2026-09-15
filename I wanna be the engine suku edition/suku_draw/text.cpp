@@ -3,6 +3,7 @@
 #include "draw_core.h"
 #include "color.h"
 #include <suku_foundation/file.h>
+#include <dwrite_3.h>
 
 namespace suku
 {
@@ -17,7 +18,25 @@ namespace suku
 	TextStyle::TextStyle(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size,
+			_fontWeight, _fontStyle, _fontStretch);
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, TextAlign _textAlign, TextWrapOption _wrapOption)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+	{
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size);
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch, TextAlign _textAlign, TextWrapOption _wrapOption)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+	{
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size,
+			_fontWeight, _fontStyle, _fontStretch);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -190,7 +209,7 @@ namespace suku
 
 	namespace graphics
 	{
-		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(String _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
+		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(const String& _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
 		{
 			ComPtr<IDWriteTextFormat> pTextFormat = nullptr;
 			HRESULT hr = getDWriteFactory()->CreateTextFormat(
@@ -206,8 +225,110 @@ namespace suku
 			return pTextFormat;
 		}
 
-		void TextFactoryGlobal::addLocalFont(const String& _url)
+		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(const String& _fontName, const String& _localUrl, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
 		{
+			String url = filesystem::absolutePath(_localUrl);
+			if (localFontCollectionMap_.find(_fontName) == localFontCollectionMap_.end())
+			{
+				if (!addLocalFontCollection(url, _fontName))
+				{
+					ERRORWINDOW_GLOBAL("Failed to add local font collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+					return nullptr;
+				}
+			}
+			auto& pFontCollection = localFontCollectionMap_[_fontName];
+			ComPtr<IDWriteTextFormat> textFormat;
+
+			HRESULT hr = getDWriteFactory()->CreateTextFormat(
+				_fontName.content,
+				pFontCollection.Get(),
+				_fontWeight,
+				_fontStyle,
+				_fontStretch,
+				_size,
+				L"",
+				textFormat.GetAddressOf()
+			);
+
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create text format for local font: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return nullptr;
+			}
+
+			return textFormat;
+		}
+
+		bool TextFactoryGlobal::addLocalFontCollection(const String& _localUrl, const String& _fontName)
+		{
+			ComPtr<IDWriteFontCollection> pFontCollection = nullptr;
+			ComPtr<IDWriteFontFile> pFontFile;
+			String url = filesystem::absolutePath(_localUrl);
+
+			IDWriteFactory* pFactory = getDWriteFactory();
+			ComPtr<IDWriteFactory5> pFactory5;
+			HRESULT hr = pFactory->QueryInterface(__uuidof(IDWriteFactory5),
+				reinterpret_cast<void**>(pFactory5.GetAddressOf()));
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to query IDWriteFactory5 interface.");
+				return false;
+			}
+
+			ComPtr<IDWriteFontSetBuilder1> fontSetBuilder;
+			hr = pFactory5->CreateFontSetBuilder(
+				fontSetBuilder.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create font set builder.");
+				return false;
+			}
+
+			ComPtr<IDWriteFontFile> fontFile;
+			hr = pFactory->CreateFontFileReference(
+				_localUrl.content,
+				nullptr,
+				fontFile.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create font file reference.");
+				return false;
+			}
+
+			hr = fontSetBuilder->AddFontFile(
+				fontFile.Get()
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to add font file to font set builder.");
+				return false;
+			}
+
+			ComPtr<IDWriteFontSet> fontSet;
+			hr = fontSetBuilder->CreateFontSet(
+				fontSet.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create font set.");
+				return false;
+			}
+
+			ComPtr<IDWriteFontCollection1> customFontCollection;
+			hr = pFactory5->CreateFontCollectionFromFontSet(
+				fontSet.Get(),
+				customFontCollection.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create font collection from font set.");
+				return false;
+			}
+
+			localFontCollectionMap_[_fontName] = customFontCollection;
+			return true;
 		}
 
 		TextFactoryGlobal::TextFactoryGlobal()

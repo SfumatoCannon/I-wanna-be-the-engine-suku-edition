@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <compare>
+#include <Windows.h>
 
 namespace suku
 {
@@ -20,7 +22,16 @@ namespace suku
 		bool isEmpty()const;
 
 		bool operator==(const String& _other)const;
-		auto operator<=>(const String& _other)const;
+		std::strong_ordering operator<=>(const String& _other)const
+		{
+			if (content == nullptr && _other.content == nullptr)
+				return std::strong_ordering::equal;
+			if (content == nullptr)
+				return std::strong_ordering::less;
+			if (_other.content == nullptr)
+				return std::strong_ordering::greater;
+			return (lstrcmpW(content, _other.content) <=> 0);
+		}
 		void operator=(const String& _other);
 		String operator+(const String& _other);
 		String operator+(const char* _string);

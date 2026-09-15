@@ -5,6 +5,7 @@
 #include "color.h"
 #include "transform.h"
 #include "brush.h"
+#include <map>
 
 namespace suku
 {
@@ -43,7 +44,13 @@ namespace suku
 			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
 			TextAlign _textAlign = TextAlign::TopLeft,
 			TextWrapOption _wrapOption = TextWrapOption::Wrap);
-
+		TextStyle(String _fontName, String _localUrl, float _size,
+			TextAlign _textAlign = TextAlign::TopLeft,
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
+		TextStyle(String _fontName, String _localUrl, float _size,
+			DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch,
+			TextAlign _textAlign = TextAlign::TopLeft,
+			TextWrapOption _wrapOption = TextWrapOption::Wrap);
 
 		void setTextAlign(TextAlign _textAlign);
 		TextAlign getTextAlign() { return textAlign_; }
@@ -114,16 +121,24 @@ namespace suku
 			TextFactoryGlobal& operator=(const TextFactoryGlobal&) = delete;
 
 			static ComPtr<IDWriteTextFormat> createTextFormat(
-				String _fontName, float _size,
+				const String& _fontName, float _size,
+				DWRITE_FONT_WEIGHT _fontWeight = DWRITE_FONT_WEIGHT_NORMAL,
+				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
+			);
+			static ComPtr<IDWriteTextFormat> createTextFormat(
+				const String& _fontName, const String& _localUrl, float _size,
 				DWRITE_FONT_WEIGHT _fontWeight = DWRITE_FONT_WEIGHT_NORMAL,
 				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
 				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
 			);
 
-			static void addLocalFont(const String& _url);
+			static bool addLocalFontCollection(const String& _localUrl, const String& _fontName);
+
 		private:
 			TextFactoryGlobal();
 			ComPtr<IDWriteFactory> pDWriteFactory_ = nullptr;
+			inline static std::map<String, ComPtr<IDWriteFontCollection>> localFontCollectionMap_;
 		};
 	}
 }
