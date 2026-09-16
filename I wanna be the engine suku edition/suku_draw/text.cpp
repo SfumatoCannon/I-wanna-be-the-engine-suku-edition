@@ -245,10 +245,47 @@ namespace suku
 				}
 			}
 			auto& pFontCollection = localFontCollectionMap_[_fontName];
-			ComPtr<IDWriteTextFormat> textFormat;
 
-			HRESULT hr = getDWriteFactory()->CreateTextFormat(
-				_fontName.content,
+			UINT32 familyCount = pFontCollection->GetFontFamilyCount();
+			if (familyCount == 0)
+			{
+				ERRORWINDOW_GLOBAL("No font families found in local font collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return nullptr;
+			}
+
+			ComPtr<IDWriteFontFamily> pFamily;
+			HRESULT hr = pFontCollection->GetFontFamily(0, pFamily.GetAddressOf());
+			if (FAILED(hr) || !pFamily)
+			{
+				ERRORWINDOW_GLOBAL("Failed to get font family from local collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return nullptr;
+			}
+
+			ComPtr<IDWriteLocalizedStrings> familyNames;
+			hr = pFamily->GetFamilyNames(familyNames.GetAddressOf());
+			if (FAILED(hr) || !familyNames)
+			{
+				ERRORWINDOW_GLOBAL("Failed to get family names from font family: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return nullptr;
+			}
+
+			// Try to find an English locale name first, otherwise take the first available name
+			UINT32 nameIndex = 0;
+			BOOL exists = FALSE;
+			familyNames->FindLocaleName(L"en-us", &nameIndex, &exists);
+			if (!exists)
+			{
+				nameIndex = 0;
+			}
+
+			UINT32 nameLength = 0;
+			familyNames->GetStringLength(nameIndex, &nameLength);
+			std::wstring actualFamilyName(nameLength + 1, L'\0');
+			familyNames->GetString(nameIndex, &actualFamilyName[0], nameLength + 1);
+
+			ComPtr<IDWriteTextFormat> textFormat;
+			hr = getDWriteFactory()->CreateTextFormat(
+				actualFamilyName.c_str(),
 				pFontCollection.Get(),
 				_fontWeight,
 				_fontStyle,
