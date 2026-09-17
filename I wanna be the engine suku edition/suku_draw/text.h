@@ -6,6 +6,7 @@
 #include "transform.h"
 #include "brush.h"
 #include <map>
+#include <utility>
 
 namespace suku
 {
@@ -85,7 +86,16 @@ namespace suku
 		TextStyle(String _fontName, String _localUrl, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);		
+		TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+				TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+				TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+		TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+
+		static void registerLocalFont(String _fontName, String _localUrl, String _localeName = "en-us");
 
 		void setTextAlign(TextStyle::Align _textAlign);
 		TextStyle::Align getTextAlign() { return textAlign_; }
@@ -167,13 +177,19 @@ namespace suku
 				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
 				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
 			);
+			static ComPtr<IDWriteTextFormat> createTextFormat(
+				const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
+				DWRITE_FONT_WEIGHT _fontWeight = DWRITE_FONT_WEIGHT_NORMAL,
+				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
+			);
 
-			static bool addLocalFontCollection(const String& _localUrl, const String& _fontName);
+			static bool addLocalFontCollection(const String& _localUrl, const String& _fontName, const String& _localeName = "en-us");
 
 		private:
 			TextFactoryGlobal();
 			ComPtr<IDWriteFactory> pDWriteFactory_ = nullptr;
-			inline static std::map<String, ComPtr<IDWriteFontCollection>> localFontCollectionMap_;
+			inline static std::map<String, std::pair<String, ComPtr<IDWriteFontCollection>>> localFontCollectionMap_;
 		};
 	}
 }

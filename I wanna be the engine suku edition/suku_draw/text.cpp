@@ -4,10 +4,11 @@
 #include "color.h"
 #include <suku_foundation/file.h>
 #include <dwrite_3.h>
+#include <utility>
 
 namespace suku
 {
-	TextStyle::TextStyle(String _fontName, float _size, 
+	TextStyle::TextStyle(String _fontName, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -16,7 +17,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, float _size, 
+	TextStyle::TextStyle(String _fontName, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -28,7 +29,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, 
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -37,7 +38,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size, 
+	TextStyle::TextStyle(String _fontName, String _localUrl, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -47,6 +48,32 @@ namespace suku
 			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
+	}
+
+	TextStyle::TextStyle(String _fontName, String _localUrl, String _localeName, float _size, 
+		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+	{
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size);
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	TextStyle::TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
+		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+	{
+		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size,
+			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
+			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
+			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
+		setTextAlign(_textAlign);
+		setTextWrapOption(_wrapOption);
+	}
+
+	void TextStyle::registerLocalFont(String _fontName, String _localUrl, String _localeName)
+	{
+		graphics::TextFactoryGlobal::addLocalFontCollection(_localUrl, _fontName, _localeName);
 	}
 
 	void TextStyle::setTextAlign(TextStyle::Align _textAlign)
@@ -244,48 +271,14 @@ namespace suku
 					return nullptr;
 				}
 			}
-			auto& pFontCollection = localFontCollectionMap_[_fontName];
 
-			UINT32 familyCount = pFontCollection->GetFontFamilyCount();
-			if (familyCount == 0)
-			{
-				ERRORWINDOW_GLOBAL("No font families found in local font collection: \"" + _fontName + L"\" (" + _localUrl + L")");
-				return nullptr;
-			}
+			String actualFamilyName = localFontCollectionMap_[_fontName].first;
+			auto& pFontCollection = localFontCollectionMap_[_fontName].second;
 
-			ComPtr<IDWriteFontFamily> pFamily;
-			HRESULT hr = pFontCollection->GetFontFamily(0, pFamily.GetAddressOf());
-			if (FAILED(hr) || !pFamily)
-			{
-				ERRORWINDOW_GLOBAL("Failed to get font family from local collection: \"" + _fontName + L"\" (" + _localUrl + L")");
-				return nullptr;
-			}
-
-			ComPtr<IDWriteLocalizedStrings> familyNames;
-			hr = pFamily->GetFamilyNames(familyNames.GetAddressOf());
-			if (FAILED(hr) || !familyNames)
-			{
-				ERRORWINDOW_GLOBAL("Failed to get family names from font family: \"" + _fontName + L"\" (" + _localUrl + L")");
-				return nullptr;
-			}
-
-			// Try to find an English locale name first, otherwise take the first available name
-			UINT32 nameIndex = 0;
-			BOOL exists = FALSE;
-			familyNames->FindLocaleName(L"en-us", &nameIndex, &exists);
-			if (!exists)
-			{
-				nameIndex = 0;
-			}
-
-			UINT32 nameLength = 0;
-			familyNames->GetStringLength(nameIndex, &nameLength);
-			std::wstring actualFamilyName(nameLength + 1, L'\0');
-			familyNames->GetString(nameIndex, &actualFamilyName[0], nameLength + 1);
 
 			ComPtr<IDWriteTextFormat> textFormat;
-			hr = getDWriteFactory()->CreateTextFormat(
-				actualFamilyName.c_str(),
+			HRESULT hr = getDWriteFactory()->CreateTextFormat(
+				actualFamilyName.content,
 				pFontCollection.Get(),
 				_fontWeight,
 				_fontStyle,
@@ -304,9 +297,46 @@ namespace suku
 			return textFormat;
 		}
 
-		bool TextFactoryGlobal::addLocalFontCollection(const String& _localUrl, const String& _fontName)
+		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(const String& _fontName, const String& _localUrl, const String& _localeName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
 		{
-			ComPtr<IDWriteFontCollection> pFontCollection = nullptr;
+			String url = filesystem::absolutePath(_localUrl);
+			if (localFontCollectionMap_.find(_fontName) == localFontCollectionMap_.end())
+			{
+				if (!addLocalFontCollection(url, _fontName, _localeName))
+				{
+					ERRORWINDOW_GLOBAL("Failed to add local font collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+					return nullptr;
+				}
+			}
+
+			String actualFamilyName = localFontCollectionMap_[_fontName].first;
+			auto& pFontCollection = localFontCollectionMap_[_fontName].second;
+
+
+			ComPtr<IDWriteTextFormat> textFormat;
+			HRESULT hr = getDWriteFactory()->CreateTextFormat(
+				actualFamilyName.content,
+				pFontCollection.Get(),
+				_fontWeight,
+				_fontStyle,
+				_fontStretch,
+				_size,
+				L"",
+				textFormat.GetAddressOf()
+			);
+
+			if (FAILED(hr))
+			{
+				ERRORWINDOW_GLOBAL("Failed to create text format for local font: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return nullptr;
+			}
+
+			return textFormat;
+		}
+
+		bool TextFactoryGlobal::addLocalFontCollection(const String& _localUrl, const String& _fontName, const String& _localeName)
+		{
+			ComPtr<IDWriteFontCollection1> pFontCollection = nullptr;
 			ComPtr<IDWriteFontFile> pFontFile;
 			String url = filesystem::absolutePath(_localUrl);
 
@@ -361,10 +391,9 @@ namespace suku
 				return false;
 			}
 
-			ComPtr<IDWriteFontCollection1> customFontCollection;
 			hr = pFactory5->CreateFontCollectionFromFontSet(
 				fontSet.Get(),
-				customFontCollection.GetAddressOf()
+				pFontCollection.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -372,7 +401,44 @@ namespace suku
 				return false;
 			}
 
-			localFontCollectionMap_[_fontName] = customFontCollection;
+			UINT32 familyCount = pFontCollection->GetFontFamilyCount();
+			if (familyCount == 0)
+			{
+				ERRORWINDOW_GLOBAL("No font families found in local font collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return false;
+			}
+
+			ComPtr<IDWriteFontFamily> pFamily;
+			hr = pFontCollection->GetFontFamily(0, pFamily.GetAddressOf());
+			if (FAILED(hr) || !pFamily)
+			{
+				ERRORWINDOW_GLOBAL("Failed to get font family from local collection: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return false;
+			}
+
+			ComPtr<IDWriteLocalizedStrings> familyNames;
+			hr = pFamily->GetFamilyNames(familyNames.GetAddressOf());
+			if (FAILED(hr) || !familyNames)
+			{
+				ERRORWINDOW_GLOBAL("Failed to get family names from font family: \"" + _fontName + L"\" (" + _localUrl + L")");
+				return false;
+			}
+
+			UINT32 nameIndex = 0;
+			BOOL exists = FALSE;
+			familyNames->FindLocaleName(_localeName.content, &nameIndex, &exists);
+			if (!exists)
+			{
+				WARNINGWINDOW_GLOBAL("Locale name \"" + _localeName + L"\" not found for font family: \"" + _fontName + L"\" (" + _localUrl + L"). Using default locale.");
+				nameIndex = 0;
+			}
+
+			UINT32 nameLength = 0;
+			familyNames->GetStringLength(nameIndex, &nameLength);
+			std::wstring actualFamilyName(nameLength + 1, L'\0');
+			familyNames->GetString(nameIndex, &actualFamilyName[0], nameLength + 1);
+
+			localFontCollectionMap_[_fontName] = std::make_pair(String(actualFamilyName), pFontCollection);
 			return true;
 		}
 
@@ -385,21 +451,24 @@ namespace suku
 			);
 		}
 	}
-	
+
 	Text::Text(const TextStyle& _textStyle) : style(_textStyle)
-	{}
+	{
+	}
 
 	Text::Text(String _text, const TextStyle& _textStyle) : text(_text), style(_textStyle)
-	{}
+	{
+	}
 
 	Text::Text(String _text) : text(_text), style(TextStyle(L"Arial", 16.0f))
-	{}
+	{
+	}
 
 	void Text::paint(float _x, float _y, Transform _transform)
 	{
 		style.paint(text, _x, _y, _transform);
 	}
-	
+
 	void Text::paint(float _x, float _y, float _width, float _height, Transform _transform)
 	{
 		style.paint(text, _x, _y, _width, _height, _transform);
