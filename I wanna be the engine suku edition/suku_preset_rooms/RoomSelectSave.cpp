@@ -8,6 +8,20 @@ RoomSelectSave::RoomSelectSave()
 
 void RoomSelectSave::onUpdateStart()
 {
+	if (input::isKeyDown(VK_LEFT_ARROW))
+	{
+		if (selectedSaveIndex_ > 0)
+			selectedSaveIndex_--;
+	}
+	else if (input::isKeyDown(VK_RIGHT_ARROW))
+	{
+		if (selectedSaveIndex_ < 2)
+			selectedSaveIndex_++;
+	}
+	if (input::isKeyDown(VK_SHIFT))
+	{
+
+	}
 }
 
 void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
@@ -19,19 +33,45 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 	constexpr int padding = 8;
 
 	TextStyle saveSlotTitleStyle("Staatliches", "Font\\staatliches-latin-400-normal.ttf", 32, TextStyle::Align::TopCenter);
-	TextStyle saveSlotContentStyle("Barlow Condensed", "Font\\barlow-condensed-latin-400-normal.ttf", 24, TextStyle::Align::TopCenter);
+	TextStyle saveSlotNoDataStyle("Barlow Condensed", "Font\\barlow-condensed-latin-400-normal.ttf", 24, TextStyle::Align::TopCenter);
+	TextStyle saveSlotContentStyle("Courier New", 16);
 
+	// Save slot card
 	for (int i = 0; i < 3; i++)
 	{
+		// Title
 		saveSlotTitleStyle.paint(L"Save" + std::to_wstring(i + 1),
 			saveSlotX[i], saveSlotY + padding, saveSlotWidth, saveSlotHeight);
+		
+		// Info
 		if (!saveFile[i].isExist())
 		{
-			saveSlotContentStyle.paint(L"No Data",
-				saveSlotX[i], saveSlotY + padding + 48, saveSlotWidth, saveSlotHeight - 48,
-				Brush::solidColorBrush(Color(140, 140, 140)));
+			saveSlotNoDataStyle.paint(L"No Data",
+				saveSlotX[i], saveSlotY + padding + 96, saveSlotWidth, saveSlotHeight - 96,
+				Brush::solidColorBrush(Color(100, 100, 100)));
+		}
+		else
+		{
+			auto time = saveFile[i].get<unsigned int>("time");
+			auto death = saveFile[i].get<unsigned int>("death");
+			time = time / game_loop::updateFPS; // frame -> seconds
+			unsigned int hour = time / 3600;
+			unsigned int minute = (time % 3600) / 60;
+			unsigned int second = time % 60;
+			saveSlotContentStyle.setTextAlign(TextStyle::Align::TopLeft);
+			saveSlotContentStyle.paint(
+				L"Time\nDeath",
+				saveSlotX[i] + padding, saveSlotY + padding + 96, saveSlotWidth, saveSlotHeight - 96);
+			saveSlotContentStyle.setTextAlign(TextStyle::Align::TopRight);
+			saveSlotContentStyle.paint(
+				std::to_wstring(hour) + L":" + std::to_wstring(minute) + L":" + std::to_wstring(second) + L"\n" + std::to_wstring(death),
+				saveSlotX[i] + padding, saveSlotY + padding + 96, saveSlotWidth - padding * 2, saveSlotHeight - 96);
 		}
 	}
+
+	// show selectedSaveIndex_
+	int startX = saveSlotX[selectedSaveIndex_];
+
 
 	//saveSlotTitleStyle.paint();
 }

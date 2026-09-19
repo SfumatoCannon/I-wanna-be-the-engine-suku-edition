@@ -33,9 +33,9 @@ namespace suku
 
 		enum class WrapOption
 		{
-			NoWrap,
-			Wrap,
-			WrapWord
+			NoWrap = DWRITE_WORD_WRAPPING_NO_WRAP,
+			Wrap = DWRITE_WORD_WRAPPING_CHARACTER,
+			WrapWord = DWRITE_WORD_WRAPPING_WRAP,
 		};
 
 		enum class Weight

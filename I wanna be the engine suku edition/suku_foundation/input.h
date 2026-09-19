@@ -2,17 +2,8 @@
 #include <queue>
 #include <windows.h>
 
-
-namespace suku::input
+namespace suku
 {
-	bool isKeyDown(UINT8 _keyVCode);
-	bool isKeyUp(UINT8 _keyVCode);
-	bool isKeyHolding(UINT8 _keyVCode);
-	std::pair<UINT, USHORT> onWindowInput(LPARAM _lParam);
-	void pushKeyMessage(UINT _message, USHORT _keyVCode);
-	void frameStateUpdate();
-	void resetKeyState();
-
 	constexpr USHORT VK_0 = 0x30;
 	constexpr USHORT VK_1 = 0x31;
 	constexpr USHORT VK_2 = 0x32;
@@ -49,6 +40,28 @@ namespace suku::input
 	constexpr USHORT VK_X = 0x58;
 	constexpr USHORT VK_Y = 0x59;
 	constexpr USHORT VK_Z = 0x5A;
+	constexpr USHORT VK_LEFT_ARROW = VK_LEFT;
+	constexpr USHORT VK_UP_ARROW = VK_UP;
+	constexpr USHORT VK_RIGHT_ARROW = VK_RIGHT;
+	constexpr USHORT VK_DOWN_ARROW = VK_DOWN;
+	constexpr USHORT VK_ESC = VK_ESCAPE;
+	constexpr USHORT VK_ALT = VK_MENU;
+	constexpr USHORT VK_LEFT_ALT = VK_LMENU;
+	constexpr USHORT VK_RIGHT_ALT = VK_RMENU;
+	constexpr USHORT VK_CTRL = VK_CONTROL;
+	constexpr USHORT VK_LEFT_CTRL = VK_LCONTROL;
+	constexpr USHORT VK_RIGHT_CTRL = VK_RCONTROL;
+}
+
+namespace suku::input
+{
+	bool isKeyDown(UINT8 _keyVCode);
+	bool isKeyUp(UINT8 _keyVCode);
+	bool isKeyHolding(UINT8 _keyVCode);
+	std::pair<UINT, USHORT> onWindowInput(LPARAM _lParam);
+	void pushKeyMessage(UINT _message, USHORT _keyVCode);
+	void frameStateUpdate();
+	void resetKeyState();
 
 	constexpr UINT INPUT_KEYDOWN = 0x01;
 	constexpr UINT INPUT_KEYUP = 0x02;

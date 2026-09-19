@@ -355,7 +355,7 @@ namespace suku
 
 	void Blood::onPreUpdate()
 	{
-		if (input::isKeyDown(input::VK_R))
+		if (input::isKeyDown(VK_R))
 			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;

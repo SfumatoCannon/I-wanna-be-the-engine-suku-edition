@@ -119,12 +119,7 @@ namespace suku
 	void TextStyle::setTextWrapOption(TextStyle::WrapOption _option)
 	{
 		textWrapOption_ = _option;
-		if (_option == TextStyle::WrapOption::NoWrap)
-			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		else if (_option == TextStyle::WrapOption::Wrap)
-			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_CHARACTER);
-		else if (_option == TextStyle::WrapOption::WrapWord)
-			pTextFormat_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+		pTextFormat_->SetWordWrapping(static_cast<DWRITE_WORD_WRAPPING>(_option));
 	}
 
 	int TextStyle::getContentLineCount(String _text, float _width)

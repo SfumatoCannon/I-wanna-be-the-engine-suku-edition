@@ -13,7 +13,7 @@ namespace suku
 
 	void PausePage::onUpdate()
 	{
-		if (input::isKeyDown(input::VK_P))
+		if (input::isKeyDown(VK_P))
 		{
 			if (!isPaused_)
 			{

@@ -10,6 +10,7 @@ namespace suku
 		void start();
 		void startWithVsync(int _frameRate = 1);
 		double getRenderFPS();
+		double getUpdateFPS();
 		void setRenderFPS(double _fps);
 	}
 }

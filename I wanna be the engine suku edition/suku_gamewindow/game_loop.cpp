@@ -155,6 +155,10 @@ namespace suku
 				thread.detach();
 			}
 		}
+		double getUpdateFPS()
+		{
+			return updateFPS;
+		}
 	}
 }
 

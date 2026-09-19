@@ -61,6 +61,7 @@ namespace suku
 		template<typename T> void loadVar(T& _x, T _defaultValue = T());
 		template<typename T> void loadVar(Property<T>& _x, T _defaultValue = T());
 		template<typename T> T loadVar(const std::string _name, T _defaultValue = T());
+		template<typename T> T get(const std::string _name, T _defaultValue = T()) { return loadVar<T>(_name, _defaultValue); }
 
 		bool hasValue(const std::string _name);
 	private:

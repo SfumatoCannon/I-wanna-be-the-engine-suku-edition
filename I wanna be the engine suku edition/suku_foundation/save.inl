@@ -130,7 +130,6 @@ namespace suku
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		if (byteDataPool.find(id) == byteDataPool.end())
 		{
-			ERRORWINDOW("Variable not set as savable");
 			return _defaultValue;
 		}
 		auto& [dataPtr, size] = byteDataPool[id];
