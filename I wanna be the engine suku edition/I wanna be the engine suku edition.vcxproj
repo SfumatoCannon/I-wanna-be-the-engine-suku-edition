@@ -169,7 +169,7 @@
     <ClInclude Include="suku_constants.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="suku_config\config_element.h" />
-    <ClInclude Include="suku_config\config_element_pool.h" />
+    <ClInclude Include="definitions\config_element_pool.h" />
     <ClInclude Include="suku_config\config_file.h" />
     <ClInclude Include="suku_config\includes.h" />
     <ClInclude Include="suku_core\action.h" />
@@ -188,6 +188,7 @@
     <ClInclude Include="suku_core\tile.h" />
     <ClInclude Include="suku_core\transition.h" />
     <ClInclude Include="suku_draw\brush.h" />
+    <ClInclude Include="definitions\suku_font_pool.h" />
     <ClInclude Include="suku_foundation\update_id_register.h" />
     <ClInclude Include="suku_objects\basic\Block.hpp" />
     <ClInclude Include="suku_objects\basic\object_definer.h" />
@@ -239,7 +240,7 @@
     <ClInclude Include="suku_preset_rooms\skins.hpp" />
     <ClInclude Include="suku_sounds\audio_core.h" />
     <ClInclude Include="suku_sounds\includes.h" />
-    <ClInclude Include="suku_sounds\suku_sound_pool.h" />
+    <ClInclude Include="definitions\suku_sound_pool.h" />
     <ClInclude Include="suku_sounds\suku_sounds.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

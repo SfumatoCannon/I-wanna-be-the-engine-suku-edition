@@ -8,7 +8,15 @@
 
 namespace suku
 {
-	TextStyle::TextStyle(String _fontName, float _size,
+	TextStyle::TextStyle(const String& _fontName, TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch)
+		: TextStyle(_fontName, 16.0f, _fontWeight, _fontStyle, _fontStretch)
+	{}
+
+	TextStyle::TextStyle(const String & _fontName, const String & _localUrl, TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch)
+		: TextStyle(_fontName, _localUrl, 16.0f, _fontWeight, _fontStyle, _fontStretch)
+	{}
+	
+	TextStyle::TextStyle(const String& _fontName, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -17,7 +25,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, float _size,
+	TextStyle::TextStyle(const String& _fontName, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -29,7 +37,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size,
+	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -38,7 +46,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, float _size,
+	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -50,7 +58,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, String _localeName, float _size, 
+	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size, 
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -59,7 +67,7 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	TextStyle::TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(Color::Black())
 	{
@@ -71,7 +79,17 @@ namespace suku
 		setTextWrapOption(_wrapOption);
 	}
 
-	void TextStyle::registerLocalFont(String _fontName, String _localUrl, String _localeName)
+	TextStyle::TextStyle(const TextStyle& _other, float _size, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
+		: TextStyle(_other.getFontName(), _other.getSource(), _size,
+			_textAlign, _wrapOption)
+	{}
+
+	TextStyle::TextStyle(const TextStyle& _other, float _size, TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
+		: TextStyle(_other.getFontName(), _other.getSource(), _size,
+			_fontWeight, _fontStyle, _fontStretch, _textAlign, _wrapOption)
+	{}
+
+	void TextStyle::registerLocalFont(const String& _fontName, const String& _localUrl, const String& _localeName)
 	{
 		graphics::TextFactoryGlobal::addLocalFontCollection(_localUrl, _fontName, _localeName);
 	}
@@ -257,6 +275,11 @@ namespace suku
 
 		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(const String& _fontName, const String& _localUrl, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
 		{
+			if (_localUrl.isEmpty())
+			{
+				return createTextFormat(_fontName, _size, _fontWeight, _fontStyle, _fontStretch);
+			}
+
 			String url = filesystem::absolutePath(_localUrl);
 			if (localFontCollectionMap_.find(_fontName) == localFontCollectionMap_.end())
 			{

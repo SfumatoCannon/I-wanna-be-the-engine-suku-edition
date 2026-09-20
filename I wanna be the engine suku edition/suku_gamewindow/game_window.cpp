@@ -87,7 +87,7 @@ namespace suku
 
 	void GameWindow::setFullscreen(bool _isFullscreen)
 	{
-		ConfigElementPool::isFullScreen = _isFullscreen;
+		GameWindowConfig::isFullScreen = _isFullscreen;
 		if (isFullscreen_ == _isFullscreen)
 			return;
 		DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
@@ -131,8 +131,8 @@ namespace suku
 	{
 		if (!isMaximized())
 		{
-			suku::ConfigElementPool::windowPosX = _posX;
-			suku::ConfigElementPool::windowPosY = _posY;
+			GameWindowConfig::windowPosX = _posX;
+			GameWindowConfig::windowPosY = _posY;
 		}
 		x_ = _posX;
 		y_ = _posY;
@@ -146,9 +146,9 @@ namespace suku
 	void GameWindow::onMaximize(bool _isMaximized)
 	{
 		if (_isMaximized)
-			suku::ConfigElementPool::isMaximized = true;
+			GameWindowConfig::isMaximized = true;
 		else
-			suku::ConfigElementPool::isMaximized = false;
+			GameWindowConfig::isMaximized = false;
 	}
 
 	void GameWindow::onFocusChanged(bool _isFocused)
@@ -172,8 +172,8 @@ namespace suku
 
 			if (!isMaximized())
 			{
-				ConfigElementPool::windowWidth = width_;
-				ConfigElementPool::windowHeight = height_;
+				GameWindowConfig::windowWidth = width_;
+				GameWindowConfig::windowHeight = height_;
 			}
 
 			pixelMappingTransformUpdateTag_ = true;

@@ -35,10 +35,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
+	using namespace suku;
 	hInst = hInstance;
 
 #ifdef FULLSCREEN_MODE
-	suku::GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
+	GameWindow::hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
 		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
 #else
 	UINT dpi = GetDpiForSystem();
@@ -46,11 +47,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	if (scale < 1.0f)
 		scale = 1.0f;
 
-	suku::GameWindow::defaultDisplayWidth = static_cast<UINT>(suku::GameWindow::getLogicalWidth() * scale);
-	suku::GameWindow::defaultDisplayHeight = static_cast<UINT>(suku::GameWindow::getLogicalHeight() * scale);
+	GameWindow::defaultDisplayWidth = static_cast<UINT>(GameWindow::getLogicalWidth() * scale);
+	GameWindow::defaultDisplayHeight = static_cast<UINT>(GameWindow::getLogicalHeight() * scale);
 
 	int windowWidth, windowHeight;
-	if (suku::ConfigElementPool::windowWidth.value() == -1 || suku::ConfigElementPool::windowHeight.value() == -1)
+	if (GameWindowConfig::windowWidth.value() == -1 || GameWindowConfig::windowHeight.value() == -1)
 	{
 		RECT rc = { 0, 0,
 			static_cast<LONG>(suku::GameWindow::defaultDisplayWidth),
@@ -63,8 +64,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	else
 	{
 		RECT rc = { 0, 0,
-			static_cast<LONG>(suku::ConfigElementPool::windowWidth.value()),
-			static_cast<LONG>(suku::ConfigElementPool::windowHeight.value()) 
+			static_cast<LONG>(GameWindowConfig::windowWidth.value()),
+			static_cast<LONG>(GameWindowConfig::windowHeight.value()) 
 		};
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 		windowWidth = rc.right - rc.left;
@@ -73,7 +74,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 
 	int windowX, windowY;
-	if (suku::ConfigElementPool::windowPosX.value() == -1 && suku::ConfigElementPool::windowPosY.value() == -1)
+	if (GameWindowConfig::windowPosX.value() == -1 && GameWindowConfig::windowPosY.value() == -1)
 	{
 		int screenW = GetSystemMetrics(SM_CXSCREEN);
 		int screenH = GetSystemMetrics(SM_CYSCREEN);
@@ -83,8 +84,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	}
 	else
 	{
-		windowX = suku::ConfigElementPool::windowPosX.value();
-		windowY = suku::ConfigElementPool::windowPosY.value();
+		windowX = GameWindowConfig::windowPosX.value();
+		windowY = GameWindowConfig::windowPosY.value();
 	}
 
 
@@ -105,7 +106,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	if (suku::ConfigElementPool::isMaximized.value() == true)
+	if (GameWindowConfig::isMaximized.value() == true)
 	{
 		ShowWindow(suku::GameWindow::hWnd, SW_SHOWMAXIMIZED);
 	}

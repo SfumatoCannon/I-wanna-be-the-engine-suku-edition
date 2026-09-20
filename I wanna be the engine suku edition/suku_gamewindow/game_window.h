@@ -3,6 +3,7 @@
 #include "../suku_foundation/suku_string.h"
 #include "../suku_constants.h"
 #include "../suku_draw/transform.h"
+#include <suku_config/config_element.h>
 #include <utility>
 
 namespace suku
@@ -58,5 +59,18 @@ namespace suku
 		inline static bool isFullscreen_ = false;
 		inline static bool isFocused_ = false;
 		inline static WINDOWPLACEMENT previousWindowPlacement_ = { sizeof(WINDOWPLACEMENT) };
+	};
+
+
+	class GameWindowConfig
+	{
+	public:
+		// configs about window
+		inline static ConfigElement<bool> isMaximized = { "Window", "isMaximized", false };
+		inline static ConfigElement<bool> isFullScreen = { "Window", "isFullScreen", false };
+		inline static ConfigElement<int> windowWidth = { "Window", "width", -1 };
+		inline static ConfigElement<int> windowHeight = { "Window", "height", -1 };
+		inline static ConfigElement<int> windowPosX = { "Window", "posX", -1 };
+		inline static ConfigElement<int> windowPosY = { "Window", "posY", -1 };
 	};
 }

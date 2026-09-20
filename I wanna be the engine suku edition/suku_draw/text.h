@@ -73,29 +73,49 @@ namespace suku
 			UltraExpanded = DWRITE_FONT_STRETCH_ULTRA_EXPANDED
 		};
 
-		TextStyle(String _fontName, float _size,
+		TextStyle(const String& _fontName, 
+			TextStyle::Weight _fontWeight = TextStyle::Weight::Normal, 
+			TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, 
+			TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal);
+		TextStyle(const String& _fontName, const String& _localUrl,
+			TextStyle::Weight _fontWeight = TextStyle::Weight::Normal,
+			TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None,
+			TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal);
+
+		TextStyle(const String& _fontName, float _size,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
-		TextStyle(String _fontName, float _size,
+		TextStyle(const String& _fontName, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
-		TextStyle(String _fontName, String _localUrl, float _size,
+		TextStyle(const String& _fontName, const String& _localUrl, float _size,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
-		TextStyle(String _fontName, String _localUrl, float _size,
+		TextStyle(const String& _fontName, const String& _localUrl, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);		
-		TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 				TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 				TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
-		TextStyle(String _fontName, String _localUrl, String _localeName, float _size,
+		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 
-		static void registerLocalFont(String _fontName, String _localUrl, String _localeName = "en-us");
+		TextStyle(const TextStyle& _other, float _size,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+		TextStyle(const TextStyle& _other, float _size,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+
+		const String& getFontName()const { return fontName_; }
+		const String& getSource()const { return source_; }
+
+		static void registerLocalFont(const String& _fontName, const String& _localUrl, const String& _localeName = "en-us");
 
 		void setTextAlign(TextStyle::Align _textAlign);
 		TextStyle::Align getTextAlign() { return textAlign_; }
@@ -114,6 +134,7 @@ namespace suku
 		void setBrush(const Brush& _brush);
 	private:
 		String fontName_;
+		String source_;
 		float size_;
 		ComPtr<IDWriteTextFormat> pTextFormat_;
 		Brush brush_;
