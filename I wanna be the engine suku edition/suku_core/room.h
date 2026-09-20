@@ -120,7 +120,7 @@ namespace suku
 		bool hasBackground_ = false;
 		bool hasBackgroundColor_ = false;
 		std::unique_ptr<Bitmap> background_ = nullptr;
-		Color backgroundColor_ = Color::Black();
+		Color backgroundColor_ = Color::Black;
 		std::unique_ptr<RectangleShape> backgroundShape_ = nullptr;
 		void paintBackground();
 	protected:

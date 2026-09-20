@@ -7,10 +7,14 @@ namespace suku
 	public:
 		float alpha;	//range: 0.0f ~ 1.0f
 
-		constexpr Color() : r_(0.0f), g_(0.0f), b_(0.0f), alpha(1.0f) {}
+		constexpr Color() 
+			: r_(0.0f), g_(0.0f), b_(0.0f), alpha(1.0f) {}
 		constexpr Color(float _r, float _g, float _b, float _alpha = 1.0f)
-			: r_(_r), g_(_g), b_(_b), alpha(_alpha) {
-		}
+			: r_(_r), g_(_g), b_(_b), alpha(_alpha) {}
+		constexpr Color(const Color& _other) 
+			: r_(_other.r()), g_(_other.g()), b_(_other.b()), alpha(_other.alpha) {}
+		constexpr Color(const Color& _other, float _alpha)
+			: r_(_other.r()), g_(_other.g()), b_(_other.b()), alpha(_alpha) {}
 
 		inline float r()const { return r_; }
 		inline float g()const { return g_; }
@@ -27,12 +31,18 @@ namespace suku
 		void setV(float _v);
 		void setHSV(float _h, float _s, float _v);
 
-		static constexpr Color Black(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 0.0f, _alpha); }
-		static constexpr Color White(float _alpha = 1.0f) { return Color(255.0f, 255.0f, 255.0f, _alpha); }
-		static constexpr Color Red(float _alpha = 1.0f) { return Color(255.0f, 0.0f, 0.0f, _alpha); }
-		static constexpr Color Green(float _alpha = 1.0f) { return Color(0.0f, 255.0f, 0.0f, _alpha); }
-		static constexpr Color Blue(float _alpha = 1.0f) { return Color(0.0f, 0.0f, 255.0f, _alpha); }
+		static const Color Black;
+		static const Color White;
+		static const Color Red;
+		static const Color Green;
+		static const Color Blue;
 	private:
 		float r_, g_, b_;	//range: 0.0f ~ 255.0f
 	};
+
+	inline const Color Color::Black(0.0f, 0.0f, 0.0f);
+	inline const Color Color::White(255.0f, 255.0f, 255.0f);
+	inline const Color Color::Red(255.0f, 0.0f, 0.0f);
+	inline const Color Color::Green(0.0f, 255.0f, 0.0f);
+	inline const Color Color::Blue(0.0f, 0.0f, 255.0f);
 }
