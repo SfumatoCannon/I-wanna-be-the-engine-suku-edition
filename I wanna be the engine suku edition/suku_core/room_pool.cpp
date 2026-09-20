@@ -6,4 +6,9 @@ namespace suku
 	{
 		return RoomPool::getNowRoom();
 	}
+
+	void RoomPool::gotoNewGameRoom()
+	{
+		actionOnNewGame();
+	}
 }

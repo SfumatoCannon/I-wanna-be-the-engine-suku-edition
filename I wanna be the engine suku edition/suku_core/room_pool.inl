@@ -53,4 +53,10 @@ namespace suku
 		}
 		nowRoom_->enter();
 	}
+
+	template<suku_room T>
+	inline void RoomPool::setNewGameRoom()
+	{
+		actionOnNewGame_ = []() { RoomPool::gotoRoom<T>(); }
+	}
 }

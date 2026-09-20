@@ -16,11 +16,14 @@ namespace suku
 		template<suku_room T> static void releaseRoom();
 		template<suku_room T> static Room* getRoom();
 		template<suku_room T> static void gotoRoom();
+		template<suku_room T> static void setNewGameRoom();
+		static void gotoNewGameRoom();
 	private:
 		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
 		inline static Room* nowRoom_ = nullptr;
 		inline static SoundController* BGMController_ = nullptr;
 		inline static Sound* nowBGM_ = nullptr;
+		inline static std::function<void()> actionOnNewGame_;
 	};
 
 	Room* getNowRoom();
