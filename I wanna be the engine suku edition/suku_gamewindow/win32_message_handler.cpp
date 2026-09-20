@@ -41,8 +41,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		graphics::suku_drawing_postinit(hWnd);
 		//soundInit();
 		init();
-		if (GameWindow::isVSyncOn.value())
-			game_loop::startWithVsync(ConfigElementPool::vsyncFrameRate.value());
+		if (GameLoopConfig::isVSyncOn.value())
+			game_loop::startWithVsync(GameLoopConfig::vsyncFrameRate.value());
 		else
 			game_loop::start();
 		break;

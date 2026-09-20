@@ -108,7 +108,7 @@ namespace suku
 		void renderSender()
 		{
 			const double updateFrameTime = 1000.0 / updateFPS;
-			double frameTime = 1000.0 / (double)suku::ConfigElementPool::renderFPS.value();
+			double frameTime = 1000.0 / (double)suku::GameLoopConfig::renderFPS.value();
 			auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
 				(std::chrono::duration<double, std::milli>(frameTime));
 
@@ -293,7 +293,7 @@ namespace
 	void displayDebugMessage()
 	{
 		double monitoredFPS = getMonitoredFPS(false);
-		bool isVsyncOn = suku::ConfigElementPool::isVSyncOn.value();
+		bool isVsyncOn = suku::GameLoopConfig::isVSyncOn.value();
 		static suku::Text a({"Consolas", 24});
 		a.style.setBrush(suku::Color(0, 255, 0, 1.0f));
 		a.text.clear();

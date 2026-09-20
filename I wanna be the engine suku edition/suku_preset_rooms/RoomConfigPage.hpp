@@ -14,10 +14,10 @@ public:
 		auto optionLayout = create<UILayoutVerticalSelectable<OptionElement>>((windowWidth - configElementWidth) / 2, 0);
 		optionLayout->make(
 			{
-				{ ConfigElementPool::renderFPS, "Render FPS" },
-				{ ConfigElementPool::isVSyncOn, "Vsync", "abcdddffffffffffffffffffffff\nddddddddddddddddddddd"},
-				{ ConfigElementPool::vsyncFrameRate, "Vsync Frame Rate" },
-				{ ConfigElementPool::isFullScreen, "Fullscreen"}
+				{ GameLoopConfig::renderFPS, "Render FPS" },
+				{ GameLoopConfig::isVSyncOn, "Vsync", "abcdddffffffffffffffffffffff\nddddddddddddddddddddd"},
+				{ GameLoopConfig::vsyncFrameRate, "Vsync Frame Rate" },
+				{ GameWindowConfig::isFullScreen, "Fullscreen"}
 			},
 			configElementWidth, configElementHeight
 		);

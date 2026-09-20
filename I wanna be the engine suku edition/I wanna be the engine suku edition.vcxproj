@@ -169,7 +169,6 @@
     <ClInclude Include="suku_constants.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="suku_config\config_element.h" />
-    <ClInclude Include="definitions\config_element_pool.h" />
     <ClInclude Include="suku_config\config_file.h" />
     <ClInclude Include="suku_config\includes.h" />
     <ClInclude Include="suku_core\action.h" />
