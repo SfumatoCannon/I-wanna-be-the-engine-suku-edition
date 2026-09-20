@@ -15,7 +15,9 @@ namespace suku
 	public:
 		Brush(Color _color);
 		Brush(Bitmap _bitmap);
+		Brush() = default;
 
+		bool isValid()const { return pBrush_ != nullptr; }
 		static Brush solidColorBrush(Color _color);
 		static Brush bitmapBrush(Bitmap _bitmap);
 

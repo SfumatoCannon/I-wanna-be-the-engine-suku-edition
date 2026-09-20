@@ -86,21 +86,21 @@ namespace suku
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, float _size,
-			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, const String& _localUrl, float _size,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, const String& _localUrl, float _size,
-			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);		
 		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 				TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 				TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
-			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 
@@ -108,7 +108,7 @@ namespace suku
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const TextStyle& _other, float _size,
-			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch,
+			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
 			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 

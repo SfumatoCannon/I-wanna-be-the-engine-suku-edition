@@ -18,7 +18,7 @@ namespace suku
 	
 	TextStyle::TextStyle(const String& _fontName, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_()
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
 		setTextAlign(_textAlign);
@@ -27,7 +27,7 @@ namespace suku
 
 	TextStyle::TextStyle(const String& _fontName, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_()
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
@@ -39,7 +39,7 @@ namespace suku
 
 	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, float _size,
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_()
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size);
 		setTextAlign(_textAlign);
@@ -48,7 +48,7 @@ namespace suku
 
 	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
@@ -60,7 +60,7 @@ namespace suku
 
 	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size, 
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size);
 		setTextAlign(_textAlign);
@@ -69,7 +69,7 @@ namespace suku
 
 	TextStyle::TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
-		: fontName_(_fontName), size_(_size), brush_(Color::Black())
+		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
 		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
@@ -235,7 +235,14 @@ namespace suku
 
 	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, Transform _transform)
 	{
-		paint(_text, _x, _y, _width, _height, brush_, _transform);
+		if (brush_.isValid())
+		{
+			paint(_text, _x, _y, _width, _height, brush_, _transform);
+		}
+		else
+		{
+			paint(_text, _x, _y, _width, _height, Brush::solidColorBrush(Color::Black()));
+		}
 	}
 
 	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform)

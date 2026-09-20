@@ -1,4 +1,5 @@
 #include "RoomSelectSave.h"
+#include <definitions/suku_font_pool.h>
 
 RoomSelectSave::RoomSelectSave()
 {
@@ -32,9 +33,9 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 	constexpr int saveSlotHeight = 288;
 	constexpr int padding = 8;
 
-	TextStyle saveSlotTitleStyle("Staatliches", "Font\\staatliches-latin-400-normal.ttf", 32, TextStyle::Align::TopCenter);
-	TextStyle saveSlotNoDataStyle("Barlow Condensed", "Font\\barlow-condensed-latin-400-normal.ttf", 24, TextStyle::Align::TopCenter);
-	TextStyle saveSlotContentStyle("Courier New", 16);
+	TextStyle saveSlotTitleStyle(Font::Staatliches, 32, TextStyle::Align::TopCenter);
+	TextStyle saveSlotNoDataStyle(Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
+	TextStyle saveSlotContentStyle(Font::Arial, 16, TextStyle::Weight::Bold);
 
 	// Save slot card
 	for (int i = 0; i < 3; i++)
