@@ -9,6 +9,17 @@ namespace suku
 
 	void RoomPool::gotoNewGameRoom()
 	{
-		actionOnNewGame();
+		actionOnNewGame_();
+	}
+
+	void RoomTypecodeManager::gotoRoom(Typecode _typecode)
+	{
+		auto iter = gotoRoomExecuteMap_.find(_typecode);
+		if (iter == gotoRoomExecuteMap_.end())
+		{
+			ERRORWINDOW_GLOBAL(L"Failed to goto room: room typecode is invalid (" + std::to_wstring(_typecode) + L")");
+			return;
+		}
+		(*iter).second();
 	}
 }

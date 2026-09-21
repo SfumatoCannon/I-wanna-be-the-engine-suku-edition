@@ -13,6 +13,7 @@ namespace suku
 {
 	class Object;
 	class Room;
+	class RoomPool;
 	class ObjectCollisionPool;
 
 	class RectangleShape;
@@ -32,7 +33,8 @@ namespace suku
 		unsigned int getWidth() { return width_; }
 		unsigned int getHeight() { return height_; }
 
-		unsigned int getRoomId() const { return roomId_; }
+		Typecode getRoomTypecode() const { return typecode_; }
+		const String& getName() const { return name_; }
 
 		template<suku_object Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
@@ -98,11 +100,13 @@ namespace suku
 		void addTilePack(TilePack& _tilepack);
 		void removeTilePack(TilePack& _tilepack);
 	private:
+		friend class RoomPool;
+
 		unsigned int width_;
 		unsigned int height_;
 
-		unsigned int roomId_;
-		String alias_ = L"";
+		Typecode typecode_;
+		String name_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
 		std::unique_ptr<ObjectCollisionPool> collisionPool_;
 		std::map<double, std::list<std::shared_ptr<Object>>> preUpdateArray_;

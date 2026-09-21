@@ -21,6 +21,8 @@ namespace suku
 			return it->second.get();
 		}
 		roomPool_[typecode] = std::make_unique<T>();
+		roomPool_[typecode]->name_ = typeid(T).name();
+		roomPool_[typecode]->typecode_ = typecode(T);
 		return roomPool_[typecode].get();
 	}
 
@@ -57,6 +59,12 @@ namespace suku
 	template<suku_room T>
 	inline void RoomPool::setNewGameRoom()
 	{
-		actionOnNewGame_ = []() { RoomPool::gotoRoom<T>(); }
+		actionOnNewGame_ = []() { RoomPool::gotoRoom<T>(); };
+	}
+
+	template<suku_room T>
+	inline void RoomTypecodeManager::registerRoom()
+	{
+		gotoRoomExecuteMap_.emplace(typecode(T), []() { RoomPool::gotoRoom<T>(); });
 	}
 }

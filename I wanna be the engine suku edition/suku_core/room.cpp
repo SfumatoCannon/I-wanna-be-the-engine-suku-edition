@@ -18,9 +18,6 @@ namespace suku
 		camera(constants::window::widthLogical, constants::window::heightLogical),
 		collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
-		static unsigned int roomIdCounter = 0;
-		roomIdCounter++;
-		roomId_ = roomIdCounter;
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 		camera.setBorder(0, 0, _height, _width);
 	}

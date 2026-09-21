@@ -26,8 +26,28 @@ namespace suku
 		inline static std::function<void()> actionOnNewGame_;
 	};
 
+	class RoomTypecodeManager
+	{
+	public:
+		template<suku_room T> static void registerRoom();
+		static void gotoRoom(Typecode _typecode);
+	private:
+		inline static std::map<Typecode, std::function<void()>> gotoRoomExecuteMap_;
+		RoomTypecodeManager() = default;
+	};
+
+	template<suku_room T>
+	class RoomTypecodeRegisterClass
+	{
+	public:
+		RoomTypecodeRegisterClass() { RoomTypecodeManager::registerRoom<T>(); }
+	};
+
+#define ROOM_SAVABLE(suku_room) static inline RoomTypecode<suku_room> savable_registered;
+
 	Room* getNowRoom();
-	template<suku_room T> void gotoRoom() { RoomPool::gotoRoom<T>(); }
+	template<suku_room T> inline void gotoRoom() { RoomPool::gotoRoom<T>(); }
+	inline void gotoRoom(Typecode _roomTypecode) { RoomTypecodeManager::gotoRoom(_roomTypecode); }
 }
 
 #include "room_pool.inl"

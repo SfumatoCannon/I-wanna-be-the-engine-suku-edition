@@ -303,7 +303,7 @@ namespace
 
 		// Now Room
 		auto nowRoom = suku::RoomPool::getNowRoom();
-		a.text += L"\nRoom Id: " + std::to_wstring(nowRoom->getRoomId());
+		a.text += L"\nRoom name: " + nowRoom->getName();
 
 		// Player
 		if (!nowRoom->getObjectList<suku::Player>().empty())
