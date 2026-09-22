@@ -34,6 +34,7 @@ namespace suku
 		if (RoomTypecodeManager::exist(id_))
 		{
 			SaveFile* savefile = getGlobalSaveFile();
+			setSavable<Typecode>("roomid");
 			if (savefile != nullptr)
 			{
 				savefile->saveVar("roomid", this->getRoomId());

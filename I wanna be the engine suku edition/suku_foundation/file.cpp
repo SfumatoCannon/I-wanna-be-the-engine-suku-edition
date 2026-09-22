@@ -113,16 +113,12 @@ namespace suku
 
 	void File::openForWrite(bool _overwrite)
 	{
+		if (!isExist())
+			create();
 		if (ofs_.is_open())
 			ofs_.close();
 		ofs_.open(filesystem::absolutePath(path_).contentInWString(), 
 			_overwrite ? (std::ios::binary | std::ios::trunc) : std::ios::binary);
-		if (!ofs_.is_open())
-		{
-			create();
-			ofs_.open(filesystem::absolutePath(path_).contentInWString(), 
-				_overwrite ? (std::ios::binary | std::ios::trunc) : std::ios::binary);
-		}
 		ofs_.seekp(0, std::ios::beg);
 	}
 
@@ -144,14 +140,11 @@ namespace suku
 
 	void File::openForRead()
 	{
+		if (!isExist())
+			create();
 		if (ifs_.is_open())
 			ifs_.close();
 		ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
-		if (!ifs_.is_open())
-		{
-			create();
-			ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
-		}
 	}
 
 	bool File::tryOpenForRead()
@@ -200,6 +193,8 @@ namespace suku
 
 	void File::write(const char* _ptrData, size_t _size)
 	{
+		if (!isExist())
+			create();
 		if (!ofs_.is_open())
 			openForWrite();
 		ofs_.write(_ptrData, _size);
@@ -207,6 +202,8 @@ namespace suku
 
 	void File::read(char* _ptrData, size_t _size)
 	{
+		if (!isExist())
+			return;
 		if (!ifs_.is_open())
 			openForRead();
 		ifs_.read(_ptrData, _size);
@@ -214,6 +211,8 @@ namespace suku
 
 	void File::write(const std::vector<char>& _data)
 	{
+		if (!isExist())
+			create();
 		if (!ofs_.is_open())
 			openForWrite();
 		write(_data.data(), _data.size());
@@ -221,6 +220,8 @@ namespace suku
 
 	void File::read(std::vector<char>& _data)
 	{
+		if (!isExist())
+			return;
 		if (!ifs_.is_open())
 			openForRead();
 		ifs_.seekg(0, std::ios::end);
@@ -236,6 +237,8 @@ namespace suku
 
 	void File::read(std::vector<char>& _data, size_t _size)
 	{
+		if (!isExist())
+			return;
 		if (!ifs_.is_open())
 			openForRead();
 		if (_size == 0) return;
@@ -245,12 +248,19 @@ namespace suku
 
 	void File::writeDataPtr(unsigned long long _id, char* _data, size_t _size)
 	{
+		if (!isExist())
+			create();
 		if (ofs_.is_open())
 			ofs_.close();
 		if (ifs_.is_open())
 			ifs_.close();
 		std::fstream fs;
 		fs.open(filesystem::absolutePath(path_).contentInWString(), std::ios::in | std::ios::out | std::ios::binary);
+		if (!fs.is_open())
+		{
+			ERRORWINDOW("Failed to open file.");
+			return;
+		}
 		fs.clear();
 		fs.seekg(0, std::ios::beg);
 		fs.seekp(0, std::ios::beg);

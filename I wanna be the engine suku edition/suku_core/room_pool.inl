@@ -70,6 +70,7 @@ namespace suku
 				savefile->clear();
 			}
 			Room* newgameRoom = RoomPool::gotoRoom<T>();
+			newgameRoom->save();
 		};
 	}
 

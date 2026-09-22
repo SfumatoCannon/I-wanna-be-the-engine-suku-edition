@@ -52,8 +52,8 @@ namespace suku
 		auto iter = byteDataPool.find(id);
 		if (iter == byteDataPool.end())
 		{
-			WARNINGWINDOW("Variable name \"" + _name + "\" not set as savable.Attempting to set it as savable.");
 			setSavable<T>(_name);
+			iter = byteDataPool.find(id);
 		}
 		T* dataPtr = reinterpret_cast<T*>(iter->second.first);
 		*dataPtr = _val;
