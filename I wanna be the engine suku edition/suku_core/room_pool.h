@@ -10,6 +10,8 @@
 namespace suku
 {
 	class Room;
+	class RoomPool;
+	class RoomTypecodeManager;
 
 	class RoomPool
 	{
@@ -18,6 +20,7 @@ namespace suku
 		template<suku_room T> static void releaseRoom();
 		template<suku_room T> static Room* getRoom();
 		template<suku_room T> static Room* gotoRoom();
+		static void gotoRoom(Typecode _roomid);
 		template<suku_room T> static void setNewGameRoom();
 		static void gotoNewGameRoom();
 	private:

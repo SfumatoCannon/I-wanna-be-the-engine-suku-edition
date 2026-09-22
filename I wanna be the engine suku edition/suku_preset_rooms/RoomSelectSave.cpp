@@ -4,7 +4,11 @@
 RoomSelectSave::RoomSelectSave()
 {
 	MapLoader::loadFromJtoolData(this, "-801p01o01n01m01hg1gg1fg1eg1a01901801701ig1dg1l01q01b01601s0140-i01eg1fg1gg1hg1ig1dg1q01701601o01n01m01l01p01b01a01901801s0140-h01ig1dg1l01q01b01601s0140-g01ig1dg1l01q01b01601s0140-f01ig1dg1l01q01b01601s0140-e01ig1dg1l01q01b01601s0140-d01ig1dg1l01q01b01601s0140-c01ig1dg1l01q01b01601s0140-b01ig1dg1l01q01b01601s0140-a01ig1dg1l01q01b01601s0140-901ig1dg1l01q01b01601s0140-l01s0140-k01s0140-j01s0140-701s0140-601s0140-501s0140-401s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140-m01s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140");
-
+	for (int i = 0; i < 3; i++)
+	{
+		saveFileTime[i] = saveFile[i].get<unsigned int>("time");
+		saveFileDeath[i] = saveFile[i].get<unsigned int>("death");
+	}
 }
 
 void RoomSelectSave::onUpdateStart()
@@ -23,6 +27,11 @@ void RoomSelectSave::onUpdateStart()
 	{
 		setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
 		RoomPool::gotoNewGameRoom();
+	}
+	if (input::isKeyDown(VK_Z))
+	{
+		setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+		SaveFile::load();
 	}
 }
 
@@ -54,8 +63,8 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 		}
 		else
 		{
-			auto time = saveFile[i].get<unsigned int>("time");
-			auto death = saveFile[i].get<unsigned int>("death");
+			auto time = saveFileTime[i];
+			auto death = saveFileDeath[i];
 			time = time / game_loop::updateFPS; // frame -> seconds
 			unsigned int hour = time / 3600;
 			unsigned int minute = (time % 3600) / 60;

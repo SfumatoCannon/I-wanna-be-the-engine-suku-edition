@@ -128,6 +128,17 @@ namespace suku
 		nowRoom->onSave();
 	}
 
+	bool SaveFile::load()
+	{
+		SaveFile* savefile = getGlobalSaveFile();
+		if (savefile == nullptr)
+			return false;
+		Typecode roomid = savefile->loadVar<Typecode>("roomid");
+		RoomPool::gotoRoom(roomid);
+		savefile->readData();
+		return true;
+	}
+
 	bool SaveFile::hasValue(const std::string _name)
 	{
 		auto idList = file_->readDataPtrMapIdList();

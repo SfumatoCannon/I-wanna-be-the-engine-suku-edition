@@ -55,7 +55,7 @@ namespace suku
 		String getFileName()const;
 
 		static void save();
-		static void load();
+		static bool load();
 
 		template<typename T> void saveVar(const std::string _name, T _val);
 		template<typename T> void saveVar(const std::string _name, Property<T>& _val);

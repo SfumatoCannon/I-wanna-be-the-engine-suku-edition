@@ -23,21 +23,10 @@ public:
 	Room0() : Room(2000, 1216)
 	{
 		setBackground("Image\\bg.jpg");
-		//static SaveFile save0("save123");
-		//setGlobalSaveFile(&save0);
 
 		create<Block>(1400, 400);
 		Player* p = create<Player>(0.f, 0.f).get();
 		int x = 0;
-		//setSavable<int>("test");
-		//if (!getGlobalSaveFile()->hasValue("test"))
-		//{
-		//	x = 0;
-		//}
-		//else
-		//	x = getGlobalSaveFile()->loadVar<int>("test");
-		//x++;
-		//getGlobalSaveFile()->saveVar("test", x);
 
 		create(Block(32, 32))->addTimelineAction({ 100, 200 },
 			{

@@ -7,6 +7,11 @@ namespace suku
 		return RoomPool::getNowRoom();
 	}
 
+	void RoomPool::gotoRoom(Typecode _roomid)
+	{
+		RoomTypecodeManager::gotoRoom(_roomid);
+	}
+
 	void RoomPool::gotoNewGameRoom()
 	{
 		actionOnNewGame_();

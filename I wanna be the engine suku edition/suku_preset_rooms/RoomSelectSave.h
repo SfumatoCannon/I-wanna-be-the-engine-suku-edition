@@ -9,6 +9,8 @@ class RoomSelectSave : public RoomStage0
 {
 public:
 	inline static SaveFile saveFile[3] = {SaveFile("Save1"), SaveFile("Save2"), SaveFile("Save3")};
+	inline static unsigned int saveFileTime[3];
+	inline static unsigned int saveFileDeath[3];
 	RoomSelectSave();
 	virtual void onUpdateStart() override;
 	virtual void onPaintEnd(PaintLayer& _layer) override;

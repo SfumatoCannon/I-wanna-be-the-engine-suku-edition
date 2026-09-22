@@ -111,10 +111,7 @@ namespace suku
 	{
 		if (!isAlive())
 			return;
-		spawnX = x;
-		spawnY = y;
-		getGlobalSaveFile()->saveVar("player_x", x);
-		getGlobalSaveFile()->saveVar("player_y", y);
+		SaveFile::save();
 	}
 
 	bool Player::isAlive()
