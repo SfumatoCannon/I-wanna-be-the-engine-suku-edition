@@ -36,7 +36,7 @@ namespace suku
 		Typecode getRoomId() const { return id_; }
 		const String& getName() const { return name_; }
 
-		void save();
+		bool isSavable(); // should define a room with ROOM_SAVABLE(T) macro if you want to save the room automatically
 
 		template<suku_object Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
@@ -72,7 +72,7 @@ namespace suku
 		virtual void onEnter() {}
 		virtual void onRestart() {}
 		virtual void onStart() {}
-		virtual void onSave() {}
+		virtual void onSave();
 		virtual void onPaintStart() {}
 		virtual void onPaintStart(PaintLayer& _layer) { _layer.clear(); if (&_layer == &displayLayer) paintBackground(); }
 		virtual void onPaintEnd() {}

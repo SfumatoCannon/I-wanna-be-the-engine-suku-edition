@@ -33,7 +33,7 @@ namespace suku
 	{
 	public:
 		template<suku_room T> static void registerRoom();
-		static bool exist(Typecode _typecode);
+		static bool isExist(Typecode _typecode);
 		static void gotoRoom(Typecode _typecode);
 	private:
 		inline static std::map<Typecode, std::function<void()>> gotoRoomExecuteMap_;

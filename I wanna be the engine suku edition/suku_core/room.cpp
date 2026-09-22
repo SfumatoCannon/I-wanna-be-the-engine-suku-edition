@@ -29,22 +29,9 @@ namespace suku
 		MapLoader::loadFromJtoolData(this, _data);
 	}
 
-	void Room::save()
+	bool Room::isSavable()
 	{
-		if (RoomTypecodeManager::exist(id_))
-		{
-			SaveFile* savefile = getGlobalSaveFile();
-			setSavable<Typecode>("roomid");
-			if (savefile != nullptr)
-			{
-				savefile->saveVar("roomid", this->getRoomId());
-			}
-			onSave();
-			for (Object* o : getObjectList<Object>())
-			{
-				o->onSave();
-			}
-		}
+		return RoomTypecodeManager::isExist(id_);
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)
@@ -211,6 +198,12 @@ namespace suku
 		}
 		onStart();
 		onRestart();
+	}
+
+	void Room::onSave()
+	{
+		for (auto& o : getObjectList<Object>())
+			o->onSave();
 	}
 
 	void Room::update()

@@ -3,7 +3,7 @@
 #include "suku_string.h"
 #include "message.h"
 #include "file.h"
-#include <ios>
+#include <suku_core/room_pool.h>
 
 namespace suku
 {
@@ -115,6 +115,17 @@ namespace suku
 		if (!file_)
 			return String();
 		return file_->getName();
+	}
+
+	void SaveFile::save()
+	{
+		SaveFile* savefile = getGlobalSaveFile();
+		Room* nowRoom = RoomPool::getNowRoom();
+		if (savefile == nullptr || nowRoom == nullptr)
+			return;
+		savefile->saveVar("roomid", nowRoom->getRoomId());
+		savefile->writeData();
+		nowRoom->onSave();
 	}
 
 	bool SaveFile::hasValue(const std::string _name)
