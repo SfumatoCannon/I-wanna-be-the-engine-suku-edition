@@ -21,6 +21,8 @@ namespace suku
 		static Brush solidColorBrush(Color _color);
 		static Brush bitmapBrush(Bitmap _bitmap);
 
+		static const Brush& defaultBrush();
+
 		ComPtr<ID2D1Brush> getD2DBrush()const { return pBrush_; }
 	private:
 		ComPtr<ID2D1Brush> pBrush_ = nullptr;

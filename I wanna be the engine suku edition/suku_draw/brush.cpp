@@ -25,4 +25,9 @@ namespace suku
 	{
 		return Brush(_bitmap);
 	}
+	const Brush& Brush::defaultBrush()
+	{
+		static Brush defaultBrush(solidColorBrush(Color::Black));
+		return defaultBrush;
+	}
 }

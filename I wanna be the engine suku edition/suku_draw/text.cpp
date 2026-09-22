@@ -185,7 +185,7 @@ namespace suku
 		}
 		else
 		{
-			paint(_text, _x, _y, Brush::solidColorBrush(Color::Black), _transform);
+			paint(_text, _x, _y, Brush::defaultBrush(), _transform);
 		}
 	}
 
@@ -248,7 +248,7 @@ namespace suku
 		}
 		else
 		{
-			paint(_text, _x, _y, _width, _height, Brush::solidColorBrush(Color::Black));
+			paint(_text, _x, _y, _width, _height, Brush::defaultBrush(), _transform);
 		}
 	}
 
