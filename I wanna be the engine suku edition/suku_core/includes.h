@@ -1,4 +1,6 @@
 #pragma once
+#include "action.h"
+#include "camera.h"
 #include "collision_box.h"
 #include "group.h"
 #include "object.h"
@@ -6,5 +8,8 @@
 #include "room.h"
 #include "room_pool.h"
 #include "sprite.h"
+#include "suku_core_concepts.h"
+#include "suku_property.h"
 #include "tile.h"
+#include "transition.h"
 #include "view.h"

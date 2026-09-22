@@ -101,8 +101,10 @@ public:
 		a.paint(256, 256);
 	}
 };
+ROOM_SAVABLE(Room0)
 
 void init()
 {
+	RoomPool::setNewGameRoom<Room0>();
 	gotoRoom<RoomTitle>();
 }

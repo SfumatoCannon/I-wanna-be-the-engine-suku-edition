@@ -7,6 +7,8 @@
 #include <suku_foundation/maths.h>
 #include <suku_objects/map_loader.h>
 #include <suku_draw/shape.h>
+#include <suku_foundation/save.h>
+#include "room_pool.h"
 #include "tile.h"
 
 namespace suku
@@ -25,6 +27,23 @@ namespace suku
 	void Room::loadFromJtoolData(std::string_view _data)
 	{
 		MapLoader::loadFromJtoolData(this, _data);
+	}
+
+	void Room::save()
+	{
+		if (RoomTypecodeManager::exist(id_))
+		{
+			SaveFile* savefile = getGlobalSaveFile();
+			if (savefile != nullptr)
+			{
+				savefile->saveVar("roomid", this->getRoomId());
+			}
+			onSave();
+			for (Object* o : getObjectList<Object>())
+			{
+				o->onSave();
+			}
+		}
 	}
 
 	Object* Room::findObj(Typecode _kindId, size_t _pos)

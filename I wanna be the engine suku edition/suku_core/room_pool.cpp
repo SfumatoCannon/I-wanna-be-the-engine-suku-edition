@@ -12,6 +12,11 @@ namespace suku
 		actionOnNewGame_();
 	}
 
+	bool RoomTypecodeManager::exist(Typecode _typecode)
+	{
+		return gotoRoomExecuteMap_.find(_typecode) != gotoRoomExecuteMap_.end();
+	}
+
 	void RoomTypecodeManager::gotoRoom(Typecode _typecode)
 	{
 		auto iter = gotoRoomExecuteMap_.find(_typecode);

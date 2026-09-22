@@ -21,7 +21,8 @@ void RoomSelectSave::onUpdateStart()
 	}
 	if (input::isKeyDown(VK_SHIFT))
 	{
-
+		setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+		RoomPool::gotoNewGameRoom();
 	}
 }
 

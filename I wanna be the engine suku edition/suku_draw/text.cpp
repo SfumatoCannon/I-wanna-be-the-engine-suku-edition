@@ -179,7 +179,14 @@ namespace suku
 
 	void TextStyle::paint(String _text, float _x, float _y, Transform _transform)
 	{
-		paint(_text, _x, _y, brush_, _transform);
+		if (brush_.isValid())
+		{
+			paint(_text, _x, _y, brush_, _transform);
+		}
+		else
+		{
+			paint(_text, _x, _y, Brush::solidColorBrush(Color::Black), _transform);
+		}
 	}
 
 	void TextStyle::paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform)

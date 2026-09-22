@@ -33,8 +33,10 @@ namespace suku
 		unsigned int getWidth() { return width_; }
 		unsigned int getHeight() { return height_; }
 
-		Typecode getRoomTypecode() const { return typecode_; }
+		Typecode getRoomId() const { return id_; }
 		const String& getName() const { return name_; }
+
+		void save();
 
 		template<suku_object Obj> std::list<Obj*> getObjectList();
 		Object* findObj(Typecode _kindId, size_t _pos);
@@ -70,6 +72,7 @@ namespace suku
 		virtual void onEnter() {}
 		virtual void onRestart() {}
 		virtual void onStart() {}
+		virtual void onSave() {}
 		virtual void onPaintStart() {}
 		virtual void onPaintStart(PaintLayer& _layer) { _layer.clear(); if (&_layer == &displayLayer) paintBackground(); }
 		virtual void onPaintEnd() {}
@@ -105,7 +108,7 @@ namespace suku
 		unsigned int width_;
 		unsigned int height_;
 
-		Typecode typecode_;
+		Typecode id_;
 		String name_;
 		std::map<Typecode, std::list<std::shared_ptr<Object>>> objectPointerArray_;
 		std::unique_ptr<ObjectCollisionPool> collisionPool_;

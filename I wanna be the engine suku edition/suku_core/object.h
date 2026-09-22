@@ -79,6 +79,7 @@ namespace suku
 		virtual void onRoomStart() {}
 		virtual void onRoomRestart() { x = spawnX; y = spawnY; }
 		virtual void onRemove() {}
+		virtual void onSave() {}
 		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
 		virtual void onPreUpdate() {}
 		virtual void onUpdate() {}

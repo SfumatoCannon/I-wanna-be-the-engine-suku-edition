@@ -1,6 +1,8 @@
 #include "room_pool.h"
 #include "room.h"
 #include <suku_core/tile.h>
+#include <suku_foundation/save.h>
+
 
 namespace suku
 {
@@ -22,12 +24,12 @@ namespace suku
 		}
 		roomPool_[typecode] = std::make_unique<T>();
 		roomPool_[typecode]->name_ = typeid(T).name();
-		roomPool_[typecode]->typecode_ = typecode(T);
+		roomPool_[typecode]->id_ = typecode(T);
 		return roomPool_[typecode].get();
 	}
 
 	template<suku_room T>
-	inline void RoomPool::gotoRoom()
+	inline Room* RoomPool::gotoRoom()
 	{
 		Tile::resetAll();
 		RoomPool::nowRoom_ = getRoom<T>();
@@ -54,12 +56,21 @@ namespace suku
 			}
 		}
 		nowRoom_->enter();
+		return nowRoom_;
 	}
 
 	template<suku_room T>
 	inline void RoomPool::setNewGameRoom()
 	{
-		actionOnNewGame_ = []() { RoomPool::gotoRoom<T>(); };
+		newgameRoomId_ = typecode(T);
+		actionOnNewGame_ = [=]() {
+			SaveFile* savefile = getGlobalSaveFile();
+			if (savefile && savefile->isExist())
+			{
+				savefile->clear();
+			}
+			Room* newgameRoom = RoomPool::gotoRoom<T>();
+		};
 	}
 
 	template<suku_room T>
