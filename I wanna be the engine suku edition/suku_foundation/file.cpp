@@ -89,7 +89,7 @@ namespace suku
 
 	void File::create() const
 	{
-		std::ofstream ofsForCreating(filesystem::absolutePath(/*SaveDir + */path_).contentInWString());
+		std::ofstream ofsForCreating(filesystem::absolutePath(/*SaveDir + */path_).toWString());
 		ofsForCreating.close();
 	}
 
@@ -117,7 +117,7 @@ namespace suku
 			create();
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(filesystem::absolutePath(path_).contentInWString(), 
+		ofs_.open(filesystem::absolutePath(path_).toWString(), 
 			_overwrite ? (std::ios::binary | std::ios::trunc) : std::ios::binary);
 		ofs_.seekp(0, std::ios::beg);
 	}
@@ -126,7 +126,7 @@ namespace suku
 	{
 		if (ofs_.is_open())
 			ofs_.close();
-		ofs_.open(filesystem::absolutePath(path_).contentInWString(), 
+		ofs_.open(filesystem::absolutePath(path_).toWString(), 
 			_overwrite ? (std::ios::binary | std::ios::trunc) : std::ios::binary);
 		if (!ofs_.is_open())
 			return false;
@@ -144,14 +144,14 @@ namespace suku
 			create();
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
+		ifs_.open(filesystem::absolutePath(path_).toWString(), std::ios::binary);
 	}
 
 	bool File::tryOpenForRead()
 	{
 		if (ifs_.is_open())
 			ifs_.close();
-		ifs_.open(filesystem::absolutePath(path_).contentInWString(), std::ios::binary);
+		ifs_.open(filesystem::absolutePath(path_).toWString(), std::ios::binary);
 		if (!ifs_.is_open())
 			return false;
 		return true;
@@ -255,7 +255,7 @@ namespace suku
 		if (ifs_.is_open())
 			ifs_.close();
 		std::fstream fs;
-		fs.open(filesystem::absolutePath(path_).contentInWString(), std::ios::in | std::ios::out | std::ios::binary);
+		fs.open(filesystem::absolutePath(path_).toWString(), std::ios::in | std::ios::out | std::ios::binary);
 		if (!fs.is_open())
 		{
 			ERRORWINDOW("Failed to open file.");
@@ -335,7 +335,7 @@ namespace suku
 			if (ifs_.is_open())
 				ifs_.close();
 			std::fstream fs;
-			fs.open(filesystem::absolutePath(path_).contentInWString(), std::ios::in | std::ios::out | std::ios::binary);
+			fs.open(filesystem::absolutePath(path_).toWString(), std::ios::in | std::ios::out | std::ios::binary);
 			fs.clear();
 			fs.seekg(0, std::ios::beg);
 			fs.seekp(0, std::ios::beg);

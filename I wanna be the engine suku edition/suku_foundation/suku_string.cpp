@@ -5,12 +5,12 @@
 
 namespace suku
 {
-	std::wstring String::contentInWString()const
+	std::wstring String::toWString()const
 	{
 		return std::wstring(content);
 	}
 
-	std::string String::contentInString()const
+	std::string String::toString()const
 	{
 		char* str = getMultiByteString(content);
 		std::string result(str);
@@ -92,27 +92,27 @@ namespace suku
 
 	String String::operator+(const String& _other)
 	{
-		return String(contentInWString() + _other.contentInWString());
+		return String(toWString() + _other.toWString());
 	}
 
 	String String::operator+(const char* _string)
 	{
-		return String(contentInWString() + getWideString(_string));
+		return String(toWString() + getWideString(_string));
 	}
 
 	String String::operator+(const wchar_t* _wstring)
 	{
-		return String(contentInWString() + std::wstring(_wstring));
+		return String(toWString() + std::wstring(_wstring));
 	}
 
 	String String::operator+(std::string _string)
 	{
-		return String(contentInWString() + getWideString(_string.c_str()));
+		return String(toWString() + getWideString(_string.c_str()));
 	}
 
 	String String::operator+(std::wstring _wstring)
 	{
-		return String(contentInWString() + _wstring);
+		return String(toWString() + _wstring);
 	}
 
 	void String::operator+=(const String& _other)

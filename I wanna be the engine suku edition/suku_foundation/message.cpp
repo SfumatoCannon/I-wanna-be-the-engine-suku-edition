@@ -34,8 +34,8 @@ namespace suku
 #ifdef _DEBUG
 			std::ostringstream oss;
 			oss << "Information sent" << std::endl
-				<< "In function: " << _callerInfo.contentInString() << std::endl
-				<< String(_message).contentInString()
+				<< "In function: " << _callerInfo.toString() << std::endl
+				<< String(_message).toString()
 				<< std::endl << std::endl << getStackTrace();
 			MessageBoxExW(NULL,
 				String(oss.str()).content,
@@ -48,8 +48,8 @@ namespace suku
 #ifdef _DEBUG
 			std::ostringstream oss;
 			oss << "WARNING" << std::endl
-				<< "In function: " << _callerInfo.contentInString() << std::endl
-				<< String(_message).contentInString()
+				<< "In function: " << _callerInfo.toString() << std::endl
+				<< String(_message).toString()
 				<< std::endl << std::endl << getStackTrace();
 			MessageBoxExW(NULL,
 				String(oss.str()).content,
@@ -62,8 +62,8 @@ namespace suku
 #ifdef _DEBUG
 			std::ostringstream oss;
 			oss << "An ERROR occurred!" << std::endl
-				<< "In function: " << _callerInfo.contentInString() << std::endl
-				<< String(_message).contentInString()
+				<< "In function: " << _callerInfo.toString() << std::endl
+				<< String(_message).toString()
 				<< std::endl << std::endl << getStackTrace();
 			MessageBoxExW(NULL,
 				String(oss.str()).content,

@@ -10,6 +10,8 @@ namespace suku
 	{
 	public:
 		ChoiceGroupUIElement(std::vector<String>&& _options, unsigned int _defaultIndex = 0);
+		unsigned int getCurrentIndex();
+		const String& getCurrentChoice();
 	private:
 		std::vector<String> options_;
 		unsigned int selectedIndex_;

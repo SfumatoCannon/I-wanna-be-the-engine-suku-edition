@@ -34,7 +34,7 @@ namespace suku
     {
         uint64_t hash = 1469598103934665603ULL;
 
-        for (unsigned char c : _str.contentInString())
+        for (unsigned char c : _str.toString())
         {
             hash ^= c;
             hash *= 1099511628211ULL;
@@ -92,7 +92,7 @@ namespace suku
         String originalAssetsFolderPath = filesystem::absolutePath(String("ProjectAssets"));
         try
         {
-            for (const auto& entry : std::filesystem::recursive_directory_iterator(originalAssetsFolderPath.contentInString()))
+            for (const auto& entry : std::filesystem::recursive_directory_iterator(originalAssetsFolderPath.toString()))
             {
                 if (!entry.is_regular_file())
                     continue;
