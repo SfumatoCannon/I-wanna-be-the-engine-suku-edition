@@ -13,7 +13,7 @@ namespace suku
 	{}
 	
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue) 
+	inline ConfigElement<T>::ConfigElement(const String& _name, T _defaultValue)
 		: name_(_name), category_(L"Config")
 	{
 		T valueT = ConfigFile::loadVar(_name, _defaultValue);
@@ -21,7 +21,7 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue)
+	inline ConfigElement<T>::ConfigElement(const String& _category, const String& _name, T _defaultValue)
 		: name_(_name), category_(_category)
 	{
 		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
@@ -29,7 +29,7 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, T _minValue, T _maxValue)
+	inline ConfigElement<T>::ConfigElement(const String& _name, T _defaultValue, T _minValue, T _maxValue)
 		: name_(_name), category_(L"Config"), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
 	{
 		T valueT = ConfigFile::loadVar(_name, _defaultValue);
@@ -45,7 +45,7 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, T _minValue, T _maxValue)
+	inline ConfigElement<T>::ConfigElement(const String& _category, const String& _name, T _defaultValue, T _minValue, T _maxValue)
 		: name_(_name), category_(_category), hasRangeConstraint_(true), minValue_(_minValue), maxValue_(_maxValue)
 	{
 		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
@@ -61,7 +61,7 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _name, T _defaultValue, std::vector<T> _valueList)
+	inline ConfigElement<T>::ConfigElement(const String& _name, T _defaultValue, std::vector<T> _valueList)
 		: name_(_name), category_(L"Config"), hasListConstraint_(true), valueList_(_valueList)
 	{
 		T valueT = ConfigFile::loadVar(_name, _defaultValue);
@@ -76,7 +76,7 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline ConfigElement<T>::ConfigElement(String _category, String _name, T _defaultValue, std::vector<T> _valueList)
+	inline ConfigElement<T>::ConfigElement(const String& _category, const String& _name, T _defaultValue, std::vector<T> _valueList)
 		: name_(_name), category_(_category), hasListConstraint_(true), valueList_(_valueList)
 	{
 		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);

@@ -8,10 +8,10 @@ namespace suku
 	class ConfigFile
 	{
 	public:
-		template<suku_config_var_type T> static T loadVar(String _name, T _defaultValue = T());
-		template<suku_config_var_type T> static T loadVar(String _name, String _category, T _defaultValue = T());
-		template<suku_config_var_type T> static void saveVar(String _name, T _value);
-		template<suku_config_var_type T> static void saveVar(String _name, String _category, T _value);
+		template<suku_config_var_type T> static T loadVar(const String& _name, T _defaultValue = T());
+		template<suku_config_var_type T> static T loadVar(const String& _name, const String& _category, T _defaultValue = T());
+		template<suku_config_var_type T> static void saveVar(const String& _name, T _value);
+		template<suku_config_var_type T> static void saveVar(const String& _name, const String& _category, T _value);
 	private:
 		inline static std::wstring fileName_ = L"config.ini";
 	};

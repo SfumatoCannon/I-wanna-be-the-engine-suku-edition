@@ -6,13 +6,13 @@
 namespace suku
 {
 	template<suku_config_var_type T>
-	inline T ConfigFile::loadVar(String _name, T _defaultValue)
+	inline T ConfigFile::loadVar(const String& _name, T _defaultValue)
 	{
 		return loadVar(_name, L"Config", _defaultValue);
 	}
 
 	template<suku_config_var_type T>
-	inline T ConfigFile::loadVar(String _name, String _category, T _defaultValue)
+	inline T ConfigFile::loadVar(const String& _name, const String& _category, T _defaultValue)
 	{
 		std::wstring defaultValueStr;
 		if constexpr (std::is_same_v<T, bool>)
@@ -73,13 +73,13 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline void ConfigFile::saveVar(String _name, T _value)
+	inline void ConfigFile::saveVar(const String& _name, T _value)
 	{
 		saveVar(_name, L"Config", _value);
 	}
 
 	template<suku_config_var_type T>
-	inline void ConfigFile::saveVar(String _name, String _category, T _value)
+	inline void ConfigFile::saveVar(const String& _name, const String& _category, T _value)
 	{
 		std::wstring valueStr;
 		if constexpr (std::is_same_v<T, bool>)
