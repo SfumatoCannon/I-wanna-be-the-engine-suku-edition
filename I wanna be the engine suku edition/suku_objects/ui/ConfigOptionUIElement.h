@@ -8,16 +8,16 @@ namespace suku
 {
 	class OptionPool;
 
-	class OptionElement : public UIElement, public ISelectable
+	class ConfigOptionUIElement : public UIElement, public ISelectable
 	{
 	public:
-		OptionElement* prev = nullptr;
-		OptionElement* next = nullptr;
+		ConfigOptionUIElement* prev = nullptr;
+		ConfigOptionUIElement* next = nullptr;
 
-		template<typename T> OptionElement(
+		template<typename T> ConfigOptionUIElement(
 			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info = String());
-		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32) {}
-		template<typename T> OptionElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : OptionElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
+		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32) {}
+		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
 
 		// Implement ISelectable interface
 		virtual void select() override { isSelected_ = true; }
@@ -33,8 +33,8 @@ namespace suku
 		String label_;
 		Text labelText_;
 		Text valueText_;
-		std::function<void(OptionElement*)> onUpdateFunc_;
-		std::function<bool(OptionElement*)> onPaintFunc_;
+		std::function<void(ConfigOptionUIElement*)> onUpdateFunc_;
+		std::function<bool(ConfigOptionUIElement*)> onPaintFunc_;
 		bool hasInfo_ = false;
 		String info_;
 		Text infoText_;
@@ -43,7 +43,7 @@ namespace suku
 	};
 
 	template<typename T>
-	inline OptionElement::OptionElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info)
+	inline ConfigOptionUIElement::ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info)
 		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height),
 		labelText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleRight }), infoText_({ "Consolas", 16, TextStyle::Align::TopLeft })
 	{
@@ -54,7 +54,7 @@ namespace suku
 			infoText_.text = _info;
 		}
 
-		onUpdateFunc_ = [&_bindedConfig](OptionElement* _element)
+		onUpdateFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
 			{
 				if (_element->hasInfo_ && _element->isSelected_)
 				{
@@ -125,7 +125,7 @@ namespace suku
 					}
 				}
 			};
-		onPaintFunc_ = [&_bindedConfig](OptionElement* _element)
+		onPaintFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
 			{
 				RectangleShape area(_element->getWidth(), _element->getHeight());
 				area.setFill(_element->isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));

@@ -11,7 +11,7 @@ public:
 		int windowHeight = GameWindow::getLogicalHeight();
 		float configElementWidth = windowWidth * 0.5f;
 		float configElementHeight = 48;
-		auto optionLayout = create<UILayoutVerticalSelectable<OptionElement>>((windowWidth - configElementWidth) / 2, 0);
+		auto optionLayout = create<UILayoutVerticalSelectable<ConfigOptionUIElement>>((windowWidth - configElementWidth) / 2, 0);
 		optionLayout->make(
 			{
 				{ GameLoopConfig::renderFPS, "Render FPS" },
