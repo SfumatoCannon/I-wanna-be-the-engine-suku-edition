@@ -25,10 +25,13 @@ namespace suku
 		unsigned long long id = maths::hash(_name);
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		T* pointer = new T;
-		*pointer = _x;
-		char* address = reinterpret_cast<char*>(pointer);
-		byteDataPool[id] = std::make_pair(address, sizeof(T));
+		if (byteDataPool.find(id) == byteDataPool.end())
+		{
+			T* pointer = new T;
+			*pointer = _x;
+			char* address = reinterpret_cast<char*>(pointer);
+			byteDataPool[id] = std::make_pair(address, sizeof(T));
+		}
 		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
 		SaveAssetGlobal::getInstance().refreshLoadTag();
 		return true;
