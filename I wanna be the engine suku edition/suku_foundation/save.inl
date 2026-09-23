@@ -8,11 +8,10 @@ namespace suku
 	template<typename T>
 	bool setSavable(const std::string _name)
 	{
-		// 无需做 varIdMappingPool 映射，其余保持一致
 		unsigned long long id = maths::hash(_name);
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		if (byteDataPool.find(id) != byteDataPool.end())
-			return false;
+			return false; // already mapped
 		T* pointer = new T;
 		char* address = reinterpret_cast<char*>(pointer);
 		byteDataPool[id] = std::make_pair(address, sizeof(T));
@@ -26,12 +25,10 @@ namespace suku
 		unsigned long long id = maths::hash(_name);
 		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
 		auto& varIdMappingPool = SaveAssetGlobal::getInstance().varIdMappingPool;
-		if (byteDataPool.find(id) != byteDataPool.end())
-			return false;
 		T* pointer = new T;
 		*pointer = _x;
 		char* address = reinterpret_cast<char*>(pointer);
-		byteDataPool[id] = std::make_pair(address, sizeof(_x));
+		byteDataPool[id] = std::make_pair(address, sizeof(T));
 		varIdMappingPool[reinterpret_cast<char*>(&_x)] = id;
 		SaveAssetGlobal::getInstance().refreshLoadTag();
 		return true;
@@ -127,16 +124,10 @@ namespace suku
 	T SaveFile::loadVar(const std::string _name, T _defaultValue)
 	{
 		unsigned long long id = maths::hash(_name);
-		auto& byteDataPool = SaveAssetGlobal::getInstance().byteDataPool;
-		if (byteDataPool.find(id) == byteDataPool.end())
+		T result;
+		if (file_->readDataPtr(id, reinterpret_cast<char*>(&result), sizeof(T)))
 		{
-			return _defaultValue;
-		}
-		auto& [dataPtr, size] = byteDataPool[id];
-		if (file_->readDataPtr(id, dataPtr, size))
-		{
-			T* dataPtrT = reinterpret_cast<T*>(dataPtr);
-			return *dataPtrT;
+			return result;
 		}
 		else
 		{

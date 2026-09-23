@@ -390,6 +390,8 @@ namespace suku
 
 	std::vector<std::pair<unsigned long long, size_t>> File::readDataPtrMapIdList()
 	{
+		if (!isExist())
+			return {};
 		if (!ifs_.is_open())
 			openForRead();
 		else
@@ -431,6 +433,8 @@ namespace suku
 
 	bool File::readDataPtr(unsigned long long _id, char* _data, size_t _size)
 	{
+		if (!isExist())
+			return false;
 		if (!ifs_.is_open())
 			openForRead();
 		else
@@ -481,6 +485,8 @@ namespace suku
 
 	std::map<unsigned long long, bool> File::readDataPtrMap(std::map<unsigned long long, std::pair<char*, size_t>>& _dataPtrMap)
 	{
+		if (!isExist())
+			return {};
 		if (!ifs_.is_open())
 			openForRead();
 		else
