@@ -264,6 +264,69 @@ namespace suku
 		);
 	}
 
+	void TextStyle::paint(String _text, float _x, float _y, TextStyle::Align _align, Transform _transform) const
+	{
+		if (brush_.isValid())
+		{
+			paint(_text, _x, _y, _align, brush_, _transform);
+		}
+		else
+		{
+			paint(_text, _x, _y, _align, Brush::defaultBrush(), _transform);
+		}
+	}
+
+	void TextStyle::paint(String _text, float _x, float _y, TextStyle::Align _align, const Brush& _brush, Transform _transform) const
+	{
+		if (_align == TextStyle::Align::TopFill || _align == TextStyle::Align::MiddleFill || _align == TextStyle::Align::BottomFill)
+		{
+			ERRORWINDOW("A fill property was set in the textAlign. You should assign the size of the text box.");
+			return;
+		}
+		D2D1_RECT_F textBoxArea;
+		float wideLength = 4096;
+		switch (_align)
+		{
+		case suku::TextStyle::Align::TopLeft:
+			textBoxArea = D2D1::RectF(_x, _y, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::TopCenter:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::TopRight:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleLeft:
+			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleCenter:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleRight:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::BottomLeft:
+			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y);
+			break;
+		case suku::TextStyle::Align::BottomCenter:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y);
+			break;
+		case suku::TextStyle::Align::BottomRight:
+			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y);
+			break;
+		default:
+			break;
+		}
+		graphics::setPaintingTransform(_transform);
+		graphics::pD2DContext->DrawTextW(
+			_text.content,
+			static_cast<UINT32>(wcslen(_text.content)),
+			pTextFormat_.Get(),
+			textBoxArea,
+			_brush.getD2DBrush().Get()
+		);
+	}
+
 	void TextStyle::setBrush(const Brush& _brush)
 	{
 		brush_ = _brush;

@@ -37,5 +37,8 @@ namespace suku
 	{
 		// left arrow
 		textStyle_.paint(" < ", x, y);
+		// right arrow
+		textStyle_.setTextAlign(TextStyle::Align::MiddleRight);
+		textStyle_.paint(" > ", x + width_, y)
 	}
 }

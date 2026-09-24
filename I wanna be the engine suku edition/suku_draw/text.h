@@ -130,6 +130,10 @@ namespace suku
 		void paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform = Transform())const;
 		void paint(String _text, float _x, float _y, float _width, float _height, Transform _transform = Transform())const;
 		void paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, TextStyle::Align _align, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, TextStyle::Align _align, const Brush& _brush, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, float _width, float _height, TextStyle::Align _align, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, float _width, float _height, TextStyle::Align _align, const Brush& _brush, Transform _transform = Transform())const;
 
 		void setBrush(const Brush& _brush);
 	private:
