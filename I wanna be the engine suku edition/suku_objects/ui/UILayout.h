@@ -18,7 +18,7 @@ namespace suku
 		void clear();
 		virtual void onRemove() override;
 		virtual void onPostUpdate() override;
-		virtual bool onPaint() override { return false; }
+		virtual void onPaint() override { }
 	protected:
 		std::vector<T*> elements_;
 	};

@@ -11,7 +11,7 @@ namespace suku
 	{
 	}
 
-	bool UIElement::onPaint()
+	void UIElement::onPaint()
 	{
 		RectangleShape area(width_, height_);
 		Text text({ "Consolas", 12, TextStyle::Align::MiddleCenter });
@@ -20,6 +20,5 @@ namespace suku
 		text.style.setBrush(Color(255, 255, 255));
 		text.text = L"UI";
 		text.paint(x, y, width_, height_);
-		return false;
 	}
 }

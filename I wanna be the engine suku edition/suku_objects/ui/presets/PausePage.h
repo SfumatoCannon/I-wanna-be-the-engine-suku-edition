@@ -9,7 +9,7 @@ namespace suku
 	public:
 		PausePage();
 		virtual void onUpdate() override;
-		virtual bool onPaint() override;
+		virtual void onPaint() override;
 	private:
 		bool isPaused_ = false;
 	};

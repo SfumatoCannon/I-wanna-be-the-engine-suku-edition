@@ -80,7 +80,7 @@ namespace suku
 		virtual void onRoomRestart() { x = spawnX; y = spawnY; }
 		virtual void onRemove() {}
 		virtual void onSave() {}
-		virtual bool onPaint() { return false; } //if return true, then terminate the sprite paint
+		virtual void onPaint() { paintBody(); } //if return true, then terminate the sprite paint
 		virtual void onPreUpdate() {}
 		virtual void onUpdate() {}
 		virtual void onPostUpdate() {}
@@ -146,6 +146,7 @@ namespace suku
 		
 		bool isFrozen()const { return isFrozen_; }
 		void setFrozen(bool _isFrozen) { isFrozen_ = _isFrozen; }
+		void setOpacity(float _opacity) { opacity = _opacity; }
 
 	protected:
 		template<suku_property_type T> friend class Property;

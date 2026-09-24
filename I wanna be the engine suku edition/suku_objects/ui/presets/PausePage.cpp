@@ -32,7 +32,7 @@ namespace suku
 		}
 	}
 
-	bool PausePage::onPaint()
+	void PausePage::onPaint()
 	{
 		Text pauseText(L"PAUSED", {"Consolas", 64, TextStyle::Align::MiddleCenter});
 		RectangleShape background(GameWindow::getLogicalWidth() + 1, GameWindow::getLogicalHeight() + 1);
@@ -40,6 +40,5 @@ namespace suku
 		background.paint(0, 0);
 		pauseText.style.setBrush(Color(255, 255, 255));
 		pauseText.paint(0, 0, GameWindow::getLogicalWidth(), GameWindow::getLogicalHeight());
-		return true;
 	}
 }

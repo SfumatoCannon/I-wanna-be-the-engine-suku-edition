@@ -57,10 +57,9 @@ namespace suku
 	//	picture = new Bitmap(*_bg.picture);
 	//}
 
-	bool Background::onPaint()
+	void Background::onPaint()
 	{
 		picture.paint(0, 0);
-		return true;
 	}
 
 }

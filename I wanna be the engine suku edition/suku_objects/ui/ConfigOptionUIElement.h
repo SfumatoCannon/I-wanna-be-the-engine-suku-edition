@@ -25,7 +25,7 @@ namespace suku
 		virtual bool isFocused() const override { return isSelected_; }
 
 		virtual void onUpdate() override { onUpdateFunc_(this); }
-		virtual bool onPaint() override { return onPaintFunc_(this); }
+		virtual void onPaint() override { onPaintFunc_(this); }
 
 		void setHeight(int _height) { height_ = originalHeight_ = _height; }
 	private:

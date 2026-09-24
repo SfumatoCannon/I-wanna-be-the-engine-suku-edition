@@ -27,7 +27,7 @@ namespace suku
 		Background(const Bitmap& _bitmap);
 		Background(const Background& _bg);
 		Background(Background&& _bg)noexcept;
-		virtual bool onPaint() override;
+		virtual void onPaint() override;
 		Bitmap picture;
 	};
 

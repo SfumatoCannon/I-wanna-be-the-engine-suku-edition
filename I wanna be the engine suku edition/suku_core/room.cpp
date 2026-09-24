@@ -359,8 +359,7 @@ namespace suku
 						continue;
 					}
 
-					if (!obj->onPaint())
-						obj->paintBody();
+					obj->onPaint();
 
 					iter++;
 				}
@@ -400,13 +399,7 @@ namespace suku
 						continue;
 					}
 
-					if (obj->onPaint())
-					{
-						iter++;
-						continue;
-					}
-
-					float posX, posY;
+					Property<float> posX, posY;
 					Transform transform;
 					if (obj->isPositionTransitionalFrame_)
 					{
@@ -428,7 +421,15 @@ namespace suku
 						transform = obj->transform;
 					}
 
-					obj->paintBody(posX, posY, transform);
+					std::swap(obj->x, posX);
+					std::swap(obj->y, posY);
+					std::swap(obj->transform, transform);
+
+					obj->onPaint();
+
+					std::swap(obj->x, posX);
+					std::swap(obj->y, posY);
+					std::swap(obj->transform, transform);
 
 					iter++;
 				}

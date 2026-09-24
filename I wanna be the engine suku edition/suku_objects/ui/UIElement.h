@@ -9,7 +9,7 @@ namespace suku
 	public:
 		UIElement(float _x = 0, float _y = 0, int _width = 32, int _height = 32);
 		virtual void onUpdate() override;
-		virtual bool onPaint() override;
+		virtual void onPaint() override;
 		int getWidth() const { return width_; }
 		void setWidth(int _width) { width_ = _width; }
 		int getHeight() const { return height_; }
