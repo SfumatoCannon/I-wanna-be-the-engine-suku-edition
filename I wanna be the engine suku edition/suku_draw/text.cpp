@@ -172,12 +172,12 @@ namespace suku
 		return textMetrics.height;
 	}
 
-	void TextStyle::paint(String _text, Transform _transform)
+	void TextStyle::paint(String _text, Transform _transform)const
 	{
 		paint(_text, 0, 0, _transform);
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, Transform _transform)const
 	{
 		if (brush_.isValid())
 		{
@@ -189,7 +189,7 @@ namespace suku
 		}
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform)const
 	{
 		if (textAlign_ == TextStyle::Align::TopFill || textAlign_ == TextStyle::Align::MiddleFill || textAlign_ == TextStyle::Align::BottomFill)
 		{
@@ -240,7 +240,7 @@ namespace suku
 		);
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, Transform _transform)const
 	{
 		if (brush_.isValid())
 		{
@@ -252,7 +252,7 @@ namespace suku
 		}
 	}
 
-	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform)
+	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform)const
 	{
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(

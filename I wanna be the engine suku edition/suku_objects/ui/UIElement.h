@@ -15,7 +15,14 @@ namespace suku
 		int getHeight() const { return height_; }
 		void setHeight(int _height) { height_ = _height; }
 		std::pair<int, int> getSize() const { return { width_, height_ }; }
+
+		void setTextStyle(const TextStyle& _font);
+		// alias
+			void setFont(const TextStyle& _font) { setTextStyle(_font); }
+
 	protected:
+		inline static TextStyle defaultTextStyle_{ "Arial", 16, TextStyle::Weight::Bold };
 		int width_, height_;
+		const TextStyle& textStyle_ = defaultTextStyle_;
 	};
 }

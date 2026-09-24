@@ -73,9 +73,9 @@ namespace suku
 			UltraExpanded = DWRITE_FONT_STRETCH_ULTRA_EXPANDED
 		};
 
-		TextStyle(const String& _fontName, 
-			TextStyle::Weight _fontWeight = TextStyle::Weight::Normal, 
-			TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, 
+		TextStyle(const String& _fontName,
+			TextStyle::Weight _fontWeight = TextStyle::Weight::Normal,
+			TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None,
 			TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal);
 		TextStyle(const String& _fontName, const String& _localUrl,
 			TextStyle::Weight _fontWeight = TextStyle::Weight::Normal,
@@ -95,10 +95,10 @@ namespace suku
 		TextStyle(const String& _fontName, const String& _localUrl, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
-			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);		
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
-				TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
-				TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
+			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
+			TextStyle::WrapOption _wrapOption = TextStyle::WrapOption::Wrap);
 		TextStyle(const String& _fontName, const String& _localUrl, const String& _localeName, float _size,
 			TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle = TextStyle::ItalicType::None, TextStyle::Stretch _fontStretch = TextStyle::Stretch::Normal,
 			TextStyle::Align _textAlign = TextStyle::Align::TopLeft,
@@ -125,11 +125,11 @@ namespace suku
 		int getContentLineCount(String _text, float _width);
 		float getContentHeight(String _text, float _width);
 
-		void paint(String _text, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, float _width, float _height, Transform _transform = Transform());
-		void paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform = Transform());
+		void paint(String _text, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, const Brush& _brush, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, float _width, float _height, Transform _transform = Transform())const;
+		void paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform = Transform())const;
 
 		void setBrush(const Brush& _brush);
 	private:

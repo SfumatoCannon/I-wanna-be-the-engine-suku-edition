@@ -1,4 +1,5 @@
 #include "ChoiceGroupUIElement.h"
+#include <definitions/suku_font_pool.h>
 
 namespace suku
 {
@@ -16,5 +17,25 @@ namespace suku
 		return options_[selectedIndex_];
 	}
 
+	void ChoiceGroupUIElement::onUpdate()
+	{
+		if (!isFocused_)
+			return;
+		if (input::isKeyDown(VK_LEFT))
+		{
+			if (selectedIndex_ > 0)
+				selectedIndex_--;
+		}
+		else if (input::isKeyDown(VK_RIGHT))
+		{
+			if (selectedIndex_ < options_.size() - 1)
+				selectedIndex_++;
+		}
+	}
 
+	void ChoiceGroupUIElement::onPaint()
+	{
+		// left arrow
+		textStyle_.paint(" < ", x, y);
+	}
 }

@@ -21,4 +21,7 @@ namespace suku
 		text.text = L"UI";
 		text.paint(x, y, width_, height_);
 	}
+
+	void UIElement::setTextStyle(const TextStyle& _font)
+	{}
 }
