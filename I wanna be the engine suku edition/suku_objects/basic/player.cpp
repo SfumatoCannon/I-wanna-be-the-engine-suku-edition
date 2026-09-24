@@ -98,7 +98,7 @@ namespace suku
 		y = { spawnY, Transition(0) };
 		hspeed = 0;
 		vspeed = 0;
-		alpha = 1.0;
+		opacity = 1.0;
 		isDied_ = false;
 		//for (int i = 0; i < PLAYER_BLOODNUMMAX; i++)
 		//	deathBlood_[i]->remove();
@@ -126,7 +126,7 @@ namespace suku
 			return;
 		static Sound sndDeath("Audio\\sndDeath.wav");
 		setSpeed(0.0f, 0.0f, 0.0f, 0.0f);
-		alpha = 0.0;
+		opacity = 0.0;
 		isDied_ = true;
 		sndDeath.play()->setVolume(0.2f);
 	}
