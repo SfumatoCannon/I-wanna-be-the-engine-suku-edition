@@ -21,7 +21,7 @@ public:
 			},
 			configElementWidth, configElementHeight
 		);
-		optionLayout->select();
+		optionLayout->focus();
 		
 		create<PausePage>();
 	}

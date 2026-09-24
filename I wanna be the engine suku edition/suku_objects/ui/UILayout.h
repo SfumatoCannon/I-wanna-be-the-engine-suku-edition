@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UIElement.h"
-#include "interfaces/ISelectable.h"
+#include "interfaces/IFocusable.h"
 #include <vector>
 
 namespace suku
@@ -24,16 +24,16 @@ namespace suku
 	};
 
 	template<typename T>
-		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<ISelectable, T>
-	class UILayoutVerticalSelectable : public UILayoutVertical<T>, ISelectable
+		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<IFocusable, T>
+	class UILayoutVerticalSelectable : public UILayoutVertical<T>, IFocusable
 	{
 	public:
 		UILayoutVerticalSelectable<T>(float _x, float _y) : UILayoutVertical<T>(_x, _y) { this->setUpdateId(1); }
 
-		// Implement ISelectable interface
-		virtual void select() override;
-		virtual bool deselect() override;
-		virtual bool isSelected() const override { return isSelected_; }
+		// Implement IFocusable interface
+		virtual void focus() override;
+		virtual bool unfocus() override;
+		virtual bool isFocused() const override { return isSelected_; }
 
 		virtual void onPostUpdate() override;
 	private:

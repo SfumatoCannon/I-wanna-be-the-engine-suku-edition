@@ -227,7 +227,7 @@
     <ClInclude Include="suku_objects\includes.h" />
     <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_objects\ui\ChoiceGroupUIElement.h" />
-    <ClInclude Include="suku_objects\ui\interfaces\ISelectable.h" />
+    <ClInclude Include="suku_objects\ui\interfaces\IFocusable.h" />
     <ClInclude Include="suku_objects\ui\ConfigOptionUIElement.h" />
     <ClInclude Include="suku_objects\ui\presets\ConfigPage.h" />
     <ClInclude Include="suku_objects\ui\presets\PausePage.h" />

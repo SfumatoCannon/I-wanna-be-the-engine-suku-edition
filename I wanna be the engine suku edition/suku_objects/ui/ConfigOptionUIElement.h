@@ -2,13 +2,13 @@
 #include "UIElement.h"
 #include "suku_config/config_element.h"
 #include "suku_foundation/input.h"
-#include "interfaces/ISelectable.h"
+#include "interfaces/IFocusable.h"
 
 namespace suku
 {
 	class OptionPool;
 
-	class ConfigOptionUIElement : public UIElement, public ISelectable
+	class ConfigOptionUIElement : public UIElement, public IFocusable
 	{
 	public:
 		ConfigOptionUIElement* prev = nullptr;
@@ -19,10 +19,10 @@ namespace suku
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32) {}
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
 
-		// Implement ISelectable interface
-		virtual void select() override { isSelected_ = true; }
-		virtual bool deselect() override { isSelected_ = false; return true; }
-		virtual bool isSelected() const override { return isSelected_; }
+		// Implement IFocusable interface
+		virtual void focus() override { isSelected_ = true; }
+		virtual bool unfocus() override { isSelected_ = false; return true; }
+		virtual bool isFocused() const override { return isSelected_; }
 
 		virtual void onUpdate() override { onUpdateFunc_(this); }
 		virtual bool onPaint() override { return onPaintFunc_(this); }

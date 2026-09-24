@@ -40,6 +40,7 @@ namespace suku
 		const T maxValue_ = T();
 		const bool hasListConstraint_ = false;
 		const std::vector<T> valueList_;
+		std::vector<bool> isValueEnable_;
 	};
 }
 

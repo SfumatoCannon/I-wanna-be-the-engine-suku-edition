@@ -9,7 +9,7 @@ namespace suku
 		: name_(_other.getName()), category_(_other.getCategory()),
 		hasRangeConstraint_(_other.hasRangeConstraint()), hasListConstraint_(_other.hasListConstraint()),
 		minValue_(_other.getRange().first), maxValue_(_other.getRange().second),
-		valueList_(_other.getValueList())
+		valueList_(_other.getValueList()), isValueEnable_(_other.isValueEnable_)
 	{}
 	
 	template<suku_config_var_type T>
@@ -62,7 +62,7 @@ namespace suku
 
 	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(const String& _name, T _defaultValue, std::vector<T> _valueList)
-		: name_(_name), category_(L"Config"), hasListConstraint_(true), valueList_(_valueList)
+		: name_(_name), category_(L"Config"), hasListConstraint_(true), valueList_(_valueList), isValueEnable_(_valueList.size(), true)
 	{
 		T valueT = ConfigFile::loadVar(_name, _defaultValue);
 		if (std::find(valueList_.begin(), valueList_.end(), valueT) != valueList_.end())
@@ -77,7 +77,7 @@ namespace suku
 
 	template<suku_config_var_type T>
 	inline ConfigElement<T>::ConfigElement(const String& _category, const String& _name, T _defaultValue, std::vector<T> _valueList)
-		: name_(_name), category_(_category), hasListConstraint_(true), valueList_(_valueList)
+		: name_(_name), category_(_category), hasListConstraint_(true), valueList_(_valueList), isValueEnable_(_valueList.size(), true)
 	{
 		T valueT = ConfigFile::loadVar(_name, _category, _defaultValue);
 		if (std::find(valueList_.begin(), valueList_.end(), valueT) != valueList_.end())
@@ -95,10 +95,17 @@ namespace suku
 	{
 		if (hasListConstraint_)
 		{
-			if (std::find(valueList_.begin(), valueList_.end(), _value) == valueList_.end())
+			auto iter = std::find(valueList_.begin(), valueList_.end(), _value);
+			if (iter == valueList_.end())
 			{
 				WARNINGWINDOW("Attempted to set config variable " + String(name_)
 					+ " to a value that is not in the allowed list. Value not set.");
+				return;
+			}
+			else if (isValueEnable_[iter - valueList_.begin()] == false)
+			{
+				WARNINGWINDOW("Attempted to set config variable " + String(name_)
+					+ " to a value that is disabled. Value not set.");
 				return;
 			}
 		}
