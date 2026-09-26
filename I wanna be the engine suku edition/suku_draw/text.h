@@ -208,6 +208,10 @@ namespace suku
 				DWRITE_FONT_STYLE _fontStyle = DWRITE_FONT_STYLE_NORMAL,
 				DWRITE_FONT_STRETCH _fontStretch = DWRITE_FONT_STRETCH_NORMAL
 			);
+			static void setTextFormatAlign(
+				ComPtr<IDWriteTextFormat>& _format,
+				TextStyle::Align _textAlign
+			);
 
 			static bool addLocalFontCollection(const String& _localUrl, const String& _fontName, const String& _localeName = "en-us");
 

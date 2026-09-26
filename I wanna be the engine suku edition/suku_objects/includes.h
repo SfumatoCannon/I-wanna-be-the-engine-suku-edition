@@ -4,6 +4,7 @@
 #include "basic/Block.hpp"
 #include "basic/player.h"
 
+#include "ui/ChoiceGroupUIElement.h"
 #include "ui/ConfigOptionUIElement.h"
 #include "ui/UIElement.h"
 #include "ui/UILayout.h"

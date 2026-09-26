@@ -4,8 +4,9 @@
 namespace suku
 {
 	ChoiceGroupUIElement::ChoiceGroupUIElement(std::vector<String>&& _options, unsigned int _defaultIndex)
-		:options_(std::move(_options)), selectedIndex_(_defaultIndex)
-	{}
+		:UIElement(0, 0, 192, 32), options_(std::move(_options)), selectedIndex_(_defaultIndex)
+	{
+	}
 
 	unsigned int ChoiceGroupUIElement::getCurrentIndex()
 	{
@@ -21,12 +22,12 @@ namespace suku
 	{
 		if (!isFocused_)
 			return;
-		if (input::isKeyDown(VK_LEFT))
+		if (input::isKeyDown(VK_LEFT_ARROW))
 		{
 			if (selectedIndex_ > 0)
 				selectedIndex_--;
 		}
-		else if (input::isKeyDown(VK_RIGHT))
+		else if (input::isKeyDown(VK_RIGHT_ARROW))
 		{
 			if (selectedIndex_ < options_.size() - 1)
 				selectedIndex_++;
@@ -36,9 +37,10 @@ namespace suku
 	void ChoiceGroupUIElement::onPaint()
 	{
 		// left arrow
-		textStyle_.paint(" < ", x, y);
+		textStyle_.paint(" < ", x, y, width_, height_, TextStyle::Align::MiddleLeft);
 		// right arrow
-		textStyle_.setTextAlign(TextStyle::Align::MiddleRight);
-		textStyle_.paint(" > ", x + width_, y)
+		textStyle_.paint(" > ", x, y, width_, height_, TextStyle::Align::MiddleRight);
+		// option
+		textStyle_.paint(options_[selectedIndex_], x + 16, y, width_ - 32, height_, TextStyle::Align::MiddleCenter);
 	}
 }

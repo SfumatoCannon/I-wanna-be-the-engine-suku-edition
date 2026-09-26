@@ -6,6 +6,49 @@
 #include <dwrite_3.h>
 #include <utility>
 
+namespace
+{
+	D2D1_RECT_F getAreaFromPoint(float _x, float _y, suku::TextStyle::Align _align) noexcept
+	{
+		float wideLength = 4096.f;
+		D2D1_RECT_F area;
+		switch (_align)
+		{
+		case suku::TextStyle::Align::TopLeft:
+			area = D2D1::RectF(_x, _y, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::TopCenter:
+			area = D2D1::RectF(_x - wideLength, _y, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::TopRight:
+			area = D2D1::RectF(_x - wideLength, _y, _x, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleLeft:
+			area = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleCenter:
+			area = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::MiddleRight:
+			area = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y + wideLength);
+			break;
+		case suku::TextStyle::Align::BottomLeft:
+			area = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y);
+			break;
+		case suku::TextStyle::Align::BottomCenter:
+			area = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y);
+			break;
+		case suku::TextStyle::Align::BottomRight:
+			area = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y);
+			break;
+		default:
+			area = D2D1_RECT_F();
+			break;
+		}
+		return area;
+	}
+}
+
 namespace suku
 {
 	TextStyle::TextStyle(const String& _fontName, TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch)
@@ -99,39 +142,7 @@ namespace suku
 		if (!pTextFormat_)
 			return;
 		textAlign_ = _textAlign;
-		// Horizonal
-		switch (_textAlign)
-		{
-		case TextStyle::Align::TopLeft: case TextStyle::Align::MiddleLeft: case TextStyle::Align::BottomLeft:
-			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-			break;
-		case TextStyle::Align::TopCenter: case TextStyle::Align::MiddleCenter: case TextStyle::Align::BottomCenter:
-			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-			break;
-		case TextStyle::Align::TopRight: case TextStyle::Align::MiddleRight: case TextStyle::Align::BottomRight:
-			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
-			break;
-		case TextStyle::Align::TopFill: case TextStyle::Align::MiddleFill: case TextStyle::Align::BottomFill:
-			pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
-			break;
-		default:
-			break;
-		}
-		// Vertical
-		switch (_textAlign)
-		{
-		case TextStyle::Align::TopLeft: case TextStyle::Align::TopCenter: case TextStyle::Align::TopRight: case TextStyle::Align::TopFill:
-			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-			break;
-		case TextStyle::Align::MiddleLeft: case TextStyle::Align::MiddleCenter: case TextStyle::Align::MiddleRight: case TextStyle::Align::MiddleFill:
-			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-			break;
-		case TextStyle::Align::BottomLeft: case TextStyle::Align::BottomCenter: case TextStyle::Align::BottomRight: case TextStyle::Align::BottomFill:
-			pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			break;
-		default:
-			break;
-		}
+		graphics::TextFactoryGlobal::setTextFormatAlign(pTextFormat_, _textAlign);
 	}
 
 	void TextStyle::setTextWrapOption(TextStyle::WrapOption _option)
@@ -196,40 +207,8 @@ namespace suku
 			ERRORWINDOW("A fill property was set in the textAlign. You should assign the size of the text box.");
 			return;
 		}
-		D2D1_RECT_F textBoxArea;
-		float wideLength = 4096;
-		switch (textAlign_)
-		{
-		case suku::TextStyle::Align::TopLeft:
-			textBoxArea = D2D1::RectF(_x, _y, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::TopCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::TopRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleLeft:
-			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::BottomLeft:
-			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y);
-			break;
-		case suku::TextStyle::Align::BottomCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y);
-			break;
-		case suku::TextStyle::Align::BottomRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y);
-			break;
-		default:
-			break;
-		}
+		D2D1_RECT_F textBoxArea = getAreaFromPoint(_x, _y, textAlign_);
+
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			_text.content,
@@ -283,48 +262,55 @@ namespace suku
 			ERRORWINDOW("A fill property was set in the textAlign. You should assign the size of the text box.");
 			return;
 		}
-		D2D1_RECT_F textBoxArea;
-		float wideLength = 4096;
-		switch (_align)
-		{
-		case suku::TextStyle::Align::TopLeft:
-			textBoxArea = D2D1::RectF(_x, _y, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::TopCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::TopRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y, _x, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleLeft:
-			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::MiddleRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y + wideLength);
-			break;
-		case suku::TextStyle::Align::BottomLeft:
-			textBoxArea = D2D1::RectF(_x, _y - wideLength, _x + wideLength, _y);
-			break;
-		case suku::TextStyle::Align::BottomCenter:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x + wideLength, _y);
-			break;
-		case suku::TextStyle::Align::BottomRight:
-			textBoxArea = D2D1::RectF(_x - wideLength, _y - wideLength, _x, _y);
-			break;
-		default:
-			break;
-		}
+		D2D1_RECT_F textBoxArea = getAreaFromPoint(_x, _y, _align);
+		ComPtr<IDWriteTextFormat> format = pTextFormat_;
+		graphics::TextFactoryGlobal::setTextFormatAlign(format, _align);
+
 		graphics::setPaintingTransform(_transform);
 		graphics::pD2DContext->DrawTextW(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
-			pTextFormat_.Get(),
+			format.Get(),
 			textBoxArea,
 			_brush.getD2DBrush().Get()
 		);
+
+		graphics::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
+	}
+
+	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, TextStyle::Align _align, Transform _transform) const
+	{
+		if (brush_.isValid())
+		{
+			paint(_text, _x, _y, _width, _height, _align, brush_, _transform);
+		}
+		else
+		{
+			paint(_text, _x, _y, _width, _height, _align, Brush::defaultBrush(), _transform);
+		}
+	}
+
+	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, TextStyle::Align _align, const Brush& _brush, Transform _transform) const
+	{
+		if (_align == TextStyle::Align::TopFill || _align == TextStyle::Align::MiddleFill || _align == TextStyle::Align::BottomFill)
+		{
+			ERRORWINDOW("A fill property was set in the textAlign. You should assign the size of the text box.");
+			return;
+		}
+
+		ComPtr<IDWriteTextFormat> format = pTextFormat_;
+		graphics::TextFactoryGlobal::setTextFormatAlign(format, _align);
+
+		graphics::setPaintingTransform(_transform);
+		graphics::pD2DContext->DrawTextW(
+			_text.content,
+			static_cast<UINT32>(wcslen(_text.content)),
+			format.Get(),
+			D2D1::RectF(_x, _y, _x + _width, _y + _height),
+			_brush.getD2DBrush().Get()
+		);
+
+		graphics::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
 	}
 
 	void TextStyle::setBrush(const Brush& _brush)
@@ -427,6 +413,42 @@ namespace suku
 			}
 
 			return textFormat;
+		}
+
+		void TextFactoryGlobal::setTextFormatAlign(ComPtr<IDWriteTextFormat>& _format, TextStyle::Align _textAlign)
+		{		// Horizonal
+			switch (_textAlign)
+			{
+			case TextStyle::Align::TopLeft: case TextStyle::Align::MiddleLeft: case TextStyle::Align::BottomLeft:
+				_format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+				break;
+			case TextStyle::Align::TopCenter: case TextStyle::Align::MiddleCenter: case TextStyle::Align::BottomCenter:
+				_format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+				break;
+			case TextStyle::Align::TopRight: case TextStyle::Align::MiddleRight: case TextStyle::Align::BottomRight:
+				_format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+				break;
+			case TextStyle::Align::TopFill: case TextStyle::Align::MiddleFill: case TextStyle::Align::BottomFill:
+				_format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
+				break;
+			default:
+				break;
+			}
+			// Vertical
+			switch (_textAlign)
+			{
+			case TextStyle::Align::TopLeft: case TextStyle::Align::TopCenter: case TextStyle::Align::TopRight: case TextStyle::Align::TopFill:
+				_format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+				break;
+			case TextStyle::Align::MiddleLeft: case TextStyle::Align::MiddleCenter: case TextStyle::Align::MiddleRight: case TextStyle::Align::MiddleFill:
+				_format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+				break;
+			case TextStyle::Align::BottomLeft: case TextStyle::Align::BottomCenter: case TextStyle::Align::BottomRight: case TextStyle::Align::BottomFill:
+				_format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				break;
+			default:
+				break;
+			}
 		}
 
 		bool TextFactoryGlobal::addLocalFontCollection(const String& _localUrl, const String& _fontName, const String& _localeName)
