@@ -21,9 +21,11 @@ namespace suku
 		Real(double _value) : value_(static_cast<real_type>(_value)) {}
 
 #ifdef DOUBLE_FLOATING_MODE
-		operator double() { return value_; }
+		explicit operator float()const { return static_cast<float>(value_); }
+		operator double()const { return value_; }
 #else
-		operator float() { return value_; }
+		operator float()const { return value_; }
+		explicit operator double()const { return static_cast<double>(value_); }
 #endif
 
 	private:
