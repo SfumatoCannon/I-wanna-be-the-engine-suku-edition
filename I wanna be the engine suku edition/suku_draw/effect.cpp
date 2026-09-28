@@ -38,7 +38,7 @@ namespace suku
 		: transform_(_transform), scaleMode_(_scaleMode), isBorderSoftMode_(_isBorderSoftMode), sharpness_(_sharpness)
 	{
 		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
-		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.matrix);
+		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.getMatrix());
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 		if (_isBorderSoftMode)
@@ -68,7 +68,7 @@ namespace suku
 	void EffectTransform::setTransform(Transform _transform)
 	{
 		transform_ = _transform;
-		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.matrix);
+		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.getMatrix());
 	}
 
 	void EffectTransform::setScaleMode(ScaleMode _scaleMode)

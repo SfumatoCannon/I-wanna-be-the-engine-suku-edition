@@ -225,7 +225,7 @@ namespace suku
 		if (currentPaintLayerPtrStack_.top() != this)
 		{
 			beginDraw();
-			pD2DContext->SetTransform((this->basicTransform_ + _transform).matrix);
+			pD2DContext->SetTransform((this->basicTransform_ + _transform).getMatrix());
 			if (_outlineBrush)
 				pD2DContext->DrawGeometry(_shape.currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush)
@@ -234,7 +234,7 @@ namespace suku
 		}
 		else
 		{
-			pD2DContext->SetTransform((this->basicTransform_ + _transform).matrix);
+			pD2DContext->SetTransform((this->basicTransform_ + _transform).getMatrix());
 			if (_outlineBrush)
 				pD2DContext->DrawGeometry(_shape.currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
 			if (_fillBrush)

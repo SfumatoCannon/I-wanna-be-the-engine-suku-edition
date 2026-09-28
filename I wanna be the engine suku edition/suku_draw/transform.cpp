@@ -6,30 +6,30 @@ namespace suku
 {
 	Transform::Transform()
 	{
-		matrix = D2D1::Matrix3x2F::Identity();
+		matrix_ = D2D1::Matrix3x2F::Identity();
 	}
 
 	Transform::Transform(D2D1::Matrix3x2F _matrix)
 	{
-		matrix = _matrix;
+		matrix_ = _matrix;
 	}
 
 	void Transform::transformPoint(float* _pX, float* _pY)
 	{
-		auto transformedPoint = matrix.TransformPoint(D2D1::Point2F(*_pX, *_pY));
+		auto transformedPoint = matrix_.TransformPoint(D2D1::Point2F(*_pX, *_pY));
 		*_pX = transformedPoint.x;
 		*_pY = transformedPoint.y;
 	}
 
 	Vector Transform::transformPoint(float _x, float _y)
 	{
-		auto transformedPoint = matrix.TransformPoint(D2D1::Point2F(_x, _y));
+		auto transformedPoint = matrix_.TransformPoint(D2D1::Point2F(_x, _y));
 		return { transformedPoint.x, transformedPoint.y };
 	}
 
 	Transform Transform::invertTransform()
 	{
-		D2D1::Matrix3x2F invertedMatrix = matrix;
+		D2D1::Matrix3x2F invertedMatrix = matrix_;
 		if (invertedMatrix.IsInvertible())
 		{
 			invertedMatrix.Invert();
@@ -39,25 +39,25 @@ namespace suku
 			return Transform();
 	}
 
-	Transform Transform::operator+(Transform _x)
+	Transform Transform::operator+(const Transform& _x)const
 	{
 		//Transform resultTransform;
-		//resultTransform.matrix.SetProduct(matrix, _x.matrix);
+		//resultTransform.matrix_.SetProduct(matrix_, _x.matrix_);
 		//return resultTransform;
-		return Transform(_x.matrix * matrix);
+		return Transform(_x.matrix_ * matrix_);
 	}
 
-	Transform Transform::operator*(Transform _x)
+	Transform Transform::operator*(const Transform& _x)const
 	{
 		//Transform resultTransform;
-		//resultTransform.matrix.SetProduct(matrix, _x.matrix);
+		//resultTransform.matrix_.SetProduct(matrix_, _x.matrix_);
 		//return resultTransform;
-		return Transform(matrix * _x.matrix);
+		return Transform(matrix_ * _x.matrix_);
 	}
 
 	void Transform::operator=(Transform _x)
 	{
-		matrix = _x.matrix;
+		matrix_ = _x.matrix_;
 	}
 
 	Transform translation(float _shiftX, float _shiftY)
@@ -88,8 +88,8 @@ namespace suku
 
 	Transform linearInterpolate(Transform _from, Transform _to, float _t)
 	{
-		D2D1::Matrix3x2F fromMatrix = _from.matrix;
-		D2D1::Matrix3x2F toMatrix = _to.matrix;
+		D2D1::Matrix3x2F fromMatrix = _from.getMatrix();
+		D2D1::Matrix3x2F toMatrix = _to.getMatrix();
 		return Transform(D2D1::Matrix3x2F(
 			fromMatrix._11 + (toMatrix._11 - fromMatrix._11) * _t,
 			fromMatrix._12 + (toMatrix._12 - fromMatrix._12) * _t,

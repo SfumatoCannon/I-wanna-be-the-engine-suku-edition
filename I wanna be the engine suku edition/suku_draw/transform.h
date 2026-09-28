@@ -8,7 +8,7 @@ namespace suku
 	class Transform
 	{
 	public:
-		D2D1::Matrix3x2F matrix;
+		const D2D1::Matrix3x2F& getMatrix() const { return matrix_;}
 
 		Transform();
 		Transform(D2D1::Matrix3x2F _matrix);
@@ -17,10 +17,13 @@ namespace suku
 		void transformPoint(float* _x, float* _y);
 		Vector transformPoint(float _x, float _y);
 		Transform invertTransform();
+		Vector getScale();
 
-		Transform operator +(Transform _x);	//recommend using this
-		Transform operator *(Transform _x);
+		Transform operator +(const Transform& _x)const;	//recommend using this
+		Transform operator *(const Transform& _x)const;
 		void operator =(Transform _x);
+	private:
+		D2D1::Matrix3x2F matrix_;
 	};
 
 	Transform translation(float _shiftX, float _shiftY);

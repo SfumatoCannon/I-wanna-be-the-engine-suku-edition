@@ -66,7 +66,7 @@ namespace suku
 					pixelShape.currentGeometry->CompareWithGeometry(
 
 						_other.shape.currentGeometry.Get(),
-						&t.matrix,
+						&t.getMatrix(),
 						&result);
 					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
 						return true;
@@ -95,7 +95,7 @@ namespace suku
 					Transform t = (_otherTransform + translation((float)i, (float)j)).invertTransform() + _transform;
 					pixelShape.currentGeometry->CompareWithGeometry(
 						shape.currentGeometry.Get(),
-						&t.matrix,
+						&t.getMatrix(),
 						&result);
 					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
 						return true;
@@ -110,7 +110,7 @@ namespace suku
 		Transform targetTransform = _otherTransform * _transform.invertTransform();
 		shape.currentGeometry->CompareWithGeometry(
 			_other.shape.currentGeometry.Get(),
-			&targetTransform.matrix,
+			&targetTransform.getMatrix(),
 			&result
 		);
 		if (result != D2D1_GEOMETRY_RELATION_DISJOINT)

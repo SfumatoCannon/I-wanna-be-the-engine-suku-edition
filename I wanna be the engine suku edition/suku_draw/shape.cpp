@@ -32,7 +32,7 @@ namespace suku
 			else
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.getMatrix(), currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -73,7 +73,7 @@ namespace suku
 		{
 			originalGeometry = _geometry;
 			auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-			pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+			pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.getMatrix(), currentGeometry.GetAddressOf());
 		}
 		else
 			originalGeometry = currentGeometry = nullptr;
@@ -84,7 +84,7 @@ namespace suku
 		transform = _transform;
 		currentGeometry.Reset();
 		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-		pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+		pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.getMatrix(), currentGeometry.GetAddressOf());
 	}
 
 	void Shape::setFill(const Brush& _brush)
@@ -339,7 +339,7 @@ namespace suku
 			else
 			{
 				auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
-				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.matrix, currentGeometry.GetAddressOf());
+				pD2DFactory->CreateTransformedGeometry(originalGeometry.Get(), transform.getMatrix(), currentGeometry.GetAddressOf());
 			}
 		}
 		else
@@ -372,10 +372,14 @@ namespace suku
 		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
+			Transform inv = transform.invertTransform();
+			D2D1::Matrix3x2F m1 = inv.getMatrix();
+			D2D1::Matrix3x2F m2 = _x.transform.getMatrix();
+			D2D1::Matrix3x2F combineMatrix = m1 * m2;
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_EXCLUDE,
-				transform.invertTransform().matrix * _x.transform.matrix,
+				combineMatrix,
 				NULL,
 				resGeometrySink.Get()
 			);
@@ -399,10 +403,13 @@ namespace suku
 		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
+			D2D1::Matrix3x2F m1 = transform.invertTransform().getMatrix();
+			D2D1::Matrix3x2F m2 = _x.transform.getMatrix();
+			D2D1::Matrix3x2F combineMatrix = m1 * m2;
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_INTERSECT,
-				transform.invertTransform().matrix * _x.transform.matrix,
+				combineMatrix,
 				NULL,
 				resGeometrySink.Get()
 			);
@@ -426,10 +433,13 @@ namespace suku
 		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
+			D2D1::Matrix3x2F m1 = transform.invertTransform().getMatrix();
+			D2D1::Matrix3x2F m2 = _x.transform.getMatrix();
+			D2D1::Matrix3x2F combineMatrix = m1 * m2;
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_UNION,
-				transform.invertTransform().matrix * _x.transform.matrix,
+				combineMatrix,
 				NULL,
 				resGeometrySink.Get()
 			);
@@ -453,10 +463,14 @@ namespace suku
 		hr = resGeometry->Open(resGeometrySink.GetAddressOf());
 		if (SUCCEEDED(hr))
 		{
+			Transform inv = transform.invertTransform();
+			D2D1::Matrix3x2F m1 = inv.getMatrix();
+			D2D1::Matrix3x2F m2 = _x.transform.getMatrix();
+			D2D1::Matrix3x2F combineMatrix = m1 * m2;
 			hr = currentGeometry->CombineWithGeometry(
 				_x.currentGeometry.Get(),
 				D2D1_COMBINE_MODE_XOR,
-				transform.invertTransform().matrix * _x.transform.matrix,
+				combineMatrix,
 				NULL,
 				resGeometrySink.Get()
 			);
