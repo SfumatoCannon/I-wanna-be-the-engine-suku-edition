@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include <suku_foundation/maths.h>
 namespace suku
 {
 	class Room;
@@ -12,5 +13,5 @@ namespace suku
 	concept suku_object = std::is_base_of_v<Object, T>;
 
 	template<typename T>
-	concept suku_property_type = std::is_arithmetic<T>::value;
+	concept suku_property_type = std::is_arithmetic<T>::value || std::is_same_v<T, Real>;
 }

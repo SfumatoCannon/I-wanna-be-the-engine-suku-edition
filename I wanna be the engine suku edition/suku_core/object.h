@@ -22,9 +22,10 @@ namespace suku
 	{
 
 	public:
-		Property<float> x, y;
+		Property<real> x, y;
 		float spawnX, spawnY;
-		float vspeed = 0, hspeed = 0, vspeedTemp = 0, hspeedTemp = 0;
+		float vspeed = 0, hspeed = 0;
+		float vspeedTemp = 0, hspeedTemp = 0;
 		float xScale = 1, yScale = 1;
 		
 		unsigned int spriteBasicIndex = 0;

@@ -399,7 +399,7 @@ namespace suku
 						continue;
 					}
 
-					Property<float> posX, posY;
+					Property<real> posX, posY;
 					Transform transform;
 					if (obj->isPositionTransitionalFrame_)
 					{

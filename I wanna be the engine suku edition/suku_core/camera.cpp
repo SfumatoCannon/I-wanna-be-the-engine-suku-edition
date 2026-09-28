@@ -8,8 +8,8 @@ namespace suku
 	{
 		return [_object, _velocity](Camera* _c) {
 			auto border = _c->getBorder();
-			float targetX = std::clamp(_object->x.getValue(), border.left + _c->getCenterX(), border.right - _c->getCenterX());
-			float targetY = std::clamp(_object->y.getValue(), border.top + _c->getCenterY(), border.bottom - _c->getCenterY());
+			float targetX = std::clamp(_object->x.getValue().get(), border.left + _c->getCenterX(), border.right - _c->getCenterX());
+			float targetY = std::clamp(_object->y.getValue().get(), border.top + _c->getCenterY(), border.bottom - _c->getCenterY());
 			_c->x += (targetX - _c->x - _c->getCenterX()) * _velocity;
 			_c->y += (targetY - _c->y - _c->getCenterY()) * _velocity;
 			};

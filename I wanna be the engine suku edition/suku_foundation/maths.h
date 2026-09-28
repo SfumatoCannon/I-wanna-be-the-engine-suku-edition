@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <type_traits>
 #include <list>
 #include <vector>
 #include <stdarg.h>
@@ -17,16 +18,26 @@ namespace suku
 	{
 	public:
 		Real() = default;
-		Real(float _value) : value_(static_cast<real_type>(_value)) {}
-		Real(double _value) : value_(static_cast<real_type>(_value)) {}
+		Real(const Real&) = default;
+		template<typename T> Real(T _value)
+			requires std::is_arithmetic_v<T>
+		: value_(static_cast<real_type>(_value)) {}
 
-#ifdef DOUBLE_FLOATING_MODE
-		explicit operator float()const { return static_cast<float>(value_); }
-		operator double()const { return value_; }
-#else
-		operator float()const { return value_; }
-		explicit operator double()const { return static_cast<double>(value_); }
-#endif
+		real_type get() const { return value_; }
+
+		Real& operator+=(const Real& _other) { value_ += _other.value_; return *this; }
+		Real& operator-=(const Real& _other) { value_ -= _other.value_; return *this; }
+		Real& operator*=(const Real& _other) { value_ *= _other.value_; return *this; }
+		Real& operator/=(const Real& _other) { value_ /= _other.value_; return *this; }
+
+		Real& operator+=(real_type _other) { value_ += _other; return *this; }
+		Real& operator-=(real_type _other) { value_ -= _other; return *this; }
+		Real& operator*=(real_type _other) { value_ *= _other; return *this; }
+		Real& operator/=(real_type _other) { value_ /= _other; return *this; }
+
+		Real operator-() const { return Real(-value_); }
+
+		operator real_type() const { return value_; }
 
 	private:
 		real_type value_ = 0;

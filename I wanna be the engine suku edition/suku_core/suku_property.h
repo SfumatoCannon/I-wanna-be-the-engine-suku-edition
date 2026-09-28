@@ -13,6 +13,13 @@ namespace suku
 		Property(T&& _value) : value_(std::move(_value)), frameState_(value_), lastFrameState_(value_) {}
 
 		operator T() const { return value_; }
+#ifdef DOUBLE_FLOATING_MODE
+		explicit operator float()const requires std::is_same_v<T, Real> { return static_cast<float>(value_); }
+		operator double()const requires std::is_same_v<T, Real> { return value_; }
+#else
+		operator float()const requires std::is_same_v<T, Real> { return value_; }
+		explicit operator double()const requires std::is_same_v<T, Real> { return static_cast<double>(value_); }
+#endif
 
 		void operator=(T _value);
 		void operator=(std::pair<T, const Transition&> _valueWithTransition);
@@ -38,17 +45,17 @@ namespace suku
 		void addTick(double _ticks = 1.0);
 	private:
 		Transition currentTransition_ = Transition(0.0, TransitionCurve::linear);
-		bool isTranslating_ = false;
-		T transitionValueBegin_;
-		T transitionValueEnd_;
-		double transitionDuration_ = 0.0;
-		double transitionElapsedTime_ = 0.0; //?
-		long double transitionStartTime_ = 0;
-		T value_;
-		T frameState_;
-		T lastFrameState_;
-		bool forceUpdateTag_ = false;
-		T forceUpdateValue_;
+		bool isTranslating_					= false;
+		T transitionValueBegin_				= T();
+		T transitionValueEnd_				= T();
+		double transitionDuration_			= 0.0;
+		double transitionElapsedTime_		= 0.0; //?
+		long double transitionStartTime_	= 0;
+		T value_				= T();
+		T frameState_			= T();
+		T lastFrameState_		= T();
+		bool forceUpdateTag_	= false;
+		T forceUpdateValue_		= T();
 	};
 }
 
