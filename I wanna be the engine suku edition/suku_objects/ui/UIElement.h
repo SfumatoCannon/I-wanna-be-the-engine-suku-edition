@@ -14,6 +14,7 @@ namespace suku
 		void setWidth(int _width) { width_ = _width; }
 		int getHeight() const { return height_; }
 		void setHeight(int _height) { height_ = _height; }
+		void setSize(int _width, int _height) { width_ = _width, height_ = _height; }
 		std::pair<int, int> getSize() const { return { width_, height_ }; }
 
 		void setTextStyle(const TextStyle& _font);

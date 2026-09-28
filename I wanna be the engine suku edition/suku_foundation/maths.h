@@ -7,6 +7,31 @@
 #define PI 3.14159265358979323846
 namespace suku
 {
+#ifdef DOUBLE_FLOATING_MODE
+	typedef double real_type;
+#else
+	typedef float real_type;
+#endif
+
+	class Real
+	{
+	public:
+		Real() = default;
+		Real(float _value) : value_(static_cast<real_type>(_value)) {}
+		Real(double _value) : value_(static_cast<real_type>(_value)) {}
+
+#ifdef DOUBLE_FLOATING_MODE
+		operator double() { return value_; }
+#else
+		operator float() { return value_; }
+#endif
+
+	private:
+		real_type value_ = 0;
+	};
+
+	typedef Real real;
+
 	class Vector
 	{
 	public:
