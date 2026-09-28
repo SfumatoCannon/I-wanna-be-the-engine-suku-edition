@@ -23,10 +23,10 @@ namespace suku
 
 	public:
 		Property<real> x, y;
-		float spawnX, spawnY;
-		float vspeed = 0, hspeed = 0;
+		real spawnX, spawnY;
+		real vspeed = 0, hspeed = 0;
 		float vspeedTemp = 0, hspeedTemp = 0;
-		float xScale = 1, yScale = 1;
+		real xScale = 1, yScale = 1;
 		
 		unsigned int spriteBasicIndex = 0;
 		double spriteAnimationRate = 1.0;
