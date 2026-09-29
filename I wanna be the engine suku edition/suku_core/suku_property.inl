@@ -3,19 +3,28 @@
 namespace suku
 {
 	template<suku_property_type T>
-	inline void Property<T>::operator=(T _value)
+	template<typename U>
+	inline Property<T>& Property<T>::operator=(U _value) requires std::is_same_v<T, Real> && std::is_arithmetic_v<U>
 	{
-		value_ = _value;
+		value_ = static_cast<T>(_value);
+		return *this;
 	}
 
 	template<suku_property_type T>
-	inline void Property<T>::operator=(std::pair<T, const Transition&> _valueWithTransition)
+	inline Property<T>& Property<T>::operator=(T _value)
+	{
+		value_ = _value;
+		return *this;
+	}
+
+	template<suku_property_type T>
+	inline Property<T>& Property<T>::operator=(std::pair<T, const Transition&> _valueWithTransition)
 	{
 		auto& [value, transition] = _valueWithTransition;
 		if (transition.getDuration() <= 0.0)
 		{
 			setValueForce(value);
-			return;
+			return *this;
 		}
 		isTranslating_ = true;
 		currentTransition_ = transition;
@@ -23,6 +32,7 @@ namespace suku
 		transitionValueBegin_ = value_;
 		transitionValueEnd_ = value;
 		transitionElapsedTime_ = 0.0;
+		return *this;
 	}
 
 	template<suku_property_type T>

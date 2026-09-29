@@ -3,7 +3,7 @@
 #include "suku_core_concepts.h"
 
 namespace suku
-{ 
+{
 	template<suku_property_type T>
 	class Property
 	{
@@ -11,6 +11,10 @@ namespace suku
 		Property() = default;
 		Property(const T& _value) : value_(_value), frameState_(_value), lastFrameState_(_value) {}
 		Property(T&& _value) : value_(std::move(_value)), frameState_(value_), lastFrameState_(value_) {}
+		template<typename U>
+		Property(const U& _value)
+			requires std::is_same_v<T, Real>&& std::is_arithmetic_v<U>
+		: value_(_value), frameState_(_value), lastFrameState_(_value) {}
 
 		operator T() const { return value_; }
 #ifdef DOUBLE_FLOATING_MODE
@@ -21,8 +25,10 @@ namespace suku
 		explicit operator double()const requires std::is_same_v<T, Real> { return static_cast<double>(value_); }
 #endif
 
-		void operator=(T _value);
-		void operator=(std::pair<T, const Transition&> _valueWithTransition);
+		Property<T>& operator=(T _value);
+		Property<T>& operator=(std::pair<T, const Transition&> _valueWithTransition);
+		template<typename U> Property<T>& operator=(U _value) requires std::is_same_v<T, Real>&& std::is_arithmetic_v<U>;
+
 		void operator+=(T _value);
 		void operator+=(std::pair<T, const Transition&> _valueWithTransition);
 		void operator-=(T _value);
@@ -33,7 +39,8 @@ namespace suku
 		void operator/=(std::pair<T, const Transition&> _valueWithTransition);
 		T operator++(int);
 		T operator--(int);
-		auto operator<=>(const T& _value) const { return getValue() <=> _value; }
+
+		//auto operator<=>(const T& _value) const { return getValue() <=> _value; }
 
 		void setValueForce(T _value);
 		T getValue() const;
@@ -45,17 +52,17 @@ namespace suku
 		void addTick(double _ticks = 1.0);
 	private:
 		Transition currentTransition_ = Transition(0.0, TransitionCurve::linear);
-		bool isTranslating_					= false;
-		T transitionValueBegin_				= T();
-		T transitionValueEnd_				= T();
-		double transitionDuration_			= 0.0;
-		double transitionElapsedTime_		= 0.0; //?
-		long double transitionStartTime_	= 0;
-		T value_				= T();
-		T frameState_			= T();
-		T lastFrameState_		= T();
-		bool forceUpdateTag_	= false;
-		T forceUpdateValue_		= T();
+		bool isTranslating_ = false;
+		T transitionValueBegin_ = T();
+		T transitionValueEnd_ = T();
+		double transitionDuration_ = 0.0;
+		double transitionElapsedTime_ = 0.0; //?
+		long double transitionStartTime_ = 0;
+		T value_ = T();
+		T frameState_ = T();
+		T lastFrameState_ = T();
+		bool forceUpdateTag_ = false;
+		T forceUpdateValue_ = T();
 	};
 }
 
