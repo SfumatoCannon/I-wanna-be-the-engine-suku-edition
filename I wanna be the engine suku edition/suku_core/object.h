@@ -47,7 +47,6 @@ namespace suku
 		void setTargetPaintLayer(PaintLayer& _layer);
 		PaintLayer* getTargetPaintLayer() { return targetPaintLayer_; }
 
-		Transform transform;
 		float getWidth();
 		float getHeight();
 		Vector getSize();
@@ -152,6 +151,8 @@ namespace suku
 	protected:
 		template<suku_property_type T> friend class Property;
 		friend class Room;
+
+		Transform transform_;
 
 		std::map<std::string, Var> var_;
 

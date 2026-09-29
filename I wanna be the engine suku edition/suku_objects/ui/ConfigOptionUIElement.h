@@ -129,7 +129,7 @@ namespace suku
 			{
 				RectangleShape area(_element->getWidth(), _element->getHeight());
 				area.setFill(_element->isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
-				area.paint(_element->x, _element->y, _element->transform);
+				area.paint(_element->x, _element->y, _element->transform_);
 
 				// label text
 				_element->labelText_.style.setBrush(Color(255, 255, 255));

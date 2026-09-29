@@ -280,7 +280,7 @@ namespace suku
 				sprite_ = &sprStanding;
 		}
 
-		transform = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
+		transform_ = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
 		if (vspeed > 9.4f)

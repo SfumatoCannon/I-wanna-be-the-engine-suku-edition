@@ -16,7 +16,7 @@ namespace suku
 		RectangleShape area(width_, height_);
 		Text text({ "Consolas", 12, TextStyle::Align::MiddleCenter });
 		area.setFill(Color(128, 128, 128, 0.5f));
-		area.paint(x, y, transform);
+		area.paint(x, y, transform_);
 		text.style.setBrush(Color(255, 255, 255));
 		text.text = L"UI";
 		text.paint(x, y, width_, height_);

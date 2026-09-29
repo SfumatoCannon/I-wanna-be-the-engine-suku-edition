@@ -216,7 +216,7 @@ namespace suku
 			obj->isSpriteTransformTransitionalFrame_ = true;
 			obj->hspeedTemp = obj->vspeedTemp = 0;
 			obj->updateFunction();
-			obj->spriteTransformLastFrame_ = obj->transform;
+			obj->spriteTransformLastFrame_ = obj->transform_;
 			obj->onPreUpdate();
 			obj->onUpdate();
 			obj->xLastFrame_ = obj->x;
@@ -267,7 +267,7 @@ namespace suku
 					iter = objArray.erase(iter);
 					continue;
 				}
-				obj->spriteTransformLastFrame_ = obj->transform;
+				obj->spriteTransformLastFrame_ = obj->transform_;
 				if (!obj->isFrozen())
 				{
 					obj->onPreUpdate();
@@ -414,22 +414,22 @@ namespace suku
 					if (obj->isSpriteTransformTransitionalFrame_)
 					{
 						Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
-						transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform, _frameOffsetRate);
+						transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform_, _frameOffsetRate);
 					}
 					else
 					{
-						transform = obj->transform;
+						transform = obj->transform_;
 					}
 
 					std::swap(obj->x, posX);
 					std::swap(obj->y, posY);
-					std::swap(obj->transform, transform);
+					std::swap(obj->transform_, transform);
 
 					obj->onPaint();
 
 					std::swap(obj->x, posX);
 					std::swap(obj->y, posY);
-					std::swap(obj->transform, transform);
+					std::swap(obj->transform_, transform);
 
 					iter++;
 				}
