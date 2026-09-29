@@ -1,17 +1,30 @@
 #include "RoomSelectSave.h"
 #include <definitions/suku_font_pool.h>
 
+namespace
+{
+	constexpr int saveSlotY = 160;
+	constexpr int saveSlotX[3] = { 96, 336, 576 };
+	constexpr int saveSlotWidth = 128;
+	constexpr int saveSlotHeight = 288;
+	constexpr int padding = 8;
+	ChoiceGroupUIElement* choiceUIElement[3];
+}
+
+
+
 RoomSelectSave::RoomSelectSave()
 {
-	// MapLoader::loadFromJtoolData(this, "-801p01o01n01m01hg1gg1fg1eg1a01901801701ig1dg1l01q01b01601s0140-i01eg1fg1gg1hg1ig1dg1q01701601o01n01m01l01p01b01a01901801s0140-h01ig1dg1l01q01b01601s0140-g01ig1dg1l01q01b01601s0140-f01ig1dg1l01q01b01601s0140-e01ig1dg1l01q01b01601s0140-d01ig1dg1l01q01b01601s0140-c01ig1dg1l01q01b01601s0140-b01ig1dg1l01q01b01601s0140-a01ig1dg1l01q01b01601s0140-901ig1dg1l01q01b01601s0140-l01s0140-k01s0140-j01s0140-701s0140-601s0140-501s0140-401s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140-m01s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140");
+	MapLoader::loadFromJtoolData(this, "-801p01o01n01m01hg1gg1fg1eg1a01901801701ig1dg1l01q01b01601s0140-i01eg1fg1gg1hg1ig1dg1q01701601o01n01m01l01p01b01a01901801s0140-h01ig1dg1l01q01b01601s0140-g01ig1dg1l01q01b01601s0140-f01ig1dg1l01q01b01601s0140-e01ig1dg1l01q01b01601s0140-d01ig1dg1l01q01b01601s0140-c01ig1dg1l01q01b01601s0140-b01ig1dg1l01q01b01601s0140-a01ig1dg1l01q01b01601s0140-901ig1dg1l01q01b01601s0140-l01s0140-k01s0140-j01s0140-701s0140-601s0140-501s0140-401s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140-m01s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01c01b01a0190180170160150140");
 	for (int i = 0; i < 3; i++)
 	{
 		saveFileTime[i] = saveFile[i].get<unsigned int>("time");
 		saveFileDeath[i] = saveFile[i].get<unsigned int>("death");
+		choiceUIElement[i] = create<ChoiceGroupUIElement>(saveSlotX[i], saveSlotY + 48, saveSlotWidth, 32,
+			std::vector{ String("Load Game"), String("Bow"), String("No Bow") }, 0).get();
 	}
+	choiceUIElement[0]->focus();
 
-	//TEST
-	create<ChoiceGroupUIElement>(std::vector{ String("aaa"), String("aab"), String("aac") }, 1)->focus();
 }
 
 void RoomSelectSave::onUpdateStart()
@@ -40,12 +53,6 @@ void RoomSelectSave::onUpdateStart()
 
 void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 {
-	constexpr int saveSlotY = 160;
-	constexpr int saveSlotX[3] = { 96, 336, 576 };
-	constexpr int saveSlotWidth = 128;
-	constexpr int saveSlotHeight = 288;
-	constexpr int padding = 8;
-
 	TextStyle saveSlotTitleStyle(Font::Staatliches, 32, TextStyle::Align::TopCenter);
 	TextStyle saveSlotNoDataStyle(Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
 	TextStyle saveSlotContentStyle(Font::Arial, 16, TextStyle::Weight::Bold);

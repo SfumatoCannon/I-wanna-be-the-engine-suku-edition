@@ -58,6 +58,8 @@ namespace suku
 		double getScaleY();
 		Vector getScale();
 
+		Object* setPosition(real _x, real _y);
+
 		bool isVisible = true;
 		float opacity = 1;
 

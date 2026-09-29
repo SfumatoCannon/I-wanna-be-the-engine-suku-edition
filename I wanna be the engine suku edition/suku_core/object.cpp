@@ -240,6 +240,13 @@ namespace suku
 		return { (double)x / (double)width, (double)y / (double)height };
 	}
 
+	Object* Object::setPosition(real _x, real _y)
+	{
+		x = _x;
+		y = _y;
+		return this;
+	}
+
 	Object::Object(float _x, float _y, Room* _inRoom)
 		: x(_x), y(_y), inRoom_(_inRoom),
 		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX), 

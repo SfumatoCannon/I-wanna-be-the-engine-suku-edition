@@ -5,8 +5,11 @@ namespace suku
 {
 	ChoiceGroupUIElement::ChoiceGroupUIElement(std::vector<String>&& _options, unsigned int _defaultIndex)
 		:UIElement(0, 0, 192, 32), options_(std::move(_options)), selectedIndex_(_defaultIndex)
-	{
-	}
+	{}
+
+	ChoiceGroupUIElement::ChoiceGroupUIElement(real _x, real _y, int _width, int _height, std::vector<String>&& _options, unsigned int _defaultIndex)
+		:UIElement(_x, _y, _width, _height), options_(std::move(_options)), selectedIndex_(_defaultIndex)
+	{}
 
 	unsigned int ChoiceGroupUIElement::getCurrentIndex()
 	{
