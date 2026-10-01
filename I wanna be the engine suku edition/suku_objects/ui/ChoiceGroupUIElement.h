@@ -15,13 +15,25 @@ namespace suku
 		unsigned int getCurrentIndex();
 		const String& getCurrentChoice();
 
-		const std::vector<String>& getOptionList() { return options_; }
-		void insertOption(const String& _option, unsigned int _index);
+		ChoiceGroupUIElement* setOptions(std::vector<String>&& _options);
+		ChoiceGroupUIElement* setSelectedIndex(unsigned int _index);
+
+		const std::vector<String>& getOptions() { return options_; }
+		unsigned int getOptionIndex(const String& _option);
+		const String& getOption(unsigned int _index);
+
+		ChoiceGroupUIElement* enableOption(unsigned int _index);
+		ChoiceGroupUIElement* enableOption(const String& _option) { return enableOption(getOptionIndex(_option)); }
+		ChoiceGroupUIElement* disableOption(unsigned int _index);
+		ChoiceGroupUIElement* disableOption(const String& _option) { return disableOption(getOptionIndex(_option)); }
+
+		ChoiceGroupUIElement* renameOption(unsigned int _index, const String& _newOption);
 
 		virtual void onUpdate() override;
 		virtual void onPaint() override;
 	private:
 		std::vector<String> options_;
+		std::vector<bool> isEnabled_;
 		unsigned int selectedIndex_;
 	};
 }

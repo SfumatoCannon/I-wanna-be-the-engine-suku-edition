@@ -21,33 +21,61 @@ RoomSelectSave::RoomSelectSave()
 		saveFileTime[i] = saveFile[i].get<unsigned int>("time");
 		saveFileDeath[i] = saveFile[i].get<unsigned int>("death");
 		choiceUIElement[i] = create<ChoiceGroupUIElement>(saveSlotX[i], saveSlotY + 48, saveSlotWidth, 32,
-			std::vector{ String("Load Game"), String("Bow"), String("No Bow") }, 0).get();
+			std::vector<String>{"Load Game", "Medium", "Hard", "Very Hard"}, 0).get();
+		choiceUIElement[i]->isVisible = false;
+		choiceUIElement[i]->unfocus();
 	}
-	choiceUIElement[0]->focus();
-
 }
 
 void RoomSelectSave::onUpdateStart()
 {
+	auto choiceUI = choiceUIElement[selectedSaveIndex_];
 	if (input::isKeyDown(VK_LEFT_ARROW))
 	{
-		if (selectedSaveIndex_ > 0)
-			selectedSaveIndex_--;
+		if (choiceUI->isVisible == false)
+		{
+			if (selectedSaveIndex_ > 0)
+				selectedSaveIndex_--;
+		}
 	}
 	else if (input::isKeyDown(VK_RIGHT_ARROW))
 	{
-		if (selectedSaveIndex_ < 2)
-			selectedSaveIndex_++;
+		if (choiceUI->isVisible == false)
+		{
+			if (selectedSaveIndex_ < 2)
+				selectedSaveIndex_++;
+		}
 	}
-	if (input::isKeyDown(VK_SHIFT))
+	else if (input::isKeyDown(VK_SHIFT))
 	{
-		setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
-		RoomPool::gotoNewGameRoom();
+		if (choiceUI->isVisible == true)
+		{
+			auto choice = choiceUI->getCurrentIndex();
+			if (choice == 0) // Load Game
+			{
+				setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+				SaveFile::load();
+			}
+			else if (choice == 1 || choice == 2 || choice == 3) // Medium | Hard | Very Hard
+			{
+				setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+				RoomPool::gotoNewGameRoom();
+			}
+		}
+		else // choiceUI->isVisible == false
+		{
+			choiceUI->isVisible = true;
+			choiceUI->focus();
+		}
 	}
+
 	if (input::isKeyDown(VK_Z))
 	{
-		setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
-		SaveFile::load();
+		if (choiceUI->isVisible == true)
+		{
+			choiceUI->unfocus();
+			choiceUI->isVisible = false;
+		}
 	}
 }
 
