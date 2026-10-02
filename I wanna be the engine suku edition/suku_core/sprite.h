@@ -20,7 +20,7 @@ namespace suku
 	class Transform;
 	class Shape;
 	class Bitmap;
-	
+
 	template<typename T>
 	concept sprite_element_type = std::is_base_of_v<SpriteElement, T>;
 
@@ -38,6 +38,9 @@ namespace suku
 		virtual void paint(float _x, float _y,
 			Transform _transform, float _alpha = 1.0) = 0;
 		virtual void paint(Transform _transform, float _alpha = 1.0) = 0;
+		virtual void paintWithCenter(float _x, float _y, float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) { paint(_x - centerX, _y - centerY, _xscale, _yscale, _alpha, _angle); }
+		virtual void paintWithCenter(float _x, float _y, Transform _transform, float _alpha = 1.0) { paint(_x - centerX, _y - centerY, _transform, _alpha); }
+		virtual void paintWithCenter(Transform _transform, float _alpha = 1.0) { paint(translation(-centerX, -centerY) + _transform, _alpha); }
 		bool isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const;
 	protected:

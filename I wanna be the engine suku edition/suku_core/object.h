@@ -70,6 +70,7 @@ namespace suku
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
 		UINT getSpriteFrameIndex()const;
+		long double getClock()const { return clock_; }
 
 		void remove();
 		void destroy();

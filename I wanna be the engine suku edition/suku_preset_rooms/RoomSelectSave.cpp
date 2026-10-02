@@ -120,7 +120,13 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 
 	// show selectedSaveIndex_
 	int startX = saveSlotX[selectedSaveIndex_];
-
+	int startY = saveSlotY + saveSlotHeight + 64;
+	int mid = startX + saveSlotWidth / 2;
+	for (int i = startX - 16; i < mid; i += 16)
+		Cherry::spr.getFrameState(clock_)->paintWithCenter(i, startY);
+	for (int i = mid + 16; i < startX + saveSlotWidth + 32; i += 16)
+		Cherry::spr.getFrameState(clock_)->paintWithCenter(i, startY);
+	Player::sprStanding.getFrameState(clock_)->paintWithCenter(mid, startY);
 
 	//saveSlotTitleStyle.paint();
 }

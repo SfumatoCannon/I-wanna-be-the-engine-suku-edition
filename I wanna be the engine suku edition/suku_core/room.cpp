@@ -228,6 +228,8 @@ namespace suku
 			obj->y.addTick();
 			return;
 		}
+
+		clock_++;
 		onUpdateStart();
 
 		for (auto& [type, objArray] : objectPointerArray_)

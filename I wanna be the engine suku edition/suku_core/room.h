@@ -80,6 +80,8 @@ namespace suku
 		virtual void onUpdateStart() {}
 		virtual void onUpdateEnd() {}
 
+		long double getClock() { return clock_; }
+
 		void update();
 		RenderBitmap paintOnLayer(PaintLayer& _layer);
 		RenderBitmap paintOnLayer(PaintLayer& _layer, float _frameOffset);
@@ -131,6 +133,8 @@ namespace suku
 		std::unique_ptr<RectangleShape> backgroundShape_ = nullptr;
 		void paintBackground();
 	protected:
+		long double clock_ = 0.0;
+
 		PaintLayer displayLayer;
 
 		float backgroundOffsetX = 0.0f;
