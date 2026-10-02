@@ -1,7 +1,7 @@
 #pragma once
 #include <suku_draw/text.h>
 
-namespace suku
+namespace suku::resource
 {
 	class Font
 	{

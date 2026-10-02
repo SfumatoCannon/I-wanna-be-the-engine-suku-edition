@@ -1,5 +1,5 @@
 #include "RoomSelectSave.h"
-#include <definitions/suku_font_pool.h>
+#include <resources/suku_font_pool.h>
 
 namespace
 {
@@ -81,9 +81,10 @@ void RoomSelectSave::onUpdateStart()
 
 void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 {
-	TextStyle saveSlotTitleStyle(Font::Staatliches, 32, TextStyle::Align::TopCenter);
-	TextStyle saveSlotNoDataStyle(Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
-	TextStyle saveSlotContentStyle(Font::Arial, 16, TextStyle::Weight::Bold);
+	TextStyle saveSlotTitleStyle(resource::Font::Staatliches, 32, TextStyle::Align::TopCenter);
+	TextStyle saveSlotNoDataStyle(resource::Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
+	TextStyle saveSlotContentStyle(resource::Font::Arial, 16, TextStyle::Weight::Bold);
+
 
 	// Save slot card
 	for (int i = 0; i < 3; i++)

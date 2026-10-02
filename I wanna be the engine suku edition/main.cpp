@@ -67,7 +67,7 @@ public:
 		create(Spike(32, 128), Block(32, 160));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
-		// setBGM(&suku::SoundPool::musGuyRock);
+		// setBGM(&suku::resource::Audio::musGuyRock);
 		//camera.angle = {720, Transition(100.0, TransitionCurve::easeOutExpo)};
 		camera.setBind(Camera::follow(p, 0.2));
 	}
