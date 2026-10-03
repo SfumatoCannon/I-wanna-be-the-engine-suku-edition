@@ -137,4 +137,38 @@ namespace suku
 			return _defaultValue;
 		}
 	}
+
+	template<typename T>
+	inline SaveFileVar<T>::SaveFileVar(const std::string _name, T _defaultValue)
+		: name_(_name), pSaveFile_(getGlobalSaveFile()), defaultValue_(_defaultValue)
+	{
+	}
+
+	template<typename T>
+	inline SaveFileVar<T>::SaveFileVar(const SaveFile& _saveFile, const std::string _name, T _defaultValue)
+		: name_(_name), pSaveFile_(&_saveFile), defaultValue_(_defaultValue)
+	{
+	}
+
+	template<typename T>
+	inline T SaveFileVar<T>::get()
+	{
+		if (pSaveFile_ != nullptr)
+		{
+			return pSaveFile_->loadVar<T>(name_, defaultValue_);
+		}
+		else
+		{
+			return defaultValue_;
+		}
+	}
+
+	template<typename T>
+	inline void SaveFileVar<T>::set(T _value)
+	{
+		if (pSaveFile_ != nullptr)
+		{
+			pSaveFile_->saveVar(name_, _value);
+		}
+	}
 }

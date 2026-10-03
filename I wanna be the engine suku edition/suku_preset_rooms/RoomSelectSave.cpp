@@ -129,5 +129,4 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 		Cherry::spr.getFrameState(clock_)->paintWithCenter(i, startY);
 	Player::sprStanding.getFrameState(clock_)->paintWithCenter(mid, startY);
 
-	//saveSlotTitleStyle.paint();
 }

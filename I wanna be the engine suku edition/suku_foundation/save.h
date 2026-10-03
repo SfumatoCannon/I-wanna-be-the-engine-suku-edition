@@ -71,6 +71,21 @@ namespace suku
 		std::unique_ptr<File> file_ = nullptr;
 	};
 
+	template<typename T>
+	class SaveFileVar
+	{
+	public:
+		SaveFileVar(const std::string _name, T _defaultValue = T());
+		SaveFileVar(const SaveFile& _saveFile, const std::string _name, T _defaultValue = T());
+
+		T get();
+		void set(T _value);
+	private:
+		const std::string& name_;
+		SaveFile* pSaveFile_;
+		T defaultValue_;
+	};
+
 	void setGlobalSaveFile(SaveFile* _saveFile);
 	SaveFile* getGlobalSaveFile();
 	template<typename T> bool setSavable(const std::string _name);
