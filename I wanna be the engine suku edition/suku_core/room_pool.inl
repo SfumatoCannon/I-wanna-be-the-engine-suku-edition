@@ -64,7 +64,7 @@ namespace suku
 	{
 		newgameRoomId_ = typecode(T);
 		actionOnNewGame_ = [=]() {
-			SaveFile* savefile = getGlobalSaveFile();
+			SaveFile* savefile = SaveFile::getGlobalSaveFile();
 			if (savefile && savefile->isExist())
 			{
 				savefile->clear();

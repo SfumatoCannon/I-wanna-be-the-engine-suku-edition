@@ -119,7 +119,7 @@ namespace suku
 
 	void SaveFile::save()
 	{
-		SaveFile* savefile = getGlobalSaveFile();
+		SaveFile* savefile = SaveFile::getGlobalSaveFile();
 		Room* nowRoom = RoomPool::getNowRoom();
 		if (savefile == nullptr || nowRoom == nullptr)
 			return;
@@ -130,13 +130,23 @@ namespace suku
 
 	bool SaveFile::load()
 	{
-		SaveFile* savefile = getGlobalSaveFile();
+		SaveFile* savefile = SaveFile::getGlobalSaveFile();
 		if (savefile == nullptr)
 			return false;
 		Typecode roomid = savefile->loadVar<Typecode>("roomid");
 		RoomPool::gotoRoom(roomid);
 		savefile->readData();
 		return true;
+	}
+
+	void SaveFile::setGlobalSaveFile(SaveFile* _saveFile)
+	{
+		SaveAssetGlobal::getInstance().setSaveFile(_saveFile);
+	}
+
+	SaveFile* SaveFile::getGlobalSaveFile()
+	{
+		return SaveAssetGlobal::getInstance().getSaveFile();
 	}
 
 	bool SaveFile::hasValue(const std::string _name)
@@ -149,16 +159,6 @@ namespace suku
 				return true;
 		}
 		return false;
-	}
-
-	void setGlobalSaveFile(SaveFile* _saveFile)
-	{
-		SaveAssetGlobal::getInstance().setSaveFile(_saveFile);
-	}
-
-	SaveFile* getGlobalSaveFile()
-	{
-		return SaveAssetGlobal::getInstance().getSaveFile();
 	}
 
 	bool isSavable(const std::string _name)

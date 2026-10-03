@@ -140,7 +140,7 @@ namespace suku
 
 	template<typename T>
 	inline SaveFileVar<T>::SaveFileVar(const std::string _name, T _defaultValue)
-		: name_(_name), pSaveFile_(getGlobalSaveFile()), defaultValue_(_defaultValue)
+		: name_(_name), pSaveFile_(SaveFile::getGlobalSaveFile()), defaultValue_(_defaultValue)
 	{
 	}
 

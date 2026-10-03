@@ -56,6 +56,8 @@ namespace suku
 
 		static void save();
 		static bool load();
+		static void setGlobalSaveFile(SaveFile* _saveFile);
+		static SaveFile* getGlobalSaveFile();
 
 		template<typename T> void saveVar(const std::string _name, T _val);
 		template<typename T> void saveVar(const std::string _name, Property<T>& _val);
@@ -86,8 +88,7 @@ namespace suku
 		T defaultValue_;
 	};
 
-	void setGlobalSaveFile(SaveFile* _saveFile);
-	SaveFile* getGlobalSaveFile();
+
 	template<typename T> bool setSavable(const std::string _name);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
 	template<typename T> bool setSavable(Property<T>& _x, const std::string _name);

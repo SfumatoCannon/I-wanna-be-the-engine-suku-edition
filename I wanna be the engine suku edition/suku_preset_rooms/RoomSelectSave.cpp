@@ -53,12 +53,12 @@ void RoomSelectSave::onUpdateStart()
 			auto choice = choiceUI->getCurrentIndex();
 			if (choice == 0) // Load Game
 			{
-				setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+				SaveFile::setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
 				SaveFile::load();
 			}
 			else if (choice == 1 || choice == 2 || choice == 3) // Medium | Hard | Very Hard
 			{
-				setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
+				SaveFile::setGlobalSaveFile(&saveFile[selectedSaveIndex_]);
 				RoomPool::gotoNewGameRoom();
 			}
 		}
