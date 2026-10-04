@@ -16,7 +16,8 @@ namespace suku
 	Room::Room() : Room(constants::window::widthLogical, constants::window::heightLogical) {}
 
 	Room::Room(unsigned int _width, unsigned int _height)
-		: width_(_width), height_(_height),
+		: id_(typecode(Room)), 
+		width_(_width), height_(_height),
 		camera(constants::window::widthLogical, constants::window::heightLogical),
 		collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{

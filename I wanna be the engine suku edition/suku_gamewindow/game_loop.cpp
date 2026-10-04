@@ -5,6 +5,7 @@
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
 #include <suku_objects/basic/player.h>
+#include <format>
 
 // Private functions declaration
 // ----------------------------------------------------------------------------
@@ -299,11 +300,11 @@ namespace
 		a.text.clear();
 
 		// FPS
-		a.text += L"FPS: " + std::to_wstring(monitoredFPS) + (isVsyncOn ? L" (vsync on)" : L"");
+		a.text += std::format(L"FPS: {}{}", monitoredFPS, (isVsyncOn ? L" (vsync on)" : L""));
 
 		// Now Room
 		auto nowRoom = suku::RoomPool::getNowRoom();
-		a.text += L"\nRoom name: " + nowRoom->getName();
+		a.text += std::format(L"\nRoom name: {}", nowRoom->getName().toWString());
 
 		// Player
 		if (!nowRoom->getObjectList<suku::Player>().empty())

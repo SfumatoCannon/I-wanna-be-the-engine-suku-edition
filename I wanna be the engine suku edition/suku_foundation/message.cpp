@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "message.h"
+#include <format>
 
 namespace suku
 {
@@ -32,13 +33,10 @@ namespace suku
 		void showInfoMessage(const String& _callerInfo, const String& _message)
 		{
 #ifdef _DEBUG
-			std::ostringstream oss;
-			oss << "Information sent" << std::endl
-				<< "In function: " << _callerInfo.toString() << std::endl
-				<< String(_message).toString()
-				<< std::endl << std::endl << getStackTrace();
+			std::string formatted = std::format("Information sent\nIn function: {}\n{}\n\n{}",
+				_callerInfo.toString(), String(_message).toString(), getStackTrace());
 			MessageBoxExW(NULL,
-				String(oss.str()).content,
+				String(formatted).content,
 				L"Info", MB_OK | MB_ICONINFORMATION, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));
 #endif
 		}
@@ -46,13 +44,10 @@ namespace suku
 		void showWarningMessage(const String& _callerInfo, const String& _message)
 		{
 #ifdef _DEBUG
-			std::ostringstream oss;
-			oss << "WARNING" << std::endl
-				<< "In function: " << _callerInfo.toString() << std::endl
-				<< String(_message).toString()
-				<< std::endl << std::endl << getStackTrace();
+			std::string formatted = std::format("WARNING\nIn function: {}\n{}\n\n{}",
+				_callerInfo.toString(), String(_message).toString(), getStackTrace());
 			MessageBoxExW(NULL,
-				String(oss.str()).content,
+				String(formatted).content,
 				L"Warning", MB_OK | MB_ICONWARNING, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));
 #endif
 		}
@@ -60,13 +55,10 @@ namespace suku
 		void showErrorMessage(const String& _callerInfo, const String& _message)
 		{
 #ifdef _DEBUG
-			std::ostringstream oss;
-			oss << "An ERROR occurred!" << std::endl
-				<< "In function: " << _callerInfo.toString() << std::endl
-				<< String(_message).toString()
-				<< std::endl << std::endl << getStackTrace();
+			std::string formatted = std::format("An ERROR occurred!\nIn function: {}\n{}\n\n{}",
+				_callerInfo.toString(), String(_message).toString(), getStackTrace());
 			MessageBoxExW(NULL,
-				String(oss.str()).content,
+				String(formatted).content,
 				L"Error", MB_OK | MB_ICONERROR, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT));
 #endif
 		}

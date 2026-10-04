@@ -1,6 +1,7 @@
 #pragma once
 
 #include "message.h"
+#include <format>
 
 namespace suku
 {
@@ -13,9 +14,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
@@ -30,9 +30,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
@@ -47,9 +46,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
@@ -64,9 +62,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
@@ -81,9 +78,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
@@ -97,9 +93,8 @@ namespace suku
 		}
 		catch (std::bad_any_cast& e)
 		{
-			ERRORWINDOW("Failed to get value: " + std::string(e.what()) + "\n"
-				+ "request type: " + typeid(T).name() + "\n"
-				+ "storage type: " + pTypeInfo_->name());
+			ERRORWINDOW(String(std::format("Failed to get value: {}\nrequest type: {}\nstorage type: {}",
+				e.what(), typeid(T).name(), pTypeInfo_->name())));
 			return _x;
 		}
 	}
