@@ -9,6 +9,7 @@ namespace suku::resource
 		inline static TextStyle Staatliches{ "Staatliches", "Font\\staatliches-latin-400-normal.ttf" };
 		inline static TextStyle Barlow_Condensed{ "Barlow Condensed", "Font\\barlow-condensed-latin-400-normal.ttf" };
 		inline static TextStyle Courier_New{ "Courier New" };
+		inline static TextStyle Consolas{ "Consolas" };
 		inline static TextStyle Arial{ "Arial" };
 	};
 }

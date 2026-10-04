@@ -42,7 +42,7 @@ namespace suku
 		return { borderTop_, borderLeft_, borderBottom_, borderRight_ };
 	}
 
-	void Camera::setBorder(float _top, float _left, float _bottom, float _right)
+	void Camera::setBorder(float _left, float _top, float _right, float _bottom)
 	{
 		borderTop_ = _top;
 		borderLeft_ = _left;

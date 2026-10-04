@@ -83,7 +83,7 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 {
 	TextStyle saveSlotTitleStyle(resource::Font::Staatliches, 32, TextStyle::Align::TopCenter);
 	TextStyle saveSlotNoDataStyle(resource::Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
-	TextStyle saveSlotContentStyle(resource::Font::Arial, 16, TextStyle::Weight::Bold);
+	TextStyle saveSlotContentStyle(resource::Font::Arial, 15, TextStyle::Weight::Bold);
 
 
 	// Save slot card
@@ -110,11 +110,11 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 			unsigned int second = time % 60;
 			saveSlotContentStyle.setTextAlign(TextStyle::Align::TopLeft);
 			saveSlotContentStyle.paint(
-				L"Time\nDeath",
+				L"Time:\nDeath:",
 				saveSlotX[i] + padding, saveSlotY + padding + 96, saveSlotWidth, saveSlotHeight - 96);
 			saveSlotContentStyle.setTextAlign(TextStyle::Align::TopRight);
 			saveSlotContentStyle.paint(
-				std::to_wstring(hour) + L":" + std::to_wstring(minute) + L":" + std::to_wstring(second) + L"\n" + std::to_wstring(death),
+				std::format("{:02}:{:02}:{:02}\n{}", hour, minute, second, death),
 				saveSlotX[i] + padding, saveSlotY + padding + 96, saveSlotWidth - padding * 2, saveSlotHeight - 96);
 		}
 	}

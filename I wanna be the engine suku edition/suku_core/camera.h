@@ -42,7 +42,7 @@ namespace suku
 		};
 
 		CameraBorder getBorder();
-		void setBorder(float _top, float _left, float _bottom, float _right);
+		void setBorder(float _left, float _top, float _right, float _bottom);
 		void resetBorder();
 
 

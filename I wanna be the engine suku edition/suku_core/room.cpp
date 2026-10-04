@@ -21,7 +21,12 @@ namespace suku
 		collisionPool_(std::make_unique<ObjectCollisionPool>())
 	{
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
-		camera.setBorder(0, 0, _height, _width);
+		camera.setBorder(0, 0, _width, _height);
+		SaveFile* saveFile = SaveFile::getGlobalSaveFile();
+		if (saveFile != nullptr)
+		{
+			clock_ = saveFile->get<unsigned int>("time");
+		}
 	}
 
 	void Room::loadFromJtoolData(std::string_view _data)
@@ -230,6 +235,15 @@ namespace suku
 		}
 
 		clock_++;
+		if (static_cast<long>(clock_) % 50 == 0)
+		{
+			SaveFile* saveFile = SaveFile::getGlobalSaveFile();
+			if (saveFile != nullptr)
+			{
+				saveFile->saveVar<unsigned int>("time", static_cast<unsigned int>(clock_));
+			}
+		}
+
 		onUpdateStart();
 
 		for (auto& [type, objArray] : objectPointerArray_)
