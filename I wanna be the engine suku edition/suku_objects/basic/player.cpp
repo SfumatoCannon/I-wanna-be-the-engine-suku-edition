@@ -155,7 +155,7 @@ namespace suku
 		}
 	}
 
-	void Player::onPreUpdate()
+	void Player::onUpdateStart()
 	{
 		using namespace suku::input;
 		if (isKeyDown(VK_R))
@@ -305,7 +305,7 @@ namespace suku
 			hspeed = hspeedTemp = 0;
 	}
 
-	void Player::onPostUpdate()
+	void Player::onUpdateEnd()
 	{
 		if (getCrashedObject<Spike>() || getCrashedObject<Cherry>())
 		{
@@ -350,7 +350,7 @@ namespace suku
 		gravity = 0.2f;
 	}
 
-	void Blood::onPreUpdate()
+	void Blood::onUpdateStart()
 	{
 		if (input::isKeyDown(VK_R))
 			destroy();

@@ -38,13 +38,6 @@ namespace suku
 	}
 
 	template<typename T>
-	bool setSavable(Property<T>& _x, const std::string _name)
-	{
-		//return setSavable(_x.value_, _name);
-		return false;
-	}
-
-	template<typename T>
 	inline void SaveFile::saveVar(const std::string _name, T _val)
 	{
 		unsigned long long id = maths::hash(_name);

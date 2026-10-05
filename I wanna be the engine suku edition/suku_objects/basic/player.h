@@ -26,9 +26,9 @@ namespace suku
 
 		virtual void onRoomEnter() override;
 		virtual void onRoomRestart() override;
-		virtual void onPreUpdate() override;
+		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
-		virtual void onPostUpdate() override;
+		virtual void onUpdateEnd() override;
 
 		void moveLeft();
 		void moveRight();
@@ -60,7 +60,7 @@ namespace suku
 		float gravity;
 		Blood(float _x = 0, float _y = 0, float _wspeed = 0, float _hspeed = 0);
 
-		virtual void onPreUpdate() override;
+		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
 	};
 }

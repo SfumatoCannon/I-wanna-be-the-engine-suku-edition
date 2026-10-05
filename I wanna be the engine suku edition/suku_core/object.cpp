@@ -247,7 +247,7 @@ namespace suku
 		return this;
 	}
 
-	Object::Object(float _x, float _y, Room* _inRoom)
+	Object::Object(real _x, real _y, Room* _inRoom)
 		: x(_x), y(_y), inRoom_(_inRoom),
 		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX), 
 		spawnX(_x), spawnY(_y) {}

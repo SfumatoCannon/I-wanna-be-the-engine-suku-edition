@@ -225,6 +225,7 @@
     <ClInclude Include="suku_gamewindow\win32_message_handler.h" />
     <ClInclude Include="suku_gamewindow\win32_window_creator.h" />
     <ClInclude Include="suku_objects\basic\player.h" />
+    <ClInclude Include="suku_objects\basic\Save.hpp" />
     <ClInclude Include="suku_objects\includes.h" />
     <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_objects\ui\ChoiceGroupUIElement.h" />

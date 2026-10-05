@@ -59,7 +59,7 @@ namespace suku
 
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T>
-	void UILayoutVertical<T>::onPostUpdate()
+	void UILayoutVertical<T>::onUpdateEnd()
 	{
 		bool isFirstElement = true;
 		int totalY = this->y;
@@ -136,7 +136,7 @@ namespace suku
 
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T>&& std::is_base_of_v<IFocusable, T>
-	inline void UILayoutVerticalSelectable<T>::onPostUpdate()
+	inline void UILayoutVerticalSelectable<T>::onUpdateEnd()
 	{
 		if (isFocused())
 		{
@@ -160,6 +160,6 @@ namespace suku
 				}
 			}
 		}
-		UILayoutVertical<T>::onPostUpdate();
+		UILayoutVertical<T>::onUpdateEnd();
 	}
 }

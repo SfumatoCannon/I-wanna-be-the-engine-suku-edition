@@ -91,7 +91,6 @@ namespace suku
 
 	template<typename T> bool setSavable(const std::string _name);
 	template<typename T> bool setSavable(T& _x, const std::string _name);
-	template<typename T> bool setSavable(Property<T>& _x, const std::string _name);
 	bool isSavable(const std::string _name);
 }
 

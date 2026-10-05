@@ -65,7 +65,7 @@ namespace suku
 
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 
-		Object(float _x = 0, float _y = 0, Room* _inRoom = nullptr);
+		Object(real _x = 0, real _y = 0, Room* _inRoom = nullptr);
 
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
@@ -84,9 +84,9 @@ namespace suku
 		virtual void onRemove() {}
 		virtual void onSave() {}
 		virtual void onPaint() { paintBody(); } //if return true, then terminate the sprite paint
-		virtual void onPreUpdate() {}
+		virtual void onUpdateStart() {}
 		virtual void onUpdate() {}
-		virtual void onPostUpdate() {}
+		virtual void onUpdateEnd() {}
 
 		float totalHspeed()const;
 		float totalVspeed()const;

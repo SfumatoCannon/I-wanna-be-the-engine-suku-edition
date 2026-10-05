@@ -255,6 +255,9 @@
     <ClInclude Include="resources\includes.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_objects\basic\Save.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="suku_objects\basic\object_definer.cpp">
