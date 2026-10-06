@@ -1,5 +1,5 @@
 #include "file.h"
-#include "save.h"
+#include "suku_save.h"
 #include "message.h"
 #include "suku_string.h"
 #include <wchar.h>

@@ -214,7 +214,7 @@
     <ClInclude Include="suku_foundation\array.h" />
     <ClInclude Include="suku_foundation\message.h" />
     <ClInclude Include="suku_foundation\input_mouse.h" />
-    <ClInclude Include="suku_foundation\save.h" />
+    <ClInclude Include="suku_foundation\suku_save.h" />
     <ClInclude Include="suku_foundation\suku_string.h" />
     <ClInclude Include="suku_foundation\suku_type.h" />
     <ClInclude Include="suku_foundation\var.h" />
@@ -225,7 +225,7 @@
     <ClInclude Include="suku_gamewindow\win32_message_handler.h" />
     <ClInclude Include="suku_gamewindow\win32_window_creator.h" />
     <ClInclude Include="suku_objects\basic\player.h" />
-    <ClInclude Include="suku_objects\basic\Save.hpp" />
+    <ClInclude Include="suku_objects\basic\Save.h" />
     <ClInclude Include="suku_objects\includes.h" />
     <ClInclude Include="suku_objects\map_loader.h" />
     <ClInclude Include="suku_objects\ui\ChoiceGroupUIElement.h" />
@@ -367,7 +367,7 @@
     <ClCompile Include="suku_foundation\message.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="suku_foundation\save.cpp">
+    <ClCompile Include="suku_foundation\suku_save.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -395,6 +395,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="suku_objects\basic\Save.cpp" />
     <ClCompile Include="suku_objects\map_loader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -424,7 +425,7 @@
     <None Include="suku_core\suku_property.inl" />
     <None Include="suku_core\tile.inl" />
     <None Include="suku_draw\scale_mode.inl" />
-    <None Include="suku_foundation\save.inl" />
+    <None Include="suku_foundation\suku_save.inl" />
     <None Include="suku_foundation\suku_type.inl" />
     <None Include="suku_foundation\var.inl" />
     <None Include="suku_objects\ui\UILayout.inl" />

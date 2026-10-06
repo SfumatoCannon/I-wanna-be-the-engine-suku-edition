@@ -6,7 +6,7 @@
 #include "maths.h"
 #include "array.h"
 #include "message.h"
-#include "save.h"
+#include "suku_save.h"
 #include "suku_string.h"
 #include "suku_type.h"
 #include "var.h"

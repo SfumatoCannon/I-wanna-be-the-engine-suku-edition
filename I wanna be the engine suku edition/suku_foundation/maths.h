@@ -25,11 +25,6 @@ namespace suku
 
 		real_type get() const { return value_; }
 
-		Real& operator+=(const Real& _other) { value_ += _other.value_; return *this; }
-		Real& operator-=(const Real& _other) { value_ -= _other.value_; return *this; }
-		Real& operator*=(const Real& _other) { value_ *= _other.value_; return *this; }
-		Real& operator/=(const Real& _other) { value_ /= _other.value_; return *this; }
-
 		Real& operator+=(real_type _other) { value_ += _other; return *this; }
 		Real& operator-=(real_type _other) { value_ -= _other; return *this; }
 		Real& operator*=(real_type _other) { value_ *= _other; return *this; }
@@ -48,10 +43,9 @@ namespace suku
 	class Vector
 	{
 	public:
-		float x = 0.0f;
-		float y = 0.0f;
-		Vector(float _x, float _y) : x(_x), y(_y) {}
-		Vector(double _x, double _y) : x((float)_x), y((float)_y) {}
+		real x = 0.0;
+		real y = 0.0;
+		Vector(real _x, real _y) : x(_x), y(_y) {}
 	};
 
 	namespace maths

@@ -84,7 +84,7 @@
     <ClInclude Include="suku_foundation\message.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_foundation\save.h">
+    <ClInclude Include="suku_foundation\suku_save.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="suku_foundation\var.h">
@@ -255,7 +255,7 @@
     <ClInclude Include="resources\includes.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_objects\basic\Save.hpp">
+    <ClInclude Include="suku_objects\basic\Save.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -533,7 +533,7 @@
     <ClCompile Include="suku_foundation\maths.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="suku_foundation\save.cpp">
+    <ClCompile Include="suku_foundation\suku_save.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_foundation\var.cpp">
@@ -632,6 +632,9 @@
     <ClCompile Include="suku_objects\ui\ConfigOptionUIElement.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="suku_objects\basic\Save.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="I wanna be the engine suku edition.rc">
@@ -654,7 +657,7 @@
     <None Include="suku_draw\scale_mode.inl">
       <Filter>头文件</Filter>
     </None>
-    <None Include="suku_foundation\save.inl">
+    <None Include="suku_foundation\suku_save.inl">
       <Filter>头文件</Filter>
     </None>
     <None Include="suku_core\object_collision_pool.inl">

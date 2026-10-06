@@ -11,9 +11,6 @@ namespace suku
 		{
 			sprite_ = &spr;
 		}
-		virtual void onUpdateEnd() override
-		{
-
-		}
+		virtual void onUpdateEnd() override;
 	};
 }

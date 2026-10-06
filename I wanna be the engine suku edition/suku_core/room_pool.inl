@@ -1,7 +1,7 @@
 #include "room_pool.h"
 #include "room.h"
 #include <suku_core/tile.h>
-#include <suku_foundation/save.h>
+#include <suku_foundation/suku_save.h>
 
 
 namespace suku

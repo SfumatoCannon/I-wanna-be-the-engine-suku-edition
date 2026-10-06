@@ -94,4 +94,4 @@ namespace suku
 	bool isSavable(const std::string _name);
 }
 
-#include "save.inl"
+#include "suku_save.inl"
