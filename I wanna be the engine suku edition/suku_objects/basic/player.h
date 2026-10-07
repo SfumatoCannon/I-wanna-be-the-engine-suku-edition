@@ -24,11 +24,11 @@ namespace suku
 
 		Player(float _x = 0, float _y = 0, Room* _room = nullptr);
 
-		virtual void onRoomEnter() override;
-		virtual void onRoomRestart() override;
+		virtual void onRoomStart() override;
 		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
 		virtual void onUpdateEnd() override;
+		virtual void onSave() override;
 
 		void moveLeft();
 		void moveRight();
@@ -36,8 +36,6 @@ namespace suku
 		void vineJumpRight();
 		void startJump();
 		void stopJump();
-		void save();
-		void spawn();
 		bool isAlive();
 	private:
 		short nowBloodNum_;
@@ -62,5 +60,6 @@ namespace suku
 
 		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
+		virtual void onRoomRestart() override;
 	};
 }

@@ -70,7 +70,7 @@ namespace suku
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
 		UINT getSpriteFrameIndex()const;
-		long double getClock()const { return clock_; }
+		long long getClockTick()const { return clock_; }
 
 		void remove();
 		void destroy();
@@ -159,7 +159,7 @@ namespace suku
 
 		std::map<std::string, Var> var_;
 
-		long double clock_		= 0.0;
+		long long clock_		= 0;
 		Room* inRoom_			= nullptr;
 		double	preUpdateId_	= 0.0,
 			updateId_			= 0.0,
@@ -168,7 +168,7 @@ namespace suku
 		bool isInRoom_			= false;
 		bool isFrozen_			= false;
 
-		Sprite* sprite_			= nullptr;
+		Sprite* sprite_				= nullptr;
 		std::list<std::function<bool()> > actionList_;
 		float xLastFrame_;
 		float yLastFrame_;

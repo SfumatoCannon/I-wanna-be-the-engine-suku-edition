@@ -25,6 +25,7 @@ public:
 		setBackground("Image\\bg.jpg");
 
 		create<Block>(1400, 400);
+		create<Save>(32, 0);
 		Player* p = create<Player>(0.f, 0.f).get();
 		int x = 0;
 

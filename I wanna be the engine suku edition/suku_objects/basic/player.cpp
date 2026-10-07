@@ -38,16 +38,19 @@ namespace suku
 		sprite_ = &sprStanding;
 	}
 
-	void Player::onRoomEnter()
+	void Player::onRoomStart()
 	{
+		SaveFile::getCurrent()->loadVar(x);
+		SaveFile::getCurrent()->loadVar(y);
+		hspeed = 0;
+		vspeed = 0;
+		opacity = 1.0;
+		isDied_ = false;
+		nowBloodNum_ = 0;
+		clock_ = 0;
+		jumpTime_ = maxJumpTime;
 		spawnX = x;
 		spawnY = y;
-	}
-
-	void Player::onRoomRestart()
-	{
-		x = { spawnX, Transition(0) };
-		y = { spawnY, Transition(0) };
 	}
 
 	void Player::startJump()
@@ -90,28 +93,6 @@ namespace suku
 	{
 		if (vspeed < 0)
 			vspeed *= 0.45f;
-	}
-
-	void Player::spawn()
-	{
-		x = { spawnX, Transition(0) };
-		y = { spawnY, Transition(0) };
-		hspeed = 0;
-		vspeed = 0;
-		opacity = 1.0;
-		isDied_ = false;
-		//for (int i = 0; i < PLAYER_BLOODNUMMAX; i++)
-		//	deathBlood_[i]->remove();
-		nowBloodNum_ = 0;
-		clock_ = 0;
-		jumpTime_ = maxJumpTime;
-	}
-
-	void Player::save()
-	{
-		if (!isAlive())
-			return;
-		SaveFile::save();
 	}
 
 	bool Player::isAlive()
@@ -160,7 +141,10 @@ namespace suku
 		using namespace suku::input;
 		if (isKeyDown(VK_R))
 		{
-			spawn();
+			if (inRoom_)
+			{
+				inRoom_->restart();
+			}
 		}
 
 		if (!isAlive())
@@ -256,8 +240,6 @@ namespace suku
 					moveLeft();
 				}
 			}
-			if (isKeyDown(VK_S))
-				save();
 			if (isKeyDown(VK_SHIFT))
 				startJump();
 			if (isKeyUp(VK_SHIFT))
@@ -318,6 +300,12 @@ namespace suku
 		}
 	}
 
+	void Player::onSave()
+	{
+		SaveFile::getCurrent()->saveVar(x);
+		SaveFile::getCurrent()->saveVar(y);
+	}
+
 	void Player::moveLeft()
 	{
 		hspeedTemp -= movingSpeed;
@@ -352,8 +340,6 @@ namespace suku
 
 	void Blood::onUpdateStart()
 	{
-		if (input::isKeyDown(VK_R))
-			destroy();
 		if (vspeed == 0 && hspeed == 0)
 			return;
 		vspeed += gravity;
@@ -375,5 +361,10 @@ namespace suku
 		}
 		if (getCrashedObject<Solid>(x + totalHspeed(), y + totalVspeed(), true))
 			hspeed = hspeedTemp = 0;
+	}
+
+	void Blood::onRoomRestart()
+	{
+		destroy();
 	}
 }

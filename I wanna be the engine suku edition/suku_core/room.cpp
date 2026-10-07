@@ -8,6 +8,7 @@
 #include <suku_objects/map_loader.h>
 #include <suku_draw/shape.h>
 #include <suku_foundation/suku_save.h>
+#include <suku_foundation/input.h>
 #include "room_pool.h"
 #include "tile.h"
 

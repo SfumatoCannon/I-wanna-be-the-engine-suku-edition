@@ -120,7 +120,7 @@ namespace suku
 	{
 		if (!sprite_)
 			return nullptr;
-		return sprite_->getFrameState(spriteBasicIndex, clock_ * spriteAnimationRate);
+		return sprite_->getFrameState(spriteBasicIndex, static_cast<long double>(clock_) * spriteAnimationRate);
 	}
 
 	UINT Object::getSpriteFrameIndex() const

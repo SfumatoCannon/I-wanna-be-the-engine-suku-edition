@@ -3,6 +3,7 @@
 #include "basic/object_definer.h"
 #include "basic/Block.hpp"
 #include "basic/player.h"
+#include "basic/Save.h"
 
 #include "ui/ChoiceGroupUIElement.h"
 #include "ui/ConfigOptionUIElement.h"

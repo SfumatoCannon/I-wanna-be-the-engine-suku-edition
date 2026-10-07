@@ -6,11 +6,14 @@ namespace suku
 	class Save : public Object
 	{
 	public:
-		inline static Sprite spr{ "Image\\save.png", SquareShape(32), 16, 16 };
+		const int cooldown = 30;
+		inline static Sprite spr{ "Image\\save.png", 2, 0, SquareShape(32), 16, 16 };
 		Save(float _x = 0.0f, float _y = 0.0f) : Object(_x, _y)
 		{
 			sprite_ = &spr;
 		}
 		virtual void onUpdateEnd() override;
+	private:
+		long long lastSaved_ = -1;
 	};
 }
