@@ -22,7 +22,7 @@ namespace suku
 
 	void ShapeSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
-		Transform paintingTransform = translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle);
+		Transform paintingTransform = translation(_x - centerX, _y - centerY) + scale(_x, _y, _xScale, _yScale) + rotation(_x, _y, _angle);
 		shape.setOpacity(_alpha);
 		shape.paint(paintingTransform);
 	}
@@ -30,7 +30,7 @@ namespace suku
 	void ShapeSpriteElement::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		shape.setOpacity(_alpha);
-		shape.paint(_x, _y, _transform);
+		shape.paint(_x - centerX, _y - centerY, _transform);
 	}
 
 	void ShapeSpriteElement::paint(Transform _transform, float _alpha)
@@ -53,13 +53,13 @@ namespace suku
 
 	void BitmapSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
-		pBitmap_->paint(translation(_x, _y) + scale(centerX, centerY, _xScale, _yScale) + rotation(centerX, centerY, _angle),
+		pBitmap_->paint(translation(_x - centerX, _y - centerY) + scale(_x, _y, _xScale, _yScale) + rotation(_x, _y, _angle),
 			_alpha);
 	}
 
 	void BitmapSpriteElement::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
-		pBitmap_->paint(translation(_x, _y) + _transform,
+		pBitmap_->paint(translation(_x - centerX, _y - centerY) + _transform,
 			_alpha);
 	}
 
@@ -168,7 +168,7 @@ namespace suku
 	}
 
 	Sprite::Sprite()
-		: flipTime_(0), width_(0), height_(0), centerX_(0), centerY_(0) {
+		: flipTime_(0), width_(0), height_(0), centerX_(0), centerY_(0), colCount_(0), rowCount_(0) {
 	}
 
 	Sprite::Sprite(String _path, const Shape& _collisionBox, float _centerX, float _centerY)

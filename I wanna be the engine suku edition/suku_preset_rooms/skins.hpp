@@ -8,7 +8,7 @@ class RoomStage0 : public Room
 {
 public:
 	inline static TilePack tilepack{
-		Tile{ Block::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32)) },
+		Tile{ Block::spr, Sprite("Image\\stage0\\block.png", 2, 1, 0, SquareShape(32), 16, 16) },
 		Tile{ Spike::sprUp, Sprite("Image\\stage0\\spike_u.png") },
 		Tile{ Spike::sprDown, Sprite("Image\\stage0\\spike_d.png") },
 		Tile{ Spike::sprLeft, Sprite("Image\\stage0\\spike_l.png") },
