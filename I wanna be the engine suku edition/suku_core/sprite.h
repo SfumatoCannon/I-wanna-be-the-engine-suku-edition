@@ -138,8 +138,6 @@ namespace suku
 		template<sprite_element_type T> void push(T&& _spriteZ);
 		template<sprite_element_type T, sprite_element_type... TNext> void push(T&& _spriteZ, TNext&&... _spriteZNext);
 
-		void setStartingIndex(UINT _index);
-
 		UINT getWidth()const { return width_; }
 		UINT getHeight()const { return height_; }
 		std::pair<UINT, UINT> getSize()const { return { width_, height_ }; }
@@ -154,20 +152,19 @@ namespace suku
 
 		SpriteElement* operator[](UINT _index) { return getState(_index); }
 		SpriteElement* getState(UINT _index);
-		SpriteElement* getFrameState(long long _frameTick)const;
-		SpriteElement* getFrameState(long double _frameTick)const;
 		SpriteElement* getFrameState(UINT _startIndex, long long _frameTick)const;
+		SpriteElement* getFrameState(long long _frameTick)const { return getFrameState(0, _frameTick); }
 		SpriteElement* getFrameState(UINT _startIndex, long double _frameTick)const;
-		UINT getFrameStateIndex(long long _frameTick)const;
-		UINT getFrameStateIndex(long double _frameTick)const;
+		SpriteElement* getFrameState(long double _frameTick)const { return getFrameState(0, _frameTick); }
 		UINT getFrameStateIndex(UINT _startIndex, long long _frameTick)const;
+		UINT getFrameStateIndex(long long _frameTick)const { return getFrameStateIndex(0, _frameTick); }
 		UINT getFrameStateIndex(UINT _startIndex, long double _frameTick)const;
+		UINT getFrameStateIndex(long double _frameTick)const { return getFrameStateIndex(0, _frameTick); }
 	private:
 		UINT rowCount_, colCount_;
 		UINT width_, height_;
 		float centerX_, centerY_;
 		int flipTime_;
-		UINT lastSetIndex_ = 0;
 	};
 }
 

@@ -322,34 +322,9 @@ namespace suku
 		}
 	}
 
-	void Sprite::setStartingIndex(UINT _index)
-	{
-		lastSetIndex_ = _index % bodyList.size();
-	}
-
 	SpriteElement* Sprite::getState(UINT _index)
 	{
 		return bodyList[_index % bodyList.size()].get();
-	}
-
-	SpriteElement* Sprite::getFrameState(long long _frameTick)const
-	{
-		if (bodyList.empty())
-			return nullptr;
-		else if (flipTime_ == 0)
-			return bodyList[lastSetIndex_].get();
-		else if (flipTime_ > 0)
-			return bodyList[(lastSetIndex_ + _frameTick / flipTime_) % bodyList.size()].get();
-		else // flipTime_ < 0
-		{
-			size_t size = bodyList.size();
-			return bodyList[((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size].get();
-		}
-	}
-
-	SpriteElement* Sprite::getFrameState(long double _frameTick) const
-	{
-		return getFrameState(static_cast<long long>(_frameTick));
 	}
 
 	SpriteElement* Sprite::getFrameState(UINT _startIndex, long long _frameTick) const
@@ -370,26 +345,6 @@ namespace suku
 	SpriteElement* Sprite::getFrameState(UINT _startIndex, long double _frameTick) const
 	{
 		return getFrameState(_startIndex, static_cast<long long>(_frameTick));
-	}
-
-	UINT Sprite::getFrameStateIndex(long long _frameTick) const
-	{
-		if (bodyList.empty())
-			return 0;
-		else if (flipTime_ == 0)
-			return lastSetIndex_;
-		else if (flipTime_ > 0)
-			return static_cast<UINT>((lastSetIndex_ + _frameTick / flipTime_) % bodyList.size());
-		else // flipTime_ < 0
-		{
-			size_t size = bodyList.size();
-			return static_cast<UINT>(((lastSetIndex_ + _frameTick / flipTime_) % size + size) % size);
-		}
-	}
-
-	UINT Sprite::getFrameStateIndex(long double _frameTick) const
-	{
-		return getFrameStateIndex(static_cast<long long>(_frameTick));
 	}
 
 	UINT Sprite::getFrameStateIndex(UINT _startIndex, long long _frameTick) const
