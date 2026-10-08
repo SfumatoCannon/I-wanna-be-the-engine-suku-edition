@@ -6,10 +6,10 @@ using namespace suku::maths;
 namespace suku
 {
 
-	Sprite Spike::sprUp(BitmapSpriteElement("Image\\spike_u.png", 16, 16));
-	Sprite Spike::sprDown(BitmapSpriteElement("Image\\spike_d.png", 16, 16));
-	Sprite Spike::sprLeft(BitmapSpriteElement("Image\\spike_l.png", 16, 16));
-	Sprite Spike::sprRight(BitmapSpriteElement("Image\\spike_r.png", 16, 16));
+	Sprite Spike::sprUp(BitmapSpriteElement("Image\\spike_u.png"));
+	Sprite Spike::sprDown(BitmapSpriteElement("Image\\spike_d.png"));
+	Sprite Spike::sprLeft(BitmapSpriteElement("Image\\spike_l.png"));
+	Sprite Spike::sprRight(BitmapSpriteElement("Image\\spike_r.png"));
 	Spike::Spike(float _x, float _y, Direction _dir) :Object(_x, _y)
 	{
 		setPaintId(3);

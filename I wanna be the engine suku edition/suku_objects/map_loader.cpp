@@ -80,22 +80,22 @@ namespace suku
 			switch (i.type)
 			{
 			case 1:
-				_room->create<Block>((float)i.x, (float)i.y);
+				_room->create<Block>((float)i.x + Block::spr.getCenterX(), (float)i.y + Block::spr.getCenterY());
 				break;
 			case 3:
-				_room->create<Spike>((float)i.x, (float)i.y, Direction::Up);
+				_room->create<Spike>((float)i.x + Spike::sprUp.getCenterX(), (float)i.y + Spike::sprUp.getCenterY(), Direction::Up);
 				break;
 			case 4:
-				_room->create<Spike>((float)i.x, (float)i.y, Direction::Right);
+				_room->create<Spike>((float)i.x + Spike::sprRight.getCenterX(), (float)i.y + Spike::sprRight.getCenterY(), Direction::Right);
 				break;
 			case 5:
-				_room->create<Spike>((float)i.x, (float)i.y, Direction::Left);
+				_room->create<Spike>((float)i.x + Spike::sprLeft.getCenterX(), (float)i.y + Spike::sprLeft.getCenterY(), Direction::Left);
 				break;
 			case 6:
-				_room->create<Spike>((float)i.x, (float)i.y, Direction::Down);
+				_room->create<Spike>((float)i.x + Spike::sprDown.getCenterX(), (float)i.y + Spike::sprDown.getCenterY(), Direction::Down);
 				break;
 			case 20:
-				_room->create<Player>((float)i.x, (float)i.y);
+				_room->create<Player>((float)i.x + Player::sprStanding.getCenterX(), (float)i.y + Player::sprStanding.getCenterY());
 				break;
 			default:
 				break;

@@ -7,14 +7,16 @@ namespace suku
 	{
 		if (!hitArea_ || !(_other.hitArea_))
 			return false;
-		return hitArea_->isCrashed(_transform, *(_other.hitArea_), _otherTransform);
+		return hitArea_->isCrashed(translation(-centerX, -centerY) + _transform, *(_other.hitArea_), translation(-_other.centerX, -_other.centerY) + _otherTransform);
 	}
 
 	bool SpriteElement::isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const
 	{
+		if (!_other)
+			return false;
 		if (!hitArea_ || !(_other->hitArea_))
 			return false;
-		return hitArea_->isCrashed(_transform, *(_other->hitArea_), _otherTransform);
+		return hitArea_->isCrashed(translation(-centerX, -centerY) + _transform, *(_other->hitArea_), translation(-_other->centerX, -_other->centerY) + _otherTransform);
 	}
 
 	ShapeSpriteElement::ShapeSpriteElement(const Shape& _shape) : shape(_shape)
