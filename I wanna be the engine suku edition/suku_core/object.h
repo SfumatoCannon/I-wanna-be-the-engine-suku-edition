@@ -69,7 +69,12 @@ namespace suku
 
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;
-		UINT getSpriteFrameIndex()const;
+		UINT getSpriteIndex()const;
+		void setSpriteIndex(UINT _index) { spriteBasicIndex = _index; }
+		double getSpriteAnimationRate()const { return spriteAnimationRate; }
+		double getSpriteFlipTime()const;
+		void setSpriteAnimationRate(double _rate) { spriteAnimationRate = _rate; }
+		void setSpriteFlipTime(double _speed);
 		long long getClockTick()const { return clock_; }
 
 		void remove();
@@ -83,7 +88,7 @@ namespace suku
 		virtual void onRoomRestart() { x = spawnX; y = spawnY; }
 		virtual void onRemove() {}
 		virtual void onSave() {}
-		virtual void onPaint() { paintBody(); } //if return true, then terminate the sprite paint
+		virtual void onPaint() { paintBody(); }
 		virtual void onUpdateStart() {}
 		virtual void onUpdate() {}
 		virtual void onUpdateEnd() {}

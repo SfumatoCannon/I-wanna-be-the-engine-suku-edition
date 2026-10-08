@@ -123,11 +123,27 @@ namespace suku
 		return sprite_->getFrameState(spriteBasicIndex, static_cast<long double>(clock_) * spriteAnimationRate);
 	}
 
-	UINT Object::getSpriteFrameIndex() const
+	UINT Object::getSpriteIndex() const
 	{
 		if (!sprite_)
 			return 0;
 		return sprite_->getFrameStateIndex(clock_);
+	}
+
+	double Object::getSpriteFlipTime() const
+	{
+		if (!sprite_)
+			return 0.0;
+		return getSpriteAnimationRate() * static_cast<double>(sprite_->getFlipTime());
+	}
+
+	void Object::setSpriteFlipTime(double _speed)
+	{
+		if (sprite_)
+		{
+			double animationRate = _speed / static_cast<double>(sprite_->getFlipTime());
+			setSpriteAnimationRate(animationRate);
+		}
 	}
 
 	void Object::setPreUpdateId(double _id)

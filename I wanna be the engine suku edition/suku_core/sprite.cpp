@@ -322,11 +322,6 @@ namespace suku
 		}
 	}
 
-	void Sprite::setSpeed(int _speed)
-	{
-		flipTime_ = _speed;
-	}
-
 	void Sprite::setStartingIndex(UINT _index)
 	{
 		lastSetIndex_ = _index % bodyList.size();

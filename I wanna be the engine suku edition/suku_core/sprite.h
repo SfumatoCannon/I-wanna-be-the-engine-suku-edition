@@ -135,7 +135,6 @@ namespace suku
 		template<sprite_element_type T, sprite_element_type... TNext> void init(int _flipTime, T&& _spriteZ, TNext&&... _spriteZNext);
 		void operator= (Sprite& _sprite)const = delete;
 
-		void setSpeed(int _speed);
 		template<sprite_element_type T> void push(T&& _spriteZ);
 		template<sprite_element_type T, sprite_element_type... TNext> void push(T&& _spriteZ, TNext&&... _spriteZNext);
 
