@@ -179,14 +179,14 @@ namespace suku
 		targetPaintLayer_ = &_layer;
 	}
 
-	float Object::getWidth()
+	double Object::getWidth()
 	{
 		if (sprite_ == nullptr)
 			return 0;
 		return sprite_->getWidth() * (float)getScaleX();
 	}
 
-	float Object::getHeight()
+	double Object::getHeight()
 	{
 		if (sprite_ == nullptr)
 			return 0;
@@ -200,7 +200,7 @@ namespace suku
 		return Vector(sprite_->getWidth() * getScaleX(), sprite_->getHeight() * getScaleY());
 	}
 
-	float Object::getCenterX()
+	real Object::getCenterX()
 	{
 		float cx = sprite_->getCenterX();
 		float cy = sprite_->getCenterY();
@@ -208,7 +208,7 @@ namespace suku
 		return x + cx;
 	}
 
-	float Object::getCenterY()
+	real Object::getCenterY()
 	{
 		float cx = sprite_->getCenterX();
 		float cy = sprite_->getCenterY();

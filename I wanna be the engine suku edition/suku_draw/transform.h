@@ -17,7 +17,6 @@ namespace suku
 		void transformPoint(float* _x, float* _y);
 		Vector transformPoint(float _x, float _y);
 		Transform invertTransform();
-		Vector getScale();
 
 		Transform operator +(const Transform& _x)const;	//recommend using this
 		Transform operator *(const Transform& _x)const;

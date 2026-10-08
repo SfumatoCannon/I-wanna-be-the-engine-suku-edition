@@ -25,8 +25,9 @@ namespace suku
 		Property<real> x, y;
 		real spawnX, spawnY;
 		Property<real> vspeed = 0, hspeed = 0;
-		float vspeedTemp = 0, hspeedTemp = 0;
+		real vspeedTemp = 0, hspeedTemp = 0;
 		Property<real> xScale = 1, yScale = 1;
+		real centerOffsetX = 0, centerOffsetY = 0;
 		
 		unsigned int spriteBasicIndex = 0;
 		double spriteAnimationRate = 1.0;
@@ -47,11 +48,11 @@ namespace suku
 		void setTargetPaintLayer(PaintLayer& _layer);
 		PaintLayer* getTargetPaintLayer() { return targetPaintLayer_; }
 
-		float getWidth();
-		float getHeight();
+		double getWidth();
+		double getHeight();
 		Vector getSize();
-		float getCenterX();
-		float getCenterY();
+		real getCenterX();
+		real getCenterY();
 		Vector getCenter();
 		double getAngle();
 		double getScaleX();
