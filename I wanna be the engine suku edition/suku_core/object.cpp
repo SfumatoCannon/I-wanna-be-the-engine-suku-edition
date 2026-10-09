@@ -242,60 +242,12 @@ namespace suku
 		return Vector(sprite_->getWidth() * getScaleX(), sprite_->getHeight() * getScaleY());
 	}
 
-	real Object::getCenterX()
-	{
-		float cx = sprite_->getCenterX();
-		float cy = sprite_->getCenterY();
-		transform_.transformPoint(&cx, &cy);
-		return x + cx;
-	}
-
-	real Object::getCenterY()
-	{
-		float cx = sprite_->getCenterX();
-		float cy = sprite_->getCenterY();
-		transform_.transformPoint(&cx, &cy);
-		return y + cy;
-	}
-
-	Vector Object::getCenter()
-	{
-		auto result = transform_.transformPoint(sprite_->getCenterX(), sprite_->getCenterY());
-		result.x += x;
-		result.y += y;
-		return result;
-	}
-
 	double Object::getAngle()
 	{
 		float width = (float)sprite_->getWidth();
 		float height = (float)sprite_->getHeight();
 		auto [x, y] = transform_.transformPoint(width, height);
 		return atan((double)(width / height)) - atan((double)(x / y)) / PI * 180.0;
-	}
-
-	double Object::getScaleX()
-	{
-		float width = (float)sprite_->getWidth();
-		float height = (float)sprite_->getHeight();
-		auto [x, y] = transform_.transformPoint(width, height);
-		return (double)x / (double)width;
-	}
-
-	double Object::getScaleY()
-	{
-		float width = (float)sprite_->getWidth();
-		float height = (float)sprite_->getHeight();
-		auto [x, y] = transform_.transformPoint(width, height);
-		return (double)y / (double)height;
-	}
-
-	Vector Object::getScale()
-	{
-		float width = (float)sprite_->getWidth();
-		float height = (float)sprite_->getHeight();
-		auto [x, y] = transform_.transformPoint(width, height);
-		return { (double)x / (double)width, (double)y / (double)height };
 	}
 
 	Object* Object::setPosition(real _x, real _y)

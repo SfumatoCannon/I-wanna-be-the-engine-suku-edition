@@ -28,7 +28,7 @@ namespace suku
 		real vspeedTemp = 0, hspeedTemp = 0;
 		Property<real> xScale = 1, yScale = 1;
 		real centerOffsetX = 0, centerOffsetY = 0;
-		
+
 		unsigned int spriteBasicIndex = 0;
 		double spriteAnimationRate = 1.0;
 
@@ -51,13 +51,25 @@ namespace suku
 		double getWidth();
 		double getHeight();
 		Vector getSize();
-		real getCenterX();
-		real getCenterY();
-		Vector getCenter();
 		double getAngle();
-		double getScaleX();
-		double getScaleY();
-		Vector getScale();
+
+		real getScaleX() { return xScale; }
+		Object* getScaleX(real& _scaleX_out) { _scaleX_out = xScale; return this; }
+		real getScaleY() { return yScale; }
+		Object* getScaleY(real& _scaleY_out) { _scaleY_out = yScale; return this; }
+		Vector getScale() { return { xScale, yScale }; }
+		Object* getScale(Vector& _scale_out) { _scale_out = { xScale, yScale }; return this; }
+
+		Object* setScaleX(real _scaleX) { xScale = _scaleX; return this; }
+		Object* setScaleX(std::pair<real, const Transition&> _pair) { xScale = _pair; return this; }
+		Object* setScaleY(real _scaleY) { yScale = _scaleY; return this; }
+		Object* setScaleY(std::pair<real, const Transition&> _pair) { yScale = _pair; return this; }
+		Object* setScale(real _scaleX, real _scaleY) { xScale = _scaleX; yScale = _scaleY; return this; }
+		Object* setScale(std::pair<real, const Transition&> _pairX, std::pair<real, const Transition&> _pairY) { xScale = _pairX; yScale = _pairY; return this; }
+
+		Object* setCenterOffsetX(real _offsetX) { centerOffsetX = _offsetX; return this; }
+		Object* setCenterOffsetY(real _offsetY) { centerOffsetY = _offsetY; return this; }
+		Object* setCenterOffset(real _offsetX, real _offsetY) { centerOffsetX = _offsetX; centerOffsetY = _offsetY; return this; }
 
 		Object* setPosition(real _x, real _y);
 
@@ -159,7 +171,7 @@ namespace suku
 
 		void save();
 		void spawn();
-		
+
 		bool isFrozen()const { return isFrozen_; }
 		void setFrozen(bool _isFrozen) { isFrozen_ = _isFrozen; }
 		void setOpacity(float _opacity) { opacity = _opacity; }
@@ -172,16 +184,16 @@ namespace suku
 
 		std::map<std::string, Var> var_;
 
-		long long clock_		= 0;
-		Room* inRoom_			= nullptr;
-		double	preUpdateId_	= 0.0,
-			updateId_			= 0.0,
-			postUpdateId_		= 0.0,
-			paintId_			= 0.0;
-		bool isInRoom_			= false;
-		bool isFrozen_			= false;
+		long long clock_ = 0;
+		Room* inRoom_ = nullptr;
+		double	preUpdateId_ = 0.0,
+			updateId_ = 0.0,
+			postUpdateId_ = 0.0,
+			paintId_ = 0.0;
+		bool isInRoom_ = false;
+		bool isFrozen_ = false;
 
-		Sprite* sprite_				= nullptr;
+		Sprite* sprite_ = nullptr;
 		std::list<std::function<bool()> > actionList_;
 		float xLastFrame_;
 		float yLastFrame_;
