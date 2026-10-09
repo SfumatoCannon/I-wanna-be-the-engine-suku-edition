@@ -244,7 +244,7 @@ namespace suku
 
 	Transform Object::getTransform() const
 	{
-		return scale(0.0f, 0.0f, xScale, yScale) + rotation(0.0f, 0.0f, angle) /*+ extraTransform_*/;
+		return scale(0.0f, 0.0f, xScale, yScale) + rotation(0.0f, 0.0f, angle) + extraTransform_;
 	}
 
 	Object* Object::setPosition(real _x, real _y)
