@@ -244,7 +244,12 @@ namespace suku
 
 	Transform Object::getTransform() const
 	{
-		return scale(0.0f, 0.0f, xScale, yScale) + rotation(0.0f, 0.0f, angle) + extraTransform_;
+		if (getSpriteFrame() == nullptr)
+			return scale(centerOffsetX, centerOffsetY, xScale, yScale) + rotation(centerOffsetX, centerOffsetY, angle) + extraTransform_;
+		auto [centerX, centerY] = getSpriteFrame()->getCenter();
+		centerX += centerOffsetX;
+		centerY += centerOffsetY;
+		return scale(centerX, centerY, xScale, yScale) + rotation(centerX, centerY, angle) + extraTransform_;
 	}
 
 	Object* Object::setPosition(real _x, real _y)

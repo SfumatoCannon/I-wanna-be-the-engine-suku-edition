@@ -6,6 +6,7 @@
 #include "collision_box.h"
 #include "../suku_draw/color.h"
 #include "../suku_draw/transform.h"
+#include <suku_foundation/maths.h>
 
 namespace suku
 {
@@ -28,7 +29,10 @@ namespace suku
 	{
 	public:
 		UINT height = 0, width = 0;
-		float centerX = 0.0f, centerY = 0.0f;
+		real centerX = 0.0f, centerY = 0.0f;
+
+		Vector getSize()const { return { width, height }; }
+		Vector getCenter()const { return { centerX, centerY }; }
 
 		SpriteElement() = default;
 		SpriteElement(SpriteElement&& _other) = default;
