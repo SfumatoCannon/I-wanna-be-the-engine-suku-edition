@@ -14,31 +14,117 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x), bRound(y), transform_, opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, opacity);
 	}
 
-	void Object::paintBody(bool _isSmoothMode)const
+	void Object::paintBody(float _alpha) const
 	{
 		if (!sprite_)
 			return;
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		if (_isSmoothMode)
-			spr->paint(bRound(x), bRound(y), transform_, opacity);
-		else spr->paint(x, y, transform_, opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, _alpha);
 	}
 
-	void Object::paintBody(float _x, float _y, bool _isSmoothMode)const
+	void Object::paintBody(float _x, float _y)const
 	{
 		if (!sprite_)
 			return;
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		if (_isSmoothMode)
-			spr->paint(bRound(_x), bRound(_y), transform_, opacity);
-		else spr->paint(_x, _y, transform_, opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, opacity);
+	}
+
+	void Object::paintBody(float _x, float _y, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, _alpha);
+	}
+
+	void Object::paintBody(float _x, float _y, Transform _spriteTransform) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity);
+	}
+
+	void Object::paintBody(float _x, float _y, Transform _spriteTransform, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, _alpha);
+	}
+
+	void Object::paintBodySmooth()const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, opacity);
+	}
+
+	void Object::paintBodySmooth(float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, _alpha);
+	}
+
+	void Object::paintBodySmooth(float _x, float _y)const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, opacity);
+	}
+
+	void Object::paintBodySmooth(float _x, float _y, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, _alpha);
+	}
+
+	void Object::paintBodySmooth(float _x, float _y, Transform _spriteTransform) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity);
+	}
+
+	void Object::paintBodySmooth(float _x, float _y, Transform _spriteTransform, float _alpha) const
+	{
+		if (!sprite_)
+			return;
+		SpriteElement* spr = getSpriteFrame();
+		if (!spr)
+			return;
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, _alpha);
 	}
 
 	void Object::paintBody(Transform _spriteTransform) const
@@ -51,40 +137,6 @@ namespace suku
 		spr->paint(_spriteTransform, opacity);
 	}
 
-	void Object::paintBody(float _x, float _y, Transform _spriteTransform) const
-	{
-		if (!sprite_)
-			return;
-		SpriteElement* spr = getSpriteFrame();
-		if (!spr)
-			return;
-		spr->paint(_x, _y, _spriteTransform, opacity);
-	}
-
-	void Object::paintBody(float _alpha, bool _isSmoothMode) const
-	{
-		if (!sprite_)
-			return;
-		SpriteElement* spr = getSpriteFrame();
-		if (!spr)
-			return;
-		if (_isSmoothMode)
-			spr->paint(bRound(x), bRound(y), transform_, _alpha);
-		else spr->paint(x, y, transform_, _alpha);
-	}
-
-	void Object::paintBody(float _x, float _y, float _alpha, bool _isSmoothMode) const
-	{
-		if (!sprite_)
-			return;
-		SpriteElement* spr = getSpriteFrame();
-		if (!spr)
-			return;
-		if (_isSmoothMode)
-			spr->paint(bRound(_x), bRound(_y), transform_, _alpha);
-		else spr->paint(_x, _y, transform_, _alpha);
-	}
-
 	void Object::paintBody(Transform _spriteTransform, float _alpha) const
 	{
 		if (!sprite_)
@@ -93,16 +145,6 @@ namespace suku
 		if (!spr)
 			return;
 		spr->paint(_spriteTransform, _alpha);
-	}
-
-	void Object::paintBody(float _x, float _y, Transform _spriteTransform, float _alpha) const
-	{
-		if (!sprite_)
-			return;
-		SpriteElement* spr = getSpriteFrame();
-		if (!spr)
-			return;
-		spr->paint(_x, _y, _spriteTransform, _alpha);
 	}
 
 	void Object::updateFunction()
@@ -265,7 +307,7 @@ namespace suku
 
 	Object::Object(real _x, real _y, Room* _inRoom)
 		: x(_x), y(_y), inRoom_(_inRoom),
-		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX), 
+		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX),
 		spawnX(_x), spawnY(_y) {}
 
 	void Object::remove()
