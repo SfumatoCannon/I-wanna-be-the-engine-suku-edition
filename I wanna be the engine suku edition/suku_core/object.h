@@ -27,6 +27,7 @@ namespace suku
 		Property<real> vspeed = 0, hspeed = 0;
 		real vspeedTemp = 0, hspeedTemp = 0;
 		Property<real> xScale = 1, yScale = 1;
+		Property<real> angle = 0;
 		real centerOffsetX = 0, centerOffsetY = 0;
 
 		unsigned int spriteBasicIndex = 0;
@@ -51,7 +52,6 @@ namespace suku
 		double getWidth();
 		double getHeight();
 		Vector getSize();
-		double getAngle();
 
 		real getScaleX() { return xScale; }
 		Object* getScaleX(real& _scaleX_out) { _scaleX_out = xScale; return this; }
@@ -70,6 +70,8 @@ namespace suku
 		Object* setCenterOffsetX(real _offsetX) { centerOffsetX = _offsetX; return this; }
 		Object* setCenterOffsetY(real _offsetY) { centerOffsetY = _offsetY; return this; }
 		Object* setCenterOffset(real _offsetX, real _offsetY) { centerOffsetX = _offsetX; centerOffsetY = _offsetY; return this; }
+
+		Transform getTransform()const;
 
 		Object* setPosition(real _x, real _y);
 
@@ -113,10 +115,7 @@ namespace suku
 		void setSpeedTemp(float _hspeedTemp, float _vspeedTemp);
 
 		void movingTo(float _xTo, float _yTo, int _time);
-		void rotate(float _angle);
-		void rotate(float _angle, double _rotatingCenterX, double _rotatingCenterY, bool _isRotatingItself = true);
-		void rotateTo(float _angle, int _time);
-		void rotateTo(float _angle, double _rotatingCenterX, double _rotatingCenterY, int _time, bool _isRotatingItself = true);
+		
 		void addAction(std::function<bool(Object*)> _actionFunc);
 		void addDelayAction(int _time, std::function<bool(Object*)> _actionFunc);
 		void addTimelineAction(std::vector<std::pair<int, std::function<bool(Object*)>>> _actionVec);
@@ -180,7 +179,7 @@ namespace suku
 		template<suku_property_type T> friend class Property;
 		friend class Room;
 
-		Transform transform_;
+		Transform extraTransform_;
 
 		std::map<std::string, Var> var_;
 
@@ -204,7 +203,7 @@ namespace suku
 		bool removeTag_ = false;
 		bool destroyTag_ = false;
 		PaintLayer* targetPaintLayer_ = nullptr;
-		Transform spriteTransformLastFrame_ = Transform();
+		Transform extraTransformLastFrame_ = Transform();
 	};
 }
 

@@ -223,7 +223,7 @@ namespace suku
 			obj->isSpriteTransformTransitionalFrame_ = true;
 			obj->hspeedTemp = obj->vspeedTemp = 0;
 			obj->updateFunction();
-			obj->spriteTransformLastFrame_ = obj->transform_;
+			obj->extraTransformLastFrame_ = obj->extraTransform_;
 			obj->onUpdateStart();
 			obj->onUpdate();
 			obj->xLastFrame_ = obj->x;
@@ -233,6 +233,9 @@ namespace suku
 			obj->onUpdateEnd();
 			obj->x.addTick();
 			obj->y.addTick();
+			obj->xScale.addTick();
+			obj->yScale.addTick();
+			obj->angle.addTick();
 			return;
 		}
 
@@ -285,7 +288,7 @@ namespace suku
 					iter = objArray.erase(iter);
 					continue;
 				}
-				obj->spriteTransformLastFrame_ = obj->transform_;
+				obj->extraTransformLastFrame_ = obj->extraTransform_;
 				if (!obj->isFrozen())
 				{
 					obj->onUpdateStart();
@@ -341,6 +344,9 @@ namespace suku
 					obj->onUpdateEnd();
 					obj->x.addTick();
 					obj->y.addTick();
+					obj->xScale.addTick();
+					obj->yScale.addTick();
+					obj->angle.addTick();
 				}
 				iter++;
 			}
@@ -417,37 +423,50 @@ namespace suku
 						continue;
 					}
 
-					Property<real> posX, posY;
-					Transform transform;
+					Property<real> oX, oY;
+					Property<real> oScaleX, oScaleY;
+					Property<real> oAngle;
+					Transform oExtraTransform;
 					if (obj->isPositionTransitionalFrame_)
 					{
-						posX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
-						posY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
+						oX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
+						oY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
 					}
 					else
 					{
-						posX = obj->x.getFrameState();
-						posY = obj->y.getFrameState();
+						oX = obj->x.getFrameState();
+						oY = obj->y.getFrameState();
 					}
 					if (obj->isSpriteTransformTransitionalFrame_)
 					{
-						Transform objSpriteTransformLastFrame = obj->spriteTransformLastFrame_;
-						transform = linearInterpolate(objSpriteTransformLastFrame, obj->transform_, _frameOffsetRate);
+						oScaleX = obj->xScale.getInterpolatedFrameState(_frameOffsetRate);
+						oScaleY = obj->yScale.getInterpolatedFrameState(_frameOffsetRate);
+						oAngle = obj->angle.getInterpolatedFrameState(_frameOffsetRate);
+						oExtraTransform = linearInterpolate(obj->extraTransformLastFrame_, obj->extraTransform_, _frameOffsetRate);
 					}
 					else
 					{
-						transform = obj->transform_;
+						oScaleX = obj->xScale.getFrameState();
+						oScaleY = obj->yScale.getFrameState();
+						oAngle = obj->angle.getFrameState();
+						oExtraTransform = obj->extraTransform_;
 					}
 
-					std::swap(obj->x, posX);
-					std::swap(obj->y, posY);
-					std::swap(obj->transform_, transform);
+					std::swap(obj->x, oX);
+					std::swap(obj->y, oY);
+					std::swap(obj->xScale, oScaleX);
+					std::swap(obj->yScale, oScaleY);
+					std::swap(obj->angle, oAngle);
+					std::swap(obj->extraTransform_, oExtraTransform);
 
 					obj->onPaint();
 
-					std::swap(obj->x, posX);
-					std::swap(obj->y, posY);
-					std::swap(obj->transform_, transform);
+					std::swap(obj->x, oX);
+					std::swap(obj->y, oY);
+					std::swap(obj->xScale, oScaleX);
+					std::swap(obj->yScale, oScaleY);
+					std::swap(obj->angle, oAngle);
+					std::swap(obj->extraTransform_, oExtraTransform);
 
 					iter++;
 				}

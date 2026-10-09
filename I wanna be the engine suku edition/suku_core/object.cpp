@@ -14,7 +14,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity);
 	}
 
 	void Object::paintBody(float _alpha) const
@@ -24,7 +24,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, _alpha);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), _alpha);
 	}
 
 	void Object::paintBody(float _x, float _y)const
@@ -34,7 +34,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity);
 	}
 
 	void Object::paintBody(float _x, float _y, float _alpha) const
@@ -44,7 +44,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, _alpha);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), _alpha);
 	}
 
 	void Object::paintBody(float _x, float _y, Transform _spriteTransform) const
@@ -74,7 +74,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity);
 	}
 
 	void Object::paintBodySmooth(float _alpha) const
@@ -84,7 +84,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), transform_, _alpha);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), _alpha);
 	}
 
 	void Object::paintBodySmooth(float _x, float _y)const
@@ -94,7 +94,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity);
 	}
 
 	void Object::paintBodySmooth(float _x, float _y, float _alpha) const
@@ -104,7 +104,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), transform_, _alpha);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), _alpha);
 	}
 
 	void Object::paintBodySmooth(float _x, float _y, Transform _spriteTransform) const
@@ -242,12 +242,9 @@ namespace suku
 		return Vector(sprite_->getWidth() * getScaleX(), sprite_->getHeight() * getScaleY());
 	}
 
-	double Object::getAngle()
+	Transform Object::getTransform() const
 	{
-		float width = (float)sprite_->getWidth();
-		float height = (float)sprite_->getHeight();
-		auto [x, y] = transform_.transformPoint(width, height);
-		return atan((double)(width / height)) - atan((double)(x / y)) / PI * 180.0;
+		return scale(0.0f, 0.0f, xScale, yScale) + rotation(0.0f, 0.0f, angle) /*+ extraTransform_*/;
 	}
 
 	Object* Object::setPosition(real _x, real _y)
@@ -308,45 +305,6 @@ namespace suku
 	{
 		hspeedTemp = _hspeedTemp;
 		vspeedTemp = _vspeedTemp;
-	}
-
-	void Object::rotate(float _angle)
-	{
-		transform_ = transform_ + rotation(sprite_->getCenterX(), sprite_->getCenterY(), _angle);
-	}
-
-	void Object::rotate(float _angle, double _rotatingCenterX, double _rotatingCenterY, bool _isRotatingItself)
-	{
-		double centerX = x + sprite_->getCenterX() * xScale, centerY = y + sprite_->getCenterY() * yScale;
-		rotateDot(_rotatingCenterX, _rotatingCenterY, _angle, &centerX, &centerY);
-		x = (float)centerX - sprite_->getCenterX() * xScale;
-		y = (float)centerY - sprite_->getCenterY() * yScale;
-		if (_isRotatingItself)
-			rotate(_angle);
-	}
-
-	void Object::rotateTo(float _angle, int _time)
-	{
-		actionList_.push_back([=]() {
-			static int nowtime = _time;
-			static float rotate_speed = _angle / _time;
-			rotate(rotate_speed);
-			nowtime--;
-			if (nowtime == 0) return false;
-			else return true;
-			});
-	}
-
-	void Object::rotateTo(float _angle, double _rotatingCenterX, double _rotatingCenterY, int _time, bool _isRotatingItself)
-	{
-		actionList_.push_back([=]() {
-			static int nowtime = _time;
-			static float rotate_speed = _angle / _time;
-			rotate(rotate_speed, _rotatingCenterX, _rotatingCenterY, _isRotatingItself);
-			nowtime--;
-			if (nowtime == 0) return false;
-			else return true;
-			});
 	}
 
 	void Object::addAction(std::function<bool(Object*)> _actionFunc)

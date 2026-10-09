@@ -128,7 +128,7 @@ namespace suku
 			float bloodvspeed = randF(-5, 5);
 			Blood* newBlood = inRoom()->create<Blood>(x, y).get();
 			newBlood->setSpeed(bloodhspeed, bloodvspeed);
-			newBlood->rotate(randF(0, 360));
+			newBlood->angle = randF(0, 360);
 			newBlood->xScale = newBlood->yScale = randF(0.5f, 1.5f);
 			nowBloodNum_++;
 			if (i >= 10)
@@ -262,7 +262,7 @@ namespace suku
 				sprite_ = &sprStanding;
 		}
 
-		transform_ = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
+		extraTransform_ = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
 		if (vspeed > 9.4f)

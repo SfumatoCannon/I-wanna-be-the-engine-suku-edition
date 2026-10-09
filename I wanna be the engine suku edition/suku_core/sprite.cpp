@@ -24,7 +24,7 @@ namespace suku
 
 	void ShapeSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
-		Transform paintingTransform = translation(_x - centerX, _y - centerY) + scale(_x, _y, _xScale, _yScale) + rotation(_x, _y, _angle);
+		Transform paintingTransform = translation(_x - centerX, _y - centerY) + scale(0, 0, _xScale, _yScale) + rotation(0, 0, _angle);
 		shape.setOpacity(_alpha);
 		shape.paint(paintingTransform);
 	}
@@ -55,7 +55,7 @@ namespace suku
 
 	void BitmapSpriteElement::paint(float _x, float _y, float _xScale, float _yScale, float _alpha, float _angle)
 	{
-		pBitmap_->paint(translation(_x - centerX, _y - centerY) + scale(_x, _y, _xScale, _yScale) + rotation(_x, _y, _angle),
+		pBitmap_->paint(translation(_x - centerX, _y - centerY) + scale(0, 0, _xScale, _yScale) + rotation(0, 0, _angle),
 			_alpha);
 	}
 

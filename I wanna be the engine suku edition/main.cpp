@@ -47,11 +47,11 @@ public:
 		create(Block(256, 256))->addAction([=](Object* _this) {
 			if (input::isKeyHolding(VK_A))
 			{
-				_this->rotate(14);
+				_this->angle+=90;
 			}
 			if (input::isKeyHolding(VK_D))
 			{
-				_this->rotate(-14);
+				_this->angle-=90;
 			}
 			return true;
 			}
