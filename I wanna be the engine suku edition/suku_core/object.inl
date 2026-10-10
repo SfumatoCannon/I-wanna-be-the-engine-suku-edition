@@ -10,36 +10,36 @@ namespace suku
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj)const
 	{
-		return getSpriteFrame()->isCrashed(translation(bRound(x - centerOffsetX), bRound(y - centerOffsetY)) + getTransform(), _obj.getSpriteFrame(),
-			translation(bRound(_obj.x - _obj.centerOffsetX), bRound(_obj.y - _obj.centerOffsetY)) + _obj.getTransform());
+		return getSpriteFrame()->isCrashed(translation(bRound(x) - centerOffsetX, bRound(y) - centerOffsetY) + getTransform(), _obj.getSpriteFrame(),
+			translation(bRound(_obj.x) - _obj.centerOffsetX, bRound(_obj.y) - _obj.centerOffsetY) + _obj.getTransform());
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, float _x, float _y)const
 	{
-		return getSpriteFrame()->isCrashed(translation(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY)) + getTransform(), _obj.getSpriteFrame(),
-			translation(bRound(_obj.x - _obj.centerOffsetX), bRound(_obj.y - _obj.centerOffsetY)) + _obj.getTransform());
+		return getSpriteFrame()->isCrashed(translation(bRound(_x) - centerOffsetX, bRound(_y) - centerOffsetY) + getTransform(), _obj.getSpriteFrame(),
+			translation(bRound(_obj.x) - _obj.centerOffsetX, bRound(_obj.y) - _obj.centerOffsetY) + _obj.getTransform());
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, float _x, float _y, float _objX, float _objY)const
 	{
-		return getSpriteFrame()->isCrashed(translation(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY)) + getTransform(), _obj.getSpriteFrame(),
-			translation(bRound(_objX - _obj.centerOffsetX), bRound(_objY - _obj.centerOffsetY)) + _obj.getTransform());
+		return getSpriteFrame()->isCrashed(translation(bRound(_x) - centerOffsetX, bRound(_y) - centerOffsetY) + getTransform(), _obj.getSpriteFrame(),
+			translation(bRound(_objX) - _obj.centerOffsetX, bRound(_objY) - _obj.centerOffsetY) + _obj.getTransform());
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, Vector _position) const
 	{
-		return getSpriteFrame()->isCrashed(translation(bRound(_position.x - centerOffsetX), bRound(_position.y - centerOffsetY)) + getTransform(), _obj.getSpriteFrame(),
-			translation(bRound(_obj.x - _obj.centerOffsetX), bRound(_obj.y - _obj.centerOffsetY)) + _obj.getTransform());
+		return getSpriteFrame()->isCrashed(translation(bRound(_position.x) - centerOffsetX, bRound(_position.y) - centerOffsetY) + getTransform(), _obj.getSpriteFrame(),
+			translation(bRound(_obj.x) - _obj.centerOffsetX, bRound(_obj.y) - _obj.centerOffsetY) + _obj.getTransform());
 	}
 
 	template<suku_object Obj>
 	bool Object::isCrashed(const Obj& _obj, Vector _position, Vector _objPosition) const
 	{
-		return getSpriteFrame()->isCrashed(translation(bRound(_position.x - centerOffsetX), bRound(_position.y - centerOffsetY)) + getTransform(), _obj.getSpriteFrame(),
-			translation(bRound(_objPosition.x - _obj.centerOffsetX), bRound(_objPosition.y - _obj.centerOffsetY)) + _obj.getTransform());
+		return getSpriteFrame()->isCrashed(translation(bRound(_position.x) - centerOffsetX, bRound(_position.y) - centerOffsetY) + getTransform(), _obj.getSpriteFrame(),
+			translation(bRound(_objPosition.x) - _obj.centerOffsetX, bRound(_objPosition.y) - _obj.centerOffsetY) + _obj.getTransform());
 	}
 
 	template<suku_object Obj>

@@ -107,7 +107,7 @@ namespace suku
 	bool ShapeCollisionBox::isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const
 	{
 		D2D1_GEOMETRY_RELATION result;
-		Transform targetTransform = _otherTransform * _transform.invertTransform();
+		Transform targetTransform = _transform.invertTransform() + _otherTransform;
 		shape.currentGeometry->CompareWithGeometry(
 			_other.shape.currentGeometry.Get(),
 			&targetTransform.getMatrix(),

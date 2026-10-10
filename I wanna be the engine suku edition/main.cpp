@@ -44,14 +44,14 @@ public:
 			return true;
 			}
 		);
-		create(Block(256, 256))->addAction([=](Object* _this) {
+		create(Block(256 + 16, 256 + 16))->setCenterOffset(16,16)->addAction([=](Object* _this) {
 			if (input::isKeyHolding(VK_A))
 			{
-				_this->angle+=90;
+				_this->angle+=30;
 			}
 			if (input::isKeyHolding(VK_D))
 			{
-				_this->angle-=90;
+				_this->angle-=30;
 			}
 			return true;
 			}
@@ -61,7 +61,10 @@ public:
 		create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 		create(Block(800, 32));
 		for (int i = 64; i < 608; i += 32)
-			create(Block(300, i));
+		{
+			create(Block(299, i));
+			create(Block(245 - 32, i));
+		}
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
@@ -87,8 +90,9 @@ public:
 		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		Text a({"Consolas", 24, TextStyle::Align::MiddleRight});
 		a.text = std::to_wstring(getObjectList<Player>().front()->y.getValue());
-		//a.contentString = "test message\npress s to save";
-		a.paint(256, 256);
+		a.paint(256, 256);		
+		a.text = std::to_wstring(getObjectList<Player>().front()->x.getValue());
+		a.paint(256, 256+64);
 	}
 };
 ROOM_SAVABLE(Room0)

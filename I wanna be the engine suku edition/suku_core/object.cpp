@@ -14,7 +14,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity);
+		spr->paint(bRound(x) - centerOffsetX, bRound(y) - centerOffsetY, getTransform(), opacity);
 	}
 
 	void Object::paintBody(float _alpha) const
@@ -249,6 +249,11 @@ namespace suku
 		auto [centerX, centerY] = getSpriteFrame()->getCenter();
 		centerX += centerOffsetX;
 		centerY += centerOffsetY;
+		if (centerX == 16 && centerY == 16)
+		{
+			int a = 3;
+			a++;
+		}
 		return scale(centerX, centerY, xScale, yScale) + rotation(centerX, centerY, angle) + extraTransform_;
 	}
 

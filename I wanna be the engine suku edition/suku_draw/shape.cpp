@@ -493,7 +493,7 @@ namespace suku
 		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
-				_startX + _length - 1.0f, _startY + _length - 1.0f
+				_startX + _length, _startY + _length
 			),
 			newGeometry.GetAddressOf()
 		);
@@ -511,7 +511,7 @@ namespace suku
 		hr = pD2DFactory->CreateRectangleGeometry(
 			D2D1::RectF(
 				_startX, _startY,
-				_startX + _width - 1.0f, _startY + _height - 1.0f
+				_startX + _width, _startY + _height
 			),
 			newGeometry.GetAddressOf()
 		);
