@@ -108,15 +108,73 @@ namespace suku
 	{
 		D2D1_GEOMETRY_RELATION result;
 		Transform targetTransform = _transform.invertTransform() + _otherTransform;
-		shape.currentGeometry->CompareWithGeometry(
+		const auto& matrix = targetTransform.getMatrix();
+		constexpr float areaThreshold = 0.5f; // Minimum area threshold for collision detection
+
+		HRESULT hr = shape.currentGeometry->CompareWithGeometry(
 			_other.shape.currentGeometry.Get(),
-			&targetTransform.getMatrix(),
+			&matrix,
 			&result
 		);
-		if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
-			return true;
-		else
+		if (FAILED(hr))
+		{
+			WARNINGWINDOW("Failed to compare geometries for collision detection.");
 			return false;
+		}
+		if (result == D2D1_GEOMETRY_RELATION_DISJOINT)
+		{
+			return false;
+		}
+
+		ID2D1Factory1* factory = graphics::D2DFactoryGlobal::getD2DFactory();
+
+		Microsoft::WRL::ComPtr<ID2D1PathGeometry> intersection;
+		hr = factory->CreatePathGeometry(intersection.GetAddressOf());
+		if (FAILED(hr))
+		{
+			WARNINGWINDOW("Failed to create path geometry for collision detection.");
+			return false;
+		}
+
+		Microsoft::WRL::ComPtr<ID2D1GeometrySink> sink;
+		hr = intersection->Open(sink.GetAddressOf());
+		if (FAILED(hr))
+		{
+			WARNINGWINDOW("Failed to open geometry sink for collision detection.");
+			return false;
+		}
+
+		hr = shape.currentGeometry->CombineWithGeometry(
+			_other.shape.currentGeometry.Get(),
+			D2D1_COMBINE_MODE_INTERSECT,
+			&matrix,
+			D2D1_DEFAULT_FLATTENING_TOLERANCE,
+			sink.Get()
+		);
+		if (FAILED(hr))
+		{
+			return false;
+		}
+
+		hr = sink->Close();
+		if (FAILED(hr))
+		{
+			WARNINGWINDOW("Failed to close geometry sink for collision detection.");
+			return false;
+		}
+
+		FLOAT area = 0.0f;
+		hr = intersection->ComputeArea(
+			nullptr,
+			D2D1_DEFAULT_FLATTENING_TOLERANCE,
+			&area
+		);
+		if (FAILED(hr))
+		{
+			return false;
+		}
+
+		return area >= areaThreshold;
 	}
 
 	bool ShapeCollisionBox::isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const

@@ -60,7 +60,7 @@ public:
 		create(VineRight(96, 32));
 		create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 		create(Block(800, 32));
-		for (int i = 64; i < 608; i += 32)
+		for (int i = 256; i < 608; i += 32)
 		{
 			create(Block(299, i));
 			create(Block(245 - 32, i));

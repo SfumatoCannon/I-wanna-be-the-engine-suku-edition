@@ -230,6 +230,8 @@ namespace suku
 					if (side_ == Direction::Left)
 						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Right;
+					xScale = 1;
+					extraTransform_ = translation(0, 0);
 					moveRight();
 				}
 				else if (isKeyHolding(VK_LEFT))
@@ -237,6 +239,8 @@ namespace suku
 					if (side_ == Direction::Right)
 						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Left;
+					xScale = -1;
+					extraTransform_ = translation(-1, 0); // align the collision box
 					moveLeft();
 				}
 			}
@@ -261,8 +265,6 @@ namespace suku
 			else
 				sprite_ = &sprStanding;
 		}
-
-		extraTransform_ = scale(getSpriteFrame()->centerX, getSpriteFrame()->centerX, (side_ == Direction::Right ? 1.0f : -1.0f), 1);
 
 		vspeed += gravity;
 		if (vspeed > 9.4f)
