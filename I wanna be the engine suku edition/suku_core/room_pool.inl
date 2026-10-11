@@ -75,6 +75,15 @@ namespace suku
 	}
 
 	template<suku_room T>
+	inline void RoomPool::setTitleRoom()
+	{
+		titleRoomId_ = typecode(T);
+		actionOnTitle_ = [=]() {
+			RoomPool::gotoRoom<T>();
+		};
+	}
+
+	template<suku_room T>
 	inline void RoomTypecodeManager::registerRoom()
 	{
 		gotoRoomExecuteMap_.emplace(typecode(T), []() { RoomPool::gotoRoom<T>(); });

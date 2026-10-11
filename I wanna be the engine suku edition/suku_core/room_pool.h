@@ -23,13 +23,18 @@ namespace suku
 		static void gotoRoom(Typecode _roomid);
 		template<suku_room T> static void setNewGameRoom();
 		static void gotoNewGameRoom();
+		template<suku_room T> static void setTitleRoom();
+		static void gotoTitleRoom();
 	private:
 		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
 		inline static Room* nowRoom_ = nullptr;
-		inline static Typecode newgameRoomId_;
 		inline static SoundController* BGMController_ = nullptr;
 		inline static Sound* nowBGM_ = nullptr;
+
+		inline static Typecode newgameRoomId_;
+		inline static Typecode titleRoomId_;
 		inline static std::function<void()> actionOnNewGame_;
+		inline static std::function<void()> actionOnTitle_;
 	};
 
 	class RoomTypecodeManager

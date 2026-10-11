@@ -24,11 +24,6 @@ namespace suku
 	{
 		displayLayer.newLayer(constants::window::widthLogical, constants::window::heightLogical);
 		camera.setBorder(0, 0, _width, _height);
-		SaveFile* saveFile = SaveFile::getGlobalSaveFile();
-		if (saveFile != nullptr)
-		{
-			clock_ = saveFile->get<unsigned int>("time");
-		}
 	}
 
 	void Room::loadFromJtoolData(std::string_view _data)
@@ -186,25 +181,34 @@ namespace suku
 	void Room::enter()
 	{
 		std::list<Object*> allObjList = getObjectList<Object>();
+		onStart();
+		onEnter();
 		for (auto& objPointer : allObjList)
 		{
 			objPointer->onRoomStart();
 			objPointer->onRoomEnter();
 		}
-		onStart();
-		onEnter();
 	}
 
 	void Room::restart()
 	{
 		std::list<Object*> allObjList = getObjectList<Object>();
+		onStart();
+		onRestart();
 		for (auto& objPointer : allObjList)
 		{
 			objPointer->onRoomStart();
 			objPointer->onRoomRestart();
 		}
-		onStart();
-		onRestart();
+	}
+
+	void Room::onEnter()
+	{
+		SaveFile* saveFile = SaveFile::getGlobalSaveFile();
+		if (saveFile != nullptr)
+		{
+			clock_ = saveFile->get<unsigned int>("time");
+		}
 	}
 
 	void Room::onSave()

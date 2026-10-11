@@ -20,6 +20,10 @@ public:
 	{
 		setBGM(bgm);
 		setBackground(Color(200, 180, 180));
+	}
+
+	virtual void onEnter() override
+	{
 		setTilePack(tilepack);
 	}
 };

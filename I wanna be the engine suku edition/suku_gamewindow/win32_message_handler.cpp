@@ -6,6 +6,7 @@
 #include "../suku_sounds/includes.h"
 #include "../suku_config/includes.h"
 #include "game_loop.h"
+#include <suku_core/room_pool.h>
 
 #define WM_CREATEFINISHED (WM_USER + 1)
 
@@ -41,6 +42,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		graphics::suku_drawing_postinit(hWnd);
 		//soundInit();
 		init();
+		suku::RoomPool::gotoTitleRoom();
 		if (GameLoopConfig::isVSyncOn.value())
 			game_loop::startWithVsync(GameLoopConfig::vsyncFrameRate.value());
 		else

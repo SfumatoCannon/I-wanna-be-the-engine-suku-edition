@@ -2,11 +2,14 @@
 #include "suku_preset_rooms/includes.h"
 using namespace suku;
 
+class Room0;
 class Room1 : public Room
 {
 public:
 	Room1() : Room()
 	{
+		create<Player>(0, 0);
+		create<Warp<RoomSelectSave>>(32, 256);
 		create(Block(96, 32));
 		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
@@ -100,5 +103,5 @@ ROOM_SAVABLE(Room0)
 void init()
 {
 	RoomPool::setNewGameRoom<Room0>();
-	gotoRoom<RoomTitle>();
+	RoomPool::setTitleRoom<RoomTitle>();
 }

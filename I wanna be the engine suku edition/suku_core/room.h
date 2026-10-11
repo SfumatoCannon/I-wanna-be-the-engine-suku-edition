@@ -69,7 +69,7 @@ namespace suku
 		void enter();
 		void restart();
 
-		virtual void onEnter() {}
+		virtual void onEnter();
 		virtual void onRestart() {}
 		virtual void onStart() {}
 		virtual void onSave();

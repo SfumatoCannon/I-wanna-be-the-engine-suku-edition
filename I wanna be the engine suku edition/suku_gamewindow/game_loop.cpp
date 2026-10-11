@@ -207,6 +207,8 @@ namespace
 		if (suku::input::isKeyDown(VK_F1))
 			debugMessage = !debugMessage;
 #endif
+		if (suku::input::isKeyDown(VK_F2))
+			RoomPool::gotoTitleRoom();
 
 		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
