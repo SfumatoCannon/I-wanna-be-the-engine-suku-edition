@@ -11,7 +11,7 @@ namespace suku
 		}
 	}
 
-	enum Direction
+	enum class Direction
 	{
 		Left,
 		Right,

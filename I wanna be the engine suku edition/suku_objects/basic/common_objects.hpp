@@ -2,11 +2,11 @@
 #include "suku_foundation/includes.h"
 #include "suku_core/includes.h"
 #include "suku_foundation/suku_type.h"
+#include <suku_core/sprite.h>
 #include <suku_constants.h>
 
 namespace suku
 {
-	class Background;
 	class PlaceChangerRaw;
 	template<suku_room T> class PlaceChanger;
 	template<suku_room T> class Warp;
@@ -19,17 +19,6 @@ namespace suku
 	class Trigger;
 	class Water;
 	class WaterExtraJump;
-
-	class Background :public Object
-	{
-	public:
-		Background() {}
-		Background(const Bitmap& _bitmap);
-		Background(const Background& _bg);
-		Background(Background&& _bg)noexcept;
-		virtual void onPaint() override;
-		Bitmap picture;
-	};
 
 	class Trigger :public Object
 	{
@@ -81,7 +70,7 @@ namespace suku
 			setRoomTo<T>();
 		}
 	};
-	
+
 	template<suku_room T>
 	class Warp :public PlaceChanger<T>
 	{
@@ -102,11 +91,32 @@ namespace suku
 	class Spike :public Object
 	{
 	public:
-		static Sprite sprUp;
-		static Sprite sprDown;
-		static Sprite sprLeft;
-		static Sprite sprRight;
-		Spike(float _x = 0, float _y = 0, Direction _dir = Direction::Up);
+		inline static Sprite sprUp{ "Image\\spike_u.png" };
+		inline static Sprite sprDown{ "Image\\spike_d.png" };
+		inline static Sprite sprLeft{ "Image\\spike_l.png" };
+		inline static Sprite sprRight{ "Image\\spike_r.png" };
+		Spike(float _x = 0, float _y = 0, Direction _dir = Direction::Up) : Object(_x, _y)
+		{
+			setPaintId(3);
+			switch (_dir)
+			{
+			case Direction::Up:
+				sprite_ = &sprUp;
+				break;
+			case Direction::Down:
+				sprite_ = &sprDown;
+				break;
+			case Direction::Left:
+				sprite_ = &sprLeft;
+				break;
+			case Direction::Right:
+				sprite_ = &sprRight;
+				break;
+			default:
+				sprite_ = &sprUp;
+				break;
+			}
+		}
 	};
 
 	class Cherry :public Object

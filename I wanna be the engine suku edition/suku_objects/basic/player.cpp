@@ -3,16 +3,10 @@
 #include <suku_foundation/includes.h>
 #include <suku_constants.h>
 #include <suku_sounds/includes.h>
-#include "object_definer.h"
+#include "common_objects.hpp"
 
 namespace suku
 {
-
-	Sprite Player::sprStanding("Image\\player_standing.png", 4, 5, RectangleShape(11, 21, 12, 11), 17, 23);
-	Sprite Player::sprRunning("Image\\player_running.png", 4, 2, RectangleShape(11, 21, 12, 11), 17, 23);
-	Sprite Player::sprJumping("Image\\player_jumping.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
-	Sprite Player::sprFalling("Image\\player_falling.png", 2, 4, RectangleShape(11, 21, 12, 11), 17, 23);
-	Sprite Player::sprSliding("Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23);
 	Player::Player(float _x, float _y, Room* _room) :Object(_x, _y, _room)
 	{
 		isDied_ = false;
@@ -93,6 +87,15 @@ namespace suku
 	{
 		if (vspeed < 0)
 			vspeed *= 0.45f;
+	}
+
+	void Player::shoot()
+	{
+		if (!isAlive())
+			return;
+		static Sound sndShoot("Audio\\sndShoot.wav");
+		sndShoot.play()->setVolume(0.2f);
+		inRoom_->create<Bullet>(x, y, side_);
 	}
 
 	bool Player::isAlive()
@@ -266,6 +269,9 @@ namespace suku
 				sprite_ = &sprStanding;
 		}
 
+		if (isKeyDown(VK_Z))
+			shoot();
+
 		vspeed += gravity;
 		if (vspeed > 9.4f)
 			vspeed = 9.4f;
@@ -330,7 +336,6 @@ namespace suku
 		hspeedTemp = movingSpeed * 5.0f;
 	}
 
-	Sprite Blood::spr(BitmapSpriteElement("Image\\blood.png", SquareShape(2)));
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
 	{
 		setPaintId(4);
@@ -368,5 +373,11 @@ namespace suku
 	void Blood::onRoomRestart()
 	{
 		destroy();
+	}
+	 
+	void Bullet::onUpdateEnd()
+	{
+		if (getCrashedObject<Solid>())
+			destroy();
 	}
 }
