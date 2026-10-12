@@ -17,7 +17,7 @@ namespace suku
 	Room::Room() : Room(constants::window::widthLogical, constants::window::heightLogical) {}
 
 	Room::Room(unsigned int _width, unsigned int _height)
-		: id_(typecode(Room)), 
+		: id_(typecode(Room)),
 		width_(_width), height_(_height),
 		camera(constants::window::widthLogical, constants::window::heightLogical),
 		collisionPool_(std::make_unique<ObjectCollisionPool>())
@@ -223,15 +223,11 @@ namespace suku
 		{
 			onUpdateStart();
 			Object* obj = updateControllerObject_;
-			obj->isPositionTransitionalFrame_ = true;
-			obj->isSpriteTransformTransitionalFrame_ = true;
 			obj->hspeedTemp = obj->vspeedTemp = 0;
 			obj->updateFunction();
 			obj->extraTransformLastFrame_ = obj->extraTransform_;
 			obj->onUpdateStart();
 			obj->onUpdate();
-			obj->xLastFrame_ = obj->x;
-			obj->yLastFrame_ = obj->y;
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
 			obj->onUpdateEnd();
@@ -271,8 +267,6 @@ namespace suku
 				}
 				else
 				{
-					obj->isPositionTransitionalFrame_ = true;
-					obj->isSpriteTransformTransitionalFrame_ = true;
 					obj->hspeedTemp = obj->vspeedTemp = 0;
 					if (!obj->isFrozen())
 					{
@@ -326,8 +320,6 @@ namespace suku
 			{
 				if (!obj->isFrozen())
 				{
-					obj->xLastFrame_ = obj->x;
-					obj->yLastFrame_ = obj->y;
 					obj->x += obj->totalHspeed();
 					obj->y += obj->totalVspeed();
 				}
@@ -433,30 +425,13 @@ namespace suku
 					Property<real> oScaleX, oScaleY;
 					Property<real> oAngle;
 					Transform oExtraTransform;
-					if (obj->isPositionTransitionalFrame_)
-					{
-						oX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
-						oY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
-					}
-					else
-					{
-						oX = obj->x.getFrameState();
-						oY = obj->y.getFrameState();
-					}
-					if (obj->isSpriteTransformTransitionalFrame_)
-					{
-						oScaleX = obj->xScale.getInterpolatedFrameState(_frameOffsetRate);
-						oScaleY = obj->yScale.getInterpolatedFrameState(_frameOffsetRate);
-						oAngle = obj->angle.getInterpolatedFrameState(_frameOffsetRate);
-						oExtraTransform = linearInterpolate(obj->extraTransformLastFrame_, obj->extraTransform_, _frameOffsetRate);
-					}
-					else
-					{
-						oScaleX = obj->xScale.getFrameState();
-						oScaleY = obj->yScale.getFrameState();
-						oAngle = obj->angle.getFrameState();
-						oExtraTransform = obj->extraTransform_;
-					}
+
+					oX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
+					oY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
+					oScaleX = obj->xScale.getInterpolatedFrameState(_frameOffsetRate);
+					oScaleY = obj->yScale.getInterpolatedFrameState(_frameOffsetRate);
+					oAngle = obj->angle.getInterpolatedFrameState(_frameOffsetRate);
+					oExtraTransform = linearInterpolate(obj->extraTransformLastFrame_, obj->extraTransform_, _frameOffsetRate);
 
 					std::swap(obj->x, oX);
 					std::swap(obj->y, oY);
@@ -521,7 +496,7 @@ namespace suku
 			translation(-cameraX, -cameraY)
 			+ rotation(camera.getCenterX(), camera.getCenterY(), -cameraAngle)
 		);
-		
+
 		auto pic = paintOnLayer(displayLayer, _offsetRate);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());

@@ -261,7 +261,6 @@ namespace suku
 
 	Object::Object(real _x, real _y, Room* _inRoom)
 		: x(_x), y(_y), inRoom_(_inRoom),
-		xLastFrame_(FLT_MAX), yLastFrame_(FLT_MAX),
 		spawnX(_x), spawnY(_y) {}
 
 	void Object::remove()

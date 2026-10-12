@@ -194,11 +194,6 @@ namespace suku
 
 		Sprite* sprite_ = nullptr;
 		std::list<std::function<bool()> > actionList_;
-		float xLastFrame_;
-		float yLastFrame_;
-
-		bool isPositionTransitionalFrame_ = true;
-		bool isSpriteTransformTransitionalFrame_ = true;
 	private:
 		bool removeTag_ = false;
 		bool destroyTag_ = false;

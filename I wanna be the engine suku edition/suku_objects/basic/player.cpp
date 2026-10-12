@@ -230,19 +230,15 @@ namespace suku
 			{
 				if (isKeyHolding(VK_RIGHT))
 				{
-					if (side_ == Direction::Left)
-						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Right;
-					xScale = 1;
+					xScale = { 1, Transition(0) };
 					extraTransform_ = translation(0, 0);
 					moveRight();
 				}
 				else if (isKeyHolding(VK_LEFT))
 				{
-					if (side_ == Direction::Right)
-						isSpriteTransformTransitionalFrame_ = false;
 					side_ = Direction::Left;
-					xScale = -1;
+					xScale = { -1, Transition(0) };
 					extraTransform_ = translation(-1, 0); // align the collision box
 					moveLeft();
 				}

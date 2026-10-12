@@ -148,6 +148,7 @@ namespace suku
 	{
 		isTranslating_ = false;
 		value_ = _value;
+		lastFrameState_ = _value;
 		forceUpdateTag_ = true;
 		forceUpdateValue_ = _value;
 	}
