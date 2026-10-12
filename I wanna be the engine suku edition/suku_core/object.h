@@ -76,7 +76,7 @@ namespace suku
 		Object* setPosition(real _x, real _y);
 
 		bool isVisible = true;
-		float opacity = 1;
+		Property<float> opacity = 1;
 
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 

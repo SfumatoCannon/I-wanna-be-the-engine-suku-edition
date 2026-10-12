@@ -14,7 +14,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity.getFrameState());
 	}
 
 	void Object::paintBody(float _alpha) const
@@ -34,7 +34,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity.getFrameState());
 	}
 
 	void Object::paintBody(float _x, float _y, float _alpha) const
@@ -54,7 +54,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity.getFrameState());
 	}
 
 	void Object::paintBody(float _x, float _y, Transform _spriteTransform, float _alpha) const
@@ -74,7 +74,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity);
+		spr->paint(bRound(x - centerOffsetX), bRound(y - centerOffsetY), getTransform(), opacity.getFrameState());
 	}
 
 	void Object::paintBodySmooth(float _alpha) const
@@ -94,7 +94,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), getTransform(), opacity.getFrameState());
 	}
 
 	void Object::paintBodySmooth(float _x, float _y, float _alpha) const
@@ -114,7 +114,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity);
+		spr->paint(bRound(_x - centerOffsetX), bRound(_y - centerOffsetY), _spriteTransform, opacity.getFrameState());
 	}
 
 	void Object::paintBodySmooth(float _x, float _y, Transform _spriteTransform, float _alpha) const
@@ -134,7 +134,7 @@ namespace suku
 		SpriteElement* spr = getSpriteFrame();
 		if (!spr)
 			return;
-		spr->paint(_spriteTransform, opacity);
+		spr->paint(_spriteTransform, opacity.getFrameState());
 	}
 
 	void Object::paintBody(Transform _spriteTransform, float _alpha) const

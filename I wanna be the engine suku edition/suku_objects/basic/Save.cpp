@@ -5,8 +5,13 @@ namespace suku
 {
 	void Save::onUpdateEnd()
 	{
-		if (inRoom_->getCrashedObject<Player>(this) && input::isKeyDown(VK_Z) 
-			&& (lastSaved_ == -1 || clock_ - lastSaved_ >= 30))
+		bool saveAction = false;
+		if ((getCrashedObject<Player>() && input::isKeyDown(VK_Z)) || getCrashedObject<Bullet>())
+		{
+			saveAction = true;
+		}
+
+		if (saveAction && (lastSaved_ == -1 || clock_ - lastSaved_ >= 30))
 		{
 			spriteBasicIndex = 1;
 			SaveFile::save();

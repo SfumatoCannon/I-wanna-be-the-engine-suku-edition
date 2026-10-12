@@ -240,6 +240,7 @@ namespace suku
 			obj->xScale.addTick();
 			obj->yScale.addTick();
 			obj->angle.addTick();
+			obj->opacity.addTick();
 			return;
 		}
 
@@ -351,6 +352,7 @@ namespace suku
 					obj->xScale.addTick();
 					obj->yScale.addTick();
 					obj->angle.addTick();
+					obj->opacity.addTick();
 				}
 				iter++;
 			}

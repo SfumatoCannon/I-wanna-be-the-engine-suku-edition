@@ -63,7 +63,7 @@ namespace suku
 
 		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
-		virtual void onRoomRestart() override;
+		virtual void onRoomRestart() override { destroy(); }
 	};
 
 	class Bullet :public Object
@@ -82,6 +82,8 @@ namespace suku
 			else // _side == Direction::Down
 				vspeed = 16;
 		}
+		virtual void onUpdateStart() override;
 		virtual void onUpdateEnd() override;
+		virtual void onRoomRestart() override { destroy(); }
 	};
 }

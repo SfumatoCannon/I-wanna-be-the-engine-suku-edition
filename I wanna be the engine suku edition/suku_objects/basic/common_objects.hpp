@@ -7,10 +7,12 @@
 
 namespace suku
 {
+	class Trigger;
 	class PlaceChangerRaw;
 	template<suku_room T> class PlaceChanger;
 	template<suku_room T> class Warp;
-	class Block;
+	class BulletBlocker;
+	class Solid;
 	class Spike;
 	class Cherry;
 	class Platform;
@@ -79,6 +81,17 @@ namespace suku
 		Warp(float _x = 0, float _y = 0) : PlaceChanger<T>(_x, _y)
 		{
 			this->sprite_ = &spr;
+		}
+	};
+
+	class BulletBlocker : public Object
+	{
+	public:
+		inline static Sprite spr{ BitmapSpriteElement("Image\\bullet_blocker.png", SquareShape(32)) };
+		BulletBlocker(float _x = 0, float _y = 0) : Object(_x, _y)
+		{
+			sprite_ = &spr;
+			opacity = 0;
 		}
 	};
 

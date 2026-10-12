@@ -370,11 +370,17 @@ namespace suku
 			hspeed = hspeedTemp = 0;
 	}
 
-	void Blood::onRoomRestart()
+	void Bullet::onUpdateStart()
 	{
-		destroy();
+		auto bulletBlocker = getCrashedObject<BulletBlocker>();
+		if (bulletBlocker)
+		{
+			bulletBlocker->opacity = { 1, Transition(0) };
+			bulletBlocker->opacity = { 0, Transition(20, TransitionCurve::easeOutCubic) };
+			destroy();
+		}
 	}
-	 
+
 	void Bullet::onUpdateEnd()
 	{
 		if (getCrashedObject<Solid>())
