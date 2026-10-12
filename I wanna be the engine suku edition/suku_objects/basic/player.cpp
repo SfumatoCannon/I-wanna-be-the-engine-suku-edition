@@ -95,7 +95,7 @@ namespace suku
 			return;
 		static Sound sndShoot("Audio\\sndShoot.wav");
 		sndShoot.play()->setVolume(0.2f);
-		inRoom_->create<Bullet>(x, y, side_);
+		inRoom_->create<Bullet>(x, y - 4, side_);
 	}
 
 	bool Player::isAlive()
