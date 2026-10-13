@@ -8,7 +8,7 @@ namespace suku
 	{
 	}
 
-	ChoiceGroupUIElement::ChoiceGroupUIElement(real _x, real _y, int _width, int _height, std::vector<String>&& _options, unsigned int _defaultIndex)
+	ChoiceGroupUIElement::ChoiceGroupUIElement(real _x, real _y, real _width, real _height, std::vector<String>&& _options, unsigned int _defaultIndex)
 		:UIElement(_x, _y, _width, _height), options_(std::move(_options)), isEnabled_(options_.size(), true), selectedIndex_(_defaultIndex)
 	{
 	}

@@ -1,5 +1,6 @@
 #include "RoomSelectSave.h"
 #include <resources/suku_font_pool.h>
+#include <suku_objects/ui/presets/ConfigPage.h>
 
 namespace
 {
@@ -25,6 +26,7 @@ RoomSelectSave::RoomSelectSave()
 		choiceUIElement[i]->isVisible = false;
 		choiceUIElement[i]->unfocus();
 	}
+	create<ConfigPage>();
 }
 
 void RoomSelectSave::onUpdateStart()

@@ -398,6 +398,7 @@
     </ClCompile>
     <ClCompile Include="suku_objects\ui\ChoiceGroupUIElement.cpp" />
     <ClCompile Include="suku_objects\ui\ConfigOptionUIElement.cpp" />
+    <ClCompile Include="suku_objects\ui\presets\ConfigPage.cpp" />
     <ClCompile Include="suku_objects\ui\presets\PausePage.cpp" />
     <ClCompile Include="suku_objects\ui\UIElement.cpp" />
     <ClCompile Include="suku_preset_rooms\RoomSelectSave.cpp" />

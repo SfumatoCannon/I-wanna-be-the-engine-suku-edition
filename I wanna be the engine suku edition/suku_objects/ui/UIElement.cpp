@@ -2,7 +2,7 @@
 
 namespace suku
 {
-	UIElement::UIElement(float _x, float _y, int _width, int _height)
+	UIElement::UIElement(real _x, real _y, real _width, real _height)
 		: Object(_x, _y), width_(_width), height_(_height)
 	{
 	}

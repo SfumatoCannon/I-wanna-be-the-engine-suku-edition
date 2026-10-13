@@ -15,7 +15,7 @@ namespace suku
 		ConfigOptionUIElement* next = nullptr;
 
 		template<typename T> ConfigOptionUIElement(
-			ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info = String());
+			ConfigElement<T>& _bindedConfig, String _label, real _x, real _y, real _width, real _height, String _info = String());
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32) {}
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
 
@@ -39,11 +39,11 @@ namespace suku
 		String info_;
 		Text infoText_;
 		bool isSelected_ = false;
-		int originalHeight_;
+		real originalHeight_;
 	};
 
 	template<typename T>
-	inline ConfigOptionUIElement::ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, float _x, float _y, int _width, int _height, String _info)
+	inline ConfigOptionUIElement::ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, real _x, real _y, real _width, real _height, String _info)
 		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height),
 		labelText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleRight }), infoText_({ "Consolas", 16, TextStyle::Align::TopLeft })
 	{

@@ -27,9 +27,6 @@
     <ClInclude Include="I wanna be the engine suku edition.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_objects\basic\object_definer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="suku_draw\transform.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -258,11 +255,11 @@
     <ClInclude Include="suku_objects\basic\Save.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_objects\basic\common_objects.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="suku_objects\basic\object_definer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -633,6 +630,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="suku_objects\basic\Save.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="suku_objects\ui\presets\ConfigPage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

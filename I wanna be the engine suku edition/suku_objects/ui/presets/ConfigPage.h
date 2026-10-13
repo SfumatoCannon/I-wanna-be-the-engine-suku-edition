@@ -7,7 +7,7 @@ namespace suku
 	class ConfigPage : public UIElement
 	{
 	public:
-		ConfigPage(Room* _inRoom);
+		ConfigPage();
 
 	};
 }
