@@ -19,13 +19,18 @@ namespace suku
 		static Room* getNowRoom() { return nowRoom_; }
 		template<suku_room T> static void releaseRoom();
 		template<suku_room T> static Room* getRoom();
-		template<suku_room T> static Room* gotoRoom();
+		template<suku_room T> static void gotoRoom();
 		static void gotoRoom(Typecode _roomid);
 		template<suku_room T> static void setNewGameRoom();
 		static void gotoNewGameRoom();
 		template<suku_room T> static void setTitleRoom();
 		static void gotoTitleRoom();
+		static void execute();
 	private:
+		friend class RoomTypecodeManager;
+
+		template<suku_room T> static void teleport();
+
 		inline static std::map<Typecode, std::unique_ptr<Room>> roomPool_;
 		inline static Room* nowRoom_ = nullptr;
 		inline static SoundController* BGMController_ = nullptr;
@@ -35,6 +40,8 @@ namespace suku
 		inline static Typecode titleRoomId_;
 		inline static std::function<void()> actionOnNewGame_;
 		inline static std::function<void()> actionOnTitle_;
+
+		inline static std::function<void()>* pAction_ = nullptr;
 	};
 
 	class RoomTypecodeManager
@@ -43,6 +50,7 @@ namespace suku
 		template<suku_room T> static void registerRoom();
 		static bool isExist(Typecode _typecode);
 		static void gotoRoom(Typecode _typecode);
+		template<suku_room T> static void gotoRoom();
 	private:
 		inline static std::map<Typecode, std::function<void()>> gotoRoomExecuteMap_;
 		RoomTypecodeManager() = default;

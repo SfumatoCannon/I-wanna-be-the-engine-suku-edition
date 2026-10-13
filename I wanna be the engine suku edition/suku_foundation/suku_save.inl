@@ -169,11 +169,11 @@ namespace suku
 		if (file_->readDataPtr(id, dataPtr, size))
 		{
 			T* dataPtrT = reinterpret_cast<T*>(dataPtr);
-			_x = { *dataPtrT , Transition(0.0) };
+			_x = { *dataPtrT , Transition(0) };
 		}
 		else
 		{
-			_x = { _defaultValue, Transition(0.0) };
+			_x = { _defaultValue, Transition(0) };
 		}
 	}
 

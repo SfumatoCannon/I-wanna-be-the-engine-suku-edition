@@ -200,25 +200,27 @@ namespace
 	void updateWork()
 	{
 		using namespace suku;
-		suku::input::frameStateUpdate();
-		suku::input::Mouse::frameStateUpdate();
+		input::frameStateUpdate();
+		input::Mouse::frameStateUpdate();
 
 #ifdef _DEBUG
-		if (suku::input::isKeyDown(VK_F1))
+		if (input::isKeyDown(VK_F1))
 			debugMessage = !debugMessage;
 #endif
-		if (suku::input::isKeyDown(VK_F2))
+		if (input::isKeyDown(VK_F2))
 			RoomPool::gotoTitleRoom();
 
-		if (suku::input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
+		if (input::isKeyDown(VK_ESCAPE) && !gameEndFlag)
 			endGame();
 
 		Room* nowRoom = RoomPool::getNowRoom();
 		if (nowRoom)
 			nowRoom->update();
 
-		suku::input::resetKeyState();
-		suku::input::Mouse::resetButtonState();
+		RoomPool::execute();
+
+		input::resetKeyState();
+		input::Mouse::resetButtonState();
 	}
 
 	double getMonitoredFPS(bool _isUpdate = false)
@@ -264,7 +266,9 @@ namespace
 			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
-			suku::RoomPool::getNowRoom()->paint();
+			suku::Room* nowRoom = suku::RoomPool::getNowRoom();
+			if (nowRoom)
+				nowRoom->paint();
 
 			if (debugMessage)
 			{
@@ -282,7 +286,9 @@ namespace
 			getMonitoredFPS(true);
 
 			suku::graphics::beginDrawGlobal();
-			suku::RoomPool::getNowRoom()->additionalFramePaint((float)_additionalFrameRate);
+			suku::Room* nowRoom = suku::RoomPool::getNowRoom();
+			if (nowRoom)
+				nowRoom->additionalFramePaint((float)_additionalFrameRate);
 
 			if (debugMessage)
 			{
@@ -306,7 +312,7 @@ namespace
 
 		// Now Room
 		auto nowRoom = suku::RoomPool::getNowRoom();
-		a.text += std::format(L"\nRoom name: {}", nowRoom->getName().toWString());
+		a.text += std::format(L"\nRoom name: {}", (nowRoom ? nowRoom->getName().toWString() : L"NULL"));
 
 		// Player
 		if (!nowRoom->getObjectList<suku::Player>().empty())

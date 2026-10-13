@@ -6,24 +6,14 @@ class Room0;
 class Room1 : public Room
 {
 public:
-	Room1() : Room()
-	{
-		create<Player>(0, 0);
-		create<Warp<RoomSelectSave>>(32, 256);
-		create(Block(96, 32));
-		create(VineLeft(96, 32));
-		create(VineRight(96, 32));
-		//create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
-		create(WaterExtraJump(160, 32));
-		create(Water(224, 32));
-		//create(Spike(32, 128), Block(32, 160));
-	}
+	Room1();
 };
+ROOM_SAVABLE(Room1)
 
 class Room0 : public Room
 {
 public:
-	Room0() : Room(2000, 1216)
+	Room0()																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																														 : Room(2000, 1216)
 	{
 		setBackground("Image\\bg.jpg");
 
@@ -100,6 +90,20 @@ public:
 	}
 };
 ROOM_SAVABLE(Room0)
+
+Room1::Room1() : Room()
+{
+	create<Player>(0, 0);
+	create<Warp<Room0>>(32, 256);
+	create(Block(96, 32));
+	create(VineLeft(96, 32));
+	create(VineRight(96, 32));
+	//create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
+	create(WaterExtraJump(160, 32));
+	create(Water(224, 32));
+	//create(Spike(32, 128), Block(32, 160));
+	create<Save>(256, 32);
+}
 
 void init()
 {

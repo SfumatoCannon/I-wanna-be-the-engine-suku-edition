@@ -3,7 +3,6 @@
 #include <suku_core/tile.h>
 #include <suku_foundation/suku_save.h>
 
-
 namespace suku
 {
 	template<suku_room T>
@@ -29,7 +28,38 @@ namespace suku
 	}
 
 	template<suku_room T>
-	inline Room* RoomPool::gotoRoom()
+	inline void RoomPool::gotoRoom()
+	{
+		RoomTypecodeManager::registerRoom<T>();
+		RoomTypecodeManager::gotoRoom<T>();
+	}
+
+	template<suku_room T>
+	inline void RoomPool::setNewGameRoom()
+	{
+		newgameRoomId_ = typecode(T);
+		actionOnNewGame_ = [=]() {
+			SaveFile* savefile = SaveFile::getGlobalSaveFile();
+			if (savefile && savefile->isExist())
+			{
+				savefile->clear();
+			}
+			teleport<T>();
+			SaveFile::save();
+		};
+	}
+
+	template<suku_room T>
+	inline void RoomPool::setTitleRoom()
+	{
+		titleRoomId_ = typecode(T);
+		actionOnTitle_ = [=]() {
+			teleport<T>();
+		};
+	}
+
+	template<suku_room T>
+	inline void RoomPool::teleport()
 	{
 		Tile::resetAll();
 		RoomPool::nowRoom_ = getRoom<T>();
@@ -56,36 +86,17 @@ namespace suku
 			}
 		}
 		nowRoom_->enter();
-		return nowRoom_;
-	}
-
-	template<suku_room T>
-	inline void RoomPool::setNewGameRoom()
-	{
-		newgameRoomId_ = typecode(T);
-		actionOnNewGame_ = [=]() {
-			SaveFile* savefile = SaveFile::getGlobalSaveFile();
-			if (savefile && savefile->isExist())
-			{
-				savefile->clear();
-			}
-			RoomPool::gotoRoom<T>();
-			SaveFile::save();
-		};
-	}
-
-	template<suku_room T>
-	inline void RoomPool::setTitleRoom()
-	{
-		titleRoomId_ = typecode(T);
-		actionOnTitle_ = [=]() {
-			RoomPool::gotoRoom<T>();
-		};
 	}
 
 	template<suku_room T>
 	inline void RoomTypecodeManager::registerRoom()
 	{
-		gotoRoomExecuteMap_.emplace(typecode(T), []() { RoomPool::gotoRoom<T>(); });
+		gotoRoomExecuteMap_.emplace(typecode(T), []() { RoomPool::teleport<T>(); });
+	}
+
+	template<suku_room T>
+	inline void RoomTypecodeManager::gotoRoom()
+	{
+		gotoRoom(typecode(T));
 	}
 }

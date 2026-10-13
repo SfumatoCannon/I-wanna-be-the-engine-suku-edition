@@ -158,6 +158,12 @@ namespace suku
 		}
 	}
 
+	void Object::onRoomRestart()
+	{
+		x = { spawnX, Transition(0) };
+		y = { spawnY, Transition(0) };
+	}
+
 	SpriteElement* Object::getSpriteFrame()const
 	{
 		if (!sprite_)

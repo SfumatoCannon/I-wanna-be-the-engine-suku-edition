@@ -100,7 +100,7 @@ namespace suku
 		static void classInitialize() {}
 		virtual void onRoomEnter() {}
 		virtual void onRoomStart() {}
-		virtual void onRoomRestart() { x = spawnX; y = spawnY; }
+		virtual void onRoomRestart();
 		virtual void onRemove() {}
 		virtual void onSave() {}
 		virtual void onPaint() { paintBody(); }

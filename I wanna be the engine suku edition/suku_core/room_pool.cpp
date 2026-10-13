@@ -14,12 +14,21 @@ namespace suku
 
 	void RoomPool::gotoNewGameRoom()
 	{
-		actionOnNewGame_();
+		pAction_ = &actionOnNewGame_;
 	}
 
 	void RoomPool::gotoTitleRoom()
 	{
-		actionOnTitle_();
+		pAction_ = &actionOnTitle_;
+	}
+
+	void RoomPool::execute()
+	{
+		if (pAction_)
+		{
+			(*pAction_)();
+			pAction_ = nullptr;
+		}
 	}
 
 	bool RoomTypecodeManager::isExist(Typecode _typecode)
@@ -35,6 +44,6 @@ namespace suku
 			ERRORWINDOW_GLOBAL(L"Failed to goto room: room typecode is invalid (" + std::to_wstring(_typecode) + L")");
 			return;
 		}
-		(*iter).second();
+		RoomPool::pAction_ = &(*iter).second;
 	}
 }
