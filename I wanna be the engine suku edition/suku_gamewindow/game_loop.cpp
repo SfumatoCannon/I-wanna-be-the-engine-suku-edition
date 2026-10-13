@@ -48,6 +48,7 @@ namespace suku
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
+				RoomPool::execute();
 			}
 		}
 
@@ -75,6 +76,7 @@ namespace suku
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
+				RoomPool::execute();
 			}
 		}
 
@@ -103,6 +105,7 @@ namespace suku
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
+				RoomPool::execute();
 			}
 		}
 
@@ -216,8 +219,6 @@ namespace
 		Room* nowRoom = RoomPool::getNowRoom();
 		if (nowRoom)
 			nowRoom->update();
-
-		RoomPool::execute();
 
 		input::resetKeyState();
 		input::Mouse::resetButtonState();
