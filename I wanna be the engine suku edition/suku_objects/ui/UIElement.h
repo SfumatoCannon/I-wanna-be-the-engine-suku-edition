@@ -23,9 +23,15 @@ namespace suku
 		// alias
 			void setFont(const TextStyle& _font) { setTextStyle(_font); }
 
+		void setBackgroundBrush(const Brush& _brush) { backgroundBrush_ = _brush; }
+		const Brush& getBackgroundBrush() const { return backgroundBrush_; }
+		void setOutlineBrush(const Brush& _brush) { outlineBrush_ = _brush; }
+		const Brush& getOutlineBrush() const { return outlineBrush_; }
 	protected:
 		inline static TextStyle defaultTextStyle_{ "Arial", 16, TextStyle::Weight::Bold };
 		real width_, height_;
+		Brush backgroundBrush_ = Brush::solidColorBrush(Color(0, 0, 0, 0.3));
+		Brush outlineBrush_ = Brush::emptyBrush();
 		const TextStyle& textStyle_ = defaultTextStyle_;
 	};
 }

@@ -11,9 +11,10 @@ namespace suku
 		pBrush_ = graphics::createSolidColorBrush(_color);
 	}
 
-	Brush::Brush(Bitmap _bitmap)
+	Brush::Brush(Bitmap _bitmap, real _opacity)
 	{
 		pBrush_ = graphics::createBitmapBrush(_bitmap.getD2DBitmap());
+		pBrush_->SetOpacity(_opacity);
 	}
 
 	Brush Brush::solidColorBrush(Color _color)
@@ -21,13 +22,42 @@ namespace suku
 		return Brush(_color);
 	}
 
-	Brush Brush::bitmapBrush(Bitmap _bitmap)
+	Brush Brush::bitmapBrush(Bitmap _bitmap, real _opacity)
 	{
-		return Brush(_bitmap);
+		return Brush(_bitmap, _opacity);
 	}
+
 	const Brush& Brush::defaultBrush()
 	{
 		static Brush defaultBrush(solidColorBrush(Color::Black));
 		return defaultBrush;
+	}
+
+	void Brush::setOpacity(real _opacity)
+	{
+		if (pBrush_)
+			pBrush_->SetOpacity(_opacity);
+	}
+
+	real Brush::getOpacity()
+	{
+		if (!pBrush_)
+			return 0.0;
+		return pBrush_->GetOpacity();
+	}
+
+	void Brush::setTransform(Transform _transform)
+	{
+		if (pBrush_)
+			pBrush_->SetTransform(_transform.getMatrix());
+	}
+
+	Transform Brush::getTransform()
+	{
+		if (!pBrush_)
+			return Transform();
+		D2D1::Matrix3x2F matrix;
+		pBrush_->GetTransform(&matrix);
+		return Transform(matrix);
 	}
 }
