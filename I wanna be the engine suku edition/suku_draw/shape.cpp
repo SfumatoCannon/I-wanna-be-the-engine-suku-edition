@@ -484,4 +484,23 @@ namespace suku
 			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
 	}
+
+	RoundedRectangleShape::RoundedRectangleShape(float _width, float _height, float _radiusX, float _radiusY, float _startX, float _startY, Transform _transform)
+		: width(_width), height(_height), radiusX(_radiusX), radiusY(_radiusY), startX(_startX), startY(_startY)
+	{
+		ComPtr<ID2D1RoundedRectangleGeometry> newGeometry;
+		HRESULT hr;
+		auto pD2DFactory = D2DFactoryGlobal::getD2DFactory();
+		D2D1_ROUNDED_RECT roundedRect = D2D1::RoundedRect(
+			D2D1::RectF(
+				_startX, _startY,
+				_startX + _width, _startY + _height
+			),
+			_radiusX, _radiusY
+		);
+		hr = pD2DFactory->CreateRoundedRectangleGeometry(roundedRect, newGeometry.GetAddressOf());
+		if (SUCCEEDED(hr))
+			setOriginalGeometry(newGeometry.Get());
+		setTransform(_transform);
+	}
 } // namespace suku

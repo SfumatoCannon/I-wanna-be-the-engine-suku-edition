@@ -10,7 +10,6 @@ namespace suku
     using Microsoft::WRL::ComPtr;
 	class Bitmap;
 	class Color;
-	class Brush;
 
 	class Shape
 	{
@@ -98,5 +97,13 @@ namespace suku
 	public:
 		const float radiusX, radiusY, startX, startY;
 		EllipseShape(float _radiusX, float _radiusY, float _startX = 0, float _startY = 0, Transform _transform = Transform());
+	};
+
+	class RoundedRectangleShape :public Shape
+	{
+	public:
+		const float width, height, radiusX, radiusY, startX, startY;
+		RoundedRectangleShape(float _width, float _height, float _radiusX, float _radiusY,
+			float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};
 }
