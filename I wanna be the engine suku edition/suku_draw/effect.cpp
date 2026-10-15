@@ -25,19 +25,19 @@ namespace suku
 
 	void Effect::paint() const
 	{
-		graphics::setPaintingTransform(Transform::Identity());
-		graphics::drawEffect(pEffect_);
+		graphics_core::setPaintingTransform(Transform::Identity());
+		graphics_core::drawEffect(pEffect_);
 	}
 
 	EffectTransform::EffectTransform()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 	}
 
 	EffectTransform::EffectTransform(Transform _transform, ScaleMode _scaleMode, bool _isBorderSoftMode, float _sharpness)
 		: transform_(_transform), scaleMode_(_scaleMode), isBorderSoftMode_(_isBorderSoftMode), sharpness_(_sharpness)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, _transform.getMatrix());
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
@@ -53,7 +53,7 @@ namespace suku
 	EffectTransform::EffectTransform(ScaleMode _scaleMode, bool _isBorderSoftMode, float _sharpness)
 		: scaleMode_(_scaleMode), isBorderSoftMode_(_isBorderSoftMode), sharpness_(_sharpness)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D12DAffineTransform, &pEffect_);
 		pEffect_->SetValue(D2D1_2DAFFINETRANSFORM_PROP_INTERPOLATION_MODE, 
 			ScaleModeTranslator::toNative<D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE>(_scaleMode));
 		if (_isBorderSoftMode)
@@ -97,20 +97,20 @@ namespace suku
 
 	EffectOpacityMask::EffectOpacityMask()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
 		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
 	}
 
 	EffectOpacityMask::EffectOpacityMask(Bitmap& _maskBitmap)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
 		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
 		setMaskBitmap(_maskBitmap);
 	}
 
 	EffectOpacityMask::EffectOpacityMask(RenderBitmap& _maskBitmap)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Composite, &pEffect_);
 		pEffect_->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN);
 		setMaskBitmap(_maskBitmap);
 	}
@@ -129,11 +129,11 @@ namespace suku
 	{
 		if (_isAtlasMode == false)
 		{
-			graphics::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
+			graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
 		}
 		else
 		{
-			graphics::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
+			graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
 		}
 	}
 
@@ -142,12 +142,12 @@ namespace suku
 	{
 		if (_isAtlasMode == false)
 		{
-			graphics::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
+			graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Crop, &pEffect_);
 			pEffect_->SetValue(D2D1_CROP_PROP_RECT, D2D1_RECT_F{ _x, _y, _x + _width, _y + _height });
 		}
 		else
 		{
-			graphics::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
+			graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Atlas, &pEffect_);
 			pEffect_->SetValue(D2D1_ATLAS_PROP_INPUT_RECT, D2D1_VECTOR_4F{ _x, _y, _x + _width, _y + _height });
 		}
 	}
@@ -250,12 +250,12 @@ namespace suku
 
 	EffectContrast::EffectContrast()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
 	}
 
 	EffectContrast::EffectContrast(float _contrast) : contrast_(_contrast)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
 		float offset = 0.5f * (1.0f - _contrast);
 		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
 			D2D1::Matrix5x4F{
@@ -285,12 +285,12 @@ namespace suku
 
 	EffectBrightness::EffectBrightness()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
 	}
 
 	EffectBrightness::EffectBrightness(float _brightness) : brightness_(_brightness)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1ColorMatrix, &pEffect_);
 		pEffect_->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX,
 			D2D1::Matrix5x4F{
 				1, 0, 0, 0,
@@ -318,12 +318,12 @@ namespace suku
 
 	EffectSaturation::EffectSaturation()
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
 	}
 
 	EffectSaturation::EffectSaturation(float _saturation) : saturation_(_saturation)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1Saturation, &pEffect_);
 		pEffect_->SetValue(D2D1_SATURATION_PROP_SATURATION, _saturation);
 	}
 
@@ -336,7 +336,7 @@ namespace suku
 	EffectBlur::EffectBlur(bool _isBorderSoftMode) 
 		: blurRadius_(9.0f), isBorderSoftMode_(_isBorderSoftMode)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
 		if (isBorderSoftMode_)
 			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
 		else
@@ -346,7 +346,7 @@ namespace suku
 	EffectBlur::EffectBlur(float _blurRadius, bool _isBorderSoftMode) 
 		: blurRadius_(_blurRadius), isBorderSoftMode_(_isBorderSoftMode)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1GaussianBlur, &pEffect_);
 		pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
 		if (isBorderSoftMode_)
 			pEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
@@ -372,7 +372,7 @@ namespace suku
 	EffectBlurDirectional::EffectBlurDirectional(float _blurAngle, bool _isBorderSoftMode)
 		: blurAngle_(_blurAngle), blurRadius_(9.0f), isBorderSoftMode_(_isBorderSoftMode)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
 		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, _blurAngle);		
 		if (isBorderSoftMode_)
 			pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_SOFT);
@@ -383,7 +383,7 @@ namespace suku
 	EffectBlurDirectional::EffectBlurDirectional(float _blurAngle, float _blurRadius, bool _isBorderSoftMode)
 		: blurAngle_(_blurAngle), blurRadius_(_blurRadius), isBorderSoftMode_(_isBorderSoftMode)
 	{
-		graphics::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
+		graphics_core::pD2DContext->CreateEffect(CLSID_D2D1DirectionalBlur, &pEffect_);
 		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_STANDARD_DEVIATION, _blurRadius / 3.0f);
 		pEffect_->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, _blurAngle);
 		if (isBorderSoftMode_)

@@ -63,7 +63,7 @@ namespace suku
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_()
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size);
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _size);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -72,7 +72,7 @@ namespace suku
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_()
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _size,
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
 			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
 			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
@@ -84,7 +84,7 @@ namespace suku
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_()
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size);
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -93,7 +93,7 @@ namespace suku
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size,
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
 			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
 			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
@@ -105,7 +105,7 @@ namespace suku
 		TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size);
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size);
 		setTextAlign(_textAlign);
 		setTextWrapOption(_wrapOption);
 	}
@@ -114,7 +114,7 @@ namespace suku
 		TextStyle::Weight _fontWeight, TextStyle::ItalicType _fontStyle, TextStyle::Stretch _fontStretch, TextStyle::Align _textAlign, TextStyle::WrapOption _wrapOption)
 		: fontName_(_fontName), size_(_size), brush_(), source_(_localUrl)
 	{
-		pTextFormat_ = graphics::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size,
+		pTextFormat_ = graphics_core::TextFactoryGlobal::createTextFormat(_fontName, _localUrl, _localeName, _size,
 			static_cast<DWRITE_FONT_WEIGHT>(_fontWeight),
 			static_cast<DWRITE_FONT_STYLE>(_fontStyle),
 			static_cast<DWRITE_FONT_STRETCH>(_fontStretch));
@@ -134,7 +134,7 @@ namespace suku
 
 	void TextStyle::registerLocalFont(const String& _fontName, const String& _localUrl, const String& _localeName)
 	{
-		graphics::TextFactoryGlobal::addLocalFontCollection(_localUrl, _fontName, _localeName);
+		graphics_core::TextFactoryGlobal::addLocalFontCollection(_localUrl, _fontName, _localeName);
 	}
 
 	void TextStyle::setTextAlign(TextStyle::Align _textAlign)
@@ -142,7 +142,7 @@ namespace suku
 		if (!pTextFormat_)
 			return;
 		textAlign_ = _textAlign;
-		graphics::TextFactoryGlobal::setTextFormatAlign(pTextFormat_, _textAlign);
+		graphics_core::TextFactoryGlobal::setTextFormatAlign(pTextFormat_, _textAlign);
 	}
 
 	void TextStyle::setTextWrapOption(TextStyle::WrapOption _option)
@@ -154,7 +154,7 @@ namespace suku
 	int TextStyle::getContentLineCount(String _text, float _width)
 	{
 		IDWriteTextLayout* pTextLayout = nullptr;
-		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
+		graphics_core::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
@@ -170,7 +170,7 @@ namespace suku
 	float TextStyle::getContentHeight(String _text, float _width)
 	{
 		IDWriteTextLayout* pTextLayout = nullptr;
-		graphics::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
+		graphics_core::TextFactoryGlobal::getDWriteFactory()->CreateTextLayout(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
@@ -209,8 +209,8 @@ namespace suku
 		}
 		D2D1_RECT_F textBoxArea = getAreaFromPoint(_x, _y, textAlign_);
 
-		graphics::setPaintingTransform(_transform);
-		graphics::pD2DContext->DrawTextW(
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::pD2DContext->DrawTextW(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
@@ -233,8 +233,8 @@ namespace suku
 
 	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, const Brush& _brush, Transform _transform)const
 	{
-		graphics::setPaintingTransform(_transform);
-		graphics::pD2DContext->DrawTextW(
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::pD2DContext->DrawTextW(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			pTextFormat_.Get(),
@@ -264,10 +264,10 @@ namespace suku
 		}
 		D2D1_RECT_F textBoxArea = getAreaFromPoint(_x, _y, _align);
 		ComPtr<IDWriteTextFormat> format = pTextFormat_;
-		graphics::TextFactoryGlobal::setTextFormatAlign(format, _align);
+		graphics_core::TextFactoryGlobal::setTextFormatAlign(format, _align);
 
-		graphics::setPaintingTransform(_transform);
-		graphics::pD2DContext->DrawTextW(
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::pD2DContext->DrawTextW(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			format.Get(),
@@ -275,7 +275,7 @@ namespace suku
 			_brush.getD2DBrush().Get()
 		);
 
-		graphics::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
+		graphics_core::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
 	}
 
 	void TextStyle::paint(String _text, float _x, float _y, float _width, float _height, TextStyle::Align _align, Transform _transform) const
@@ -299,10 +299,10 @@ namespace suku
 		}
 
 		ComPtr<IDWriteTextFormat> format = pTextFormat_;
-		graphics::TextFactoryGlobal::setTextFormatAlign(format, _align);
+		graphics_core::TextFactoryGlobal::setTextFormatAlign(format, _align);
 
-		graphics::setPaintingTransform(_transform);
-		graphics::pD2DContext->DrawTextW(
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::pD2DContext->DrawTextW(
 			_text.content,
 			static_cast<UINT32>(wcslen(_text.content)),
 			format.Get(),
@@ -310,7 +310,7 @@ namespace suku
 			_brush.getD2DBrush().Get()
 		);
 
-		graphics::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
+		graphics_core::TextFactoryGlobal::setTextFormatAlign(format, textAlign_);
 	}
 
 	void TextStyle::setBrush(const Brush& _brush)
@@ -318,7 +318,7 @@ namespace suku
 		brush_ = _brush;
 	}
 
-	namespace graphics
+	namespace graphics_core
 	{
 		ComPtr<IDWriteTextFormat> TextFactoryGlobal::createTextFormat(const String& _fontName, float _size, DWRITE_FONT_WEIGHT _fontWeight, DWRITE_FONT_STYLE _fontStyle, DWRITE_FONT_STRETCH _fontStretch)
 		{

@@ -126,7 +126,7 @@ namespace suku
 			return false;
 		}
 
-		ID2D1Factory1* factory = graphics::D2DFactoryGlobal::getD2DFactory();
+		ID2D1Factory1* factory = graphics_core::D2DFactoryGlobal::getD2DFactory();
 
 		Microsoft::WRL::ComPtr<ID2D1PathGeometry> intersection;
 		hr = factory->CreatePathGeometry(intersection.GetAddressOf());

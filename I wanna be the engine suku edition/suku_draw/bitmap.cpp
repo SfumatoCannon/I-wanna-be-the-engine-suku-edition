@@ -13,7 +13,7 @@
 namespace
 {
 	using Microsoft::WRL::ComPtr;
-	using namespace suku::graphics;
+	using namespace suku::graphics_core;
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path  /*absolute path*/);
 	HRESULT loadWICBitmap(ComPtr<IWICBitmap>& _pWicBitmap, const wchar_t* _path, /*absolute path*/
 		UINT _x, UINT _y, UINT _width, UINT _height);
@@ -30,7 +30,7 @@ namespace suku
 {
 	using Microsoft::WRL::ComPtr;
 	using memory::Array2D;
-	using namespace suku::graphics;
+	using namespace suku::graphics_core;
 
 	void Bitmap::refreshD2DBitmap()
 	{
@@ -55,7 +55,7 @@ namespace suku
 		hr = wicBitmap_->GetPixelFormat(&pixelFormat);
 
 		ComPtr<IWICComponentInfo> componentInfo = nullptr;
-		auto pWICFactory = graphics::WICFactoryGlobal::getWICFactory();
+		auto pWICFactory = graphics_core::WICFactoryGlobal::getWICFactory();
 		if (SUCCEEDED(hr))
 			hr = pWICFactory->CreateComponentInfo(pixelFormat, componentInfo.GetAddressOf());
 		ComPtr<IWICPixelFormatInfo2> pixelFormatInfo = nullptr;
@@ -334,29 +334,29 @@ namespace suku
 	void Bitmap::paint(float _x, float _y, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(translation(_x, _y));
-		graphics::drawBitmap(d2dBitmap_, _alpha);
+		graphics_core::setPaintingTransform(translation(_x, _y));
+		graphics_core::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(float _x, float _y, Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(translation(_x, _y) + _transform);
-		graphics::drawBitmap(d2dBitmap_, _alpha);
+		graphics_core::setPaintingTransform(translation(_x, _y) + _transform);
+		graphics_core::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(_transform);
-		graphics::drawBitmap(d2dBitmap_, _alpha);
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::drawBitmap(d2dBitmap_, _alpha);
 	}
 
 	void Bitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(translation(_x, _y));
-		graphics::drawBitmap(d2dBitmap_,
+		graphics_core::setPaintingTransform(translation(_x, _y));
+		graphics_core::drawBitmap(d2dBitmap_,
 			D2D1_RECT_F{
 				_partX,
 				_partY,
@@ -370,8 +370,8 @@ namespace suku
 	void Bitmap::paint(float _x, float _y, float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(translation(_x, _y) + _transform);
-		graphics::drawBitmap(d2dBitmap_,
+		graphics_core::setPaintingTransform(translation(_x, _y) + _transform);
+		graphics_core::drawBitmap(d2dBitmap_,
 			D2D1_RECT_F{
 				_partX,
 				_partY,
@@ -385,8 +385,8 @@ namespace suku
 	void Bitmap::paint(float _partX, float _partY, float _partWidth, float _partHeight, Transform _transform, float _alpha)
 	{
 		refreshD2DBitmap();
-		graphics::setPaintingTransform(_transform);
-		graphics::drawBitmap(d2dBitmap_,
+		graphics_core::setPaintingTransform(_transform);
+		graphics_core::drawBitmap(d2dBitmap_,
 			D2D1_RECT_F{
 				_partX,
 				_partY,

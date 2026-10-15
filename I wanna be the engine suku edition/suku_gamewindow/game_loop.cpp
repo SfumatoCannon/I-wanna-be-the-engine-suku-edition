@@ -266,7 +266,7 @@ namespace
 		{
 			getMonitoredFPS(true);
 
-			suku::graphics::beginDrawGlobal();
+			suku::graphics_core::beginDrawGlobal();
 			suku::Room* nowRoom = suku::RoomPool::getNowRoom();
 			if (nowRoom)
 				nowRoom->paint();
@@ -276,7 +276,7 @@ namespace
 				displayDebugMessage();
 			}
 
-			suku::graphics::endDrawGlobal();
+			suku::graphics_core::endDrawGlobal();
 		}
 	}
 
@@ -286,7 +286,7 @@ namespace
 		{
 			getMonitoredFPS(true);
 
-			suku::graphics::beginDrawGlobal();
+			suku::graphics_core::beginDrawGlobal();
 			suku::Room* nowRoom = suku::RoomPool::getNowRoom();
 			if (nowRoom)
 				nowRoom->additionalFramePaint((float)_additionalFrameRate);
@@ -296,7 +296,7 @@ namespace
 				displayDebugMessage();
 			}
 
-			suku::graphics::endDrawGlobal();
+			suku::graphics_core::endDrawGlobal();
 		}
 	}
 

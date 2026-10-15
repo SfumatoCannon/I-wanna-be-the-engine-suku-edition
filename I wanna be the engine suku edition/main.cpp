@@ -81,7 +81,7 @@ public:
 
 		Room::onPaintStart(_layer);
 		
-		auto brushBlack = graphics::createSolidColorBrush(Color(0, 0, 0, 1.0f));
+		auto brushBlack = graphics_core::createSolidColorBrush(Color(0, 0, 0, 1.0f));
 		Text a({"Consolas", 24, TextStyle::Align::MiddleRight});
 		a.text = std::to_wstring(getObjectList<Player>().front()->y.getValue());
 		a.paint(256, 256);		

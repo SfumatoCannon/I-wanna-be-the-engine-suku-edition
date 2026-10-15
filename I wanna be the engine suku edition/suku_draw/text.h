@@ -177,7 +177,7 @@ namespace suku
 		float maxHeight_;
 	};
 
-	namespace graphics
+	namespace graphics_core
 	{
 		class TextFactoryGlobal
 		{

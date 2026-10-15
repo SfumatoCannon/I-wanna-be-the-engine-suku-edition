@@ -9,7 +9,7 @@
 
 namespace suku
 {
-	using namespace suku::graphics;
+	using namespace suku::graphics_core;
 
 	std::stack<PaintLayer*> PaintLayer::currentPaintLayerPtrStack_;
 	std::stack<ComPtr<ID2D1Bitmap1>> PaintLayer::currentLayerStateStack_;

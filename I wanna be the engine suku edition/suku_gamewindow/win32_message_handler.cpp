@@ -37,9 +37,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATEFINISHED:
 		timeBeginPeriod(1);
 		//suku_save_init();
-		graphics::WICFactoryGlobal::getWICFactory();
-		graphics::D2DFactoryGlobal::getD2DFactory();
-		graphics::suku_drawing_postinit(hWnd);
+		graphics_core::WICFactoryGlobal::getWICFactory();
+		graphics_core::D2DFactoryGlobal::getD2DFactory();
+		graphics_core::suku_drawing_postinit(hWnd);
 		//soundInit();
 		init();
 		suku::RoomPool::gotoTitleRoom();
@@ -66,7 +66,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		timeEndPeriod(1);
-		graphics::suku_drawing_uninit();
+		graphics_core::suku_drawing_uninit();
 		SoundFactoryGlobal::uninitialize();
 		PostQuitMessage(0);
 		break;

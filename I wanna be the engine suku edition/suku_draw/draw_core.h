@@ -10,7 +10,7 @@
 
 namespace suku
 {
-	namespace graphics
+	namespace graphics_core
 	{
 		using Microsoft::WRL::ComPtr;
 

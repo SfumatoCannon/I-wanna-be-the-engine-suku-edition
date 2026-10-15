@@ -10,7 +10,7 @@
 namespace suku
 {
 	using Microsoft::WRL::ComPtr;
-	using namespace suku::graphics;
+	using namespace suku::graphics_core;
 
 	Shape::Shape()
 	{

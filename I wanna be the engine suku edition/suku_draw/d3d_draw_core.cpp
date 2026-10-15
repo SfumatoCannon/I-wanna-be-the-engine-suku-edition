@@ -9,7 +9,7 @@ namespace
 
 namespace suku
 {
-	namespace graphics
+	namespace graphics_core
 	{
 		void createD3DDevice(ComPtr<ID3D11Device>& _pD3DDevice,
 			ComPtr<ID3D11DeviceContext>& _pD3DDeviceContext)
@@ -35,7 +35,7 @@ namespace suku
 		void createSwapChain(HWND _hWnd)
 		{
 			ComPtr<IDXGIDevice> dxgiDevice;
-			const auto& pD3DDevice = graphics::D3DFactoryGlobal::GetD3DDevice();
+			const auto& pD3DDevice = graphics_core::D3DFactoryGlobal::GetD3DDevice();
 			pD3DDevice.As(&dxgiDevice);
 
 			ComPtr<IDXGIAdapter> adapter;

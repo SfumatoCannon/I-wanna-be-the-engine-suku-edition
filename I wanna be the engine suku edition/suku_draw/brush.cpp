@@ -8,12 +8,12 @@ namespace suku
 {
 	Brush::Brush(Color _color)
 	{
-		pBrush_ = graphics::createSolidColorBrush(_color);
+		pBrush_ = graphics_core::createSolidColorBrush(_color);
 	}
 
 	Brush::Brush(Bitmap _bitmap, real _opacity)
 	{
-		pBrush_ = graphics::createBitmapBrush(_bitmap.getD2DBitmap());
+		pBrush_ = graphics_core::createBitmapBrush(_bitmap.getD2DBitmap());
 		pBrush_->SetOpacity(_opacity);
 	}
 

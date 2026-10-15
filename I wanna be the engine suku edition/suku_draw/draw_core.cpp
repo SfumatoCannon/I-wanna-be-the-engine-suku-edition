@@ -8,7 +8,7 @@
 
 namespace suku
 {
-	namespace graphics
+	namespace graphics_core
 	{
 		ComPtr<ID2D1Device> pD2DDevice;
 		ComPtr<ID2D1DeviceContext> pD2DContext;
@@ -54,11 +54,11 @@ namespace suku
 
 		void suku_drawing_postinit(HWND _hWnd)
 		{
-			suku::graphics::suku_d3d_postinit(_hWnd);
+			suku::graphics_core::suku_d3d_postinit(_hWnd);
 
 			// Create D2D Device & Device Context
 			ComPtr<IDXGIDevice> dxgiDevice;
-			HRESULT hr = graphics::D3DFactoryGlobal::GetD3DDevice().As(&dxgiDevice);
+			HRESULT hr = graphics_core::D3DFactoryGlobal::GetD3DDevice().As(&dxgiDevice);
 
 			if (FAILED(hr))
 			{
@@ -85,7 +85,7 @@ namespace suku
 
 			// Set D2D Device Context Target
 			ComPtr<IDXGISurface> dxgiBackBuffer;
-			hr = graphics::getSwapChain()->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+			hr = graphics_core::getSwapChain()->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
 			if (FAILED(hr))
 			{
 				ERRORWINDOW_GLOBAL("Failed to create dxgiBackBuffer");
@@ -311,7 +311,7 @@ namespace suku
 		{
 			pD2DContext->EndDraw();
 			pD2DContext->SetTarget(nullptr);
-			graphics::getSwapChain()->Present(1, 0);
+			graphics_core::getSwapChain()->Present(1, 0);
 		}
 
 		void clearScreen()
