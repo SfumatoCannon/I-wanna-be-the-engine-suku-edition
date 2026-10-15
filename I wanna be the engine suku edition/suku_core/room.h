@@ -7,6 +7,7 @@
 #include "suku_core_concepts.h"
 #include <suku_draw/bitmap.h>
 #include <suku_sounds/suku_sounds.h>
+#include <suku_draw/brush.h>
 #include "camera.h"
 
 namespace suku
@@ -97,9 +98,7 @@ namespace suku
 		Sound* getBGM() const { return bgm_; }
 
 		void setBackground(Bitmap _background);
-		Bitmap* getBackground() { return background_.get(); }
 		void setBackground(Color _color);
-		Color getBackgroundColor() { return backgroundColor_; }
 
 		void setTilePack(TilePack& _tilepack);
 		void addTilePack(TilePack& _tilepack);
@@ -127,9 +126,7 @@ namespace suku
 		Sound* bgm_ = nullptr;
 
 		bool hasBackground_ = false;
-		bool hasBackgroundColor_ = false;
-		std::unique_ptr<Bitmap> background_ = nullptr;
-		Color backgroundColor_ = Color::Black;
+		std::unique_ptr<Brush> backgroundBrush_ = nullptr;
 		std::unique_ptr<RectangleShape> backgroundShape_ = nullptr;
 		void paintBackground();
 	protected:
@@ -137,8 +134,8 @@ namespace suku
 
 		PaintLayer displayLayer;
 
-		float backgroundOffsetX = 0.0f;
-		float backgroundOffsetY = 0.0f;
+		real backgroundOffsetX = 0.0;
+		real backgroundOffsetY = 0.0;
 	};
 }
 

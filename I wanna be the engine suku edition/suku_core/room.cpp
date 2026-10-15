@@ -529,16 +529,15 @@ namespace suku
 			return;
 
 		hasBackground_ = true;
-		background_ = std::make_unique<Bitmap>(_background);
+		backgroundBrush_ = std::make_unique<Brush>(_background);
+		backgroundShape_ = std::make_unique<RectangleShape>(width_, height_);
 	}
 
 	void Room::setBackground(Color _color)
 	{
 		hasBackground_ = true;
-		background_ = nullptr;
-		backgroundColor_ = _color;
+		backgroundBrush_ = std::make_unique<Brush>(_color);
 		backgroundShape_ = std::make_unique<RectangleShape>(width_, height_);
-		backgroundShape_->setFill(backgroundColor_);
 	}
 
 	void Room::setTilePack(TilePack& _tilepack)
@@ -559,29 +558,10 @@ namespace suku
 
 	void Room::paintBackground()
 	{
-		if (hasBackground_)
+		if (hasBackground_ && backgroundBrush_ && backgroundShape_)
 		{
-			if (background_ && background_->isValid())
-			{
-				auto [backgroundWidth, backgroundHeight] = background_->getSize();
-				double backgroundStartX = maths::modR((double)backgroundOffsetX, backgroundWidth);
-				double backgroundStartY = maths::modR((double)backgroundOffsetY, backgroundHeight);
-				if (backgroundStartX > 0)
-					backgroundStartX -= backgroundWidth;
-				if (backgroundStartY > 0)
-					backgroundStartY -= backgroundHeight;
-				for (double x = backgroundStartX; x < width_; x += backgroundWidth)
-				{
-					for (double y = backgroundStartY; y < height_; y += backgroundHeight)
-					{
-						background_->paint(x, y);
-					}
-				}
-			}
-			else
-			{
-				backgroundShape_->paint(0, 0);
-			}
+			backgroundBrush_->setTransform(translation(backgroundOffsetX, backgroundOffsetY) + camera.getTransformToLayer());
+			backgroundShape_->paint(0, 0, *backgroundBrush_.get(), Brush::emptyBrush());
 		}
 	}
 }
