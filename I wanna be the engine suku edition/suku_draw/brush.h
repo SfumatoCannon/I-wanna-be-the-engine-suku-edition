@@ -15,7 +15,7 @@ namespace suku
 	class Brush
 	{
 	public:
-		Brush(Color _color);
+		Brush(Color _color, real _opacity = 1.0);
 		Brush(Bitmap _bitmap, real _opacity = 1.0);
 		Brush() = default;
 		Brush(const Brush& _other) = default;

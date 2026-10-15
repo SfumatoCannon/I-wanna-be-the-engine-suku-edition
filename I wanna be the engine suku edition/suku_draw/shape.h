@@ -11,6 +11,12 @@ namespace suku
 	class Bitmap;
 	class Color;
 
+	class SquareShape;
+	class RectangleShape;
+	class CircleShape;
+	class EllipseShape;
+	class RoundedRectangleShape;
+
 	class Shape
 	{
 	public:
@@ -23,6 +29,15 @@ namespace suku
 		Shape(Shape&& _x)noexcept;
 		Shape(const ComPtr<ID2D1Geometry>& _geometry, Transform _transform = Transform());
 		~Shape();
+
+		static SquareShape square(float _length, float _startX = 0, float _startY = 0, Transform _transform = Transform());
+		static RectangleShape rectangle(float _width, float _height, float _startX = 0, float _startY = 0, Transform _transform = Transform());
+		static CircleShape circle(float _radius, float _startX = 0, float _startY = 0, Transform _transform = Transform());
+		static EllipseShape ellipse(float _radiusX, float _radiusY, float _startX = 0, float _startY = 0, Transform _transform = Transform());
+		static RoundedRectangleShape roundedRectangle(float _width, float _height, float _radiusX, float _radiusY,
+			float _startX = 0, float _startY = 0, Transform _transform = Transform());
+		static RoundedRectangleShape roundedRectangle(float _width, float _height, float _radius,
+			float _startX = 0, float _startY = 0, Transform _transform = Transform());
 
 		void setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry);
 		void setTransform(Transform _transform);
@@ -103,6 +118,8 @@ namespace suku
 	{
 	public:
 		const float width, height, radiusX, radiusY, startX, startY;
+		RoundedRectangleShape(float _width, float _height, float _radius,
+			float _startX = 0, float _startY = 0, Transform _transform = Transform());
 		RoundedRectangleShape(float _width, float _height, float _radiusX, float _radiusY,
 			float _startX = 0, float _startY = 0, Transform _transform = Transform());
 	};

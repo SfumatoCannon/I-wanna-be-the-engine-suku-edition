@@ -65,6 +65,38 @@ namespace suku
 		currentGeometry.Reset();
 	}
 
+	SquareShape Shape::square(float _length, float _startX, float _startY, Transform _transform)
+	{
+		return SquareShape(_length, _startX, _startY, _transform);
+	}
+
+	RectangleShape Shape::rectangle(float _width, float _height, float _startX, float _startY, Transform _transform)
+	{
+		return RectangleShape(_width, _height, _startX, _startY, _transform);
+	}
+
+	CircleShape Shape::circle(float _radius, float _startX, float _startY, Transform _transform)
+	{
+		return CircleShape(_radius, _startX, _startY, _transform);
+	}
+
+	EllipseShape Shape::ellipse(float _radiusX, float _radiusY, float _startX, float _startY, Transform _transform)
+	{
+		return EllipseShape(_radiusX, _radiusY, _startX, _startY, _transform);
+	}
+
+	RoundedRectangleShape Shape::roundedRectangle(float _width, float _height, float _radiusX, float _radiusY,
+		float _startX, float _startY, Transform _transform)
+	{
+		return RoundedRectangleShape(_width, _height, _radiusX, _radiusY, _startX, _startY, _transform);
+	}
+
+	RoundedRectangleShape Shape::roundedRectangle(float _width, float _height, float _radius,
+		float _startX, float _startY, Transform _transform)
+	{
+		return RoundedRectangleShape(_width, _height, _radius, _startX, _startY, _transform);
+	}
+
 	void Shape::setOriginalGeometry(const ComPtr<ID2D1Geometry>& _geometry)
 	{
 		originalGeometry.Reset();
@@ -484,6 +516,10 @@ namespace suku
 			setOriginalGeometry(newGeometry.Get());
 		setTransform(_transform);
 	}
+
+	RoundedRectangleShape::RoundedRectangleShape(float _width, float _height, float _radius, float _startX, float _startY, Transform _transform)
+		: RoundedRectangleShape(_width, _height, _radius, _radius, _startX, _startY, _transform)
+	{}
 
 	RoundedRectangleShape::RoundedRectangleShape(float _width, float _height, float _radiusX, float _radiusY, float _startX, float _startY, Transform _transform)
 		: width(_width), height(_height), radiusX(_radiusX), radiusY(_radiusY), startX(_startX), startY(_startY)

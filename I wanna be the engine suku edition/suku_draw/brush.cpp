@@ -4,11 +4,14 @@
 #include "bitmap.h"
 #include "draw_core.h"
 
+#include <suku_foundation/maths.h>
+
 namespace suku
 {
-	Brush::Brush(Color _color)
+	Brush::Brush(Color _color, real _opacity)
 	{
 		pBrush_ = graphics_core::createSolidColorBrush(_color);
+		pBrush_->SetOpacity(_opacity);
 	}
 
 	Brush::Brush(Bitmap _bitmap, real _opacity)
