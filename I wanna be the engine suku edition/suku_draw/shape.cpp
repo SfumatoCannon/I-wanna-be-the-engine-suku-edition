@@ -89,230 +89,155 @@ namespace suku
 
 	void Shape::setFill(const Brush& _brush)
 	{
-		fillBrush_ = std::make_unique<Brush>(_brush);
+		fillBrush_ = _brush;
 	}
 
 	void Shape::setOutline(const Brush& _brush)
 	{
-		outlineBrush_ = std::make_unique<Brush>(_brush);
+		outlineBrush_ = _brush;
 	}
 
 	void Shape::setOpacity(float _opacity)
 	{
-		if (fillBrush_)
-			fillBrush_.get()->getD2DBrush()->SetOpacity(_opacity);
-		if (outlineBrush_)
-			outlineBrush_.get()->getD2DBrush()->SetOpacity(_opacity);
+		if (fillBrush_.isValid())
+			fillBrush_.getD2DBrush()->SetOpacity(_opacity);
+		if (outlineBrush_.isValid())
+			outlineBrush_.getD2DBrush()->SetOpacity(_opacity);
 	}
 
 	void Shape::setFillOpacity(float _opacity)
 	{
-		if (fillBrush_)
-			fillBrush_.get()->getD2DBrush()->SetOpacity(_opacity);
+		if (fillBrush_.isValid())
+			fillBrush_.getD2DBrush()->SetOpacity(_opacity);
 	}
 
 	void Shape::setOutlineOpacity(float _opacity)
 	{
-		if (outlineBrush_)
-			outlineBrush_.get()->getD2DBrush()->SetOpacity(_opacity);
+		if (outlineBrush_.isValid())
+			outlineBrush_.getD2DBrush()->SetOpacity(_opacity);
 	}
 
-	void Shape::paintFill(float _x, float _y, const Brush& _fillBrush)
+	void Shape::paintFill(float _x, float _y, const Brush& _fillBrush)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y));
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	void Shape::paintFill(float _x, float _y, Transform _paintingTransform, const Brush& _fillBrush)
+	void Shape::paintFill(float _x, float _y, Transform _paintingTransform, const Brush& _fillBrush)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	void Shape::paintFill(Transform _paintingTransform, const Brush& _fillBrush)
+	void Shape::paintFill(Transform _paintingTransform, const Brush& _fillBrush)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(_paintingTransform);
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	void Shape::paintOutline(float _x, float _y, const Brush& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paintOutline(float _x, float _y, 
+		const Brush& _outlineBrush, float _outlineWidth, 
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y));
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
 		}
 	}
 
-	void Shape::paintOutline(float _x, float _y, Transform _paintingTransform, const Brush& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paintOutline(float _x, float _y, Transform _paintingTransform, 
+		const Brush& _outlineBrush, float _outlineWidth, 
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
 		}
 	}
 
-	void Shape::paintOutline(Transform _paintingTransform, const Brush& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paintOutline(Transform _paintingTransform, 
+		const Brush& _outlineBrush, float _outlineWidth, 
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(_paintingTransform);
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
 		}
 	}
 
-	void Shape::paint(float _x, float _y, const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth,
-		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paint(float _x, float _y, 
+		const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth,
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y));
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	void Shape::paint(float _x, float _y, Transform _paintingTransform, const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paint(float _x, float _y, Transform _paintingTransform, 
+		const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth, 
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(translation(_x, _y) + _paintingTransform);
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	void Shape::paint(Transform _paintingTransform, const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
+	void Shape::paint(Transform _paintingTransform, 
+		const Brush& _fillBrush, const Brush& _outlineBrush, float _outlineWidth, 
+		const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)const
 	{
 		if (currentGeometry != nullptr)
 		{
 			setPaintingTransform(_paintingTransform);
-			drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
-			drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
+			if (_outlineBrush.isValid())
+				drawGeometryOutline(currentGeometry.Get(), _outlineBrush.getD2DBrush().Get(), _outlineWidth, outlineStrokeStyle.Get());
+			if (_fillBrush.isValid())
+				drawGeometryFill(currentGeometry.Get(), _fillBrush.getD2DBrush().Get());
 		}
 	}
 
-	//Bitmap* Shape::paintOnBitmap(Bitmap& _bitmap, float _x, float _y, const ComPtr<ID2D1Brush>& _fillBrush, const ComPtr<ID2D1Brush>& _outlineBrush, float _outlineWidth, const ComPtr<ID2D1StrokeStyle>& outlineStrokeStyle)
-	//{
-	//	_bitmap.refreshD2DBitmap();
-	//	if (!_bitmap.d2dBitmap_ || !currentGeometry)
-	//		return nullptr;
-
-	//	ComPtr<ID2D1BitmapRenderTarget> pBitmapRenderTarget = nullptr;
-	//	HRESULT hr = pMainRenderTarget->CreateCompatibleRenderTarget(
-	//		D2D1::SizeF((FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight()),
-	//		pBitmapRenderTarget.GetAddressOf()
-	//	);
-
-	//	if (SUCCEEDED(hr) && pBitmapRenderTarget)
-	//	{
-	//		pBitmapRenderTarget->BeginDraw();
-	//		D2D1_RECT_F destRect = D2D1::RectF(0, 0, (FLOAT)_bitmap.getWidth(), (FLOAT)_bitmap.getHeight());
-	//		// draw the bitmap to the compatible render target using simple overload
-	//		pBitmapRenderTarget->DrawBitmap(
-	//			_bitmap.d2dBitmap_.Get(),
-	//			nullptr,
-	//			1.0f,
-	//			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-	//		nullptr
-	//		);
-
-	//		pBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(_x, _y));
-
-	//		if (_outlineBrush)
-	//			pBitmapRenderTarget->DrawGeometry(currentGeometry.Get(), _outlineBrush.Get(), _outlineWidth, outlineStrokeStyle.Get());
-
-	//		if (_fillBrush)
-	//			pBitmapRenderTarget->FillGeometry(currentGeometry.Get(), _fillBrush.Get());
-
-	//		hr = pBitmapRenderTarget->EndDraw();
-
-	//		if (hr == D2DERR_RECREATE_TARGET)
-	//		{
-	//			ERRORWINDOW_GLOBAL("Render target needs to be recreated");
-	//			pBitmapRenderTarget.Reset();
-	//			return nullptr;
-	//		}
-
-	//		ComPtr<ID2D1Bitmap1> pBitmapResult = nullptr;
-	//		Bitmap* resultBitmap = nullptr;
-	//		hr = pBitmapRenderTarget->GetBitmap(pBitmapResult.GetAddressOf());
-	//		if (SUCCEEDED(hr) && pBitmapResult)
-	//		{
-	//			resultBitmap = new Bitmap(pBitmapResult); // pass ComPtr overload
-	//		}
-	//		pBitmapRenderTarget.Reset();
-	//		return resultBitmap;
-	//	}
-	//	else
-	//	{
-	//		ERRORWINDOW_GLOBAL("Failed to create compatible render target for bitmap painting");
-	//		return nullptr;
-	//	}
-	//}
-
-	void Shape::paint(float _x, float _y)
+	void Shape::paint(float _x, float _y)const
 	{
-		if (fillBrush_ == nullptr && outlineBrush_ == nullptr)
-			return;
-		else if (outlineBrush_ == nullptr)
-		{
-			paintFill(_x, _y, *fillBrush_);
-		}
-		else if (fillBrush_ == nullptr)
-		{
-			paintOutline(_x, _y, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
-		else
-		{
-			paint(_x, _y, *fillBrush_, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
+		paint(_x, _y, fillBrush_, outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
-	void Shape::paint(float _x, float _y, Transform _paintingTransform)
+	void Shape::paint(float _x, float _y, Transform _paintingTransform)const
 	{
-		if (fillBrush_ == nullptr && outlineBrush_ == nullptr)
-			return;
-		else if (outlineBrush_ == nullptr)
-		{
-			paintFill(_x, _y, _paintingTransform, *fillBrush_);
-		}
-		else if (fillBrush_ == nullptr)
-		{
-			paintOutline(_x, _y, _paintingTransform, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
-		else
-		{
-			paint(_x, _y, _paintingTransform, *fillBrush_, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
+		paint(_x, _y, _paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
-	void Shape::paint(Transform _paintingTransform)
+	void Shape::paint(Transform _paintingTransform)const
 	{
-		if (fillBrush_ == nullptr && outlineBrush_ == nullptr)
-			return;
-		else if (outlineBrush_ == nullptr)
-		{
-			paintFill(_paintingTransform, *fillBrush_);
-		}
-		else if (fillBrush_ == nullptr)
-		{
-			paintOutline(_paintingTransform, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
-		else
-		{
-			paint(_paintingTransform, *fillBrush_, *outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
-		}
+		paint(_paintingTransform, fillBrush_, outlineBrush_, outlineWidth_, pOutlineStrokeStyle_);
 	}
 
 	bool Shape::isCrashed(Shape& _x)
