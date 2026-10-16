@@ -79,7 +79,6 @@ public:
 		backgroundOffsetX += 0.2;
 		backgroundOffsetY += 0.5;
 
-		camera.angle = 90;
 		Room::onPaintStart(_layer);
 		
 		auto brushBlack = graphics_core::createSolidColorBrush(Color(0, 0, 0, 1.0f));

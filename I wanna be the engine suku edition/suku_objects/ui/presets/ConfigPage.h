@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../UIElement.h"
+#include "../UILayout.h"
+#include "../ConfigOptionUIElement.h"
 
 namespace suku
 {
-	class ConfigPage : public UIElement
+	class ConfigPage : public UILayoutVerticalSelectable<ConfigOptionUIElement>
 	{
 	public:
 		ConfigPage();

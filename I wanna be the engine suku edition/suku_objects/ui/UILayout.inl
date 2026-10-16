@@ -132,6 +132,7 @@ namespace suku
 				return false;
 			}
 		}
+		return false;
 	}
 
 	template<typename T>

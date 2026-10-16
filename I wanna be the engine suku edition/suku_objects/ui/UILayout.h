@@ -12,7 +12,7 @@ namespace suku
 	class UILayoutVertical : public UIElement
 	{
 	public:
-		UILayoutVertical<T>(float _x, float _y) : UIElement(_x, _y, 0, 0) { setUpdateId(-1); }
+		UILayoutVertical<T>(real _x, real _y, real _width = 0, real _height = 0) : UIElement(_x, _y, _width, _height) { setUpdateId(-1); }
 		void addElement(T* _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
@@ -28,7 +28,7 @@ namespace suku
 	class UILayoutVerticalSelectable : public UILayoutVertical<T>, IFocusable
 	{
 	public:
-		UILayoutVerticalSelectable<T>(float _x, float _y) : UILayoutVertical<T>(_x, _y) { this->setUpdateId(1); }
+		UILayoutVerticalSelectable<T>(real _x, real _y, real _width = 0, real _height = 0) : UILayoutVertical<T>(_x, _y, _width, _height) { this->setUpdateId(1); }
 
 		// Implement IFocusable interface
 		virtual void focus() override;
