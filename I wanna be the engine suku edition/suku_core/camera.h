@@ -24,6 +24,7 @@ namespace suku
 		float getWidth() { return width_; }
 		float getHeight() { return height_; }
 		Transform getTransformToLayer();
+		Transform getTransformToLayer(float _frameOffsetRate);
 
 		void setCenterX(float _centerX) { centerX_ = _centerX; }
 		void setCenterY(float _centerY) { centerY_ = _centerY; }
@@ -35,10 +36,10 @@ namespace suku
 
 		struct CameraBorder
 		{
-			float top;
-			float left;
-			float bottom;
-			float right;
+			real top;
+			real left;
+			real bottom;
+			real right;
 		};
 
 		CameraBorder getBorder();
@@ -48,9 +49,11 @@ namespace suku
 
 		static std::function<void(Camera*)> follow(Object* _object, float _velocity /* 0 ~ 1 */);
 
-		Property<float> x = 0.0f;
-		Property<float> y = 0.0f;
-		Property<float> angle = 0.0f;
+		Property<real> x = 0.0f;
+		Property<real> y = 0.0f;
+		Property<real> xScale = 1, yScale = 1;
+		Property<real> angle = 0.0f;
+		Transform extraTransform = Transform();
 	private:
 		std::function<void(Camera*)> bindFunc_;
 		bool isBinded_ = false;

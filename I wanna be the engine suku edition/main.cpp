@@ -13,7 +13,7 @@ ROOM_SAVABLE(Room1)
 class Room0 : public Room
 {
 public:
-	Room0()																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																														 : Room(2000, 1216)
+	Room0()	: Room(1600, 1216)
 	{
 		setBackground("Image\\bg.jpg");
 
@@ -79,6 +79,7 @@ public:
 		backgroundOffsetX += 0.2;
 		backgroundOffsetY += 0.5;
 
+		camera.angle = 90;
 		Room::onPaintStart(_layer);
 		
 		auto brushBlack = graphics_core::createSolidColorBrush(Color(0, 0, 0, 1.0f));

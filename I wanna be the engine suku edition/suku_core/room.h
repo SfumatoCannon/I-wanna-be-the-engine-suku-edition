@@ -13,7 +13,6 @@
 namespace suku
 {
 	class Object;
-	class Room;
 	class RoomPool;
 	class ObjectCollisionPool;
 

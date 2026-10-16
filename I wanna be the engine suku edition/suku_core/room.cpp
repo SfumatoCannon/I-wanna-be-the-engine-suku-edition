@@ -355,6 +355,8 @@ namespace suku
 		camera.update();
 		camera.x.addTick();
 		camera.y.addTick();
+		camera.xScale.addTick();
+		camera.yScale.addTick();
 		camera.angle.addTick();
 	}
 
@@ -467,10 +469,7 @@ namespace suku
 	{
 		onPaintStart();
 
-		displayLayer.setBasicTransform(
-			translation(-camera.x, -camera.y)
-			+ rotation(camera.getCenterX(), camera.getCenterY(), -camera.angle)
-		);
+		displayLayer.setBasicTransform(camera.getTransformToLayer());
 
 		auto pic = paintOnLayer(displayLayer);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
@@ -492,10 +491,7 @@ namespace suku
 		float cameraY = camera.y.getInterpolatedFrameState(_offsetRate);
 		float cameraAngle = camera.angle.getInterpolatedFrameState(_offsetRate);
 
-		displayLayer.setBasicTransform(
-			translation(-cameraX, -cameraY)
-			+ rotation(camera.getCenterX(), camera.getCenterY(), -cameraAngle)
-		);
+		displayLayer.setBasicTransform(camera.getTransformToLayer(_offsetRate));
 
 		auto pic = paintOnLayer(displayLayer, _offsetRate);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
@@ -560,7 +556,7 @@ namespace suku
 	{
 		if (hasBackground_ && backgroundBrush_ && backgroundShape_)
 		{
-			backgroundBrush_->setTransform(translation(backgroundOffsetX, backgroundOffsetY) + camera.getTransformToLayer());
+			backgroundBrush_->setTransform(translation(backgroundOffsetX, backgroundOffsetY));
 			backgroundShape_->paint(0, 0, *backgroundBrush_.get(), Brush::emptyBrush());
 		}
 	}

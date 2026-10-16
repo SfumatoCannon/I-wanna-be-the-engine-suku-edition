@@ -17,7 +17,18 @@ namespace suku
 
 	Transform Camera::getTransformToLayer()
 	{
-		return translation(-x, -y) + rotation(getCenterX(), getCenterY(), -angle);
+		return translation(-x, -y) + scale(x + centerX_, y + centerY_, xScale, yScale)
+			+ rotation(x + centerX_, y + centerY_, angle) + extraTransform;
+	}
+
+	Transform Camera::getTransformToLayer(float _frameOffsetRate)
+	{
+		auto frameX = x.getInterpolatedFrameState(_frameOffsetRate);
+		auto frameY = y.getInterpolatedFrameState(_frameOffsetRate);
+		return translation(-frameX, -frameY)
+			+ scale(frameX + centerX_, frameY + centerY_, xScale.getInterpolatedFrameState(_frameOffsetRate), yScale.getInterpolatedFrameState(_frameOffsetRate))
+			+ rotation(frameX + centerX_, frameY + centerY_, angle.getInterpolatedFrameState(_frameOffsetRate))
+			+ extraTransform;
 	}
 
 	void Camera::update()
