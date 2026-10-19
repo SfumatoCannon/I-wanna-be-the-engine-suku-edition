@@ -20,9 +20,9 @@ namespace suku
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
 
 		// Implement IFocusable interface
-		virtual void focus() override { isSelected_ = true; }
-		virtual bool unfocus() override { isSelected_ = false; return true; }
-		virtual bool isFocused() const override { return isSelected_; }
+		virtual void focus() override { isFocused_ = true; }
+		virtual bool unfocus() override { isFocused_ = false; return true; }
+		virtual bool isFocused() const override { return isFocused_; }
 
 		virtual void onUpdate() override { onUpdateFunc_(this); }
 		virtual void onPaint() override { onPaintFunc_(this); }
@@ -38,7 +38,7 @@ namespace suku
 		bool hasInfo_ = false;
 		String info_;
 		Text infoText_;
-		bool isSelected_ = false;
+		bool isFocused_ = false;
 		real originalHeight_;
 	};
 
@@ -56,14 +56,14 @@ namespace suku
 
 		onUpdateFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
 			{
-				if (_element->hasInfo_ && _element->isSelected_)
+				if (_element->hasInfo_ && _element->isFocused_)
 				{
 					_element->height_ = _element->originalHeight_ + 8 + _element->infoText_.getContentHeight(_element->getWidth() - 16);
 				}
 				else
 					_element->height_ = _element->originalHeight_;
 
-				if (!_element->isSelected_)
+				if (!_element->isFocused_)
 					return;
 
 				if (input::isKeyDown(VK_LEFT))
@@ -128,7 +128,7 @@ namespace suku
 		onPaintFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
 			{
 				RectangleShape area(_element->getWidth(), _element->getHeight());
-				area.setFill(_element->isSelected_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
+				area.setFill(_element->isFocused_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
 				area.paint(_element->x, _element->y, _element->getTransform());
 
 				// label text
@@ -141,7 +141,7 @@ namespace suku
 				_element->valueText_.text = std::to_wstring(_bindedConfig.value());
 				_element->valueText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16);
 				
-				if (_element->hasInfo_ && _element->isSelected_)
+				if (_element->hasInfo_ && _element->isFocused_)
 				{
 					float height = _element->infoText_.getContentHeight(_element->getWidth() - 16);
 					_element->infoText_.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, height);

@@ -12,7 +12,7 @@ namespace suku
 	class UILayoutVertical : public UIElement
 	{
 	public:
-		UILayoutVertical<T>(real _x, real _y, real _width = 0, real _height = 0) : UIElement(_x, _y, _width, _height) { setUpdateId(-1); }
+		UILayoutVertical<T>(real _x, real _y, real _width = 0, real _height = 0, Room* _inRoom = nullptr) : UIElement(_x, _y, _width, _height, _inRoom) { setUpdateId(-1); }
 		void addElement(T* _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
@@ -20,7 +20,7 @@ namespace suku
 		virtual void onUpdateEnd() override;
 		virtual void onPaint() override { }
 	protected:
-		std::vector<T*> elements_;
+		std::vector<T*> subElements_;
 	};
 
 	template<typename T>
@@ -28,16 +28,16 @@ namespace suku
 	class UILayoutVerticalSelectable : public UILayoutVertical<T>, IFocusable
 	{
 	public:
-		UILayoutVerticalSelectable<T>(real _x, real _y, real _width = 0, real _height = 0) : UILayoutVertical<T>(_x, _y, _width, _height) { this->setUpdateId(1); }
+		UILayoutVerticalSelectable<T>(real _x, real _y, real _width = 0, real _height = 0, Room* _inRoom = nullptr) : UILayoutVertical<T>(_x, _y, _width, _height, _inRoom) { this->setUpdateId(1); }
 
 		// Implement IFocusable interface
 		virtual void focus() override;
 		virtual bool unfocus() override;
-		virtual bool isFocused() const override { return isSelected_; }
+		virtual bool isFocused() const override { return isFocused_; }
 
 		virtual void onUpdateEnd() override;
 	private:
-		bool isSelected_ = false;
+		bool isFocused_ = false;
 		int selectedElementIndex = 0;
 	};
 }

@@ -2,8 +2,8 @@
 
 namespace suku
 {
-	UIElement::UIElement(real _x, real _y, real _width, real _height)
-		: Object(_x, _y), width_(_width), height_(_height), area_(RectangleShape(_width, _height))
+	UIElement::UIElement(real _x, real _y, real _width, real _height, Room* _inRoom)
+		: Object(_x, _y, _inRoom), width_(_width), height_(_height), area_(RectangleShape(_width, _height))
 	{
 	}
 

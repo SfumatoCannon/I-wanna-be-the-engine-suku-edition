@@ -10,7 +10,7 @@ namespace suku
 		if (_element->getWidth() > width_)
 			width_ = _element->getWidth();
 		height_ += _element->getHeight();
-		elements_.push_back(_element);
+		subElements_.push_back(_element);
 	}
 
 	template<typename T>
@@ -40,12 +40,12 @@ namespace suku
 		requires std::is_base_of_v<UIElement, T>
 	void UILayoutVertical<T>::clear()
 	{
-		for (auto& element : elements_)
+		for (auto& element : subElements_)
 		{
 			if (element)
 				element->remove();
 		}
-		elements_.clear();
+		subElements_.clear();
 		width_ = 0;
 		height_ = 0;
 	}
@@ -63,7 +63,7 @@ namespace suku
 	{
 		bool isFirstElement = true;
 		int totalY = this->y;
-		for (T* element : elements_)
+		for (T* element : subElements_)
 		{
 			if (isFirstElement)
 			{
@@ -82,8 +82,8 @@ namespace suku
 		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<IFocusable, T>
 	void UILayoutVerticalSelectable<T>::focus()
 	{
-		isSelected_ = true;
-		if (this->elements_.size() == 0)
+		isFocused_ = true;
+		if (this->subElements_.size() == 0)
 			return;
 		if (input::isKeyDown(VK_DOWN))
 		{
@@ -91,10 +91,10 @@ namespace suku
 		}
 		else if (input::isKeyDown(VK_UP))
 		{
-			selectedElementIndex = (int)this->elements_.size() - 1;
+			selectedElementIndex = (int)this->subElements_.size() - 1;
 		}
-		this->elements_[selectedElementIndex]->focus();
-		}
+		this->subElements_[selectedElementIndex]->focus();
+	}
 
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<IFocusable, T>
@@ -102,19 +102,19 @@ namespace suku
 	{
 		if (!isFocused())
 			return false;
-		if (!this->elements_[selectedElementIndex]->unfocus())
+		if (!this->subElements_[selectedElementIndex]->unfocus())
 			return false;
 		if (input::isKeyDown(VK_DOWN))
 		{
-			if (selectedElementIndex == this->elements_.size() - 1)
+			if (selectedElementIndex == this->subElements_.size() - 1)
 			{
-				isSelected_ = false;
+				isFocused_ = false;
 				return true;
 			}
 			else
 			{
 				selectedElementIndex++;
-				this->elements_[selectedElementIndex]->focus();
+				this->subElements_[selectedElementIndex]->focus();
 				return false;
 			}
 		}
@@ -122,13 +122,13 @@ namespace suku
 		{
 			if (selectedElementIndex == 0)
 			{
-				isSelected_ = false;
+				isFocused_ = false;
 				return true;
 			}
 			else
 			{
 				selectedElementIndex--;
-				this->elements_[selectedElementIndex]->focus();
+				this->subElements_[selectedElementIndex]->focus();
 				return false;
 			}
 		}
@@ -143,11 +143,11 @@ namespace suku
 		{
 			if (input::isKeyDown(VK_DOWN))
 			{
-				if (selectedElementIndex < this->elements_.size() - 1)
+				if (selectedElementIndex < this->subElements_.size() - 1)
 				{
-					this->elements_[selectedElementIndex]->unfocus();
+					this->subElements_[selectedElementIndex]->unfocus();
 					selectedElementIndex++;
-					this->elements_[selectedElementIndex]->focus();
+					this->subElements_[selectedElementIndex]->focus();
 				}
 
 			}
@@ -155,9 +155,9 @@ namespace suku
 			{
 				if (selectedElementIndex > 0)
 				{
-					this->elements_[selectedElementIndex]->unfocus();
+					this->subElements_[selectedElementIndex]->unfocus();
 					selectedElementIndex--;
-					this->elements_[selectedElementIndex]->focus();
+					this->subElements_[selectedElementIndex]->focus();
 				}
 			}
 		}

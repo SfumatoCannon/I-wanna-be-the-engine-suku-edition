@@ -3,9 +3,9 @@
 
 namespace suku
 {
-	ConfigPage::ConfigPage() : UILayoutVerticalSelectable<ConfigOptionUIElement>(0, 0, GameWindow::getLogicalWidth(), GameWindow::getLogicalHeight())
+	ConfigPage::ConfigPage(Room* _inRoom) : UILayoutVerticalSelectable<ConfigOptionUIElement>(0, 0, GameWindow::getLogicalWidth(), GameWindow::getLogicalHeight(), _inRoom)
 	{
-		float configElementWidth = width_ * 0.5f;
+		float configElementWidth = width_;
 		float configElementHeight = 48;
 		make({
 				{ GameLoopConfig::renderFPS, "Render FPS" },
@@ -15,5 +15,23 @@ namespace suku
 			}, 
 			configElementWidth, configElementHeight
 		);
+		unfocus();
+	}
+
+	void ConfigPage::focus()
+	{
+		IFocusableImplBasic::focus();
+		isVisible = true;
+		for (auto& o : subElements_)
+			o->isVisible = true;
+	}
+
+	bool ConfigPage::unfocus()
+	{
+		IFocusableImplBasic::unfocus();
+		isVisible = false;
+		for (auto& o : subElements_)
+			o->isVisible = false;
+		return true;
 	}
 }

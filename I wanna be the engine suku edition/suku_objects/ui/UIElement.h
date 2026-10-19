@@ -7,7 +7,7 @@ namespace suku
 	class UIElement : public Object
 	{
 	public:
-		UIElement(real _x = 0, real _y = 0, real _width = 32, real _height = 32);
+		UIElement(real _x = 0, real _y = 0, real _width = 32, real _height = 32, Room* _inRoom = nullptr);
 		virtual void onUpdate() override;
 		virtual void onPaint() override;
 
