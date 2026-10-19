@@ -7,6 +7,7 @@ namespace suku
 	{
 		float configElementWidth = width_;
 		float configElementHeight = 48;
+		setPaintId(1000);
 		make({
 				{ GameLoopConfig::renderFPS, "Render FPS" },
 				{ GameLoopConfig::isVSyncOn, "Vsync", "abcdddffffffffffffffffffffff\nddddddddddddddddddddd"},

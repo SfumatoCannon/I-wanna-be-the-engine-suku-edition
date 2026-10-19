@@ -5,7 +5,7 @@ namespace suku
 {
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T>
-	void UILayoutVertical<T>::addElement(T* _element)
+	void UILayoutVertical<T>::addElement(std::shared_ptr<T> _element)
 	{
 		if (_element->getWidth() > width_)
 			width_ = _element->getWidth();
@@ -19,14 +19,20 @@ namespace suku
 	{
 		clear();
 		int i = 0;
+		if (inRoom_ == nullptr)
+		{
+			ERRORWINDOW("Failed to create sub element because inRoom is NULL");
+			return;
+		}
 		for (auto& element : _elements)
 		{
-			T* newElement = inRoom_->create<T>(element).get();
+			auto newElement = inRoom_->create<T>(element);
 			if (newElement == nullptr)
 			{
-				WARNINGWINDOW_GLOBAL("Failed to create UIElement in UILayoutVertical::make()");
+				WARNINGWINDOW("Failed to create sub element");
 				continue;
 			}
+			newElement->setPaintId(paintId_);
 			newElement->x = x;
 			newElement->y = y + i * _elementHeight;
 			newElement->setWidth(_elementWidth);
@@ -63,7 +69,7 @@ namespace suku
 	{
 		bool isFirstElement = true;
 		int totalY = this->y;
-		for (T* element : subElements_)
+		for (auto& element : subElements_)
 		{
 			if (isFirstElement)
 			{

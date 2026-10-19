@@ -13,14 +13,14 @@ namespace suku
 	{
 	public:
 		UILayoutVertical<T>(real _x, real _y, real _width = 0, real _height = 0, Room* _inRoom = nullptr) : UIElement(_x, _y, _width, _height, _inRoom) { setUpdateId(-1); }
-		void addElement(T* _element);
+		void addElement(std::shared_ptr<T> _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
 		virtual void onRemove() override;
 		virtual void onUpdateEnd() override;
 		virtual void onPaint() override { }
 	protected:
-		std::vector<T*> subElements_;
+		std::vector<std::shared_ptr<T>> subElements_;
 	};
 
 	template<typename T>

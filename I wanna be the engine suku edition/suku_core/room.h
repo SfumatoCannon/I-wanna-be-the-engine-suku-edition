@@ -117,6 +117,7 @@ namespace suku
 		std::map<double, std::list<std::shared_ptr<Object>>> postUpdateArray_;
 		std::map<PaintLayer*, std::map<double, std::list<std::shared_ptr<Object>>>> paintArray_;
 		template<suku_object Obj> void createObjectList();
+		std::shared_ptr<Object> findObjectSharedPtr(Object* _object);
 
 		bool isUpdatePaused_ = false;
 		Object* updateControllerObject_ = nullptr;

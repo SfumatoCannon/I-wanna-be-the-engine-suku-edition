@@ -9,6 +9,7 @@
 #include <suku_draw/shape.h>
 #include <suku_foundation/suku_save.h>
 #include <suku_foundation/input.h>
+#include <algorithm>
 #include "room_pool.h"
 #include "tile.h"
 
@@ -81,6 +82,24 @@ namespace suku
 			{ return objPtr.get() == _object; });
 	}
 
+	std::shared_ptr<Object> Room::findObjectSharedPtr(Object* _object)
+	{
+		if (_object == nullptr)
+			return nullptr;
+
+		auto iter = objectPointerArray_.find(_object->getTypecode());
+		if (iter == objectPointerArray_.end())
+			return nullptr;
+
+		auto objectList = iter->second;
+		for (auto& o : objectList)
+		{
+			if (o.get() == _object)
+				return o;
+		}
+		return nullptr;
+	}
+
 	void Room::setObjectRevisePriority(Object* _object, double _newId)
 	{
 		auto& originalArray = preUpdateArray_[_object->preUpdateId_];
@@ -96,7 +115,9 @@ namespace suku
 			}
 		}
 		// not found in original array
-		targetArray.push_back(std::shared_ptr<Object>(_object));
+
+		if (auto objectPtr = findObjectSharedPtr(_object))
+			targetArray.push_back(std::move(objectPtr));
 		_object->preUpdateId_ = _newId;
 	}
 
@@ -104,18 +125,22 @@ namespace suku
 	{
 		auto& originalArray = updateArray_[_object->updateId_];
 		auto& targetArray = updateArray_[_newId];
+		bool found = false;
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->updateId_ = _newId;
+				found = true;
 				break;
 			}
 		}
-		// not found in original array
-		targetArray.push_back(std::shared_ptr<Object>(_object));
+		if (!found)
+		{
+			if (auto objectPtr = findObjectSharedPtr(_object))
+				targetArray.push_back(std::move(objectPtr));
+		}
 		_object->updateId_ = _newId;
 	}
 
@@ -123,18 +148,22 @@ namespace suku
 	{
 		auto& originalArray = postUpdateArray_[_object->postUpdateId_];
 		auto& targetArray = postUpdateArray_[_newId];
+		bool found = false;
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->postUpdateId_ = _newId;
+				found = true;
 				break;
 			}
 		}
-		// not found in original array
-		targetArray.push_back(std::shared_ptr<Object>(_object));
+		if (!found)
+		{
+			if (auto objectPtr = findObjectSharedPtr(_object))
+				targetArray.push_back(std::move(objectPtr));
+		}
 		_object->postUpdateId_ = _newId;
 	}
 
@@ -142,18 +171,22 @@ namespace suku
 	{
 		auto& originalArray = paintArray_[_object->getTargetPaintLayer()][_object->paintId_];
 		auto& targetArray = paintArray_[_object->getTargetPaintLayer()][_newId];
+		bool found = false;
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->paintId_ = _newId;
+				found = true;
 				break;
 			}
 		}
-		// not found in original array
-		targetArray.push_back(std::shared_ptr<Object>(_object));
+		if (!found)
+		{
+			if (auto objectPtr = findObjectSharedPtr(_object))
+				targetArray.push_back(std::move(objectPtr));
+		}
 		_object->paintId_ = _newId;
 	}
 
@@ -163,18 +196,22 @@ namespace suku
 			return;
 		auto& originalArray = paintArray_[_object->getTargetPaintLayer()][_object->paintId_];
 		auto& targetArray = paintArray_[_paintLayer][_object->paintId_];
+		bool found = false;
 		for (auto iter = originalArray.begin(); iter != originalArray.end(); iter++)
 		{
 			if ((*iter).get() == _object)
 			{
 				targetArray.push_back(std::move(*iter));
 				originalArray.erase(iter);
-				_object->targetPaintLayer_ = _paintLayer;
+				found = true;
 				break;
 			}
 		}
-		// not found in original array
-		targetArray.push_back(std::shared_ptr<Object>(_object));
+		if (!found)
+		{
+			if (auto objectPtr = findObjectSharedPtr(_object))
+				targetArray.push_back(std::move(objectPtr));
+		}
 		_object->targetPaintLayer_ = _paintLayer;
 	}
 
