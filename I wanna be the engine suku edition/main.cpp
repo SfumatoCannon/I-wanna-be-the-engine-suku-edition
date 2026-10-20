@@ -17,7 +17,7 @@ public:
 	{
 		setBackground("Image\\bg.jpg");
 
-		create<Block>(1400, 400);
+		create<Block>(400, 400)->setScaleX(2)->setScaleY(1);
 		create<Save>(32, 0);
 		create<BulletBlocker>(96, 0);
 		Player* p = create<Player>(0.f, 0.f).get();
@@ -93,7 +93,6 @@ ROOM_SAVABLE(Room0)
 
 Room1::Room1() : Room()
 {
-	create<Player>(0, 0);
 	create<Warp<Room0>>(32, 256);
 	create(Block(96, 32));
 	create(VineLeft(96, 32));

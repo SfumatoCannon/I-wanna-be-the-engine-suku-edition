@@ -54,26 +54,26 @@ namespace suku
 		Vector getSize();
 
 		real getScaleX() { return xScale; }
-		Object* getScaleX(real& _scaleX_out) { _scaleX_out = xScale; return this; }
+		auto getScaleX(this const auto& _self, real& _scaleX_out) { _scaleX_out = _self.xScale; return &_self; }
 		real getScaleY() { return yScale; }
-		Object* getScaleY(real& _scaleY_out) { _scaleY_out = yScale; return this; }
+		auto getScaleY(this const auto& _self, real& _scaleY_out) { _scaleY_out = _self.yScale; return &_self; }
 		Vector getScale() { return { xScale, yScale }; }
-		Object* getScale(Vector& _scale_out) { _scale_out = { xScale, yScale }; return this; }
+		auto getScale(this const auto& _self, Vector& _scale_out) { _scale_out = { _self.xScale, _self.yScale }; return &_self; }
 
-		Object* setScaleX(real _scaleX) { xScale = _scaleX; return this; }
-		Object* setScaleX(std::pair<real, const Transition&> _pair) { xScale = _pair; return this; }
-		Object* setScaleY(real _scaleY) { yScale = _scaleY; return this; }
-		Object* setScaleY(std::pair<real, const Transition&> _pair) { yScale = _pair; return this; }
-		Object* setScale(real _scaleX, real _scaleY) { xScale = _scaleX; yScale = _scaleY; return this; }
-		Object* setScale(std::pair<real, const Transition&> _pairX, std::pair<real, const Transition&> _pairY) { xScale = _pairX; yScale = _pairY; return this; }
+		auto setScaleX(this auto& _self, real _scaleX) { _self.xScale = _scaleX; return &_self; }
+		auto setScaleX(this auto& _self, std::pair<real, const Transition&> _pair) { _self.xScale = _pair; return &_self; }
+		auto setScaleY(this auto& _self, real _scaleY) { _self.yScale = _scaleY; return &_self; }
+		auto setScaleY(this auto& _self, std::pair<real, const Transition&> _pair) { _self.yScale = _pair; return &_self; }
+		auto setScale(this auto& _self, real _scaleX, real _scaleY) { _self.xScale = _scaleX; _self.yScale = _scaleY; return &_self; }
+		auto setScale(this auto& _self, std::pair<real, const Transition&> _pairX, std::pair<real, const Transition&> _pairY) { _self.xScale = _pairX; _self.yScale = _pairY; return &_self; }
 
-		Object* setCenterOffsetX(real _offsetX) { centerOffsetX = _offsetX; return this; }
-		Object* setCenterOffsetY(real _offsetY) { centerOffsetY = _offsetY; return this; }
-		Object* setCenterOffset(real _offsetX, real _offsetY) { centerOffsetX = _offsetX; centerOffsetY = _offsetY; return this; }
+		auto setCenterOffsetX(this auto& _self, real _offsetX) { _self.centerOffsetX = _offsetX; return &_self; }
+		auto setCenterOffsetY(this auto& _self, real _offsetY) { _self.centerOffsetY = _offsetY; return &_self; }
+		auto setCenterOffset(this auto& _self, real _offsetX, real _offsetY) { _self.centerOffsetX = _offsetX; _self.centerOffsetY = _offsetY; return &_self; }
 
 		Transform getTransform()const;
 
-		Object* setPosition(real _x, real _y);
+		auto setPosition(this auto& _self, real _x, real _y) { _self.x = _x; _self.y = _y; return &_self; }
 
 		bool isVisible = true;
 		Property<float> opacity = 1;

@@ -258,13 +258,6 @@ namespace suku
 		return scale(centerX, centerY, xScale, yScale) + rotation(centerX, centerY, angle) + extraTransform_;
 	}
 
-	Object* Object::setPosition(real _x, real _y)
-	{
-		x = _x;
-		y = _y;
-		return this;
-	}
-
 	Object::Object(real _x, real _y, Room* _inRoom)
 		: x(_x), y(_y), inRoom_(_inRoom),
 		spawnX(_x), spawnY(_y) {}
