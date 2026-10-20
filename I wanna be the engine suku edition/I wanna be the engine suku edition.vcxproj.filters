@@ -258,6 +258,9 @@
     <ClInclude Include="suku_objects\basic\common_objects.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="suku_core\execute_priority.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
