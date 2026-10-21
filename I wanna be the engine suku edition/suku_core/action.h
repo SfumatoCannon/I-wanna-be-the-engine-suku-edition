@@ -7,15 +7,28 @@
 
 namespace suku
 {
+	class IAction
+	{
+	public:
+		virtual ~IAction() = default;
+		virtual void execute(Room* _inRoom) = 0;
+	};
+
 	template<auto Func>
 		requires std::is_member_function_pointer_v<decltype(Func)>&& suku_object<suku_upd_function_source_class_t<decltype(Func)>>
-	class Action
+	class Action : public IAction
 	{
 	public:
 		Action();
+		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
 	private:
 		Typecode id_;
 		std::function<void(Room*)> executeFunction_;
+	};
+
+	class ActionManager
+	{
+
 	};
 }
 

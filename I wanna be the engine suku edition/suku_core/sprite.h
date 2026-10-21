@@ -145,7 +145,7 @@ namespace suku
 		UINT getRowCount()const { return rowCount_; }
 		UINT getColCount()const { return colCount_; }
 		std::pair<UINT, UINT> getRowColCount()const { return { rowCount_, colCount_ }; }
-		UINT getCount()const { return bodyList.size(); }
+		UINT getCount()const { return static_cast<UINT>(bodyList.size()); }
 		int getFlipTime()const { return flipTime_; }
 		float getCenterX()const { return centerX_; }
 		float getCenterY()const { return centerY_; }

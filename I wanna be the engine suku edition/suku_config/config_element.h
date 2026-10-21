@@ -26,7 +26,7 @@ namespace suku
 		bool hasListConstraint() { return hasListConstraint_; }
 		const String& getName() { return name_; }
 		const String& getCategory() { return category_; }
-		const std::pair<T, T>& getRange() { return { minValue_, maxValue_ }; }
+		std::pair<T, T> getRange() { return { minValue_, maxValue_ }; }
 		const std::vector<T>& getValueList() { return valueList_; }
 		void operator =(const ConfigElement& _other) = delete;
 		void operator =(ConfigElement&& _other) = delete;
