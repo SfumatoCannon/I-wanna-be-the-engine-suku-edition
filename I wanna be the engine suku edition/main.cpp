@@ -16,7 +16,7 @@ public:
 	Room0()	: Room(1600, 1216)
 	{
 		setBackground("Image\\bg.jpg");
-
+		Action<&Player::onUpdate> test;
 		create<Block>(400, 400)->setScaleX(2)->setScaleY(1);
 		create<Save>(32, 0);
 		create<BulletBlocker>(96, 0);

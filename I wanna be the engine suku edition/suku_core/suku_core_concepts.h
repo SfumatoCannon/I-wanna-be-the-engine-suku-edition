@@ -21,16 +21,16 @@ namespace suku
 	template<typename Obj>
 	struct suku_upd_function_source_class<void(Obj::*)()>
 	{
-		using type = C;
+		using type = Obj;
 	};
 
 	template<typename Obj>
 	struct suku_upd_function_source_class<void(Obj::*)() const>
 	{
-		using type = C;
+		using type = Obj;
 	};
 
 	template<typename T>
-	using member_function_class_t =
+	using suku_upd_function_source_class_t =
 		typename suku_upd_function_source_class<T>::type;
 }

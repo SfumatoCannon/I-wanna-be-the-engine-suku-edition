@@ -7,11 +7,11 @@
 
 namespace suku
 {
+	template<auto Func>
+		requires std::is_member_function_pointer_v<decltype(Func)>&& suku_object<suku_upd_function_source_class_t<decltype(Func)>>
 	class Action
 	{
 	public:
-		template<auto Func>
-			requires std::is_member_function_pointer_v<decltype(Func)> && suku_object<suku_upd_function_source_class<decltype(Func)>>
 		Action();
 	private:
 		Typecode id_;
