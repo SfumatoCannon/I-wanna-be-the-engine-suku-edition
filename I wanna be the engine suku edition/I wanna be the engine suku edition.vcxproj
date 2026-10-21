@@ -412,6 +412,7 @@
   <ItemGroup>
     <None Include="suku_config\config_element.inl" />
     <None Include="suku_config\config_file.inl" />
+    <None Include="suku_core\action.inl" />
     <None Include="suku_core\object.inl" />
     <None Include="suku_core\room.inl" />
     <None Include="suku_core\object_collision_pool.inl" />

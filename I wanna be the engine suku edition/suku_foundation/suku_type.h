@@ -8,6 +8,8 @@
 namespace suku
 {
 	typedef size_t Typecode;
+	// alias
+		typedef Typecode typecode_t;
 
 	class TypeNode;
 	class SukuObjectTypeTree;
