@@ -21,14 +21,24 @@ namespace suku
 	public:
 		Action();
 		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
+		Typecode getId() { return id_; }
 	private:
 		Typecode id_;
 		std::function<void(Room*)> executeFunction_;
 	};
 
+	struct ActionNode
+	{
+		std::unique_ptr<IAction> action;
+		std::list<ActionNode*> prev;
+		std::list<ActionNode*> next;
+		int prevCounter = 0;
+	};
+
 	class ActionManager
 	{
-
+	private:
+		std::map<long double, ActionNode> actionNodePool_;
 	};
 }
 
