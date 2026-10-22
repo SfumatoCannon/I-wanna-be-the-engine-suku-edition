@@ -15,7 +15,7 @@ namespace suku
 	};
 
 	template<auto Func>
-		requires std::is_member_function_pointer_v<decltype(Func)>&& suku_object<suku_upd_function_source_class_t<decltype(Func)>>
+		requires suku_upd_function<decltype(Func)>
 	class Action : public IAction
 	{
 	public:
@@ -33,12 +33,25 @@ namespace suku
 		std::list<ActionNode*> prev;
 		std::list<ActionNode*> next;
 		int prevCounter = 0;
+		ActionNode(std::unique_ptr<IAction> _action) : action(std::move(_action)) {}
 	};
 
 	class ActionManager
 	{
+	public:
+		template<auto Func>
+			requires suku_upd_function<decltype(Func)>
+		static void registerAction();
+
+		template<auto Func>
+			requires suku_upd_function<decltype(Func)>
+		static ActionNode* findActionNode();
+
+		template<auto FuncSrc, auto FuncDst>
+			requires suku_upd_function<decltype(FuncSrc)> && suku_upd_function<decltype(FuncDst)>
+		static void addDependency();
 	private:
-		std::map<long double, ActionNode> actionNodePool_;
+		inline static std::map<Typecode, ActionNode> actionNodePool_;
 	};
 }
 

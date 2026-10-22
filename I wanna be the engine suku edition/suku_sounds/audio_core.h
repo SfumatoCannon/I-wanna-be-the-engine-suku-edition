@@ -8,13 +8,9 @@ namespace suku
 {
 	class SoundFactoryGlobal
 	{
-		// 单例模式
 	public:
-		static SoundFactoryGlobal& getInstance()
-		{
-			static SoundFactoryGlobal instance;
-			return instance;
-		}
+		static SoundFactoryGlobal& getInstance() { static SoundFactoryGlobal instance; return instance; }
+
 		static void uninitialize();
 		SoundFactoryGlobal(const SoundFactoryGlobal&) = delete;
 		SoundFactoryGlobal& operator=(const SoundFactoryGlobal&) = delete;

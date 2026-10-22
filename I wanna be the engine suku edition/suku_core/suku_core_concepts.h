@@ -33,4 +33,7 @@ namespace suku
 	template<typename T>
 	using suku_upd_function_source_class_t =
 		typename suku_upd_function_source_class<T>::type;
+
+	template<typename Func>
+	concept suku_upd_function = std::is_member_function_pointer_v<Func> && suku_object<suku_upd_function_source_class_t<Func>>;
 }
