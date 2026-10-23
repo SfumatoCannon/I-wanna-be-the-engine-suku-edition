@@ -55,6 +55,14 @@ namespace suku
 	private:
 		inline static std::map<Typecode, ActionNode> actionNodePool_;
 	};
+
+	template<auto Func>
+		requires suku_upd_function<decltype(Func)>
+	class ActionRegisterClass
+	{
+	public:
+		ActionRegisterClass() { ActionManager::registerAction<Func>(); }
+	};
 }
 
 #include "action.inl"
