@@ -50,6 +50,8 @@ namespace suku
 		template<auto FuncSrc, auto FuncDst>
 			requires suku_upd_function<decltype(FuncSrc)> && suku_upd_function<decltype(FuncDst)>
 		static void addDependency();
+
+		static void execute(Room* _inRoom);
 	private:
 		inline static std::map<Typecode, ActionNode> actionNodePool_;
 	};
