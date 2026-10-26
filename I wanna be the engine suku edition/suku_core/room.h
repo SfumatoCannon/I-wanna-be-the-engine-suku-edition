@@ -9,7 +9,6 @@
 #include <suku_sounds/suku_sounds.h>
 #include <suku_draw/brush.h>
 #include "camera.h"
-#include "action.h"
 
 namespace suku
 {

@@ -14,7 +14,6 @@ namespace suku
 		isOnFloor_ = false;
 		isOnVineLeft_ = isOnVineRight_ = false;
 		isInfinityJump = false;
-		isFrozen = false;
 		maxJumpTime = 2;
 		movingSpeed = 3.0;
 		gravity = 0.4f;
@@ -204,7 +203,7 @@ namespace suku
 
 		static Sound sndWallJump("Audio\\sndWallJump.wav");
 
-		if (!isFrozen)
+		if (!isFrozen())
 		{
 			if (isOnVineLeft_)
 			{

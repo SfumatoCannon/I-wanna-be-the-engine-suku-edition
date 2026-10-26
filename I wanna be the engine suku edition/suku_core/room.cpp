@@ -12,6 +12,7 @@
 #include <algorithm>
 #include "room_pool.h"
 #include "tile.h"
+#include "action.h"
 
 namespace suku
 {

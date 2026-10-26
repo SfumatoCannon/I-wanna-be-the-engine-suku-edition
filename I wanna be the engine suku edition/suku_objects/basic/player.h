@@ -18,7 +18,6 @@ namespace suku
 		inline static Sprite sprSliding{ "Image\\player_sliding.png", 2, 3, RectangleShape(11, 21, 12, 11), 17, 23 };
 
 		bool isInfinityJump;
-		bool isFrozen;
 		short maxJumpTime;
 		float movingSpeed;
 		float gravity;
