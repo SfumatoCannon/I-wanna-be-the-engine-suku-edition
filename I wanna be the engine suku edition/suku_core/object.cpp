@@ -269,21 +269,13 @@ namespace suku
 		{
 			inRoom_->remove(this);
 		}
-		else
-		{
-			removeTag_ = true;
-		}
+		removeTag_ = true;
 	}
 
 	void Object::destroy()
 	{
 		remove();
 		destroyTag_ = true;
-		// inRoom_ != nullptr 时其生命周期由 Room 管理
-		if (!isInRoom())
-		{
-			delete this;
-		}
 	}
 
 	float Object::totalHspeed()const

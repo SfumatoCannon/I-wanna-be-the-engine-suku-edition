@@ -5,6 +5,10 @@
 #include <suku_foundation/suku_type.h>
 #include <functional>
 
+#define ACTION(func) static inline suku::ActionRegisterClass<func> action_registered_##func## {};
+
+#define ACTION_ORDER(func, func2) static inline suku::ActionOrderRegisterClass<func, func2> action_order_registered_##func##_##func2## {};
+
 namespace suku
 {
 	class IAction
@@ -62,6 +66,14 @@ namespace suku
 	{
 	public:
 		ActionRegisterClass() { ActionManager::registerAction<Func>(); }
+	};
+
+	template<auto Func1, auto Func2>
+		requires suku_upd_function<decltype(Func1)> && suku_upd_function<decltype(Func2)>
+	class ActionOrderRegisterClass
+	{
+	public:
+		ActionOrderRegisterClass() { ActionManager::addDependency<Func1, Func2>(); }
 	};
 }
 

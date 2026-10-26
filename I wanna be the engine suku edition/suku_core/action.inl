@@ -1,5 +1,6 @@
 #include "action.h"
 #include <list>
+#include "room.h"
 
 namespace suku
 {
@@ -10,11 +11,14 @@ namespace suku
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
 		executeFunction_ = [](Room* _inRoom) {
 			std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-			for (auto& op : objList)
+			for (Obj* o : objList)
 			{
-				(op->*Func)();
+				if (o->isExist() && !o->isFrozen())
+				{
+					(o->*Func)();
+				}
 			}
-			};
+		};
 	}
 
 

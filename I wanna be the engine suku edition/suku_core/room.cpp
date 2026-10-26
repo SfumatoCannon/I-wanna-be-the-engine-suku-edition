@@ -333,23 +333,24 @@ namespace suku
 			}
 		}
 
-		for (auto& [id, objArray] : updateArray_)
-		{
-			for (auto iter = objArray.begin(); iter != objArray.end();)
-			{
-				Object* obj = (*iter).get();
-				if (obj->removeTag_)
-				{
-					iter = objArray.erase(iter);
-					continue;
-				}
-				if (!obj->isFrozen())
-				{
-					obj->onUpdate();
-				}
-				iter++;
-			}
-		}
+		ActionManager::execute(this);
+		//for (auto& [id, objArray] : updateArray_)
+		//{
+		//	for (auto iter = objArray.begin(); iter != objArray.end();)
+		//	{
+		//		Object* obj = (*iter).get();
+		//		if (obj->removeTag_)
+		//		{
+		//			iter = objArray.erase(iter);
+		//			continue;
+		//		}
+		//		if (!obj->isFrozen())
+		//		{
+		//			obj->onUpdate();
+		//		}
+		//		iter++;
+		//	}
+		//}
 
 		for (auto& [id, objArray] : objectPointerArray_)
 		{
@@ -375,7 +376,7 @@ namespace suku
 				}
 				if (!obj->isFrozen())
 				{
-					obj->onUpdateEnd();
+					//obj->onUpdateEnd();
 					obj->x.addTick();
 					obj->y.addTick();
 					obj->xScale.addTick();
