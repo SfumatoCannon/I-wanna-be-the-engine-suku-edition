@@ -1,6 +1,7 @@
 #pragma once
 
 #include <suku_core/object.h>
+#include <suku_core/action.h>
 
 namespace suku
 {
@@ -52,6 +53,7 @@ namespace suku
 		void die();
 		void bleed();
 	};
+	ACTION(Player::onUpdate)
 
 	class Blood :public Object
 	{

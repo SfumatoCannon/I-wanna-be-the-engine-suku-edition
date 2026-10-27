@@ -5,9 +5,13 @@
 #include <suku_foundation/suku_type.h>
 #include <functional>
 
-#define ACTION(func) static inline suku::ActionRegisterClass<func> action_registered_##func## {};
+#define CONCAT(a, b) a##b
 
-#define ACTION_ORDER(func, func2) static inline suku::ActionOrderRegisterClass<func, func2> action_order_registered_##func##_##func2## {};
+#define REGISTERED_ACTION_NAME CONCAT(action_registered_, __COUNTER__)
+
+#define ACTION(func) static inline suku::ActionRegisterClass<&func> REGISTERED_ACTION_NAME {};
+
+#define ACTION_ORDER(func, func2) static inline suku::ActionOrderRegisterClass<&func, &func2> REGISTERED_ACTION_NAME {};
 
 namespace suku
 {
@@ -45,19 +49,26 @@ namespace suku
 	public:
 		template<auto Func>
 			requires suku_upd_function<decltype(Func)>
-		static void registerAction();
+		void registerAction();
 
 		template<auto Func>
 			requires suku_upd_function<decltype(Func)>
-		static ActionNode* findActionNode();
+		ActionNode* findActionNode();
 
 		template<auto FuncSrc, auto FuncDst>
 			requires suku_upd_function<decltype(FuncSrc)> && suku_upd_function<decltype(FuncDst)>
-		static void addDependency();
+		void addDependency();
 
-		static void execute(Room* _inRoom);
+		void execute(Room* _inRoom);
+
+		static ActionManager& getInstance()
+		{
+			static ActionManager instance;
+			return instance;
+		}
 	private:
-		inline static std::map<Typecode, ActionNode> actionNodePool_;
+		ActionManager() = default;
+		std::map<Typecode, ActionNode> actionNodePool_;
 	};
 
 	template<auto Func>
@@ -65,7 +76,7 @@ namespace suku
 	class ActionRegisterClass
 	{
 	public:
-		ActionRegisterClass() { ActionManager::registerAction<Func>(); }
+		ActionRegisterClass() { ActionManager::getInstance().registerAction<Func>(); }
 	};
 
 	template<auto Func1, auto Func2>
@@ -73,7 +84,7 @@ namespace suku
 	class ActionOrderRegisterClass
 	{
 	public:
-		ActionOrderRegisterClass() { ActionManager::addDependency<Func1, Func2>(); }
+		ActionOrderRegisterClass() { ActionManager::getInstance().addDependency<Func1, Func2>(); }
 	};
 }
 
