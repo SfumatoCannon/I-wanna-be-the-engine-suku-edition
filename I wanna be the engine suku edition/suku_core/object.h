@@ -32,7 +32,7 @@ namespace suku
 
 		unsigned int spriteBasicIndex = 0;
 		double spriteAnimationRate = 1.0;
-
+	
 		bool isInRoom()const { return inRoom_ != nullptr && isInRoom_; }
 		bool isExist()const { return !(removeTag_ || destroyTag_); }
 		Room* inRoom()const { return inRoom_; }

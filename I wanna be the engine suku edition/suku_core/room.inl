@@ -1,5 +1,4 @@
-#pragma once
-#include "room.h"
+#pragma once 
 #include "object.h"
 #include "object_collision_pool.h"
 #include <type_traits>

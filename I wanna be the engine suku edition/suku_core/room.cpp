@@ -377,7 +377,6 @@ namespace suku
 				}
 				if (!obj->isFrozen())
 				{
-					//obj->onUpdateEnd();
 					obj->x.addTick();
 					obj->y.addTick();
 					obj->xScale.addTick();

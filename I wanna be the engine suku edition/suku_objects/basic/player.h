@@ -53,7 +53,6 @@ namespace suku
 		void die();
 		void bleed();
 	};
-	ACTION(Player::onUpdate)
 
 	class Blood :public Object
 	{

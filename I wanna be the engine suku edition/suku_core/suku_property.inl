@@ -1,4 +1,3 @@
-#include "suku_property.h"
 
 namespace suku
 {

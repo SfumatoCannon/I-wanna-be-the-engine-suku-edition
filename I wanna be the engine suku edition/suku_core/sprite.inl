@@ -1,5 +1,4 @@
 #pragma once
-#include "sprite.h"
 
 namespace suku
 {

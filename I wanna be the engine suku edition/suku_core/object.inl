@@ -1,6 +1,5 @@
 #pragma once
 #include "room.h"
-#include "object.h"
 #include "sprite.h"
 
 namespace suku

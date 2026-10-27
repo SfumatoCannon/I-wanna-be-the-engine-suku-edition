@@ -9,9 +9,9 @@
 
 #define REGISTERED_ACTION_NAME CONCAT(action_registered_, __COUNTER__)
 
-#define ACTION(func) static inline suku::ActionRegisterClass<&func> REGISTERED_ACTION_NAME {};
+#define ACTION(func) inline suku::ActionRegisterClass<&func> REGISTERED_ACTION_NAME {};
 
-#define ACTION_ORDER(func, func2) static inline suku::ActionOrderRegisterClass<&func, &func2> REGISTERED_ACTION_NAME {};
+#define ACTION_ORDER(func, func2) inline suku::ActionOrderRegisterClass<&func, &func2> REGISTERED_ACTION_NAME {};
 
 namespace suku
 {
