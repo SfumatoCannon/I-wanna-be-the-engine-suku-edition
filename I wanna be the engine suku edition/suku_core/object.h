@@ -105,9 +105,9 @@ namespace suku
 		virtual void onRemove() {}
 		virtual void onSave() {}
 		virtual void onPaint() { paintBody(); }
-		virtual void onUpdateStart() {}
-		virtual void onUpdate() {}
-		virtual void onUpdateEnd() {}
+		virtual void onUpdateStart() {} // actionlized
+		virtual void onUpdate() {}		// actionlized
+		virtual void onUpdateEnd() {}	// actionlized
 
 		float totalHspeed()const;
 		float totalVspeed()const;
@@ -194,7 +194,7 @@ namespace suku
 		bool isFrozen_ = false;
 
 		Sprite* sprite_ = nullptr;
-		std::list<std::function<bool()> > actionList_;
+		std::list<std::function<bool()>> actionList_;
 	private:
 		bool removeTag_ = false;
 		bool destroyTag_ = false;

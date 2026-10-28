@@ -1,11 +1,11 @@
 #include <list>
-#include "room.h"
+#include "action.h"
 
 namespace suku
 {
 	template<auto Func>
 		requires suku_upd_function<decltype(Func)>
-	inline Action<Func>::Action() : id_(typecode(Func))
+	inline Action<Func>::Action() : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
 		executeFunction_ = [](Room* _inRoom) {
@@ -20,19 +20,27 @@ namespace suku
 		};
 	}
 
+	template<auto Func>
+	inline unsigned int Action<Func>::registerNewId()
+	{
+		static unsigned int newId = IAction::allocateId();
+		return newId;
+	}
 
 	template<auto Func>
 		requires suku_upd_function<decltype(Func)>
 	inline void ActionManager::registerAction()
 	{
-		actionNodePool_.try_emplace(typecode(Func), ActionNode{ std::make_unique<Action<Func>>() });
+		auto pFunc = std::make_unique<Action<Func>>();
+		actionNodePool_.try_emplace(pFunc->getId(), ActionNode{std::move(pFunc)});
 	}
 
 	template<auto Func>
 		requires suku_upd_function<decltype(Func)>
 	inline ActionNode* ActionManager::findActionNode()
 	{
-		auto iter = actionNodePool_.find(typecode(Func));
+		auto pFunc = std::make_unique<Action<Func>>();
+		auto iter = actionNodePool_.find(pFunc->getId());
 		if (iter != actionNodePool_.end())
 			return &(iter->second);
 		else

@@ -1,12 +1,18 @@
 ﻿#include "object.h"
 #include "room.h"
 #include "sprite.h"
+#include "action.h"
 #include <suku_draw/includes.h>
 
 using namespace suku::maths;
 
 namespace suku
 {
+	// object action implement
+	ACTION(Object::onUpdate)
+	ACTION_ORDER(Object::onUpdateStart, Object::onUpdate)
+	ACTION_ORDER(Object::onUpdate, Object::onUpdateEnd)
+
 	void Object::paintBody()const
 	{
 		if (!sprite_)

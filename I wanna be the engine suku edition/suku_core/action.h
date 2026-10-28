@@ -5,13 +5,14 @@
 #include <suku_foundation/suku_type.h>
 #include <functional>
 
-#define CONCAT(a, b) a##b
+#define CONCAT_IMPL(a, b) a##b
+#define CONCAT(a, b) CONCAT_IMPL(a, b)
 
 #define REGISTERED_ACTION_NAME CONCAT(action_registered_, __COUNTER__)
 
-#define ACTION(func) inline suku::ActionRegisterClass<&func> REGISTERED_ACTION_NAME {};
+#define ACTION(func) inline suku::ActionRegisterClass<&(func)> REGISTERED_ACTION_NAME {};
 
-#define ACTION_ORDER(func, func2) inline suku::ActionOrderRegisterClass<&func, &func2> REGISTERED_ACTION_NAME {};
+#define ACTION_ORDER(func, func2) inline suku::ActionOrderRegisterClass<&(func), &(func2)> REGISTERED_ACTION_NAME {};
 
 namespace suku
 {
@@ -20,6 +21,10 @@ namespace suku
 	public:
 		virtual ~IAction() = default;
 		virtual void execute(Room* _inRoom) = 0;
+	protected:
+		unsigned int allocateId() { idCounter_++; return idCounter_; }
+	private:
+		inline static unsigned int idCounter_ = 0;
 	};
 
 	template<auto Func>
@@ -29,10 +34,11 @@ namespace suku
 	public:
 		Action();
 		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
-		Typecode getId() { return id_; }
+		unsigned int getId() const { return id_; }
 	private:
-		Typecode id_;
+		unsigned int registerNewId();
 		std::function<void(Room*)> executeFunction_;
+		unsigned int id_;
 	};
 
 	struct ActionNode
