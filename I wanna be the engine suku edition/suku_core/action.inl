@@ -21,6 +21,7 @@ namespace suku
 	}
 
 	template<auto Func>
+		requires suku_upd_function<decltype(Func)>
 	inline unsigned int Action<Func>::registerNewId()
 	{
 		static unsigned int newId = IAction::allocateId();
@@ -32,7 +33,8 @@ namespace suku
 	inline void ActionManager::registerAction()
 	{
 		auto pFunc = std::make_unique<Action<Func>>();
-		actionNodePool_.try_emplace(pFunc->getId(), ActionNode{std::move(pFunc)});
+		const auto id = pFunc->getId();
+		actionNodePool_.try_emplace(id, ActionNode{std::move(pFunc)});
 	}
 
 	template<auto Func>
