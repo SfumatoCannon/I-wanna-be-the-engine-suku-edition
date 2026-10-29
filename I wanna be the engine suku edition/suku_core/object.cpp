@@ -11,7 +11,8 @@ namespace suku
 	// object action implement
 	ACTION(Object::onUpdate)
 	ACTION_ORDER(Object::onUpdateStart, Object::onUpdate)
-	ACTION_ORDER(Object::onUpdate, Object::onUpdateEnd)
+	ACTION_ORDER(Object::onUpdate, Object::applySpeed)
+	ACTION_ORDER(Object::applySpeed, Object::onUpdateEnd)
 
 	void Object::paintBody()const
 	{
@@ -282,6 +283,14 @@ namespace suku
 	{
 		remove();
 		destroyTag_ = true;
+	}
+
+	void Object::applySpeed()
+	{
+		x += totalHspeed();
+		y += totalVspeed();
+		hspeedTemp = 0;
+		vspeedTemp = 0;
 	}
 
 	float Object::totalHspeed()const

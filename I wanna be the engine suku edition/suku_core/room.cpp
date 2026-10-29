@@ -261,13 +261,13 @@ namespace suku
 		{
 			onUpdateStart();
 			Object* obj = updateControllerObject_;
-			obj->hspeedTemp = obj->vspeedTemp = 0;
 			obj->updateFunction();
 			obj->extraTransformLastFrame_ = obj->extraTransform_;
 			obj->onUpdateStart();
 			obj->onUpdate();
 			obj->x += obj->totalHspeed();
 			obj->y += obj->totalVspeed();
+			obj->applySpeed();
 			obj->onUpdateEnd();
 			obj->x.addTick();
 			obj->y.addTick();
@@ -305,7 +305,6 @@ namespace suku
 				}
 				else
 				{
-					obj->hspeedTemp = obj->vspeedTemp = 0;
 					if (!obj->isFrozen())
 					{
 						obj->updateFunction();
@@ -353,17 +352,17 @@ namespace suku
 		//	}
 		//}
 
-		for (auto& [id, objArray] : objectPointerArray_)
-		{
-			for (auto& obj : objArray)
-			{
-				if (!obj->isFrozen())
-				{
-					obj->x += obj->totalHspeed();
-					obj->y += obj->totalVspeed();
-				}
-			}
-		}
+		//for (auto& [id, objArray] : objectPointerArray_)
+		//{
+		//	for (auto& obj : objArray)
+		//	{
+		//		if (!obj->isFrozen())
+		//		{
+		//			obj->x += obj->totalHspeed();
+		//			obj->y += obj->totalVspeed();
+		//		}
+		//	}
+		//}
 
 		for (auto& [id, objArray] : postUpdateArray_)
 		{
