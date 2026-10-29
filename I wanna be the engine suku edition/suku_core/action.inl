@@ -75,5 +75,42 @@ namespace suku
 			srcNode->next.push_back(dstNode);
 			dstNode->prev.push_back(srcNode);
 		}
+		std::list<ActionNode*> queue;
+		std::list<ActionNode*> remainNodes;
+		for (auto& [id, node] : actionNodePool_)
+		{
+			node.prevCounter = node.prev.size();
+			remainNodes.push_back(&node);
+		}
+		while (!remainNodes.empty())
+		{
+			bool flag = false;
+			for (auto iter = remainNodes.begin(); iter != remainNodes.end();)
+			{
+				ActionNode* node = *iter;
+				if (node->prevCounter == 0)
+				{
+					flag = true;
+					queue.push_back(node);
+					for (auto& nextNode : node->next)
+					{
+						nextNode->prevCounter--;
+					}
+					iter = remainNodes.erase(iter);
+				}
+				else
+				{
+					iter++;
+				}
+			}
+			if (!flag)
+			{
+				ERRORWINDOW(std::format("Failed to define order of {} -> {}: This will cause a cycle.", typeid(FuncSrc).name(), typeid(FuncDst).name()));
+				srcNode->next.remove_if([=](ActionNode* _node) {return _node == dstNode; });
+				dstNode->prev.remove_if([=](ActionNode* _node) {return _node == srcNode; });
+				return;
+			}
+		}
+		actionExecutionQueue_ = queue;
 	}
 }

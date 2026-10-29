@@ -309,7 +309,7 @@ namespace
 		a.text.clear();
 
 		// FPS
-		a.text += std::format(L"FPS: {}{}", monitoredFPS, (isVsyncOn ? L" (vsync on)" : L""));
+		a.text += std::format(L"FPS: {}{}", monitoredFPS, (isVsyncOn ? L" (vsync on)" : L" (vsync off)"));
 
 		// Now Room
 		auto nowRoom = suku::RoomPool::getNowRoom();

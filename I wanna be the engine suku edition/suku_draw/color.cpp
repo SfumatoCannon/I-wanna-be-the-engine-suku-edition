@@ -44,22 +44,22 @@ namespace suku
 		return maxValue;
 	}
 
-	void Color::setH(float _h)
+	void Color::setH(real _h)
 	{
 		setHSV(_h, s(), v());
 	}
 
-	void Color::setS(float _s)
+	void Color::setS(real _s)
 	{
 		setHSV(h(), _s, v());
 	}
 
-	void Color::setV(float _v)
+	void Color::setV(real _v)
 	{
 		setHSV(h(), s(), _v);
 	}
 
-	void Color::setHSV(float _h, float _s, float _v)
+	void Color::setHSV(real _h, real _s, real _v)
 	{
 		float C = _v * _s;
 		float X = C * (1.0f - (float)fabs((int)(_h / 60) % 2 - 1));

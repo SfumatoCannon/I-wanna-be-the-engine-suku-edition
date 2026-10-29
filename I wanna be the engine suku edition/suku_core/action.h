@@ -46,7 +46,7 @@ namespace suku
 		std::unique_ptr<IAction> action;
 		std::list<ActionNode*> prev;
 		std::list<ActionNode*> next;
-		int prevCounter = 0;
+		size_t prevCounter = 0;
 		ActionNode(std::unique_ptr<IAction> _action) : action(std::move(_action)) {}
 	};
 
@@ -75,6 +75,7 @@ namespace suku
 	private:
 		ActionManager() = default;
 		std::map<Typecode, ActionNode> actionNodePool_;
+		std::list<ActionNode*> actionExecutionQueue_;
 	};
 
 	template<auto Func>
