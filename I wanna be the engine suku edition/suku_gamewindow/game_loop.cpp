@@ -5,6 +5,7 @@
 #include "../suku_draw/includes.h"
 #include "../suku_config/includes.h"
 #include <suku_objects/basic/player.h>
+#include <suku_foundation/input_mouse.h>
 #include <format>
 
 // Private functions declaration
@@ -321,6 +322,8 @@ namespace
 			suku::Player* p = nowRoom->getObjectList<suku::Player>().front();
 			a.text += L"\nPlayer X: " + std::to_wstring(p->x.getValue());
 			a.text += L"\nPlayer Y: " + std::to_wstring(p->y.getValue());
+			a.text += std::format(L"\nMouse Position: ({}, {}) [raw: ({}, {})]",
+				suku::input::Mouse::getX(), suku::input::Mouse::getY(), suku::input::Mouse::getPixelX(), suku::input::Mouse::getPixelY());
 		}
 
 		a.paint(10, 10);

@@ -75,7 +75,7 @@ namespace suku
 		return false;
 	}
 
-	bool BitmapCollisionBox::isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const
+	bool BitmapCollisionBox::isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const
 	{
 		return _other.isCrashed(_otherTransform, *this, _transform);
 	}
@@ -177,7 +177,7 @@ namespace suku
 		return area >= areaThreshold;
 	}
 
-	bool ShapeCollisionBox::isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const
+	bool ShapeCollisionBox::isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const
 	{
 		return _other.isCrashed(_otherTransform, *this, _transform);
 	}

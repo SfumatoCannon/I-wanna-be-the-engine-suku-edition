@@ -5,20 +5,20 @@
 
 namespace suku
 {
-	class CollisionBox;
+	class ICollisionBox;
 	class BitmapCollisionBox;
 	class ShapeCollisionBox;
 
-	class CollisionBox
+	class ICollisionBox
 	{
 	public:
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const = 0;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const = 0;
-		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const = 0;
+		virtual bool isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const = 0;
 	};
 
 	using namespace suku::memory;
-	class BitmapCollisionBox :public CollisionBox
+	class BitmapCollisionBox :public ICollisionBox
 	{
 	public:
 		Array2D<bool> hitArea;
@@ -30,10 +30,10 @@ namespace suku
 
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;
-		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const override;
+		virtual bool isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const override;
 	};
 
-	class ShapeCollisionBox :public CollisionBox
+	class ShapeCollisionBox :public ICollisionBox
 	{
 	public:
 		Shape shape;
@@ -42,6 +42,6 @@ namespace suku
 
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const override;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const override;
-		virtual bool isCrashed(Transform _transform, const CollisionBox& _other, Transform _otherTransform)const override;
+		virtual bool isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const override;
 	};
 }

@@ -15,7 +15,7 @@ namespace suku
 	class ShapeSpriteElement;
 	class Sprite;
 
-	class CollisionBox;
+	class ICollisionBox;
 	class BitmapCollisionBox;
 	class ShapeCollisionBox;
 	class Transform;
@@ -45,7 +45,7 @@ namespace suku
 		bool isCrashed(Transform _transform, const SpriteElement& _other, Transform _otherTransform)const;
 		bool isCrashed(Transform _transform, const SpriteElement* _other, Transform _otherTransform)const;
 	protected:
-		std::unique_ptr<CollisionBox> hitArea_;
+		std::unique_ptr<ICollisionBox> hitArea_;
 	};
 
 	class BitmapSpriteElement :public SpriteElement
