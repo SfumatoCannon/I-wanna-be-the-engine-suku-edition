@@ -21,14 +21,8 @@ public:
 		create<Save>(32, 0);
 		create<BulletBlocker>(96, 0);
 		Player* p = create<Player>(0.f, 0.f).get();
-		int x = 0;
 
-		create(Block(32, 32))->addTimelineAction({ 100, 200 },
-			{
-				[=](Object* _this)->bool { _this->movingTo(64 + x * 32, 64 + x * 32, 50); return false; },
-				[](Object* _this)->bool { _this->movingTo(32, 32, 50); return false; }
-			}
-		);
+		create(Block(32, 32));
 		create(Block(96, 32))->addAction([=](Object* _this) {
 			if (input::Mouse::isDoubleClick())
 			{
@@ -63,6 +57,8 @@ public:
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
 		create(Spike(33, 128), Block(32, 160), Block(0, 192));
+		create(Spike(300, 150, Direction::Left), Block(332, 150), Spike(364, 150, Direction::Right));
+		create(Block(332, 50), Block(364, 18), Spike(364, 2, Direction::Left));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 		// setBGM(&suku::resource::Audio::musGuyRock);
