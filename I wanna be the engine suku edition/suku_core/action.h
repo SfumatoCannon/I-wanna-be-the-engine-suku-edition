@@ -74,7 +74,7 @@ namespace suku
 		}
 	private:
 		ActionManager() = default;
-		std::map<Typecode, ActionNode> actionNodePool_;
+		std::map<unsigned int, ActionNode> actionNodePool_;
 		std::list<ActionNode*> actionExecutionQueue_;
 	};
 

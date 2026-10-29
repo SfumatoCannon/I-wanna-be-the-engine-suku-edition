@@ -76,7 +76,7 @@ namespace suku
 						&t.getMatrix(),
 						&result
 					);
-					if (result == true)
+					if (result)
 						return true;
 				}
 			}
