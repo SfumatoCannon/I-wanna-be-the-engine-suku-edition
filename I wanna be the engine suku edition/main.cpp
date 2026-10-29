@@ -62,7 +62,7 @@ public:
 		create(WaterExtraJump(160, 32));
 		create(Water(224, 32));
 		create(Spike(32 + 16, 0, Direction::Down));
-		create(Spike(32, 128), Block(32, 160), Block(0, 192));
+		create(Spike(33, 128), Block(32, 160), Block(0, 192));
 		create<Warp<Room1>>(128, 0);
 		create<PausePage>();
 		// setBGM(&suku::resource::Audio::musGuyRock);

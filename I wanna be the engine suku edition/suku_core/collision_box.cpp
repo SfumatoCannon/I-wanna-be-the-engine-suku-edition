@@ -51,28 +51,7 @@ namespace suku
 
 	bool BitmapCollisionBox::isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const
 	{
-		if (hitArea.isEmpty())
-			return false;
-		static Shape pixelShape = SquareShape(1, 0, 0);
-		D2D1_GEOMETRY_RELATION result;
-		UINT i, j;
-		for (i = 0; i < hitWidth; i++)
-			for (j = 0; j < hitHeight; j++)
-			{
-				if (hitArea(i, j))
-				{
-					// compute a local transform so we can take address of matrix
-					Transform t = (_transform + translation((float)i, (float)j)).invertTransform() + _otherTransform;
-					pixelShape.currentGeometry->CompareWithGeometry(
-
-						_other.shape.currentGeometry.Get(),
-						&t.getMatrix(),
-						&result);
-					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
-						return true;
-				}
-			}
-		return false;
+		return _other.isCrashed(_otherTransform, *this, _transform);
 	}
 
 	bool BitmapCollisionBox::isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const
@@ -84,20 +63,20 @@ namespace suku
 	{
 		if (_other.hitArea.isEmpty())
 			return false;
-		static Shape pixelShape = SquareShape(1, 0, 0);
-		D2D1_GEOMETRY_RELATION result;
 		UINT i, j;
+		Transform t = _otherTransform.invertTransform() + _transform;
 		for (i = 0; i < _other.hitWidth; i++)
 			for (j = 0; j < _other.hitHeight; j++)
 			{
 				if (_other.hitArea(i, j))
 				{
-					Transform t = (_otherTransform + translation((float)i, (float)j)).invertTransform() + _transform;
-					pixelShape.currentGeometry->CompareWithGeometry(
-						shape.currentGeometry.Get(),
+					BOOL result;
+					shape.currentGeometry->FillContainsPoint(
+						D2D1_POINT_2F{ static_cast<float>(i) + 0.5f, static_cast<float>(j) + 0.5f },
 						&t.getMatrix(),
-						&result);
-					if (result != D2D1_GEOMETRY_RELATION_DISJOINT)
+						&result
+					);
+					if (result == true)
 						return true;
 				}
 			}
