@@ -27,7 +27,7 @@ namespace suku
 	{
 		options_ = _options;
 		if (selectedIndex_ >= options_.size())
-			selectedIndex_ = options_.size() - 1;
+			selectedIndex_ = static_cast<unsigned int>(options_.size()) - 1;
 		isEnabled_ = std::vector<bool>(options_.size(), true);
 		return this;
 	}
@@ -36,7 +36,7 @@ namespace suku
 	{
 		selectedIndex_ = _index;
 		if (selectedIndex_ >= options_.size())
-			selectedIndex_ = options_.size() - 1;
+			selectedIndex_ = static_cast<unsigned int>(options_.size()) - 1;
 		return this;
 	}
 

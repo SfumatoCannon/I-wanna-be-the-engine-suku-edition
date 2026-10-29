@@ -4,6 +4,7 @@
 #include "suku_property.h"
 #include <functional>
 #include <suku_draw/transform.h>
+#include <suku_foundation/maths.h>
 
 namespace suku
 {
@@ -15,19 +16,19 @@ namespace suku
 	{
 	public:
 		Camera() = default;
-		Camera(float _width, float _height) : width_(_width), height_(_height) {}
+		Camera(real _width, real _height) : width_(_width), height_(_height) {}
 
-		float getX() { return x; }
-		float getY() { return y; }
-		float getCenterX() { return centerX_; }
-		float getCenterY() { return centerY_; }
-		float getWidth() { return width_; }
-		float getHeight() { return height_; }
+		real getX() { return x; }
+		real getY() { return y; }
+		real getCenterX() { return centerX_; }
+		real getCenterY() { return centerY_; }
+		real getWidth() { return width_; }
+		real getHeight() { return height_; }
 		Transform getTransformToLayer();
-		Transform getTransformToLayer(float _frameOffsetRate);
+		Transform getTransformToLayer(real _frameOffsetRate);
 
-		void setCenterX(float _centerX) { centerX_ = _centerX; }
-		void setCenterY(float _centerY) { centerY_ = _centerY; }
+		void setCenterX(real _centerX) { centerX_ = _centerX; }
+		void setCenterY(real _centerY) { centerY_ = _centerY; }
 
 		void update();
 		bool isBinded() { return isBinded_; }
@@ -43,11 +44,11 @@ namespace suku
 		};
 
 		CameraBorder getBorder();
-		void setBorder(float _left, float _top, float _right, float _bottom);
+		void setBorder(real _left, real _top, real _right, real _bottom);
 		void resetBorder();
 
 
-		static std::function<void(Camera*)> follow(Object* _object, float _velocity /* 0 ~ 1 */);
+		static std::function<void(Camera*)> follow(Object* _object, real _velocity /* 0 ~ 1 */);
 
 		Property<real> x = 0.0f;
 		Property<real> y = 0.0f;
@@ -57,13 +58,13 @@ namespace suku
 	private:
 		std::function<void(Camera*)> bindFunc_;
 		bool isBinded_ = false;
-		float width_ = constants::window::widthLogical;
-		float height_ = constants::window::heightLogical;
-		float centerX_ = constants::window::widthLogical / 2;
-		float centerY_ = constants::window::heightLogical / 2;
-		float borderTop_ = 0.0f;
-		float borderBottom_ = FLT_MAX;
-		float borderLeft_ = 0.0f;
-		float borderRight_ = FLT_MAX;
+		real width_ = constants::window::widthLogical;
+		real height_ = constants::window::heightLogical;
+		real centerX_ = constants::window::widthLogical / 2;
+		real centerY_ = constants::window::heightLogical / 2;
+		real borderTop_ = 0.0f;
+		real borderBottom_ = FLT_MAX;
+		real borderLeft_ = 0.0f;
+		real borderRight_ = FLT_MAX;
 	};
 }

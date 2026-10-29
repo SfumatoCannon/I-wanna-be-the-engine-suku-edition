@@ -25,10 +25,10 @@ namespace suku
 
 		real_type get() const { return value_; }
 
-		Real& operator+=(real_type _other) { value_ += _other; return *this; }
-		Real& operator-=(real_type _other) { value_ -= _other; return *this; }
-		Real& operator*=(real_type _other) { value_ *= _other; return *this; }
-		Real& operator/=(real_type _other) { value_ /= _other; return *this; }
+		Real& operator+=(const Real& _other) { value_ += _other; return *this; }
+		Real& operator-=(const Real& _other) { value_ -= _other; return *this; }
+		Real& operator*=(const Real& _other) { value_ *= _other; return *this; }
+		Real& operator/=(const Real& _other) { value_ /= _other; return *this; }
 
 		Real operator-() const { return Real(-value_); }
 

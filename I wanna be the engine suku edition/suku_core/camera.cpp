@@ -4,12 +4,12 @@
 
 namespace suku
 {
-	std::function<void(Camera*)> Camera::follow(Object* _object, float _velocity)
+	std::function<void(Camera*)> Camera::follow(Object* _object, real _velocity)
 	{
 		return [_object, _velocity](Camera* _c) {
 			auto border = _c->getBorder();
-			float targetX = std::clamp(_object->x.getValue().get(), border.left + _c->getCenterX(), border.right - _c->getCenterX());
-			float targetY = std::clamp(_object->y.getValue().get(), border.top + _c->getCenterY(), border.bottom - _c->getCenterY());
+			real targetX = std::clamp(_object->x.getValue().get(), border.left + _c->getCenterX(), border.right - _c->getCenterX());
+			real targetY = std::clamp(_object->y.getValue().get(), border.top + _c->getCenterY(), border.bottom - _c->getCenterY());
 			_c->x += (targetX - _c->x - _c->getCenterX()) * _velocity;
 			_c->y += (targetY - _c->y - _c->getCenterY()) * _velocity;
 			};
@@ -21,7 +21,7 @@ namespace suku
 			+ rotation(x + centerX_, y + centerY_, angle) + extraTransform;
 	}
 
-	Transform Camera::getTransformToLayer(float _frameOffsetRate)
+	Transform Camera::getTransformToLayer(real _frameOffsetRate)
 	{
 		auto frameX = x.getInterpolatedFrameState(_frameOffsetRate);
 		auto frameY = y.getInterpolatedFrameState(_frameOffsetRate);
@@ -53,7 +53,7 @@ namespace suku
 		return { borderTop_, borderLeft_, borderBottom_, borderRight_ };
 	}
 
-	void Camera::setBorder(float _left, float _top, float _right, float _bottom)
+	void Camera::setBorder(real _left, real _top, real _right, real _bottom)
 	{
 		borderTop_ = _top;
 		borderLeft_ = _left;
