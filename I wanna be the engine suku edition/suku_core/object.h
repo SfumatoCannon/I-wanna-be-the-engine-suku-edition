@@ -107,7 +107,7 @@ namespace suku
 		virtual void onPaint() { paintBody(); }
 		virtual void onUpdateStart() {} // actionlized
 		virtual void onUpdate() {}		// actionlized
-		void applySpeed();
+		void applySpeed();				// actionlized
 		virtual void onUpdateEnd() {}	// actionlized
 
 		float totalHspeed()const;

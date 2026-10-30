@@ -333,7 +333,7 @@ namespace suku
 		//	}
 		//}
 
-		ActionManager::getInstance().execute(this);
+		ActionManager::getUpdInstance().execute(this);
 		//for (auto& [id, objArray] : updateArray_)
 		//{
 		//	for (auto iter = objArray.begin(); iter != objArray.end();)

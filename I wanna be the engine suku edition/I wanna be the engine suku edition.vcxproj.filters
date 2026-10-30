@@ -258,9 +258,6 @@
     <ClInclude Include="suku_objects\basic\common_objects.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="suku_core\execute_priority.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -685,6 +682,9 @@
       <Filter>头文件</Filter>
     </None>
     <None Include="suku_core\tile.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="suku_core\action.inl">
       <Filter>头文件</Filter>
     </None>
   </ItemGroup>

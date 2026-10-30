@@ -10,9 +10,11 @@
 
 #define REGISTERED_ACTION_NAME CONCAT(action_registered_, __COUNTER__)
 
-#define ACTION(func) inline suku::ActionRegisterClass<&(func)> REGISTERED_ACTION_NAME {};
+#define ACTION(func) inline suku::UpdateActionRegisterClass<&(func)> REGISTERED_ACTION_NAME {};
+#define ACTION_ORDER(func, func2) inline suku::UpdateActionOrderRegisterClass<&(func), &(func2)> REGISTERED_ACTION_NAME {};
 
-#define ACTION_ORDER(func, func2) inline suku::ActionOrderRegisterClass<&(func), &(func2)> REGISTERED_ACTION_NAME {};
+#define PAINT_ACTION(func) inline suku::PaintActionRegisterClass<&(func)> REGISTERED_ACTION_NAME {};
+#define PAINT_ACTION_ORDER(func, func2) inline suku::PaintActionOrderRegisterClass<&(func), &(func2)> REGISTERED_ACTION_NAME {};
 
 namespace suku
 {
@@ -67,7 +69,13 @@ namespace suku
 
 		void execute(Room* _inRoom);
 
-		static ActionManager& getInstance()
+		static ActionManager& getUpdInstance()
+		{
+			static ActionManager instance;
+			return instance;
+		}
+
+		static ActionManager& getPntInstance()
 		{
 			static ActionManager instance;
 			return instance;
@@ -80,18 +88,34 @@ namespace suku
 
 	template<auto Func>
 		requires suku_upd_function<decltype(Func)>
-	class ActionRegisterClass
+	class UpdateActionRegisterClass
 	{
 	public:
-		ActionRegisterClass() { ActionManager::getInstance().registerAction<Func>(); }
+		UpdateActionRegisterClass() { ActionManager::getUpdInstance().registerAction<Func>(); }
 	};
 
 	template<auto Func1, auto Func2>
 		requires suku_upd_function<decltype(Func1)> && suku_upd_function<decltype(Func2)>
-	class ActionOrderRegisterClass
+	class UpdateActionOrderRegisterClass
 	{
 	public:
-		ActionOrderRegisterClass() { ActionManager::getInstance().addDependency<Func1, Func2>(); }
+		UpdateActionOrderRegisterClass() { ActionManager::getUpdInstance().addDependency<Func1, Func2>(); }
+	};
+
+	template<auto Func>
+		requires suku_upd_function<decltype(Func)>
+	class PaintActionRegisterClass
+	{
+	public:
+		PaintActionRegisterClass() { ActionManager::getPntInstance().registerAction<Func>(); }
+	};
+
+	template<auto Func1, auto Func2>
+		requires suku_upd_function<decltype(Func1)>&& suku_upd_function<decltype(Func2)>
+	class PaintActionOrderRegisterClass
+	{
+	public:
+		PaintActionOrderRegisterClass() { ActionManager::getPntInstance().addDependency<Func1, Func2>(); }
 	};
 }
 
