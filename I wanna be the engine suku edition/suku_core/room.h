@@ -84,9 +84,9 @@ namespace suku
 
 		void update();
 		RenderBitmap paintOnLayer(PaintLayer& _layer);
-		RenderBitmap paintOnLayer(PaintLayer& _layer, float _frameOffset);
+		RenderBitmap paintOnLayer(PaintLayer& _layer, float _frameOffsetRate);
 		void paint();
-		void additionalFramePaint(float _offset);
+		void paint(float _frameOffsetRate);
 
 		void pause(Object* _controllerObject);
 		void resume();

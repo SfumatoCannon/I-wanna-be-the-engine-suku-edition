@@ -290,7 +290,7 @@ namespace
 			suku::graphics_core::beginDrawGlobal();
 			suku::Room* nowRoom = suku::RoomPool::getNowRoom();
 			if (nowRoom)
-				nowRoom->additionalFramePaint((float)_additionalFrameRate);
+				nowRoom->paint((float)_additionalFrameRate);
 
 			if (debugMessage)
 			{

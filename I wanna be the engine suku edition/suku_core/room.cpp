@@ -517,20 +517,20 @@ namespace suku
 		onPaintEnd();
 	}
 
-	void Room::additionalFramePaint(float _offsetRate)
+	void Room::paint(float _frameOffsetRate)
 	{
 		if (isUpdatePaused_)
-			_offsetRate = 0.0f;
+			_frameOffsetRate = 0.0f;
 
 		onPaintStart();
 
-		float cameraX = camera.x.getInterpolatedFrameState(_offsetRate);
-		float cameraY = camera.y.getInterpolatedFrameState(_offsetRate);
-		float cameraAngle = camera.angle.getInterpolatedFrameState(_offsetRate);
+		float cameraX = camera.x.getInterpolatedFrameState(_frameOffsetRate);
+		float cameraY = camera.y.getInterpolatedFrameState(_frameOffsetRate);
+		float cameraAngle = camera.angle.getInterpolatedFrameState(_frameOffsetRate);
 
-		displayLayer.setBasicTransform(camera.getTransformToLayer(_offsetRate));
+		displayLayer.setBasicTransform(camera.getTransformToLayer(_frameOffsetRate));
 
-		auto pic = paintOnLayer(displayLayer, _offsetRate);
+		auto pic = paintOnLayer(displayLayer, _frameOffsetRate);
 		static EffectTransform scaleEffect(ScaleMode::HighQualityCubic, false);
 		scaleEffect.setTransform(GameWindow::getPixelMappingTransform());
 		scaleEffect.setInput(pic);
