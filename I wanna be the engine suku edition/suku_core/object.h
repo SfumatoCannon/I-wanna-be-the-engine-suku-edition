@@ -179,6 +179,7 @@ namespace suku
 
 	protected:
 		template<suku_property_type T> friend class Property;
+		template<auto Func> requires suku_upd_function<decltype(Func)> friend class Action;
 		friend class Room;
 
 		Transform extraTransform_;
@@ -194,9 +195,17 @@ namespace suku
 		bool isInRoom_ = false;
 		bool isFrozen_ = false;
 
+		// shows physical position / transform of the object when painting
+		Property<real> xActual, yActual;
+		Property<real> xScaleActual, yScaleActual;
+		Property<real> angleActual;
+		Transform extraTransformActual;
+
 		Sprite* sprite_ = nullptr;
 		std::list<std::function<bool()>> actionList_;
 	private:
+		void applyTransactions_(float _frameOffsetRate);
+		void removeTransactions_();
 		bool removeTag_ = false;
 		bool destroyTag_ = false;
 		PaintLayer* targetPaintLayer_ = nullptr;

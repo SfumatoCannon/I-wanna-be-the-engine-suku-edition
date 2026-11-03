@@ -23,6 +23,7 @@ namespace suku
 	public:
 		virtual ~IAction() = default;
 		virtual void execute(Room* _inRoom) = 0;
+		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) = 0;
 	protected:
 		unsigned int allocateId() { idCounter_++; return idCounter_; }
 	private:
@@ -36,10 +37,12 @@ namespace suku
 	public:
 		Action();
 		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
+		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) override { executeFunctionWithOffset_(_inRoom, _frameOffsetRate); }
 		unsigned int getId() const { return id_; }
 	private:
 		unsigned int registerNewId();
 		std::function<void(Room*)> executeFunction_;
+		std::function<void(Room*, float)> executeFunctionWithOffset_;
 		unsigned int id_;
 	};
 

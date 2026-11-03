@@ -733,4 +733,31 @@ namespace suku
 		vspeed = 0;
 		clock_ = 0;
 	}
+
+	void Object::applyTransactions_(float _frameOffsetRate)
+	{
+		xActual = x.getInterpolatedFrameState(_frameOffsetRate);
+		yActual = y.getInterpolatedFrameState(_frameOffsetRate);
+		xScaleActual = xScale.getInterpolatedFrameState(_frameOffsetRate);
+		yScaleActual = yScale.getInterpolatedFrameState(_frameOffsetRate);
+		angleActual = angle.getInterpolatedFrameState(_frameOffsetRate);
+		extraTransformActual = linearInterpolate(extraTransformLastFrame_, extraTransform_, _frameOffsetRate);
+
+		std::swap(xActual, x);
+		std::swap(yActual, y);
+		std::swap(xScaleActual, xScale);
+		std::swap(yScaleActual, yScale);
+		std::swap(angleActual, angle);
+		std::swap(extraTransformActual, extraTransform_);
+	}
+
+	void Object::removeTransactions_()
+	{
+		std::swap(xActual, x);
+		std::swap(yActual, y);
+		std::swap(xScaleActual, xScale);
+		std::swap(yScaleActual, yScale);
+		std::swap(angleActual, angle);
+		std::swap(extraTransformActual, extraTransform_);
+	}
 }

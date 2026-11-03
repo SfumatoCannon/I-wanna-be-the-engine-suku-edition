@@ -12,9 +12,23 @@ namespace suku
 			std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 			for (Obj* o : objList)
 			{
-				if (o->isExist() && !o->isFrozen())
+				if (o->isExist())
 				{
 					(o->*Func)();
+				}
+			}
+		};
+		executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+			std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+			for (Obj* o : objList)
+			{
+				if (o->isExist())
+				{
+					o->applyTransactions_(_frameOffsetRate);
+
+					(o->*Func)();
+
+					o->removeTransactions_();
 				}
 			}
 		};
