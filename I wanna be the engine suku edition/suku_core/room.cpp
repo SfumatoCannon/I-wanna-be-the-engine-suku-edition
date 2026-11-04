@@ -402,30 +402,31 @@ namespace suku
 		auto& targetPaintArray = paintArray_[&_layer];
 		_layer.beginDraw();
 		onPaintStart(_layer);
-		auto work = [&]() {
-			for (auto& [id, objArray] : targetPaintArray)
-			{
-				for (auto iter = objArray.begin(); iter != objArray.end();)
-				{
-					Object* obj = (*iter).get();
-					if (obj->removeTag_)
-					{
-						iter = objArray.erase(iter);
-						continue;
-					}
+		//auto work = [&]() {
+		//	for (auto& [id, objArray] : targetPaintArray)
+		//	{
+		//		for (auto iter = objArray.begin(); iter != objArray.end();)
+		//		{
+		//			Object* obj = (*iter).get();
+		//			if (obj->removeTag_)
+		//			{
+		//				iter = objArray.erase(iter);
+		//				continue;
+		//			}
 
-					if (!obj->isVisible)
-					{
-						iter++;
-						continue;
-					}
+		//			if (!obj->isVisible)
+		//			{
+		//				iter++;
+		//				continue;
+		//			}
 
-					obj->onPaint();
+		//			obj->onPaint();
 
-					iter++;
-				}
-			}
-			};
+		//			iter++;
+		//		}
+		//	}
+		//	};
+		auto work = [=]() { ActionManager::getPntInstance().execute(this); };
 		work();
 		if (&_layer == &displayLayer)
 		{
@@ -441,57 +442,8 @@ namespace suku
 		auto& targetPaintArray = paintArray_[&_layer];
 		_layer.beginDraw();
 		onPaintStart(_layer);
-		auto work = [&]() {
 
-			for (auto& [id, objArray] : targetPaintArray)
-			{
-				for (auto iter = objArray.begin(); iter != objArray.end();)
-				{
-					Object* obj = (*iter).get();
-					if (obj->removeTag_)
-					{
-						iter = objArray.erase(iter);
-						continue;
-					}
-
-					if (!obj->isVisible)
-					{
-						iter++;
-						continue;
-					}
-
-					Property<real> oX, oY;
-					Property<real> oScaleX, oScaleY;
-					Property<real> oAngle;
-					Transform oExtraTransform;
-
-					oX = obj->x.getInterpolatedFrameState(_frameOffsetRate);
-					oY = obj->y.getInterpolatedFrameState(_frameOffsetRate);
-					oScaleX = obj->xScale.getInterpolatedFrameState(_frameOffsetRate);
-					oScaleY = obj->yScale.getInterpolatedFrameState(_frameOffsetRate);
-					oAngle = obj->angle.getInterpolatedFrameState(_frameOffsetRate);
-					oExtraTransform = linearInterpolate(obj->extraTransformLastFrame_, obj->extraTransform_, _frameOffsetRate);
-
-					std::swap(obj->x, oX);
-					std::swap(obj->y, oY);
-					std::swap(obj->xScale, oScaleX);
-					std::swap(obj->yScale, oScaleY);
-					std::swap(obj->angle, oAngle);
-					std::swap(obj->extraTransform_, oExtraTransform);
-
-					obj->onPaint();
-
-					std::swap(obj->x, oX);
-					std::swap(obj->y, oY);
-					std::swap(obj->xScale, oScaleX);
-					std::swap(obj->yScale, oScaleY);
-					std::swap(obj->angle, oAngle);
-					std::swap(obj->extraTransform_, oExtraTransform);
-
-					iter++;
-				}
-			}
-			};
+		auto work = [=]() { ActionManager::getPntInstance().executeWithOffset(this, _frameOffsetRate); };
 		work();
 		if (&_layer == &displayLayer)
 		{

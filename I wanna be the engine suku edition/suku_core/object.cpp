@@ -14,6 +14,9 @@ namespace suku
 	ACTION_ORDER(Object::onUpdate, Object::applySpeed)
 	ACTION_ORDER(Object::applySpeed, Object::onUpdateEnd)
 
+	// object paint action implement
+	PAINT_ACTION(Object::onPaint)
+
 	void Object::paintBody()const
 	{
 		if (!sprite_)

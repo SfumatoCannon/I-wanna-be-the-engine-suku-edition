@@ -104,7 +104,7 @@ namespace suku
 		virtual void onRoomRestart();
 		virtual void onRemove() {}
 		virtual void onSave() {}
-		virtual void onPaint() { paintBody(); }
+		virtual void onPaint() { paintBody(); } // actionlized
 		virtual void onUpdateStart() {} // actionlized
 		virtual void onUpdate() {}		// actionlized
 		void applySpeed();				// actionlized

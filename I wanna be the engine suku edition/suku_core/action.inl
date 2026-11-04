@@ -48,7 +48,11 @@ namespace suku
 	{
 		auto pFunc = std::make_unique<Action<Func>>();
 		const auto id = pFunc->getId();
-		actionNodePool_.try_emplace(id, ActionNode{std::move(pFunc)});
+		auto result = actionNodePool_.try_emplace(id, ActionNode{ std::move(pFunc) });
+		if (result.second == true)
+		{
+			actionExecutionQueue_.push_back(&(result.first->second));
+		}
 	}
 
 	template<auto Func>

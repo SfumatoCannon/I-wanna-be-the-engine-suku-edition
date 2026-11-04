@@ -71,6 +71,7 @@ namespace suku
 		void addDependency();
 
 		void execute(Room* _inRoom);
+		void executeWithOffset(Room* _inRoom, float _frameOffsetRate);
 
 		static ActionManager& getUpdInstance()
 		{
