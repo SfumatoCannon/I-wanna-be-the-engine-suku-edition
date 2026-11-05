@@ -5,33 +5,61 @@ namespace suku
 {
 	template<auto Func>
 		requires suku_upd_function<decltype(Func)>
-	inline Action<Func>::Action() : id_(registerNewId())
+	inline Action<Func>::Action(ActionType _type) : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
-		executeFunction_ = [](Room* _inRoom) {
-			std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-			for (Obj* o : objList)
-			{
-				if (o->isExist())
+		if (_type == ActionType::Update)
+		{
+			executeFunction_ = [](Room* _inRoom) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
 				{
-					(o->*Func)();
+					if (o->isExist() && !o->isFrozen())
+					{
+						(o->*Func)();
+					}
 				}
-			}
-		};
-		executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-			std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-			for (Obj* o : objList)
-			{
-				if (o->isExist())
+				};
+			executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
 				{
-					o->applyTransactions_(_frameOffsetRate);
+					if (o->isExist() && !o->isFrozen())
+					{
+						o->applyTransactions_(_frameOffsetRate);
 
-					(o->*Func)();
+						(o->*Func)();
 
-					o->removeTransactions_();
+						o->removeTransactions_();
+					}
 				}
-			}
-		};
+				};
+		}
+		else // _type == ActionType::Paint
+		{
+			executeFunction_ = [](Room* _inRoom) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					if (o->isExist() && o->isVisible)
+					{
+						(o->*Func)();
+					}
+				}
+				};
+			executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					if (o->isExist() && o->isVisible)
+					{
+						o->applyTransactions_(_frameOffsetRate);
+						(o->*Func)();
+						o->removeTransactions_();
+					}
+				}
+			};
+		}
 	}
 
 	template<auto Func>
@@ -46,7 +74,7 @@ namespace suku
 		requires suku_upd_function<decltype(Func)>
 	inline void ActionManager::registerAction()
 	{
-		auto pFunc = std::make_unique<Action<Func>>();
+		auto pFunc = std::make_unique<Action<Func>>(type);
 		const auto id = pFunc->getId();
 		auto result = actionNodePool_.try_emplace(id, ActionNode{ std::move(pFunc) });
 		if (result.second == true)
@@ -59,7 +87,7 @@ namespace suku
 		requires suku_upd_function<decltype(Func)>
 	inline ActionNode* ActionManager::findActionNode()
 	{
-		auto pFunc = std::make_unique<Action<Func>>();
+		auto pFunc = std::make_unique<Action<Func>>(type);
 		auto iter = actionNodePool_.find(pFunc->getId());
 		if (iter != actionNodePool_.end())
 			return &(iter->second);

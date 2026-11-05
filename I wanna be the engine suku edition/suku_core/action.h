@@ -18,6 +18,12 @@
 
 namespace suku
 {
+	enum class ActionType
+	{
+		Update,
+		Paint
+	};
+
 	class IAction
 	{
 	public:
@@ -35,7 +41,7 @@ namespace suku
 	class Action : public IAction
 	{
 	public:
-		Action();
+		Action(ActionType _type);
 		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
 		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) override { executeFunctionWithOffset_(_inRoom, _frameOffsetRate); }
 		unsigned int getId() const { return id_; }
@@ -58,6 +64,8 @@ namespace suku
 	class ActionManager
 	{
 	public:
+		ActionType type = ActionType::Update;
+
 		template<auto Func>
 			requires suku_upd_function<decltype(Func)>
 		void registerAction();
@@ -76,12 +84,14 @@ namespace suku
 		static ActionManager& getUpdInstance()
 		{
 			static ActionManager instance;
+			instance.type = ActionType::Update;
 			return instance;
 		}
 
 		static ActionManager& getPntInstance()
 		{
 			static ActionManager instance;
+			instance.type = ActionType::Paint;
 			return instance;
 		}
 	private:
