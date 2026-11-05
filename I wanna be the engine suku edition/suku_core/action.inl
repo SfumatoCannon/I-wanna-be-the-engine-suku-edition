@@ -41,7 +41,7 @@ namespace suku
 				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 				for (Obj* o : objList)
 				{
-					if (o->isExist() && o->isVisible)
+					if (o->isExist() && o->isVisible())
 					{
 						(o->*Func)();
 					}
@@ -51,7 +51,7 @@ namespace suku
 				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 				for (Obj* o : objList)
 				{
-					if (o->isExist() && o->isVisible)
+					if (o->isExist() && o->isVisible())
 					{
 						o->applyTransactions_(_frameOffsetRate);
 						(o->*Func)();

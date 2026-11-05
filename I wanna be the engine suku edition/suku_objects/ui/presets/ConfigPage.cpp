@@ -22,17 +22,17 @@ namespace suku
 	void ConfigPage::focus()
 	{
 		IFocusableImplBasic::focus();
-		isVisible = true;
+		visible = true;
 		for (auto& o : subElements_)
-			o->isVisible = true;
+			o->visible = true;
 	}
 
 	bool ConfigPage::unfocus()
 	{
 		IFocusableImplBasic::unfocus();
-		isVisible = false;
+		visible = false;
 		for (auto& o : subElements_)
-			o->isVisible = false;
+			o->visible = false;
 		return true;
 	}
 }

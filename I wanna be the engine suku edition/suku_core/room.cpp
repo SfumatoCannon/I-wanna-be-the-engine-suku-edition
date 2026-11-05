@@ -414,7 +414,7 @@ namespace suku
 		//				continue;
 		//			}
 
-		//			if (!obj->isVisible)
+		//			if (!obj->visible)
 		//			{
 		//				iter++;
 		//				continue;

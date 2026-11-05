@@ -7,7 +7,7 @@ namespace suku
 	PausePage::PausePage()
 		: UIElement(0, 0, GameWindow::getLogicalWidth(), GameWindow::getLogicalHeight())
 	{
-		isVisible = false;
+		visible = false;
 		setPaintId(1000);
 	}
 
@@ -18,14 +18,14 @@ namespace suku
 			if (!isPaused_)
 			{
 				isPaused_ = true;
-				isVisible = true;
+				visible = true;
 				if (inRoom_)
 					inRoom_->pause(this);
 			}
 			else
 			{
 				isPaused_ = false;
-				isVisible = false;
+				visible = false;
 				if (inRoom_)
 					inRoom_->resume();
 			}

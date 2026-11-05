@@ -76,8 +76,17 @@ namespace suku
 
 		auto setPosition(this auto& _self, real _x, real _y) { _self.x = _x; _self.y = _y; return &_self; }
 
-		bool isVisible = true;
+		bool visible = true;
+		bool isVisible()const { return visible; }
+		void setVisible(bool _isVisible) { visible = _isVisible; }
+
 		Property<float> opacity = 1;
+		float getOpacity()const { return opacity; }
+		void setOpacity(float _opacity) { opacity = _opacity; }
+
+		bool frozen = false;
+		bool isFrozen()const { return frozen; }
+		void setFrozen(bool _isFrozen) { frozen = _isFrozen; }
 
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 
@@ -172,11 +181,6 @@ namespace suku
 
 		void save();
 		void spawn();
-
-		bool isFrozen()const { return isFrozen_; }
-		void setFrozen(bool _isFrozen) { isFrozen_ = _isFrozen; }
-		void setOpacity(float _opacity) { opacity = _opacity; }
-
 	protected:
 		template<suku_property_type T> friend class Property;
 		template<auto Func> requires suku_upd_function<decltype(Func)> friend class Action;
@@ -193,7 +197,6 @@ namespace suku
 			postUpdateId_ = 0.0,
 			paintId_ = 0.0;
 		bool isInRoom_ = false;
-		bool isFrozen_ = false;
 
 		// shows physical position / transform of the object when painting
 		Property<real> xActual, yActual;
