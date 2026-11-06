@@ -165,7 +165,9 @@ namespace suku
 			sprite_ = &spr;
 			setPaintId(3);
 		}
+		void paint() { paintBody(); }
 	};
+	PAINT_ACTION_ORDER(Object::onPaint, VineLeft::paint)
 
 	class VineRight :public Object
 	{
@@ -176,7 +178,9 @@ namespace suku
 			sprite_ = &spr;
 			setPaintId(3);
 		}
+		void paint() { paintBody(); }
 	};
+	PAINT_ACTION_ORDER(Object::onPaint, VineRight::paint)
 
 	class Water :public Object
 	{
