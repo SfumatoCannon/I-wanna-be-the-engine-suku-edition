@@ -19,6 +19,8 @@ namespace suku
 	class RectangleShape;
 	class TilePack;
 
+	template<suku_object... Obj> struct Exclude { }; // wrapper for Room::getObjectList
+
 	class Room
 	{
 	public:
@@ -39,6 +41,8 @@ namespace suku
 		bool isSavable(); // should define a room with ROOM_SAVABLE(T) macro if you want to save the room automatically
 
 		template<suku_object Obj> std::list<Obj*> getObjectList();
+		template<suku_object Obj, typename ExcludeType = Exclude<>> std::list<Obj*> getObjectList();
+
 		Object* findObj(Typecode _kindId, size_t _pos);
 
 		template<suku_object Obj> Obj* append(std::shared_ptr<Obj> _objectPointer);
