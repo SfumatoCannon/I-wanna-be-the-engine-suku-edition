@@ -16,6 +16,9 @@
 #define PAINT_ACTION(func) inline suku::PaintActionRegisterClass<&(func)> REGISTERED_ACTION_NAME {};
 #define PAINT_ACTION_ORDER(func, func2) inline suku::PaintActionOrderRegisterClass<&(func), &(func2)> REGISTERED_ACTION_NAME {};
 
+#define OBJ_UPD_ORDER(obj, obj2) inline suku::UpdateActionOrderRegisterClass<static_cast<void (obj::*)()>(&obj::onUpdate), static_cast<void (obj2::*)()>(&obj2::onUpdate)> REGISTERED_ACTION_NAME {};
+#define OBJ_PAINT_ORDER(obj, obj2) inline suku::PaintActionOrderRegisterClass<static_cast<void (obj::*)()>(&obj::onPaint), static_cast<void (obj2::*)()>(&obj2::onPaint)> REGISTERED_ACTION_NAME {};
+
 namespace suku
 {
 	enum class ActionType
