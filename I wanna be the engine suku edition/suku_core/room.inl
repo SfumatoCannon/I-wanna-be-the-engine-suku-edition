@@ -29,7 +29,7 @@ namespace suku
 			return resultList;
 		}
 
-		std::list<Typecode> allTypeList = suku::SukuObjectTypeTree::getInstance().getAllChildrenList<Obj>();
+		std::list<Typecode> allTypeList = suku::SukuObjectTypeTree<Object>::getInstance().getAllChildrenList<Obj>();
 		std::list<Obj*> resultList;
 		for (auto typecode : allTypeList)
 		{
@@ -55,7 +55,7 @@ namespace suku
 
 		if (isFirst)
 		{
-			suku::SukuObjectTypeTree::getInstance().append<Obj>();
+			suku::SukuObjectTypeTree<Object>::getInstance().append<Obj>();
 		}
 		std::list<std::shared_ptr<Object>>& objList = (*iter).second;
 		std::shared_ptr<Object> objectParentPointer = _objectPointer;

@@ -15,6 +15,7 @@ namespace suku
 		virtual bool isCrashed(Transform _transform, const BitmapCollisionBox& _other, Transform _otherTransform)const = 0;
 		virtual bool isCrashed(Transform _transform, const ShapeCollisionBox& _other, Transform _otherTransform)const = 0;
 		virtual bool isCrashed(Transform _transform, const ICollisionBox& _other, Transform _otherTransform)const = 0;
+		virtual ~ICollisionBox() = default;
 	};
 
 	using namespace suku::memory;

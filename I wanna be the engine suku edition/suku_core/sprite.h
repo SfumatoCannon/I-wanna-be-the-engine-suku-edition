@@ -36,6 +36,7 @@ namespace suku
 
 		SpriteElement() = default;
 		SpriteElement(SpriteElement&& _other) = default;
+		virtual ~SpriteElement() = default;
 
 		virtual void paint(float _x, float _y,
 			float _xscale = 1.0, float _yscale = 1.0, float _alpha = 1.0, float _angle = 0.0) = 0;

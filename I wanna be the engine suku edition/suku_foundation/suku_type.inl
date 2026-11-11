@@ -2,54 +2,26 @@
 
 namespace suku
 {
-	template<typename T> void SukuObjectTypeTree::append()
+	template<typename BaseObjectT>
+	template<typename T> requires std::is_base_of_v<BaseObjectT, T>
+	void SukuObjectTypeTree<BaseObjectT>::append()
 	{
-		if (typeMap_[typecode(T)] == nullptr)
+		if (typeMap_.find(typecode(T)) == typeMap_.end())
 		{
 			TypeNode* newNode = new TypeNode;
 			newNode->code = typecode(T);
 			newNode->father = nullptr;
 			typeMap_[typecode(T)] = newNode;
+			convertCheckMap_[typecode(T)] = [](BaseObjectT* _o)->bool {
+				T* result = dynamic_cast<T*>(_o);
+				return result != nullptr;
+				};
 		}
 	}
 
-	template<typename Father, typename Son> void SukuObjectTypeTree::link()
-	{
-		TypeNode* fatherNode = typeMap_[typecode(Father)];
-		TypeNode* sonNode = typeMap_[typecode(Son)];
-		if (fatherNode == nullptr)
-		{
-			append<Father>();
-			fatherNode = typeMap_[typecode(Father)];
-		}
-		if (sonNode == nullptr)
-		{
-			append<Son>();
-			sonNode = typeMap_[typecode(Son)];
-		}
-		this->unlink<Son>();
-		sonNode->father = fatherNode;
-		fatherNode->child.push_back(sonNode);
-	}
-
-	template<typename Son> void SukuObjectTypeTree::unlink()
-	{
-		TypeNode* sonNode = typeMap_[typecode(Son)];
-		if (sonNode == nullptr)
-			return;
-		TypeNode* fatherNode = sonNode->father;
-		if (fatherNode == nullptr)
-			return;
-		for (auto iter = fatherNode->child.begin(); iter != fatherNode->child.end(); iter++)
-			if (*iter == sonNode)
-			{
-				fatherNode->child.erase(iter);
-				break;
-			}
-		sonNode->father = nullptr;
-	}
-
-	template<typename T> std::list<Typecode> SukuObjectTypeTree::getImmediateChildrenList()
+	template<typename BaseObjectT>
+	template<typename T> requires std::is_base_of_v<BaseObjectT, T>
+	std::list<Typecode> SukuObjectTypeTree<BaseObjectT>::getImmediateChildrenList()
 	{
 		TypeNode* targetNode = typeMap_[typecode(T)];
 		std::list<Typecode> resultList;
@@ -63,7 +35,9 @@ namespace suku
 			return resultList;
 	}
 
-	template<typename T> std::list<Typecode> SukuObjectTypeTree::getAllChildrenList()
+	template<typename BaseObjectT>
+	template<typename T> requires std::is_base_of_v<BaseObjectT, T>
+	std::list<Typecode> SukuObjectTypeTree<BaseObjectT>::getAllChildrenList()
 	{
 		TypeNode* rootNode = typeMap_[typecode(T)];
 		std::list<Typecode> resultList;
