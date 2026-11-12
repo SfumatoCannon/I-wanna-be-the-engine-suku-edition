@@ -1,5 +1,6 @@
 #pragma once
 #include "room.h"
+#include "object.h"
 #include "suku_core_concepts.h"
 #include <type_traits>
 #include <suku_foundation/suku_type.h>
@@ -30,6 +31,7 @@ namespace suku
 	class IAction
 	{
 	public:
+		//inline static std::map<Typecode, bool> hasCustomAction;
 		virtual ~IAction() = default;
 		virtual void execute(Room* _inRoom) = 0;
 		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) = 0;
