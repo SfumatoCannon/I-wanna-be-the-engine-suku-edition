@@ -8,10 +8,10 @@ namespace suku
 	inline Action<Func>::Action(ActionType _type) : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
-		//if (typecode(Obj) != typecode(Object))
-		//{
-		//	hasCustomAction[typecode(Obj)] = true;
-		//}
+		if (typecode(Obj) != typecode(Object))
+		{
+			hasCustomAction[typecode(Obj)] = true;
+		}
 		if (_type == ActionType::Update)
 		{
 			executeFunction_ = [](Room* _inRoom) {

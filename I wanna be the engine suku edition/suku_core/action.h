@@ -31,7 +31,7 @@ namespace suku
 	class IAction
 	{
 	public:
-		//inline static std::map<Typecode, bool> hasCustomAction;
+		inline static std::map<Typecode, bool> hasCustomAction;
 		virtual ~IAction() = default;
 		virtual void execute(Room* _inRoom) = 0;
 		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) = 0;

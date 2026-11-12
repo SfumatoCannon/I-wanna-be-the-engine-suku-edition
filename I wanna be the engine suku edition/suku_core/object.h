@@ -91,6 +91,7 @@ namespace suku
 		Var& operator[](const std::string& _str) { return var_[_str]; }
 
 		Object(real _x = 0, real _y = 0, Room* _inRoom = nullptr);
+		virtual ~Object() = default;
 
 		Sprite* getSprite()const { return sprite_; }
 		SpriteElement* getSpriteFrame()const;

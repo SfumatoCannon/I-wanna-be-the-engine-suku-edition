@@ -28,6 +28,7 @@ namespace suku
 
 		Room();
 		Room(unsigned int _width, unsigned int _height);
+		virtual ~Room() = default;
 
 		void loadFromJtoolData(std::string_view _data);
 		//void loadFromJtoolFile(String _url);
