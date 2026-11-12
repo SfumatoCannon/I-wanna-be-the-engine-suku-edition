@@ -1,5 +1,4 @@
 #include <list>
-#include "action.h"
 
 namespace suku
 {
@@ -8,61 +7,133 @@ namespace suku
 	inline Action<Func>::Action(ActionType _type) : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
-		if (typecode(Obj) != typecode(Object))
+		if constexpr (std::is_same_v<Obj, Object>)
 		{
-			hasCustomAction[typecode(Obj)] = true;
-		}
-		if (_type == ActionType::Update)
-		{
-			executeFunction_ = [](Room* _inRoom) {
-				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-				for (Obj* o : objList)
-				{
-					if (o->isExist() && !o->isFrozen())
+			if (_type == ActionType::Update)
+			{
+				executeFunction_ = [](Room* _inRoom) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
 					{
-						(o->*Func)();
+						if (IAction::hasCustomAction[o->getTypecode()])
+						{
+							continue;
+						}
+						if (o->isExist() && !o->isFrozen())
+						{
+							(o->*Func)();
+						}
 					}
-				}
-				};
-			executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-				for (Obj* o : objList)
-				{
-					if (o->isExist() && !o->isFrozen())
+					};
+				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
 					{
-						o->applyTransactions_(_frameOffsetRate);
+						if (IAction::hasCustomAction[o->getTypecode()])
+						{
+							continue;
+						}
+						if (o->isExist() && !o->isFrozen())
+						{
+							o->applyTransactions_(_frameOffsetRate);
 
-						(o->*Func)();
+							(o->*Func)();
 
-						o->removeTransactions_();
+							o->removeTransactions_();
+						}
 					}
-				}
-				};
+					};
+			}
+			else // _type == ActionType::Paint
+			{
+				executeFunction_ = [](Room* _inRoom) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
+					{
+						if (IAction::hasCustomPaintAction[o->getTypecode()])
+						{
+							continue;
+						}
+						if (o->isExist() && o->isVisible())
+						{
+							(o->*Func)();
+						}
+					}
+					};
+				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
+					{
+						if (IAction::hasCustomPaintAction[o->getTypecode()])
+						{
+							continue;
+						}
+						if (o->isExist() && o->isVisible())
+						{
+							o->applyTransactions_(_frameOffsetRate);
+							(o->*Func)();
+							o->removeTransactions_();
+						}
+					}
+					};
+			}
 		}
-		else // _type == ActionType::Paint
+		else
 		{
-			executeFunction_ = [](Room* _inRoom) {
-				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-				for (Obj* o : objList)
-				{
-					if (o->isExist() && o->isVisible())
+			if (_type == ActionType::Update)
+			{
+				hasCustomAction[typecode(Obj)] = true;
+				executeFunction_ = [](Room* _inRoom) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
 					{
-						(o->*Func)();
+						if (o->isExist() && !o->isFrozen())
+						{
+							(o->*Func)();
+						}
 					}
-				}
-				};
-			executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-				for (Obj* o : objList)
-				{
-					if (o->isExist() && o->isVisible())
+					};
+				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
 					{
-						o->applyTransactions_(_frameOffsetRate);
-						(o->*Func)();
-						o->removeTransactions_();
+						if (o->isExist() && !o->isFrozen())
+						{
+							o->applyTransactions_(_frameOffsetRate);
+
+							(o->*Func)();
+
+							o->removeTransactions_();
+						}
 					}
-				}
-			};
+					};
+			}
+			else // _type == ActionType::Paint
+			{
+				hasCustomPaintAction[typecode(Obj)] = true;
+				executeFunction_ = [](Room* _inRoom) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
+					{
+						if (o->isExist() && o->isVisible())
+						{
+							(o->*Func)();
+						}
+					}
+					};
+				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
+					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+					for (Obj* o : objList)
+					{
+						if (o->isExist() && o->isVisible())
+						{
+							o->applyTransactions_(_frameOffsetRate);
+							(o->*Func)();
+							o->removeTransactions_();
+						}
+					}
+					};
+			}
 		}
 	}
 
