@@ -6,7 +6,7 @@ namespace suku
 	template<typename T> requires std::is_base_of_v<BaseObjectT, T>
 	void SukuObjectTypeTree<BaseObjectT>::append()
 	{
-		if (typeMap_.find(typecode(T)) == typeMap_.end())
+		if (typeMap_[typecode(T)] == nullptr)
 		{
 			TypeNode* newNode = new TypeNode;
 			newNode->code = typecode(T);

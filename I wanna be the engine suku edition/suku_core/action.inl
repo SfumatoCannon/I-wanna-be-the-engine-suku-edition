@@ -78,7 +78,7 @@ namespace suku
 					};
 			}
 		}
-		else
+		else // !std::is_same_v<Obj, Object>
 		{
 			if (_type == ActionType::Update)
 			{
