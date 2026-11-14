@@ -16,12 +16,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	using namespace suku;
 	using namespace suku::input;
-	std::pair<UINT, USHORT> inputResult;
-	static bool wasWindowMaximized = false;
 
 	switch (message)
 	{
 	case WM_CREATE:
+	{
 		rid.usUsagePage = 0x01;
 		rid.usUsage = 0x06;
 		rid.dwFlags = 0;
@@ -34,6 +33,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		PostMessage(hWnd, WM_CREATEFINISHED, 0, 0);
 		break;
+	}
 	case WM_CREATEFINISHED:
 		timeBeginPeriod(1);
 		//suku_save_init();
@@ -49,7 +49,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			game_loop::start();
 		break;
 	case WM_INPUT:
-		inputResult = suku::input::onWindowInput(lParam);
+	{
+		std::pair<UINT, USHORT> inputResult = suku::input::onWindowInput(lParam);
 		if (inputResult.first == INPUT_KEYDOWN && inputResult.second == VK_F3)
 		{
 			suku::GameWindow::resetDisplaySizeToDefault();
@@ -61,6 +62,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			suku::GameWindow::setFullscreen(fullscreenTag);
 		}
 		break;
+	}
 	case WM_ERASEBKGND:
 		return true;
 		break;
@@ -71,6 +73,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_SIZE:
+	{
+		static bool wasWindowMaximized = false;
 		if (wParam == SIZE_MINIMIZED)
 			suku::GameWindow::onMinimize();
 		else if (wParam == SIZE_MAXIMIZED)
@@ -89,12 +93,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			suku::GameWindow::refreshSizeInfo();
 		}
 		break;
+	}
 	case WM_MOVE:
-		suku::GameWindow::refreshPositionInfo(
-			(int)(lParam & 0xFFFF), 
-			(int)((lParam >> 16) & 0xFFFF)
-		);
+	{
+		RECT windowRect;
+		if (GetWindowRect(hWnd, &windowRect))
+			suku::GameWindow::refreshPositionInfo(windowRect.left, windowRect.top);
 		break;
+	}
 	case WM_ACTIVATE:
 		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			suku::GameWindow::onFocusChanged(true);
