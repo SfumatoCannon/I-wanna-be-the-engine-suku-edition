@@ -5,6 +5,12 @@
 namespace suku
 {
 	template<suku_property_type T>
+	struct TransitionInfo
+	{
+		const Transition& transition;
+	};
+
+	template<suku_property_type T>
 	class Property
 	{
 	public:
@@ -48,6 +54,7 @@ namespace suku
 		T getFrameState() const { return frameState_; }
 		T getLastFrameState() const { return lastFrameState_; }
 		T getInterpolatedFrameState(float _offsetRate) const;
+
 		void updateFrameState();
 		void addTick(double _ticks = 1.0);
 	private:
@@ -56,7 +63,7 @@ namespace suku
 		T transitionValueBegin_ = T();
 		T transitionValueEnd_ = T();
 		double transitionDuration_ = 0.0;
-		double transitionElapsedTime_ = 0.0; //?
+		double transitionElapsedTime_ = 0.0;
 		long double transitionStartTime_ = 0;
 		T value_ = T();
 		T frameState_ = T();
