@@ -4,6 +4,9 @@
 #include <suku_constants.h>
 #include <suku_sounds/includes.h>
 #include "common_objects.hpp"
+#include <resources/suku_sound_pool.h>
+
+using namespace suku::resource;
 
 namespace suku
 {
@@ -48,28 +51,26 @@ namespace suku
 
 	void Player::startJump()
 	{
-		static Sound sndJump("Audio\\sndJump.wav");
-		static Sound sndDJump("Audio\\sndDJump.wav");
 		if (!isAlive())
 			return;
 		if (!isOnVineLeft_ && !isOnVineRight_)
 		{
 			if (jumpTime_ == maxJumpTime)
 			{
-				sndJump.play();
+				Audio::sndJump.play();
 				vspeed = -8.5f;
 				jumpTime_--;
 			}
 			else if (jumpTime_ != 0)
 			{
-				sndDJump.play();
+				Audio::sndDoubleJump.play();
 				vspeed = -7.0f;
 				if (!getCrashedObject<WaterExtraJump>(x, y))
 					jumpTime_--;
 			}
 			else if (getCrashedObject<Water>(x, y))
 			{
-				sndDJump.play();
+				Audio::sndDoubleJump.play();
 				vspeed = -7.0f;
 			}
 		}
@@ -88,12 +89,36 @@ namespace suku
 			vspeed *= 0.45f;
 	}
 
+
+	void Player::moveLeft()
+	{
+		hspeedTemp -= movingSpeed;
+	}
+
+	void Player::moveRight()
+	{
+		hspeedTemp += movingSpeed;
+	}
+
+	void Player::vineJumpLeft()
+	{
+		Audio::sndVineJump.play();
+		vspeed = -9.0f;
+		hspeedTemp = -movingSpeed * 5.0f;
+	}
+
+	void Player::vineJumpRight()
+	{
+		Audio::sndVineJump.play();
+		vspeed = -9.0f;
+		hspeedTemp = movingSpeed * 5.0f;
+	}
+
 	void Player::shoot()
 	{
 		if (!isAlive())
 			return;
-		static Sound sndShoot("Audio\\sndShoot.wav");
-		sndShoot.play()->setVolume(0.2f);
+		Audio::sndShoot.play();
 		inRoom_->create<Bullet>(x, y - 4, side_);
 	}
 
@@ -107,11 +132,10 @@ namespace suku
 	{
 		if (isDied_)
 			return;
-		static Sound sndDeath("Audio\\sndDeath.wav");
 		setSpeed(0.0f, 0.0f, 0.0f, 0.0f);
 		opacity = 0.0;
 		isDied_ = true;
-		sndDeath.play()->setVolume(0.2f);
+		Audio::sndDeath.play();
 	}
 
 	void Player::bleed()
@@ -181,9 +205,6 @@ namespace suku
 		else
 			isOnVineRight_ = false;
 
-		if (isOnPlatform_ && !getCrashedObject<Platform>(x, y + 4.0f, false))
-			isOnPlatform_ = false;
-
 		if (isOnVineLeft_ || isOnVineRight_)
 		{
 			side_ = isOnVineLeft_ ? Direction::Right : Direction::Left;
@@ -199,53 +220,6 @@ namespace suku
 				jumpTime_ = maxJumpTime - 1;
 			if (vspeed > 2.0)
 				vspeed = 2.0;
-		}
-
-		static Sound sndWallJump("Audio\\sndWallJump.wav");
-
-		if (!isFrozen())
-		{
-			if (isOnVineLeft_)
-			{
-				if (isKeyDown(VK_RIGHT) && isKeyHolding(VK_SHIFT))
-				{
-					sndWallJump.play();
-					vineJumpRight();
-				}
-				else if (isKeyHolding(VK_RIGHT))
-					moveRight();
-			}
-			else if (isOnVineRight_)
-			{
-				if (isKeyDown(VK_LEFT) && isKeyHolding(VK_SHIFT))
-				{
-					sndWallJump.play();
-					vineJumpLeft();
-				}
-				else if (isKeyHolding(VK_LEFT))
-					moveLeft();
-			}
-			else	// not on vine
-			{
-				if (isKeyHolding(VK_RIGHT))
-				{
-					side_ = Direction::Right;
-					xScale = { 1, Transition(0) };
-					extraTransform_ = translation(0, 0);
-					moveRight();
-				}
-				else if (isKeyHolding(VK_LEFT))
-				{
-					side_ = Direction::Left;
-					xScale = { -1, Transition(0) };
-					extraTransform_ = translation(-1, 0); // align the collision box
-					moveLeft();
-				}
-			}
-			if (isKeyDown(VK_SHIFT))
-				startJump();
-			if (isKeyUp(VK_SHIFT))
-				stopJump();
 		}
 
 		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown(VK_SHIFT)))
@@ -340,6 +314,10 @@ namespace suku
 			else
 				isOnVineRight_ = false;
 		}
+
+		// platform
+		if (isOnPlatform_ && !getCrashedObject<Platform>(x, y + 4.0f, false))
+			isOnPlatform_ = false;
 	}
 
 	void Player::handleInput()
@@ -352,45 +330,51 @@ namespace suku
 			}
 		}
 
+		if (input::isKeyDown(VK_SHIFT))
+			startJump();
+		if (input::isKeyUp(VK_SHIFT))
+			stopJump();
+
 		if (isOnVineRight_ && input::isKeyDown(VK_RIGHT_ARROW))
 		{
+			side_ = Direction::Right;
 			vineJumpRight();
 		}
 		else if (isOnVineLeft_ && input::isKeyDown(VK_LEFT_ARROW))
 		{
+			side_ = Direction::Left;
 			vineJumpLeft();
+		}
+		else if (isOnVineRight_)
+		{
+			side_ = Direction::Left;
+		}
+		else if (isOnVineLeft_)
+		{
+			side_ = Direction::Right;
 		}
 
 		if (input::isKeyHolding(VK_RIGHT_ARROW) && !isOnVineRight_)
 		{
+			side_ = Direction::Right;
 			moveRight();
 		}
 		else if (input::isKeyHolding(VK_LEFT_ARROW) && !isOnVineLeft_)
 		{
+			side_ = Direction::Left;
 			moveLeft();
 		}
-	}
 
-	void Player::moveLeft()
-	{
-		hspeedTemp -= movingSpeed;
-	}
-
-	void Player::moveRight()
-	{
-		hspeedTemp += movingSpeed;
-	}
-
-	void Player::vineJumpLeft()
-	{
-		vspeed = -9.0f;
-		hspeedTemp = -movingSpeed * 5.0f;
-	}
-
-	void Player::vineJumpRight()
-	{
-		vspeed = -9.0f;
-		hspeedTemp = movingSpeed * 5.0f;
+		if (side_ == Direction::Left)
+		{
+			xScale = { -1, Transition(0) };
+			extraTransform_ = translation(-1, 0); // align the collision box
+		}
+		else
+		{
+			xScale = { 1, Transition(0) };
+			extraTransform_ = translation(1, 0); // align the collision box
+		}
 	}
 
 	Blood::Blood(float _x, float _y, float _wspeed, float _hspeed) :Object(_x, _y)
