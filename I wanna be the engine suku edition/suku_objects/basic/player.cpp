@@ -309,6 +309,68 @@ namespace suku
 		SaveFile::getCurrent()->saveVar(y);
 	}
 
+	void Player::acquireState()
+	{
+		Vector gravityDirection = { 0, 1 };
+		// floor
+		if (getCrashedObject<Solid>(x + gravityDirection.x, y + gravityDirection.y))
+		{
+			isOnFloor_ = true;
+			jumpTime_ = maxJumpTime;
+		}
+		else
+		{
+			isOnFloor_ = false;
+			if (jumpTime_ == maxJumpTime)
+				jumpTime_--;
+		}
+
+		// vine
+		if (!isOnFloor_)
+		{
+			Vector leftDirection = { -1, 0 };
+			Vector rightDirection = { 1, 0 };
+			if (getCrashedObject<VineLeft>(x + leftDirection.x, y + leftDirection.y))
+				isOnVineLeft_ = true;
+			else
+				isOnVineLeft_ = false;
+			
+			if (getCrashedObject<VineRight>(x + rightDirection.x, y + rightDirection.y))
+				isOnVineRight_ = true;
+			else
+				isOnVineRight_ = false;
+		}
+	}
+
+	void Player::handleInput()
+	{
+		if (input::isKeyDown(VK_R))
+		{
+			if (inRoom_)
+			{
+				inRoom_->restart();
+			}
+		}
+
+		if (isOnVineRight_ && input::isKeyDown(VK_RIGHT_ARROW))
+		{
+			vineJumpRight();
+		}
+		else if (isOnVineLeft_ && input::isKeyDown(VK_LEFT_ARROW))
+		{
+			vineJumpLeft();
+		}
+
+		if (input::isKeyHolding(VK_RIGHT_ARROW) && !isOnVineRight_)
+		{
+			moveRight();
+		}
+		else if (input::isKeyHolding(VK_LEFT_ARROW) && !isOnVineLeft_)
+		{
+			moveLeft();
+		}
+	}
+
 	void Player::moveLeft()
 	{
 		hspeedTemp -= movingSpeed;

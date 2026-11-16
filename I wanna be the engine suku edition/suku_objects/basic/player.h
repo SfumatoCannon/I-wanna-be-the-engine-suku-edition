@@ -30,6 +30,9 @@ namespace suku
 		virtual void onUpdate() override;
 		virtual void onUpdateEnd() override;
 		virtual void onSave() override;
+		
+		void acquireState();		// actionlized
+		void handleInput();			// actionlized
 
 		void moveLeft();
 		void moveRight();
@@ -53,6 +56,8 @@ namespace suku
 		void die();
 		void bleed();
 	};
+	ACTION(Player::acquireState);
+	ACTION(Player::handleInput);
 
 	class Blood :public Object
 	{
