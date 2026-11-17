@@ -124,7 +124,6 @@ namespace suku
 
 	bool Player::isAlive()
 	{
-		//return state_ & STATE_DIED ? 0 : 1;
 		return !isDied_;
 	}
 
@@ -162,90 +161,6 @@ namespace suku
 		}
 	}
 
-	void Player::onUpdateStart()
-	{
-		using namespace suku::input;
-		if (isKeyDown(VK_R))
-		{
-			if (inRoom_)
-			{
-				inRoom_->restart();
-			}
-		}
-
-		if (!isAlive())
-		{
-			bleed();
-			return;
-		}
-
-		if (auto wall = getCrashedObject<Solid>(x, y + 1, false))
-		{
-			isOnFloor_ = true;
-			jumpTime_ = maxJumpTime;
-			vspeedTemp = wall->totalVspeed();
-			if (wall->totalHspeed() != 0)
-				hspeedTemp = wall->totalHspeed();
-			if (wall->totalVspeed() > 0)
-				vspeed = wall->totalVspeed();
-		}
-		else
-		{
-			isOnFloor_ = false;
-			if (jumpTime_ == maxJumpTime)
-				jumpTime_--;
-		}
-
-		if (!isOnFloor_ && getCrashedObject<VineLeft>(x - 1, y, false))
-			isOnVineLeft_ = true;
-		else
-			isOnVineLeft_ = false;
-		if (!isOnFloor_ && getCrashedObject<VineRight>(x + 1, y, false))
-			isOnVineRight_ = true;
-		else
-			isOnVineRight_ = false;
-
-		if (isOnVineLeft_ || isOnVineRight_)
-		{
-			side_ = isOnVineLeft_ ? Direction::Right : Direction::Left;
-			vspeed = 2.0;
-		}
-
-		if (getCrashedObject<Water>(x, y) && vspeed > 2.0)
-			vspeed = 2.0;
-
-		if (getCrashedObject<WaterExtraJump>(x, y))
-		{
-			if (jumpTime_ != maxJumpTime)
-				jumpTime_ = maxJumpTime - 1;
-			if (vspeed > 2.0)
-				vspeed = 2.0;
-		}
-
-		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown(VK_SHIFT)))
-			sprite_ = &sprJumping;
-		else if (!isOnFloor_ && totalVspeed() > (isOnPlatform_ ? 0.4 : 0))
-		{
-			if (isOnVineLeft_ || isOnVineRight_)
-				sprite_ = &sprSliding;
-			else sprite_ = &sprFalling;
-		}
-		else
-		{
-			if (isKeyHolding(VK_LEFT) || isKeyHolding(VK_RIGHT))
-				sprite_ = &sprRunning;
-			else
-				sprite_ = &sprStanding;
-		}
-
-		if (isKeyDown(VK_Z))
-			shoot();
-
-		vspeed += gravity;
-		if (vspeed > 9.4f)
-			vspeed = 9.4f;
-	}
-
 	void Player::onUpdate()
 	{
 		if (!isAlive())
@@ -266,6 +181,10 @@ namespace suku
 
 	void Player::onUpdateEnd()
 	{
+		if (!isAlive())
+		{
+			bleed();
+		}
 		if (getCrashedObject<Spike>() || getCrashedObject<Cherry>())
 		{
 			die();
@@ -285,6 +204,9 @@ namespace suku
 
 	void Player::acquireState()
 	{
+		if (!isAlive())
+			return;
+		
 		Vector gravityDirection = { 0, 1 };
 		// floor
 		if (getCrashedObject<Solid>(x + gravityDirection.x, y + gravityDirection.y))
@@ -330,6 +252,12 @@ namespace suku
 			}
 		}
 
+		if (!isAlive())
+			return;
+
+		if (input::isKeyDown(VK_Z))
+			shoot();
+
 		if (input::isKeyDown(VK_SHIFT))
 			startJump();
 		if (input::isKeyUp(VK_SHIFT))
@@ -374,6 +302,51 @@ namespace suku
 		{
 			xScale = { 1, Transition(0) };
 			extraTransform_ = translation(1, 0); // align the collision box
+		}
+	}
+
+	void Player::updateSpeed()
+	{
+		if (getCrashedObject<Water>(x, y) && vspeed > 2.0)
+			vspeed = 2.0;
+
+		if (getCrashedObject<WaterExtraJump>(x, y))
+		{
+			if (jumpTime_ != maxJumpTime)
+				jumpTime_ = maxJumpTime - 1;
+			if (vspeed > 2.0)
+				vspeed = 2.0;
+		}
+
+		if (isOnVineLeft_ || isOnVineRight_)
+		{
+			side_ = isOnVineLeft_ ? Direction::Right : Direction::Left;
+			vspeed = 2.0;
+		}
+
+		vspeed += gravity;
+		if (vspeed > 9.4f)
+			vspeed = 9.4f;
+	}
+
+	void Player::updateSprite()
+	{
+		using namespace suku::input;
+
+		if (totalVspeed() < 0 && (!isOnFloor_ || isKeyDown(VK_SHIFT)))
+			sprite_ = &sprJumping;
+		else if (!isOnFloor_ && totalVspeed() > (isOnPlatform_ ? 0.4 : 0))
+		{
+			if (isOnVineLeft_ || isOnVineRight_)
+				sprite_ = &sprSliding;
+			else sprite_ = &sprFalling;
+		}
+		else
+		{
+			if (isKeyHolding(VK_LEFT) || isKeyHolding(VK_RIGHT))
+				sprite_ = &sprRunning;
+			else
+				sprite_ = &sprStanding;
 		}
 	}
 

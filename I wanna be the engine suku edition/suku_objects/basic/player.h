@@ -26,13 +26,14 @@ namespace suku
 		Player(float _x = 0, float _y = 0, Room* _room = nullptr);
 
 		virtual void onRoomStart() override;
-		virtual void onUpdateStart() override;
 		virtual void onUpdate() override;
 		virtual void onUpdateEnd() override;
 		virtual void onSave() override;
-		
+
 		void acquireState();		// actionlized
 		void handleInput();			// actionlized
+		void updateSpeed();			// actionlized
+		void updateSprite();		// actionlized
 
 		void moveLeft();
 		void moveRight();
@@ -57,7 +58,10 @@ namespace suku
 		void bleed();
 	};
 	ACTION(Player::acquireState);
-	ACTION(Player::handleInput);
+	ACTION_ORDER(Player::acquireState, Player::handleInput);
+	ACTION_ORDER(Player::handleInput, Player::updateSpeed);
+	ACTION_ORDER(Player::updateSpeed, Player::updateSprite);
+	ACTION_ORDER(Player::updateSprite, Object::onUpdateStart);
 
 	class Blood :public Object
 	{
