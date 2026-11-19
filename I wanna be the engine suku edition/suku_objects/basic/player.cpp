@@ -51,8 +51,7 @@ namespace suku
 
 	void Player::startJump()
 	{
-		if (!isAlive())
-			return;
+		eventJump_ = true;
 		if (!isOnVineLeft_ && !isOnVineRight_)
 		{
 			if (jumpTime_ == maxJumpTime)
@@ -102,6 +101,7 @@ namespace suku
 
 	void Player::vineJumpLeft()
 	{
+		eventVineJump_ = true;
 		Audio::sndVineJump.play();
 		vspeed = -9.0f;
 		hspeedTemp = -movingSpeed * 5.0f;
@@ -109,6 +109,7 @@ namespace suku
 
 	void Player::vineJumpRight()
 	{
+		eventVineJump_ = true;
 		Audio::sndVineJump.play();
 		vspeed = -9.0f;
 		hspeedTemp = movingSpeed * 5.0f;
@@ -116,15 +117,11 @@ namespace suku
 
 	void Player::shoot()
 	{
+		eventShoot_ = true;
 		if (!isAlive())
 			return;
 		Audio::sndShoot.play();
 		inRoom_->create<Bullet>(x, y - 4, side_);
-	}
-
-	bool Player::isAlive()
-	{
-		return !isDied_;
 	}
 
 	void Player::die()
@@ -204,6 +201,10 @@ namespace suku
 
 	void Player::acquireState()
 	{
+		eventJump_ = false;
+		eventVineJump_ = false;
+		eventShoot_ = false;
+
 		if (!isAlive())
 			return;
 		
@@ -263,31 +264,31 @@ namespace suku
 		if (input::isKeyUp(VK_SHIFT))
 			stopJump();
 
-		if (isOnVineRight_ && input::isKeyDown(VK_RIGHT_ARROW))
+		if (isOnVineLeft_ && input::isKeyDown(VK_RIGHT_ARROW))
 		{
 			side_ = Direction::Right;
 			vineJumpRight();
 		}
-		else if (isOnVineLeft_ && input::isKeyDown(VK_LEFT_ARROW))
+		else if (isOnVineRight_ && input::isKeyDown(VK_LEFT_ARROW))
 		{
 			side_ = Direction::Left;
 			vineJumpLeft();
-		}
-		else if (isOnVineRight_)
-		{
-			side_ = Direction::Left;
 		}
 		else if (isOnVineLeft_)
 		{
 			side_ = Direction::Right;
 		}
+		else if (isOnVineRight_)
+		{
+			side_ = Direction::Left;
+		}
 
-		if (input::isKeyHolding(VK_RIGHT_ARROW) && !isOnVineRight_)
+		if (input::isKeyHolding(VK_RIGHT_ARROW) && !isOnVineRight_ && !isOnVineLeft_)
 		{
 			side_ = Direction::Right;
 			moveRight();
 		}
-		else if (input::isKeyHolding(VK_LEFT_ARROW) && !isOnVineLeft_)
+		else if (input::isKeyHolding(VK_LEFT_ARROW) && !isOnVineLeft_ && !isOnVineRight_)
 		{
 			side_ = Direction::Left;
 			moveLeft();
@@ -301,7 +302,7 @@ namespace suku
 		else
 		{
 			xScale = { 1, Transition(0) };
-			extraTransform_ = translation(1, 0); // align the collision box
+			extraTransform_ = translation(0, 0); // align the collision box
 		}
 	}
 
@@ -318,7 +319,7 @@ namespace suku
 				vspeed = 2.0;
 		}
 
-		if (isOnVineLeft_ || isOnVineRight_)
+		if ((isOnVineLeft_ || isOnVineRight_) && !eventVineJump_)
 		{
 			side_ = isOnVineLeft_ ? Direction::Right : Direction::Left;
 			vspeed = 2.0;

@@ -43,7 +43,13 @@ namespace suku
 		void stopJump();
 		void shoot();
 
-		bool isAlive();
+		bool isAlive()const { return !isDied_; }
+		void die();
+
+		bool eventJump()const { return eventJump_; }
+		bool eventVineJump()const { return eventVineJump_; }
+		bool eventShoot()const { return eventShoot_; }
+
 	private:
 		short nowBloodNum_;
 		short jumpTime_;
@@ -54,7 +60,10 @@ namespace suku
 		bool isOnVineLeft_;
 		bool isOnVineRight_;
 
-		void die();
+		bool eventJump_;
+		bool eventVineJump_;
+		bool eventShoot_;
+
 		void bleed();
 	};
 	ACTION(Player::acquireState);
