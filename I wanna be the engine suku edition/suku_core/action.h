@@ -54,12 +54,12 @@ namespace suku
 		inline static unsigned int idCounter_ = 0;
 	};
 
-	template<auto Func>
+	template<auto Func, action_tag Tag>
 		requires suku_upd_function<decltype(Func)>
 	class Action : public IAction
 	{
 	public:
-		Action(ActionType _type);
+		Action();
 		virtual void execute(Room* _inRoom) override { executeFunction_(_inRoom); }
 		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) override { executeFunctionWithOffset_(_inRoom, _frameOffsetRate); }
 		unsigned int getId() const { return id_; }

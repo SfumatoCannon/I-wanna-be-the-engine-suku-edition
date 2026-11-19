@@ -2,9 +2,9 @@
 
 namespace suku
 {
-	template<auto Func>
+	template<auto Func, action_tag Tag>
 		requires suku_upd_function<decltype(Func)>
-	inline Action<Func>::Action(ActionType _type) : id_(registerNewId())
+	inline Action<Func, Tag>::Action() : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
 		bool overrideCheck = false;
@@ -27,7 +27,7 @@ namespace suku
 
 		if constexpr (std::is_same_v<Obj, Object>)
 		{
-			executeFunction_ = [=, &overrideCheckMap](Room* _inRoom) {
+			executeFunction_ = [overrideCheck, &overrideCheckMap](Room* _inRoom) {
 				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 				for (Obj* o : objList)
 				{
@@ -37,9 +37,9 @@ namespace suku
 							continue;
 					}
 					bool flag;
-					if (_type == ActionType::Update)
+					if constexpr (std::is_same_v<Tag, UpdateActionTag>)
 						flag = (o->isExist() && !o->isFrozen());
-					else // _type == ActionType::Paint
+					else // is_same_v<Tag, PaintActionTag>
 						flag = (o->isExist() && o->isVisible());
 					if (flag)
 					{
@@ -47,7 +47,7 @@ namespace suku
 					}
 				}
 				};
-			executeFunctionWithOffset_ = [=, &overrideCheckMap](Room* _inRoom, float _frameOffsetRate) {
+			executeFunctionWithOffset_ = [overrideCheck, &overrideCheckMap](Room* _inRoom, float _frameOffsetRate) {
 				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 				for (Obj* o : objList)
 				{
@@ -57,9 +57,9 @@ namespace suku
 							continue;
 					}
 					bool flag;
-					if (_type == ActionType::Update)
+					if constexpr (std::is_same_v<Tag, UpdateActionTag>)
 						flag = (o->isExist() && !o->isFrozen());
-					else // _type == ActionType::Paint
+					else // is_same_v<Tag, PaintActionTag>
 						flag = (o->isExist() && o->isVisible());
 					if (flag)
 					{
@@ -78,14 +78,14 @@ namespace suku
 			{
 				overrideCheckMap[typecode(Obj)] = true;
 			}
-			executeFunction_ = [=](Room* _inRoom) {
+			executeFunction_ = [](Room* _inRoom) {
 				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 				for (Obj* o : objList)
 				{
 					bool flag;
-					if (_type == ActionType::Update)
+					if constexpr (std::is_same_v<Tag, UpdateActionTag>)
 						flag = (o->isExist() && !o->isFrozen());
-					else // _type == ActionType::Paint
+					else // is_same_v<Tag, PaintActionTag>
 						flag = (o->isExist() && o->isVisible());
 					if (flag)
 					{
@@ -98,9 +98,9 @@ namespace suku
 				for (Obj* o : objList)
 				{
 					bool flag;
-					if (_type == ActionType::Update)
+					if constexpr (std::is_same_v<Tag, UpdateActionTag>)
 						flag = (o->isExist() && !o->isFrozen());
-					else // _type == ActionType::Paint
+					else // is_same_v<Tag, PaintActionTag>
 						flag = (o->isExist() && o->isVisible());
 					if (flag)
 					{
@@ -115,9 +115,9 @@ namespace suku
 		}
 	}
 
-	template<auto Func>
+	template<auto Func, action_tag Tag>
 		requires suku_upd_function<decltype(Func)>
-	inline unsigned int Action<Func>::registerNewId()
+	inline unsigned int Action<Func, Tag>::registerNewId()
 	{
 		static unsigned int newId = IAction::allocateId();
 		return newId;
@@ -127,12 +127,25 @@ namespace suku
 		requires suku_upd_function<decltype(Func)>
 	inline void ActionManager::registerAction()
 	{
-		auto pFunc = std::make_unique<Action<Func>>(type);
-		const auto id = pFunc->getId();
-		auto result = actionNodePool_.try_emplace(id, ActionNode{ std::move(pFunc) });
-		if (result.second == true)
+		if (type == ActionType::Update)
 		{
-			actionExecutionQueue_.push_back(&(result.first->second));
+			auto pFunc = std::make_unique<Action<Func, UpdateActionTag>>();
+			const auto id = pFunc->getId();
+			auto result = actionNodePool_.try_emplace(id, ActionNode{ std::move(pFunc) });
+			if (result.second == true)
+			{
+				actionExecutionQueue_.push_back(&(result.first->second));
+			}
+		}
+		else // type == ActionType::Paint
+		{
+			auto pFunc = std::make_unique<Action<Func, PaintActionTag>>();
+			const auto id = pFunc->getId();
+			auto result = actionNodePool_.try_emplace(id, ActionNode{ std::move(pFunc) });
+			if (result.second == true)
+			{
+				actionExecutionQueue_.push_back(&(result.first->second));
+			}
 		}
 	}
 
@@ -140,12 +153,24 @@ namespace suku
 		requires suku_upd_function<decltype(Func)>
 	inline ActionNode* ActionManager::findActionNode()
 	{
-		auto pFunc = std::make_unique<Action<Func>>(type);
-		auto iter = actionNodePool_.find(pFunc->getId());
-		if (iter != actionNodePool_.end())
-			return &(iter->second);
-		else
-			return nullptr;
+		if (type == ActionType::Update)
+		{
+			auto pFunc = std::make_unique<Action<Func, UpdateActionTag>>();
+			auto iter = actionNodePool_.find(pFunc->getId());
+			if (iter != actionNodePool_.end())
+				return &(iter->second);
+			else
+				return nullptr;
+		}
+		else // type == ActionType::Paint
+		{
+			auto pFunc = std::make_unique<Action<Func, PaintActionTag>>();
+			auto iter = actionNodePool_.find(pFunc->getId());
+			if (iter != actionNodePool_.end())
+				return &(iter->second);
+			else
+				return nullptr;
+		}
 	}
 
 	template<auto FuncSrc, auto FuncDst>

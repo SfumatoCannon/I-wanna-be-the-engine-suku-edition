@@ -36,4 +36,11 @@ namespace suku
 
 	template<typename Func>
 	concept suku_upd_function = std::is_member_function_pointer_v<Func> && suku_object<suku_upd_function_source_class_t<Func>>;
+
+	struct ActionTag {};
+	struct UpdateActionTag : public ActionTag {};
+	struct PaintActionTag : public ActionTag {};
+
+	template<typename T>
+	concept action_tag = std::derived_from<T, ActionTag>;
 }

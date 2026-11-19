@@ -186,7 +186,7 @@ namespace suku
 		void spawn();
 	protected:
 		template<suku_property_type T> friend class Property;
-		template<auto Func> requires suku_upd_function<decltype(Func)> friend class Action;
+		template<auto Func, action_tag Tag> requires suku_upd_function<decltype(Func)> friend class Action;
 		friend class Room;
 
 		Transform extraTransform_;
