@@ -7,142 +7,111 @@ namespace suku
 	inline Action<Func>::Action(ActionType _type) : id_(registerNewId())
 	{
 		using Obj = suku_upd_function_source_class_t<decltype(Func)>;
+		bool overrideCheck = false;
+		std::map<Typecode, bool>& overrideCheckMap = IAction::hasOverridedOnUpdateStart;
+		if constexpr (IAction::isOnUpdateStartFunc<Func>())
+		{
+			overrideCheck = true;
+			overrideCheckMap = IAction::hasOverridedOnUpdateStart;
+		}
+		else if constexpr (IAction::isOnUpdateFunc<Func>())
+		{
+			overrideCheck = true;
+			overrideCheckMap = IAction::hasOverridedOnUpdate;
+		}
+		else if constexpr (IAction::isOnUpdateEndFunc<Func>())
+		{
+			overrideCheck = true;
+			overrideCheckMap = IAction::hasOverridedOnUpdateEnd;
+		}
+
 		if constexpr (std::is_same_v<Obj, Object>)
 		{
-			if (_type == ActionType::Update)
-			{
-				executeFunction_ = [](Room* _inRoom) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
+			executeFunction_ = [=, &overrideCheckMap](Room* _inRoom) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					if (overrideCheck)
 					{
-						if (IAction::hasOverridedOnUpdateStart[o->getTypecode()] && IAction::isOnUpdateStartFunc<Func>())
+						if (overrideCheckMap[o->getTypecode()] == true)
 							continue;
-						if (IAction::hasOverridedOnUpdate[o->getTypecode()] && IAction::isOnUpdateFunc<Func>())
-							continue;
-						if (IAction::hasOverridedOnUpdateEnd[o->getTypecode()] && IAction::isOnUpdateEndFunc<Func>())
-							continue;
-						if (o->isExist() && !o->isFrozen())
-						{
-							(o->*Func)();
-						}
 					}
-					};
-				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
+					bool flag;
+					if (_type == ActionType::Update)
+						flag = (o->isExist() && !o->isFrozen());
+					else // _type == ActionType::Paint
+						flag = (o->isExist() && o->isVisible());
+					if (flag)
 					{
-						if (IAction::hasOverridedOnUpdateStart[o->getTypecode()] && IAction::isOnUpdateStartFunc<Func>())
+						(o->*Func)();
+					}
+				}
+				};
+			executeFunctionWithOffset_ = [=, &overrideCheckMap](Room* _inRoom, float _frameOffsetRate) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					if (overrideCheck)
+					{
+						if (overrideCheckMap[o->getTypecode()] == true)
 							continue;
-						if (IAction::hasOverridedOnUpdate[o->getTypecode()] && IAction::isOnUpdateFunc<Func>())
-							continue;
-						if (IAction::hasOverridedOnUpdateEnd[o->getTypecode()] && IAction::isOnUpdateEndFunc<Func>())
-							continue;
-						if (o->isExist() && !o->isFrozen())
-						{
-							o->applyTransactions_(_frameOffsetRate);
+					}
+					bool flag;
+					if (_type == ActionType::Update)
+						flag = (o->isExist() && !o->isFrozen());
+					else // _type == ActionType::Paint
+						flag = (o->isExist() && o->isVisible());
+					if (flag)
+					{
+						o->applyTransactions_(_frameOffsetRate);
 
-							(o->*Func)();
+						(o->*Func)();
 
-							o->removeTransactions_();
-						}
+						o->removeTransactions_();
 					}
-					};
-			}
-			else // _type == ActionType::Paint
-			{
-				executeFunction_ = [](Room* _inRoom) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
-					{
-						if (IAction::hasCustomPaintAction[o->getTypecode()])
-						{
-							continue;
-						}
-						if (o->isExist() && o->isVisible())
-						{
-							(o->*Func)();
-						}
-					}
-					};
-				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
-					{
-						if (IAction::hasCustomPaintAction[o->getTypecode()])
-						{
-							continue;
-						}
-						if (o->isExist() && o->isVisible())
-						{
-							o->applyTransactions_(_frameOffsetRate);
-							(o->*Func)();
-							o->removeTransactions_();
-						}
-					}
-					};
-			}
+				}
+				};
 		}
 		else // !std::is_same_v<Obj, Object>
 		{
-			if (_type == ActionType::Update)
+			if (overrideCheck)
 			{
-				if (IAction::isOnUpdateStartFunc<Func>())
-					hasOverridedOnUpdateStart[typecode(Obj)] = true;
-				else if (IAction::isOnUpdateFunc<Func>())
-					hasOverridedOnUpdate[typecode(Obj)] = true;
-				else if (IAction::isOnUpdateEndFunc<Func>())
-					hasOverridedOnUpdateEnd[typecode(Obj)] = true;
-				executeFunction_ = [](Room* _inRoom) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
-					{
-						if (o->isExist() && !o->isFrozen())
-						{
-							(o->*Func)();
-						}
-					}
-					};
-				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
-					{
-						if (o->isExist() && !o->isFrozen())
-						{
-							o->applyTransactions_(_frameOffsetRate);
-
-							(o->*Func)();
-
-							o->removeTransactions_();
-						}
-					}
-					};
+				overrideCheckMap[typecode(Obj)] = true;
 			}
-			else // _type == ActionType::Paint
-			{
-				hasCustomPaintAction[typecode(Obj)] = true;
-				executeFunction_ = [](Room* _inRoom) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
+			executeFunction_ = [=](Room* _inRoom) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					bool flag;
+					if (_type == ActionType::Update)
+						flag = (o->isExist() && !o->isFrozen());
+					else // _type == ActionType::Paint
+						flag = (o->isExist() && o->isVisible());
+					if (flag)
 					{
-						if (o->isExist() && o->isVisible())
-						{
-							(o->*Func)();
-						}
+						(o->*Func)();
 					}
-					};
-				executeFunctionWithOffset_ = [](Room* _inRoom, float _frameOffsetRate) {
-					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
-					for (Obj* o : objList)
+				}
+				};
+			executeFunctionWithOffset_ = [=](Room* _inRoom, float _frameOffsetRate) {
+				std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
+				for (Obj* o : objList)
+				{
+					bool flag;
+					if (_type == ActionType::Update)
+						flag = (o->isExist() && !o->isFrozen());
+					else // _type == ActionType::Paint
+						flag = (o->isExist() && o->isVisible());
+					if (flag)
 					{
-						if (o->isExist() && o->isVisible())
-						{
-							o->applyTransactions_(_frameOffsetRate);
-							(o->*Func)();
-							o->removeTransactions_();
-						}
+						o->applyTransactions_(_frameOffsetRate);
+
+						(o->*Func)();
+
+						o->removeTransactions_();
 					}
-					};
-			}
+				}
+				};
 		}
 	}
 
@@ -180,7 +149,7 @@ namespace suku
 	}
 
 	template<auto FuncSrc, auto FuncDst>
-		requires suku_upd_function<decltype(FuncSrc)> && suku_upd_function<decltype(FuncDst)>
+		requires suku_upd_function<decltype(FuncSrc)>&& suku_upd_function<decltype(FuncDst)>
 	inline void ActionManager::addDependency()
 	{
 		registerAction<FuncSrc>();
