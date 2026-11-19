@@ -31,13 +31,25 @@ namespace suku
 	class IAction
 	{
 	public:
-		inline static std::map<Typecode, bool> hasCustomAction;
+		inline static std::map<Typecode, bool> hasOverridedOnUpdateStart;
+		inline static std::map<Typecode, bool> hasOverridedOnUpdate;
+		inline static std::map<Typecode, bool> hasOverridedOnUpdateEnd;
 		inline static std::map<Typecode, bool> hasCustomPaintAction;
 		virtual ~IAction() = default;
 		virtual void execute(Room* _inRoom) = 0;
 		virtual void executeWithOffset(Room* _inRoom, float _frameOffsetRate) = 0;
 	protected:
 		unsigned int allocateId() { idCounter_++; return idCounter_; }
+
+		template<auto Func>
+			requires suku_upd_function<decltype(Func)>
+		constexpr static bool isOnUpdateStartFunc() { return std::string_view(__FUNCSIG__).find("onUpdateStart") != std::string_view::npos; }
+		template<auto Func>
+			requires suku_upd_function<decltype(Func)>
+		constexpr static bool isOnUpdateFunc() { return std::string_view(__FUNCSIG__).find("onUpdate") != std::string_view::npos; }
+		template<auto Func>
+			requires suku_upd_function<decltype(Func)>
+		constexpr static bool isOnUpdateEndFunc() { return std::string_view(__FUNCSIG__).find("onUpdateEnd") != std::string_view::npos; }
 	private:
 		inline static unsigned int idCounter_ = 0;
 	};

@@ -15,10 +15,12 @@ namespace suku
 					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 					for (Obj* o : objList)
 					{
-						if (IAction::hasCustomAction[o->getTypecode()])
-						{
+						if (IAction::hasOverridedOnUpdateStart[o->getTypecode()] && IAction::isOnUpdateStartFunc<Func>())
 							continue;
-						}
+						if (IAction::hasOverridedOnUpdate[o->getTypecode()] && IAction::isOnUpdateFunc<Func>())
+							continue;
+						if (IAction::hasOverridedOnUpdateEnd[o->getTypecode()] && IAction::isOnUpdateEndFunc<Func>())
+							continue;
 						if (o->isExist() && !o->isFrozen())
 						{
 							(o->*Func)();
@@ -29,10 +31,12 @@ namespace suku
 					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 					for (Obj* o : objList)
 					{
-						if (IAction::hasCustomAction[o->getTypecode()])
-						{
+						if (IAction::hasOverridedOnUpdateStart[o->getTypecode()] && IAction::isOnUpdateStartFunc<Func>())
 							continue;
-						}
+						if (IAction::hasOverridedOnUpdate[o->getTypecode()] && IAction::isOnUpdateFunc<Func>())
+							continue;
+						if (IAction::hasOverridedOnUpdateEnd[o->getTypecode()] && IAction::isOnUpdateEndFunc<Func>())
+							continue;
 						if (o->isExist() && !o->isFrozen())
 						{
 							o->applyTransactions_(_frameOffsetRate);
@@ -82,7 +86,12 @@ namespace suku
 		{
 			if (_type == ActionType::Update)
 			{
-				hasCustomAction[typecode(Obj)] = true;
+				if (IAction::isOnUpdateStartFunc<Func>())
+					hasOverridedOnUpdateStart[typecode(Obj)] = true;
+				else if (IAction::isOnUpdateFunc<Func>())
+					hasOverridedOnUpdate[typecode(Obj)] = true;
+				else if (IAction::isOnUpdateEndFunc<Func>())
+					hasOverridedOnUpdateEnd[typecode(Obj)] = true;
 				executeFunction_ = [](Room* _inRoom) {
 					std::list<Obj*> objList = _inRoom->getObjectList<Obj>();
 					for (Obj* o : objList)
