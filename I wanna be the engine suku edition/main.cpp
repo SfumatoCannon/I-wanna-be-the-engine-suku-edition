@@ -43,8 +43,8 @@ public:
 			return true;
 			}
 		);
-		create(VineLeft(96, 32));
 		create(VineRight(96, 32));
+		create(VineLeft(96, 32));
 		create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 		create(Block(800, 32));
 		for (int i = 256; i < 608; i += 32)
@@ -90,8 +90,8 @@ Room1::Room1() : Room()
 {
 	create<Warp<Room0>>(32, 256);
 	create(Block(96, 32));
-	create(VineLeft(96, 32));
 	create(VineRight(96, 32));
+	create(VineLeft(96, 32));
 	//create(Block(96, 64), Block(64, 96), Block(96, 96), Block(128, 96));
 	create(WaterExtraJump(160, 32));
 	create(Water(224, 32));

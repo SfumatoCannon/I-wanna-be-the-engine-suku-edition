@@ -227,12 +227,12 @@ namespace suku
 		{
 			Vector leftDirection = { -1, 0 };
 			Vector rightDirection = { 1, 0 };
-			if (getCrashedObject<VineLeft>(x + leftDirection.x, y + leftDirection.y))
+			if (getCrashedObject<VineRight>(x + leftDirection.x, y + leftDirection.y))
 				isOnVineLeft_ = true;
 			else
 				isOnVineLeft_ = false;
 			
-			if (getCrashedObject<VineRight>(x + rightDirection.x, y + rightDirection.y))
+			if (getCrashedObject<VineLeft>(x + rightDirection.x, y + rightDirection.y))
 				isOnVineRight_ = true;
 			else
 				isOnVineRight_ = false;

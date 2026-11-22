@@ -16,8 +16,8 @@ namespace suku
 	class Spike;
 	class Cherry;
 	class Platform;
-	class VineLeft;
 	class VineRight;
+	class VineLeft;
 	class Trigger;
 	class Water;
 	class WaterExtraJump;
@@ -159,26 +159,26 @@ namespace suku
 	class VineLeft :public Object
 	{
 	public:
-		inline static Sprite spr{ BitmapSpriteElement("Image\\walljump_l.png", RectangleShape(14, 32, 18, 0)) };
+		inline static Sprite spr{ BitmapSpriteElement("Image\\vine_l.png", RectangleShape(14, 32, 0, 0)) };
 		VineLeft(float _x = 0, float _y = 0) : Object(_x, _y)
 		{
 			sprite_ = &spr;
 			setPaintId(3);
 		}
 	};
-	OBJ_PAINT_ORDER(Object, VineLeft)
+	OBJ_PAINT_ORDER(Solid, VineLeft)
 
 	class VineRight :public Object
 	{
 	public:
-		inline static Sprite spr{ BitmapSpriteElement("Image\\walljump_r.png", RectangleShape(14, 32, 0, 0)) };
+		inline static Sprite spr{ BitmapSpriteElement("Image\\vine_r.png", RectangleShape(14, 32, 18, 0)) };
 		VineRight(float _x = 0, float _y = 0) : Object(_x, _y)
 		{
 			sprite_ = &spr;
 			setPaintId(3);
 		}
 	};
-	OBJ_PAINT_ORDER(Object, VineRight)
+	OBJ_PAINT_ORDER(Solid, VineRight)
 
 	class Water :public Object
 	{
