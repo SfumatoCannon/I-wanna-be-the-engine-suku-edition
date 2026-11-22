@@ -20,8 +20,8 @@ namespace suku
 		template<typename T> ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, String _info) : ConfigOptionUIElement(_bindedConfig, _label, 0, 0, 256, 32, _info) {}
 
 		// Implement IFocusable interface
-		virtual void focus() override { isFocused_ = true; }
-		virtual bool unfocus() override { isFocused_ = false; return true; }
+		virtual void focus() override;
+		virtual bool unfocus() override;
 		virtual bool isFocused() const override { return isFocused_; }
 
 		virtual void onUpdate() override { onUpdateFunc_(this); }
@@ -56,13 +56,6 @@ namespace suku
 
 		onUpdateFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
 			{
-				if (_element->hasInfo_ && _element->isFocused_)
-				{
-					_element->height_ = _element->originalHeight_ + 8 + _element->infoText_.getContentHeight(_element->getWidth() - 16);
-				}
-				else
-					_element->height_ = _element->originalHeight_;
-
 				if (!_element->isFocused_)
 					return;
 

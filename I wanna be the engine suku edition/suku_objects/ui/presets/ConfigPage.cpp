@@ -16,11 +16,12 @@ namespace suku
 			}, 
 			configElementWidth, configElementHeight
 		);
-		unfocus();
+		focus();
 	}
 
 	void ConfigPage::focus()
 	{
+		UILayoutVerticalSelectable<ConfigOptionUIElement>::focus();
 		IFocusableImplBasic::focus();
 		visible = true;
 		for (auto& o : subElements_)
@@ -29,6 +30,7 @@ namespace suku
 
 	bool ConfigPage::unfocus()
 	{
+		UILayoutVerticalSelectable<ConfigOptionUIElement>::unfocus();
 		IFocusableImplBasic::unfocus();
 		visible = false;
 		for (auto& o : subElements_)

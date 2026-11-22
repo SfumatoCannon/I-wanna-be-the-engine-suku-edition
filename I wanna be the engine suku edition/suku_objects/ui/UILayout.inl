@@ -77,7 +77,7 @@ namespace suku
 			}
 			else
 			{
-				element->y = totalY;
+				element->y = { totalY, Transition(0) };
 			}
 			totalY += element->getHeight();
 		}
