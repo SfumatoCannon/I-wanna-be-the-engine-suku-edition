@@ -267,12 +267,26 @@ namespace suku
 		if (isOnVineLeft_ && input::isKeyDown(VK_RIGHT_ARROW))
 		{
 			side_ = Direction::Right;
-			vineJumpRight();
+			if (input::isKeyHolding(VK_SHIFT))
+			{
+				vineJumpRight();
+			}
+			else
+			{
+				moveRight();
+			}
 		}
 		else if (isOnVineRight_ && input::isKeyDown(VK_LEFT_ARROW))
 		{
 			side_ = Direction::Left;
-			vineJumpLeft();
+			if (input::isKeyHolding(VK_SHIFT))
+			{
+				vineJumpLeft();
+			}
+			else
+			{
+				moveLeft();
+			}
 		}
 		else if (isOnVineLeft_)
 		{
