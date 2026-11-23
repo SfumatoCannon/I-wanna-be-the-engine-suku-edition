@@ -104,41 +104,13 @@ namespace suku
 
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T> && std::is_base_of_v<IFocusable, T>
-	inline bool UILayoutVerticalSelectable<T>::unfocus()
+	inline void UILayoutVerticalSelectable<T>::unfocus()
 	{
 		if (!isFocused())
-			return false;
-		if (!this->subElements_[selectedElementIndex]->unfocus())
-			return false;
-		if (input::isKeyDown(VK_DOWN))
-		{
-			if (selectedElementIndex == this->subElements_.size() - 1)
-			{
-				isFocused_ = false;
-				return true;
-			}
-			else
-			{
-				selectedElementIndex++;
-				this->subElements_[selectedElementIndex]->focus();
-				return false;
-			}
-		}
-		else if (input::isKeyDown(VK_UP))
-		{
-			if (selectedElementIndex == 0)
-			{
-				isFocused_ = false;
-				return true;
-			}
-			else
-			{
-				selectedElementIndex--;
-				this->subElements_[selectedElementIndex]->focus();
-				return false;
-			}
-		}
-		return false;
+			return;
+
+		this->subElements_[selectedElementIndex]->unfocus();
+		isFocused_ = false;
 	}
 
 	template<typename T>

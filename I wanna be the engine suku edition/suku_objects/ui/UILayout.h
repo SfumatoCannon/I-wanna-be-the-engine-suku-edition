@@ -16,6 +16,11 @@ namespace suku
 		void addElement(std::shared_ptr<T> _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
+		size_t size()const { return subElements_.size(); }
+		// alias
+			size_t getSize()const { return size(); }
+			size_t getElementCount()const { return size(); }
+
 		virtual void onRemove() override;
 		virtual void onUpdateEnd() override;
 		virtual void onPaint() override { }
@@ -29,10 +34,11 @@ namespace suku
 	{
 	public:
 		UILayoutVerticalSelectable<T>(real _x, real _y, real _width = 0, real _height = 0, Room* _inRoom = nullptr) : UILayoutVertical<T>(_x, _y, _width, _height, _inRoom) { this->setUpdateId(1); }
+		int getSelectedElementIndex() const { return selectedElementIndex; }
 
 		// Implement IFocusable interface
 		virtual void focus() override;
-		virtual bool unfocus() override;
+		virtual void unfocus() override;
 		virtual bool isFocused() const override { return isFocused_; }
 
 		virtual void onUpdateEnd() override;

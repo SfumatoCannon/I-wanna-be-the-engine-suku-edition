@@ -13,7 +13,7 @@ namespace suku
 		ConfigPage(Room* _inRoom);
 
 		virtual void focus() override;
-		virtual bool unfocus() override;
+		virtual void unfocus() override;
 	};
 	OBJ_PAINT_ORDER(Object, ConfigPage)
 	OBJ_PAINT_ORDER(ConfigPage, ConfigOptionUIElement)

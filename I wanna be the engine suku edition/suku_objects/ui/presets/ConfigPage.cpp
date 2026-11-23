@@ -28,13 +28,12 @@ namespace suku
 			o->visible = true;
 	}
 
-	bool ConfigPage::unfocus()
+	void ConfigPage::unfocus()
 	{
 		UILayoutVerticalSelectable<ConfigOptionUIElement>::unfocus();
 		IFocusableImplBasic::unfocus();
 		visible = false;
 		for (auto& o : subElements_)
 			o->visible = false;
-		return true;
 	}
 }

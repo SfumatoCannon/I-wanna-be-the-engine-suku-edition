@@ -7,7 +7,7 @@ namespace suku
 	public:
 		virtual ~IFocusable() = default;
 		virtual void focus() = 0;
-		virtual bool unfocus() = 0; //返回值表示是否接受被取消选择
+		virtual void unfocus() = 0;
 		virtual bool isFocused() const = 0;
 	protected:
 		IFocusable() = default;
@@ -18,7 +18,7 @@ namespace suku
 	{
 	public:
 		virtual void focus() override { isFocused_ = true; }
-		virtual bool unfocus() override { isFocused_ = false; return true; }
+		virtual void unfocus() override { isFocused_ = false; }
 		virtual bool isFocused() const override { return isFocused_; }
 	protected:
 		bool isFocused_ = false;

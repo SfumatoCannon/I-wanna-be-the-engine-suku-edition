@@ -9,11 +9,10 @@ namespace suku
 			height_ = originalHeight_ + 8 + infoText_.getContentHeight(getWidth() - 16);
 	}
 
-	bool ConfigOptionUIElement::unfocus()
+	void ConfigOptionUIElement::unfocus()
 	{
 		isFocused_ = false;
 		height_ = originalHeight_;
-		return true;
 	}
 
 	void ConfigOptionUIElement::onUpdate()

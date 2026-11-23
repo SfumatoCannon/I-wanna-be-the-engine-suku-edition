@@ -21,7 +21,7 @@ namespace suku
 
 		// Implement IFocusable interface
 		virtual void focus() override;
-		virtual bool unfocus() override;
+		virtual void unfocus() override;
 		virtual bool isFocused() const override { return isFocused_; }
 
 		virtual void onUpdate() override;
