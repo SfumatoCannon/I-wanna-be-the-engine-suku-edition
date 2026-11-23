@@ -8,8 +8,24 @@ namespace suku
 {
 	class String;
 
+	class IConfigElement
+	{
+	public:
+		virtual ~IConfigElement() = default;
+		virtual const String& getName()const = 0;
+		virtual const String& getCategory()const = 0;
+		virtual String getValueString()const = 0;
+		virtual void selectPrev() = 0;
+		virtual void selectNext() = 0;
+		virtual bool hasPrev()const = 0;
+		virtual bool hasNext()const = 0;
+	protected:
+		IConfigElement() = default;
+		IConfigElement(const IConfigElement& _other) = default;
+	};
+
 	template<suku_config_var_type T>
-	class ConfigElement
+	class ConfigElement : public IConfigElement
 	{
 	public:
 		ConfigElement(const ConfigElement<T>& _other);
@@ -20,14 +36,21 @@ namespace suku
 		ConfigElement(const String& _name, T _defaultValue, std::vector<T> _valueList);
 		ConfigElement(const String& _category, const String& _name, T _defaultValue, std::vector<T> _valueList);
 		void setValue(T _value);
-		T value();
-		T getValue() { return value(); }
-		bool hasRangeConstraint() { return hasRangeConstraint_; }
-		bool hasListConstraint() { return hasListConstraint_; }
-		const String& getName() { return name_; }
-		const String& getCategory() { return category_; }
-		std::pair<T, T> getRange() { return { minValue_, maxValue_ }; }
-		const std::vector<T>& getValueList() { return valueList_; }
+		T value()const;
+		T getValue()const { return value(); }
+		bool hasRangeConstraint()const { return hasRangeConstraint_; }
+		bool hasListConstraint()const { return hasListConstraint_; }
+
+		virtual const String& getName()const override { return name_; }
+		virtual const String& getCategory()const override { return category_; }
+		virtual String getValueString()const override;
+		virtual void selectPrev() override;
+		virtual void selectNext() override;
+		virtual bool hasPrev()const override;
+		virtual bool hasNext()const override;
+
+		std::pair<T, T> getRange()const { return { minValue_, maxValue_ }; }
+		const std::vector<T>& getValueList()const { return valueList_; }
 		void operator =(const ConfigElement& _other) = delete;
 		void operator =(ConfigElement&& _other) = delete;
 		void operator =(T _value) { setValue(_value); }

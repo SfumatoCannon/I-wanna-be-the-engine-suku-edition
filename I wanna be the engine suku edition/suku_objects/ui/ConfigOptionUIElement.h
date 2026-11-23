@@ -24,17 +24,16 @@ namespace suku
 		virtual bool unfocus() override;
 		virtual bool isFocused() const override { return isFocused_; }
 
-		virtual void onUpdate() override { onUpdateFunc_(this); }
-		virtual void onPaint() override { onPaintFunc_(this); }
+		virtual void onUpdate() override;
+		virtual void onPaint() override;
 
 		void setHeight(int _height) { height_ = originalHeight_ = _height; }
 	private:
 		friend class OptionPool;
+		IConfigElement* pBindedConfig_;
 		String label_;
 		Text labelText_;
 		Text valueText_;
-		std::function<void(ConfigOptionUIElement*)> onUpdateFunc_;
-		std::function<bool(ConfigOptionUIElement*)> onPaintFunc_;
 		bool hasInfo_ = false;
 		String info_;
 		Text infoText_;
@@ -45,7 +44,8 @@ namespace suku
 	template<typename T>
 	inline ConfigOptionUIElement::ConfigOptionUIElement(ConfigElement<T>& _bindedConfig, String _label, real _x, real _y, real _width, real _height, String _info)
 		: UIElement(_x, _y, _width, _height), label_(_label), originalHeight_(_height),
-		labelText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleRight }), infoText_({ "Consolas", 16, TextStyle::Align::TopLeft })
+		labelText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleLeft }), valueText_({ "Consolas", _height / 2.0f, TextStyle::Align::MiddleRight }), infoText_({ "Consolas", 16, TextStyle::Align::TopLeft }),
+		pBindedConfig_(&_bindedConfig)
 	{
 		if (!_info.isEmpty())
 		{
@@ -53,93 +53,5 @@ namespace suku
 			info_ = _info;
 			infoText_.text = _info;
 		}
-
-		onUpdateFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
-			{
-				if (!_element->isFocused_)
-					return;
-
-				if (input::isKeyDown(VK_LEFT))
-				{
-					if (_bindedConfig.hasRangeConstraint())
-					{
-						auto range = _bindedConfig.getRange();
-						T newValue = _bindedConfig.getValue() - 1;
-						if (newValue < range.first)
-							newValue = range.first;
-						_bindedConfig.setValue(newValue);
-					}
-					else if (_bindedConfig.hasListConstraint())
-					{
-						auto list = _bindedConfig.getValueList();
-						auto it = std::find(list.begin(), list.end(), _bindedConfig.value());
-						if (it != list.end() && it != list.begin())
-							_bindedConfig.setValue(*(it - 1));
-					}
-					else
-					{
-						if constexpr (std::is_same_v<bool, T>)
-						{
-							_bindedConfig.setValue(!_bindedConfig.getValue());
-						}
-						else if constexpr (std::is_arithmetic_v<T>)
-						{
-							_bindedConfig.setValue(_bindedConfig.getValue() - 1);
-						}
-					}
-				}
-				else if (input::isKeyDown(VK_RIGHT))
-				{
-					if (_bindedConfig.hasRangeConstraint())
-					{
-						auto range = _bindedConfig.getRange();
-						T newValue = _bindedConfig.getValue() + 1;
-						if (newValue > range.second)
-							newValue = range.second;
-						_bindedConfig.setValue(newValue);
-					}
-					else if (_bindedConfig.hasListConstraint())
-					{
-						auto list = _bindedConfig.getValueList();
-						auto it = std::find(list.begin(), list.end(), _bindedConfig.value());
-						if (it != list.end() && it != list.end() - 1)
-							_bindedConfig.setValue(*(it + 1));
-					}
-					else
-					{
-						if constexpr (std::is_same_v<bool, T>)
-						{
-							_bindedConfig.setValue(!_bindedConfig.getValue());
-						}
-						else if constexpr (std::is_arithmetic_v<T>)
-						{
-							_bindedConfig.setValue(_bindedConfig.getValue() + 1);
-						}
-					}
-				}
-			};
-		onPaintFunc_ = [&_bindedConfig](ConfigOptionUIElement* _element)
-			{
-				RectangleShape area(_element->getWidth(), _element->getHeight());
-				area.setFill(_element->isFocused_ ? Color(128, 128, 128, 0.5f) : Color(64, 64, 64, 0.5f));
-				area.paint(_element->x, _element->y, _element->getTransform());
-
-				// label text
-				_element->labelText_.style.setBrush(Color(255, 255, 255));
-				_element->labelText_.text = _element->label_;
-				_element->labelText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16);
-
-				// value text
-				_element->valueText_.style.setBrush(Color(255, 255, 255));
-				_element->valueText_.text = std::to_wstring(_bindedConfig.value());
-				_element->valueText_.paint(_element->x + 8, _element->y + 8, _element->getWidth() - 16, _element->originalHeight_ - 16);
-				
-				if (_element->hasInfo_ && _element->isFocused_)
-				{
-					float height = _element->infoText_.getContentHeight(_element->getWidth() - 16);
-					_element->infoText_.paint(_element->x + 8, _element->y + _element->originalHeight_ + 4, _element->getWidth() - 16, height);
-				}
-				return false;
-			};
 	}
 }

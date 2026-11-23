@@ -121,8 +121,146 @@ namespace suku
 	}
 
 	template<suku_config_var_type T>
-	inline T ConfigElement<T>::value()
+	inline T ConfigElement<T>::value() const
 	{
 		return value_;
+	}
+
+	template<suku_config_var_type T>
+	inline String ConfigElement<T>::getValueString() const
+	{
+		if constexpr (std::is_same_v<T, bool>)
+		{
+			if (value_ == true)
+				return "true";
+			else
+				return "false";
+		}
+		else
+		{
+			return String(std::to_wstring(value_));
+		}
+	}
+
+	template<suku_config_var_type T>
+	inline void ConfigElement<T>::selectPrev()
+	{
+		if (hasRangeConstraint())
+		{
+			auto range = getRange();
+			T newValue = getValue() - 1;
+			if (newValue < range.first)
+				newValue = range.first;
+			setValue(newValue);
+		}
+		else if (hasListConstraint())
+		{
+			auto list = getValueList();
+			auto it = std::find(list.begin(), list.end(), value());
+			if (it != list.end() && it != list.begin())
+				setValue(*(it - 1));
+		}
+		else
+		{
+			if constexpr (std::is_same_v<bool, T>)
+			{
+				setValue(!getValue());
+			}
+			else if constexpr (std::is_arithmetic_v<T>)
+			{
+				setValue(getValue() - 1);
+			}
+		}
+	}
+
+	template<suku_config_var_type T>
+	inline void ConfigElement<T>::selectNext()
+	{
+		if (hasRangeConstraint())
+		{
+			auto range = getRange();
+			T newValue = getValue() + 1;
+			if (newValue > range.second)
+				newValue = range.second;
+			setValue(newValue);
+		}
+		else if (hasListConstraint())
+		{
+			auto list = getValueList();
+			auto it = std::find(list.begin(), list.end(), value());
+			if (it != list.end() && it != list.end() - 1)
+				setValue(*(it + 1));
+		}
+		else
+		{
+			if constexpr (std::is_same_v<bool, T>)
+			{
+				setValue(!getValue());
+			}
+			else if constexpr (std::is_arithmetic_v<T>)
+			{
+				setValue(getValue() + 1);
+			}
+		}
+	}
+
+	template<suku_config_var_type T>
+	inline bool ConfigElement<T>::hasPrev() const
+	{
+		if (hasRangeConstraint())
+		{
+			return value_ != getRange().first;
+		}
+		else if (hasListConstraint())
+		{
+			if (valueList_.size() == 0)
+				return false;
+
+			return value_ != valueList_[0];
+		}
+		else
+		{
+			if constexpr (std::is_same_v<bool, T>)
+			{
+				if (value_ == false)
+					return false;
+				else
+					return true;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+
+	template<suku_config_var_type T>
+	inline bool ConfigElement<T>::hasNext() const
+	{
+		if (hasRangeConstraint())
+		{
+			return value_ != getRange().second;
+		}
+		else if (hasListConstraint())
+		{
+			if (valueList_.size() == 0)
+				return false;
+
+			return value_ != valueList_[valueList_.size() - 1];
+		}
+		else
+		{
+			if constexpr (std::is_same_v<bool, T>)
+			{
+				if (value_ == true)
+					return false;
+				else
+					return true;
+			}
+			else
+			{
+				return true;
+			}
+		}
 	}
 }
