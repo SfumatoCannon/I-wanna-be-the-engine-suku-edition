@@ -3,17 +3,36 @@
 
 namespace suku
 {
+	double getUpdateFPS();
+	double getRenderFPS();
 	void endGame();
-	namespace game_loop
+
+	class GameLoopSender
 	{
-		constexpr double updateFPS = 50.0;
-		void debugMessageDisplay(bool _isDisplay);
+	public:
+		GameLoopSender(const GameLoopSender&) = delete;
+		GameLoopSender& operator=(const GameLoopSender&) = delete;
+
+		static GameLoopSender& getInstance() { static GameLoopSender instance; return instance; }
 		void start();
-		void startWithVsync(int _frameRate = 1);
-		double getRenderFPS();
-		double getUpdateFPS();
-		void setRenderFPS(double _fps);
-	}
+
+	private:
+		GameLoopSender() = default;
+	};
+
+	class GameLoopVsyncSender
+	{
+	public:
+		GameLoopVsyncSender(const GameLoopVsyncSender&) = delete;
+		GameLoopVsyncSender& operator=(const GameLoopVsyncSender&) = delete;
+
+		static GameLoopVsyncSender& getInstance() { static GameLoopVsyncSender instance; return instance; }
+		void start(int _frameRate);
+		int getFrameRate()const { return frameRate_; }
+	private:
+		int frameRate_ = 1;
+		GameLoopVsyncSender() = default;
+	};
 
 	class GameLoopConfig
 	{

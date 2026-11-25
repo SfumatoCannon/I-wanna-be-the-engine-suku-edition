@@ -22,6 +22,21 @@ namespace
 	void updateWork();
 	void paintWork();
 	void paintWork(double _additionalFrameRate);
+
+	constexpr double updateFPS = 50.0;
+	double renderFPS = 240.0;
+
+	// WIP
+	std::thread threadVsyncUpdate;
+	std::thread threadUpdate;
+	std::thread threadRender;
+
+	std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
+
+	void updateSender();
+	void renderSender();
+	void vsyncLoopSender();
+	void vsyncLoopSenderExtraFrames(int _frameRate);
 	void displayDebugMessage();
 	double getMonitoredFPS(bool _isUpdate);
 }
@@ -30,151 +45,33 @@ namespace
 
 namespace suku
 {
+	double getUpdateFPS()
+	{
+		return updateFPS;
+	}
+
 	void endGame() { gameEndFlag = true; }
 
-	namespace game_loop
+	void GameLoopSender::start()
 	{
-		double renderFPS = 240.0;
+		std::thread threadUpdate(updateSender);
+		threadUpdate.detach();
+		std::thread threadRender(renderSender);
+		threadRender.detach();
+	}
 
-		void vsyncLoopSender()
+	void GameLoopVsyncSender::start(int _frameRate)
+	{
+		frameRate_ = _frameRate;
+		if (_frameRate <= 1)
 		{
-			const double frameTime = 1000.0 / updateFPS;
-			auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-				(std::chrono::duration<double, std::milli>(frameTime));
-
-			auto next = std::chrono::steady_clock::now();
-			while (!gameEndFlag)
-			{
-				next += frameDuration;
-				std::this_thread::sleep_until(next);
-				updateWork();
-				paintWork();
-				if (gameEndFlag)
-				{
-					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-					break;
-				}
-			}
+			std::thread thread(vsyncLoopSender);
+			thread.detach();
 		}
-
-		void vsyncLoopSenderExtraFrames(int _frameRate)
+		else
 		{
-			const double frameTime = 1000.0 / updateFPS;
-			auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-				(std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate);
-
-			auto next = std::chrono::steady_clock::now();
-			while (!gameEndFlag)
-			{
-				next += frameDuration;
-				std::this_thread::sleep_until(next);
-				updateWork();
-				for (int i = 1; i < _frameRate; i++)
-				{
-					paintWork(1.0 / (double)_frameRate * i);
-					next += frameDuration;
-					std::this_thread::sleep_until(next);
-				}
-				paintWork(1.0);
-				if (gameEndFlag)
-				{
-					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-					break;
-				}
-			}
-		}
-
-		// WIP
-		std::thread threadVsyncUpdate;
-		std::thread threadUpdate;
-		std::thread threadRender;
-
-		std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
-
-		void updateSender()
-		{
-			const double frameTime = 1000.0 / updateFPS;
-			auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-				(std::chrono::duration<double, std::milli>(frameTime));
-
-			auto next = std::chrono::steady_clock::now();
-			while (!gameEndFlag)
-			{
-				next += frameDuration;
-				std::this_thread::sleep_until(next);
-				isUpdatePending.store(true);
-				if (isPaintPending.load() == false)
-				{
-					updateWork();
-					isPaintPending.store(true);
-					lastUpdateTime.store(std::chrono::steady_clock::now());
-				}
-				isUpdatePending.store(false);
-				if (gameEndFlag)
-				{
-					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-					break;
-				}
-			}
-		}
-
-		void renderSender()
-		{
-			const double updateFrameTime = 1000.0 / updateFPS;
-			double frameTime = 1000.0 / (double)suku::GameLoopConfig::renderFPS.value();
-			auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
-				(std::chrono::duration<double, std::milli>(frameTime));
-
-			auto next = std::chrono::steady_clock::now();
-			while (!gameEndFlag)
-			{
-				next += frameDuration;
-				std::this_thread::sleep_until(next);
-				auto nowTime = std::chrono::steady_clock::now();
-				double additionalFrameRate
-					= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
-				if (isUpdatePending.load() == false)
-				{
-					isPaintPending.store(false);
-					paintWork(additionalFrameRate);
-				}
-				if (gameEndFlag)
-				{
-					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
-					break;
-				}
-			}
-		}
-
-		void debugMessageDisplay(bool _isDisplay)
-		{
-			debugMessage = _isDisplay;
-		}
-
-		void start()
-		{
-			std::thread threadUpdate(updateSender);
-			threadUpdate.detach();
-			std::thread threadRender(renderSender);
-			threadRender.detach();
-		}
-
-		void startWithVsync(int _frameRate)
-		{
-			if (_frameRate <= 1)
-			{
-				std::thread thread(vsyncLoopSender);
-				thread.detach();
-			}
-			else
-			{
-				std::thread thread(vsyncLoopSenderExtraFrames, _frameRate);
-				thread.detach();
-			}
-		}
-		double getUpdateFPS()
-		{
-			return updateFPS;
+			std::thread thread(vsyncLoopSenderExtraFrames, _frameRate);
+			thread.detach();
 		}
 	}
 }
@@ -347,6 +244,109 @@ namespace
 		}
 
 		a.paint(10, 10);
+	}
+
+	void updateSender()
+	{
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
+		{
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			isUpdatePending.store(true);
+			if (isPaintPending.load() == false)
+			{
+				updateWork();
+				isPaintPending.store(true);
+				lastUpdateTime.store(std::chrono::steady_clock::now());
+			}
+			isUpdatePending.store(false);
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+		}
+	}
+
+	void renderSender()
+	{
+		const double updateFrameTime = 1000.0 / updateFPS;
+		double frameTime = 1000.0 / (double)suku::GameLoopConfig::renderFPS.value();
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
+		{
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			auto nowTime = std::chrono::steady_clock::now();
+			double additionalFrameRate
+				= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
+			if (isUpdatePending.load() == false)
+			{
+				isPaintPending.store(false);
+				paintWork(additionalFrameRate);
+			}
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+		}
+	}
+
+	void vsyncLoopSender()
+	{
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime));
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
+		{
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			updateWork();
+			paintWork();
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+		}
+	}
+
+	void vsyncLoopSenderExtraFrames(int _frameRate)
+	{
+		const double frameTime = 1000.0 / updateFPS;
+		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
+			(std::chrono::duration<double, std::milli>(frameTime) / (double)_frameRate);
+
+		auto next = std::chrono::steady_clock::now();
+		while (!gameEndFlag)
+		{
+			next += frameDuration;
+			std::this_thread::sleep_until(next);
+			updateWork();
+			for (int i = 1; i < _frameRate; i++)
+			{
+				paintWork(1.0 / (double)_frameRate * i);
+				next += frameDuration;
+				std::this_thread::sleep_until(next);
+			}
+			paintWork(1.0);
+			if (gameEndFlag)
+			{
+				PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
+				break;
+			}
+		}
 	}
 }
 // ----------------------------------------------------------------------------

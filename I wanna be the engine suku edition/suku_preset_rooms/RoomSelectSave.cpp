@@ -106,7 +106,7 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 		{
 			auto time = saveFileTime[i];
 			auto death = saveFileDeath[i];
-			time = time / game_loop::updateFPS; // frame -> seconds
+			time = time / getUpdateFPS(); // frame -> seconds
 			unsigned int hour = time / 3600;
 			unsigned int minute = (time % 3600) / 60;
 			unsigned int second = time % 60;

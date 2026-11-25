@@ -44,9 +44,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init();
 		suku::RoomPool::gotoTitleRoom();
 		if (GameLoopConfig::isVSyncOn.value())
-			game_loop::startWithVsync(GameLoopConfig::vsyncFrameRate.value());
+			GameLoopVsyncSender::getInstance().start(GameLoopConfig::vsyncFrameRate.value());
 		else
-			game_loop::start();
+			GameLoopSender::getInstance().start();
 		break;
 	case WM_INPUT:
 	{
