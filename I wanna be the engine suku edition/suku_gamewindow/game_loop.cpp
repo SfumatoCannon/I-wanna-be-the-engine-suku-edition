@@ -7,13 +7,18 @@
 #include <suku_objects/basic/player.h>
 #include <suku_foundation/input_mouse.h>
 #include <format>
+#include <atomic>
+#include <mutex>
 
 // Private functions declaration
 // ----------------------------------------------------------------------------
 namespace
 {
-	bool debugMessage = false;
+	bool debugMessage = true;
 	bool gameEndFlag = false;
+	std::mutex roomStateMutex;
+	std::atomic<bool> isUpdatePending = true;
+	std::atomic<bool> isPaintPending = false;
 	void updateWork();
 	void paintWork();
 	void paintWork(double _additionalFrameRate);
@@ -49,7 +54,6 @@ namespace suku
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
-				RoomPool::execute();
 			}
 		}
 
@@ -77,7 +81,6 @@ namespace suku
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
-				RoomPool::execute();
 			}
 		}
 
@@ -99,14 +102,19 @@ namespace suku
 			{
 				next += frameDuration;
 				std::this_thread::sleep_until(next);
-				updateWork();
-				lastUpdateTime.store(std::chrono::steady_clock::now());
+				isUpdatePending.store(true);
+				if (isPaintPending.load() == false)
+				{
+					updateWork();
+					isPaintPending.store(true);
+					lastUpdateTime.store(std::chrono::steady_clock::now());
+				}
+				isUpdatePending.store(false);
 				if (gameEndFlag)
 				{
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
 					break;
 				}
-				RoomPool::execute();
 			}
 		}
 
@@ -125,7 +133,11 @@ namespace suku
 				auto nowTime = std::chrono::steady_clock::now();
 				double additionalFrameRate
 					= std::chrono::duration<double, std::milli>(nowTime - lastUpdateTime.load()).count() / updateFrameTime;
-				paintWork(additionalFrameRate);
+				if (isUpdatePending.load() == false)
+				{
+					isPaintPending.store(false);
+					paintWork(additionalFrameRate);
+				}
 				if (gameEndFlag)
 				{
 					PostMessage(suku::GameWindow::hWnd, WM_QUIT, NULL, NULL);
@@ -204,6 +216,8 @@ namespace
 	void updateWork()
 	{
 		using namespace suku;
+		std::lock_guard<std::mutex> lock(roomStateMutex);
+
 		input::frameStateUpdate();
 		input::Mouse::frameStateUpdate();
 
@@ -220,6 +234,8 @@ namespace
 		Room* nowRoom = RoomPool::getNowRoom();
 		if (nowRoom)
 			nowRoom->update();
+
+		RoomPool::execute();
 
 		input::resetKeyState();
 		input::Mouse::resetButtonState();
@@ -265,6 +281,8 @@ namespace
 	{
 		if (!gameEndFlag)
 		{
+			std::lock_guard<std::mutex> lock(roomStateMutex);
+
 			getMonitoredFPS(true);
 
 			suku::graphics_core::beginDrawGlobal();
@@ -285,6 +303,8 @@ namespace
 	{
 		if (!gameEndFlag)
 		{
+			std::lock_guard<std::mutex> lock(roomStateMutex);
+
 			getMonitoredFPS(true);
 
 			suku::graphics_core::beginDrawGlobal();
@@ -305,7 +325,7 @@ namespace
 	{
 		double monitoredFPS = getMonitoredFPS(false);
 		bool isVsyncOn = suku::GameLoopConfig::isVSyncOn.value();
-		static suku::Text a({"Consolas", 24});
+		static suku::Text a({ "Consolas", 24 });
 		a.style.setBrush(suku::Color(0, 255, 0, 1.0f));
 		a.text.clear();
 
