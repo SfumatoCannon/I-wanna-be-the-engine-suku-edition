@@ -1,5 +1,7 @@
 #pragma once
 #include <suku_config/config_element.h>
+#include <thread>
+#include <memory>
 
 namespace suku
 {
@@ -15,9 +17,12 @@ namespace suku
 
 		static GameLoopSender& getInstance() { static GameLoopSender instance; return instance; }
 		void start();
+		void stop();
 
 	private:
 		GameLoopSender() = default;
+		std::unique_ptr<std::jthread> pThreadUpdateLoop_ = nullptr;
+		std::unique_ptr<std::jthread> pThreadRenderLoop_ = nullptr;
 	};
 
 	class GameLoopVsyncSender
@@ -28,10 +33,12 @@ namespace suku
 
 		static GameLoopVsyncSender& getInstance() { static GameLoopVsyncSender instance; return instance; }
 		void start(int _frameRate);
+		void stop();
 		int getFrameRate()const { return frameRate_; }
 	private:
-		int frameRate_ = 1;
 		GameLoopVsyncSender() = default;
+		int frameRate_ = 1;
+		std::unique_ptr<std::jthread> pThreadUpdateRenderLoop_ = nullptr;
 	};
 
 	class GameLoopConfig

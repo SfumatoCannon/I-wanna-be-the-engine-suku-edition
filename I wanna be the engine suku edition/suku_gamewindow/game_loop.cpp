@@ -26,17 +26,12 @@ namespace
 	constexpr double updateFPS = 50.0;
 	double renderFPS = 240.0;
 
-	// WIP
-	std::thread threadVsyncUpdate;
-	std::thread threadUpdate;
-	std::thread threadRender;
-
 	std::atomic<std::chrono::steady_clock::time_point> lastUpdateTime;
 
-	void updateSender();
-	void renderSender();
-	void vsyncLoopSender();
-	void vsyncLoopSenderExtraFrames(int _frameRate);
+	void updateSender(std::stop_token _stopToken);
+	void renderSender(std::stop_token _stopToken);
+	void vsyncLoopSender(std::stop_token _stopToken);
+	void vsyncLoopSenderExtraFrames(std::stop_token _stopToken, int _frameRate);
 	void displayDebugMessage();
 	double getMonitoredFPS(bool _isUpdate);
 }
@@ -54,10 +49,16 @@ namespace suku
 
 	void GameLoopSender::start()
 	{
-		std::thread threadUpdate(updateSender);
-		threadUpdate.detach();
-		std::thread threadRender(renderSender);
-		threadRender.detach();
+		pThreadUpdateLoop_ = std::make_unique<std::jthread>(updateSender);
+		pThreadUpdateLoop_->detach();
+		pThreadRenderLoop_ = std::make_unique<std::jthread>(renderSender);
+		pThreadRenderLoop_->detach();
+	}
+
+	void GameLoopSender::stop()
+	{
+		pThreadUpdateLoop_->request_stop();
+		pThreadRenderLoop_->request_stop();
 	}
 
 	void GameLoopVsyncSender::start(int _frameRate)
@@ -65,14 +66,18 @@ namespace suku
 		frameRate_ = _frameRate;
 		if (_frameRate <= 1)
 		{
-			std::thread thread(vsyncLoopSender);
-			thread.detach();
+			pThreadUpdateRenderLoop_ = std::make_unique<std::jthread>(vsyncLoopSender);
 		}
 		else
 		{
-			std::thread thread(vsyncLoopSenderExtraFrames, _frameRate);
-			thread.detach();
+			pThreadUpdateRenderLoop_ = std::make_unique<std::jthread>(vsyncLoopSenderExtraFrames, _frameRate);
 		}
+		pThreadUpdateRenderLoop_->detach();
+	}
+
+	void GameLoopVsyncSender::stop()
+	{
+		pThreadUpdateRenderLoop_->request_stop();
 	}
 }
 
@@ -246,7 +251,7 @@ namespace
 		a.paint(10, 10);
 	}
 
-	void updateSender()
+	void updateSender(std::stop_token _stopToken)
 	{
 		const double frameTime = 1000.0 / updateFPS;
 		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
@@ -255,6 +260,10 @@ namespace
 		auto next = std::chrono::steady_clock::now();
 		while (!gameEndFlag)
 		{
+			if (_stopToken.stop_requested())
+			{
+				break;
+			}
 			next += frameDuration;
 			std::this_thread::sleep_until(next);
 			isUpdatePending.store(true);
@@ -273,7 +282,7 @@ namespace
 		}
 	}
 
-	void renderSender()
+	void renderSender(std::stop_token _stopToken)
 	{
 		const double updateFrameTime = 1000.0 / updateFPS;
 		double frameTime = 1000.0 / (double)suku::GameLoopConfig::renderFPS.value();
@@ -283,6 +292,10 @@ namespace
 		auto next = std::chrono::steady_clock::now();
 		while (!gameEndFlag)
 		{
+			if (_stopToken.stop_requested())
+			{
+				break;
+			}
 			next += frameDuration;
 			std::this_thread::sleep_until(next);
 			auto nowTime = std::chrono::steady_clock::now();
@@ -301,7 +314,7 @@ namespace
 		}
 	}
 
-	void vsyncLoopSender()
+	void vsyncLoopSender(std::stop_token _stopToken)
 	{
 		const double frameTime = 1000.0 / updateFPS;
 		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
@@ -310,6 +323,10 @@ namespace
 		auto next = std::chrono::steady_clock::now();
 		while (!gameEndFlag)
 		{
+			if (_stopToken.stop_requested())
+			{
+				break;
+			}
 			next += frameDuration;
 			std::this_thread::sleep_until(next);
 			updateWork();
@@ -322,7 +339,7 @@ namespace
 		}
 	}
 
-	void vsyncLoopSenderExtraFrames(int _frameRate)
+	void vsyncLoopSenderExtraFrames(std::stop_token _stopToken, int _frameRate)
 	{
 		const double frameTime = 1000.0 / updateFPS;
 		auto frameDuration = std::chrono::duration_cast<std::chrono::steady_clock::duration>
@@ -331,6 +348,10 @@ namespace
 		auto next = std::chrono::steady_clock::now();
 		while (!gameEndFlag)
 		{
+			if (_stopToken.stop_requested())
+			{
+				break;
+			}
 			next += frameDuration;
 			std::this_thread::sleep_until(next);
 			updateWork();
