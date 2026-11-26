@@ -14,6 +14,7 @@
 // ----------------------------------------------------------------------------
 namespace
 {
+	suku::GameLoopMode gameLoopMode;
 	bool debugMessage = true;
 	bool gameEndFlag = false;
 	std::mutex roomStateMutex;
@@ -42,13 +43,14 @@ namespace suku
 {
 	double getUpdateFPS()
 	{
-		return updateFPS;
+		return ::updateFPS;
 	}
 
 	void endGame() { gameEndFlag = true; }
 
 	void GameLoopSender::start()
 	{
+		::gameLoopMode = GameLoopMode::Normal;
 		pThreadUpdateLoop_ = std::make_unique<std::jthread>(updateSender);
 		pThreadUpdateLoop_->detach();
 		pThreadRenderLoop_ = std::make_unique<std::jthread>(renderSender);
@@ -63,6 +65,7 @@ namespace suku
 
 	void GameLoopVsyncSender::start(int _frameRate)
 	{
+		::gameLoopMode = GameLoopMode::Vsync;
 		frameRate_ = _frameRate;
 		if (_frameRate <= 1)
 		{
@@ -78,6 +81,23 @@ namespace suku
 	void GameLoopVsyncSender::stop()
 	{
 		pThreadUpdateRenderLoop_->request_stop();
+	}
+
+	GameLoopMode GeneralGameLoopController::getMode()
+	{
+		return ::gameLoopMode;
+	}
+
+	void GeneralGameLoopController::stop()
+	{
+		if (getMode() == GameLoopMode::Normal)
+		{
+			GameLoopSender::getInstance().stop();
+		}
+		else // GameLoopMode::Vsync
+		{
+			GameLoopVsyncSender::getInstance().stop();
+		}
 	}
 }
 

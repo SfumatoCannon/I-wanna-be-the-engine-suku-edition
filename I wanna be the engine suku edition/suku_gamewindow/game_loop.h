@@ -9,6 +9,22 @@ namespace suku
 	double getRenderFPS();
 	void endGame();
 
+	enum class GameLoopMode
+	{
+		Normal,
+		Vsync
+	};
+
+	class GeneralGameLoopController
+	{
+	public:
+		static GameLoopMode getMode();
+		static void stop();
+	private:
+		GeneralGameLoopController() = delete;
+		GeneralGameLoopController(const GeneralGameLoopController&) = delete;
+	};
+
 	class GameLoopSender
 	{
 	public:
