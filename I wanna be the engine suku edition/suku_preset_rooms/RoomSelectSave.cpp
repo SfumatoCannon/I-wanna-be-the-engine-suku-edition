@@ -84,9 +84,10 @@ void RoomSelectSave::onUpdateStart()
 
 void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 {
-	TextStyle saveSlotTitleStyle(resource::Font::Staatliches, 32, TextStyle::Align::TopCenter);
-	TextStyle saveSlotNoDataStyle(resource::Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
-	TextStyle saveSlotContentStyle(resource::Font::Arial, 15, TextStyle::Weight::Bold);
+	static TextStyle saveSlotTitleStyle(resource::Font::Staatliches, 32, TextStyle::Align::TopCenter);
+	static TextStyle saveSlotNoDataStyle(resource::Font::Barlow_Condensed, 24, TextStyle::Align::TopCenter);
+	static TextStyle saveSlotContentStyle(resource::Font::Arial, 15, TextStyle::Weight::Bold);
+	static TextStyle saveSlotHintStyle(resource::Font::Arial, 15, TextStyle::Weight::Bold);
 
 
 	// Save slot card
@@ -132,4 +133,15 @@ void RoomSelectSave::onPaintEnd(PaintLayer& _layer)
 		Cherry::spr.getFrameState(clock_)->paint(i, startY);
 	Player::sprStanding.getFrameState(clock_)->paint(mid, startY);
 
+	// bottom hint
+	saveSlotHintStyle.setTextAlign(TextStyle::Align::BottomLeft);
+	saveSlotHintStyle.paint(
+		L"【Z】Back",
+		32, getHeight() - 32
+	);
+	saveSlotHintStyle.setTextAlign(TextStyle::Align::BottomRight);
+	saveSlotHintStyle.paint(
+		L"【Backspace】Settings",
+		getWidth() - 32, getHeight() - 32
+	);
 }
