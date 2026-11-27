@@ -51,6 +51,7 @@ namespace suku
 	constexpr USHORT VK_CTRL = VK_CONTROL;
 	constexpr USHORT VK_LEFT_CTRL = VK_LCONTROL;
 	constexpr USHORT VK_RIGHT_CTRL = VK_RCONTROL;
+	constexpr USHORT VK_BACKSPACE = VK_BACK;
 }
 
 namespace suku::input

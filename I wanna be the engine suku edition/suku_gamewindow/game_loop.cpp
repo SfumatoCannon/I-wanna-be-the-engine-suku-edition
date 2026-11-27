@@ -15,7 +15,7 @@
 namespace
 {
 	suku::GameLoopMode gameLoopMode;
-	bool debugMessage = true;
+	bool debugMessage = false;
 	bool gameEndFlag = false;
 	std::mutex roomStateMutex;
 	std::atomic<bool> isUpdatePending = true;

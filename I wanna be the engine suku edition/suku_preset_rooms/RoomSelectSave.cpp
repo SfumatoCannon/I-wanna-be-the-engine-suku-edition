@@ -27,6 +27,7 @@ RoomSelectSave::RoomSelectSave()
 		choiceUIElement[i]->unfocus();
 	}
 	create<ConfigPage>();
+	create<ConfigPageCaller>();
 }
 
 void RoomSelectSave::onUpdateStart()

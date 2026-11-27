@@ -12,6 +12,42 @@ namespace suku
 	}
 
 	template<suku_object Obj>
+	inline Obj* Room::getObject()
+	{
+		auto resultIter = objectPointerArray_.find(typecode(Obj));
+		if (resultIter != objectPointerArray_.end())
+		{
+			auto& targetList = (*resultIter).second;
+			for (auto& objectPtr : targetList)
+			{
+				if (objectPtr->removeTag_ == false)
+					return static_cast<Obj*>(objectPtr.get());
+			}
+		}
+		return nullptr;
+	}
+
+	template<suku_object Obj>
+	inline Obj* Room::getObject(std::function<bool(Obj*)> _condition)
+	{
+		auto resultIter = objectPointerArray_.find(typecode(Obj));
+		if (resultIter != objectPointerArray_.end())
+		{
+			auto& targetList = (*resultIter).second;
+			for (auto& pObject : targetList)
+			{
+				if (pObject->removeTag_ == false)
+				{
+					Obj* targetObject = static_cast<Obj*>(pObject.get());
+					if (_condition(targetObject))
+						return static_cast<Obj*>(pObject.get());
+				}	
+			}
+		}
+		return nullptr;
+	}
+
+	template<suku_object Obj>
 	inline std::list<Obj*> Room::getObjectList()
 	{
 		if (typecode(Obj) == typecode(Object))
@@ -20,10 +56,10 @@ namespace suku
 			std::list<Obj*> resultList;
 			for (auto& [typecode, objectList] : objectPointerArray_)
 			{
-				for (auto& objectPtr : objectList)
+				for (auto& pObject : objectList)
 				{
-					if (objectPtr->removeTag_ == false)
-						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
+					if (pObject->removeTag_ == false)
+						resultList.push_back(static_cast<Obj*>(pObject.get()));
 				}
 			}
 			return resultList;
@@ -37,10 +73,10 @@ namespace suku
 			if (resultIter != objectPointerArray_.end())
 			{
 				auto& targetList = (*resultIter).second;
-				for (auto& objectPtr : targetList)
+				for (auto& pObject : targetList)
 				{
-					if (objectPtr->removeTag_ == false)
-						resultList.push_back(static_cast<Obj*>(objectPtr.get()));
+					if (pObject->removeTag_ == false)
+						resultList.push_back(static_cast<Obj*>(pObject.get()));
 				}
 			}
 		}

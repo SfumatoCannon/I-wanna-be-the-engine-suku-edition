@@ -16,24 +16,29 @@ namespace suku
 			}, 
 			configElementWidth, configElementHeight
 		);
-		focus();
+		unfocus();
 	}
 
 	void ConfigPage::focus()
 	{
 		UILayoutVerticalSelectable<ConfigOptionUIElement>::focus();
-		IFocusableImplBasic::focus();
-		visible = true;
-		for (auto& o : subElements_)
-			o->visible = true;
+		setLayoutVisible(true);
 	}
 
 	void ConfigPage::unfocus()
 	{
 		UILayoutVerticalSelectable<ConfigOptionUIElement>::unfocus();
-		IFocusableImplBasic::unfocus();
-		visible = false;
-		for (auto& o : subElements_)
-			o->visible = false;
+		setLayoutVisible(false);
+	}
+
+	void ConfigPage::onUpdate()
+	{
+		UILayoutVerticalSelectable<ConfigOptionUIElement>::onUpdate();
+		if (!isFocused())
+			return;
+		if (input::isKeyUp(VK_Z))
+		{
+			unfocus();
+		}
 	}
 }

@@ -16,6 +16,9 @@ namespace suku
 		void addElement(std::shared_ptr<T> _element);
 		void make(std::initializer_list<T> _elements, int _elementWidth, int _elementHeight);
 		void clear();
+
+		void setLayoutVisible(bool _visible);
+
 		size_t size()const { return subElements_.size(); }
 		// alias
 			size_t getSize()const { return size(); }

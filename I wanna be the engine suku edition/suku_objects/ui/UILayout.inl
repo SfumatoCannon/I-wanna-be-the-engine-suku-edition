@@ -58,6 +58,18 @@ namespace suku
 
 	template<typename T>
 		requires std::is_base_of_v<UIElement, T>
+	inline void UILayoutVertical<T>::setLayoutVisible(bool _visible)
+	{
+		for (auto& element : subElements_)
+		{
+			if (element)
+				element->visible = _visible;
+		}
+		visible = _visible;
+	}
+
+	template<typename T>
+		requires std::is_base_of_v<UIElement, T>
 	void UILayoutVertical<T>::onRemove()
 	{
 		clear();
@@ -91,14 +103,7 @@ namespace suku
 		isFocused_ = true;
 		if (this->subElements_.size() == 0)
 			return;
-		if (input::isKeyDown(VK_DOWN))
-		{
-			selectedElementIndex = 0;
-		}
-		else if (input::isKeyDown(VK_UP))
-		{
-			selectedElementIndex = (int)this->subElements_.size() - 1;
-		}
+		
 		this->subElements_[selectedElementIndex]->focus();
 	}
 
